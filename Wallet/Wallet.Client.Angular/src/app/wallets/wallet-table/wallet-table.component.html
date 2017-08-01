@@ -1,0 +1,24 @@
+<table class="table table-responsive table-hover table-middle">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let wallet of wallets">
+      <td><span>{{wallet.moneyWalletId}}</span></td>
+      <td><span>{{wallet.name}}</span></td>
+      <th>
+        <button class="btn btn-primary" type="button" (click)="onEditBtnClicked(wallet)">
+          <span class="glyphicon glyphicon-edit">
+            </span>
+        </button>
+        <button class="btn btn-alert" type="button" (click)="onDeleteBtnClicked(wallet)">
+            <span class="glyphicon glyphicon-remove"></span>
+            </button>
+      </th>
+    </tr>
+  </tbody>
+</table>
