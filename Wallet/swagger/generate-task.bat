@@ -1,0 +1,1 @@
+java -jar swagger-codegen-cli-2.2.3.jar generate -i http://localhost:56491/swagger/v1/swagger.json -l typescript-angular2 -o walletApi

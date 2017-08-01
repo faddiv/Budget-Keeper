@@ -1,0 +1,31 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist/
+obj/
+bin/
+
+# dependencies
+node_modules/
+packages/
+
+
+# IDE - Visual Studio
+.vs/
+launchSettings.json
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+#misc
+Wallet/swagger/walletApi/
+Wallet/swagger/swagger-codegen-cli-2.2.3.jar
+
+# System Files
+.DS_Store
+Thumbs.db
+
