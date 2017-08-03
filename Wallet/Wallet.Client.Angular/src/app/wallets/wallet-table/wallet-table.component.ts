@@ -12,11 +12,7 @@ export class WalletTableComponent implements OnInit {
   @Input("wallets")
   wallets: Wallet[];
 
-  @Output("edit")
-  edit = new EventEmitter<Wallet>();
-
-  @Output("delete")
-  delete = new EventEmitter<Wallet>();
+  selected: Wallet;
 
   constructor() { }
 
@@ -24,10 +20,23 @@ export class WalletTableComponent implements OnInit {
   }
 
   onEditBtnClicked(wallet: Wallet) {
-    this.edit.emit(wallet);
+    this.selected = {...wallet};
   }
 
   onDeleteBtnClicked(wallet: Wallet) {
-    this.delete.emit(wallet);
+    
+  }
+
+  onSaveBtnClicked(wallet: Wallet) {
+    wallet.name = this.selected.name;
+    this.selected = null;
+  }
+
+  onCancelBtnClicked(wallet: Wallet) {
+    this.selected = null;
+  }
+
+  isSelected(wallet: Wallet) {
+    return this.selected && this.selected.moneyWalletId === wallet.moneyWalletId;
   }
 }

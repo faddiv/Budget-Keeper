@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -12,18 +13,21 @@ import { AppComponent } from './app.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { HomeComponent } from './home/home.component';
 import { WalletTableComponent } from './wallets/wallet-table/wallet-table.component';
+import { WalletTableRowComponent } from './wallets/wallet-table/wallet-table-row/wallet-table-row.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WalletsComponent,
     HomeComponent,
-    WalletTableComponent
+    WalletTableComponent,
+    WalletTableRowComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
     CommonModule,
+    FormsModule,
     RouterModule.forRoot([
   {
     path: "wallets",
