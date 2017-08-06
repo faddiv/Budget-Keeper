@@ -1,1 +1,5 @@
-<app-wallet-table [wallets]="wallets">
+<app-wallets-filter-row (reload)="reload()"></app-wallets-filter-row>
+<app-wallet-table [wallets]="wallets" *ngIf="!loading; else loadingTmpl"></app-wallet-table>
+<ng-template #loadingTmpl>
+    <h1>Loading...</h1>
+</ng-template>

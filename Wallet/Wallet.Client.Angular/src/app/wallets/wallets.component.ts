@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Wallet, WalletApi } from "walletApi";
+import { Component, OnInit } from "@angular/core";
+import { Wallet, WalletService, ApiError } from "walletApi";
+import { Observable } from "rxjs/Observable";
+
 @Component({
   moduleId: `${module.id}`,
   selector: "app-wallets",
@@ -8,24 +10,27 @@ import { Wallet, WalletApi } from "walletApi";
 })
 export class WalletsComponent implements OnInit {
 
-  wallets: Wallet[];
+  wallets: Wallet[] = [];
+  loading: boolean = false;
 
-  constructor(private walletApi: WalletApi) {
-    this.wallets = [];
+  constructor(private walletService: WalletService) {
   }
 
   ngOnInit() {
-    this.walletApi.apiV1WalletGet()
+    this.reload();
+  }
+
+  reload() {
+    this.wallets = [];
+    this.loading = true;
+    this.walletService.getAll()
       .subscribe(value => {
         this.wallets = value;
-      })
+        this.loading = false;
+      }, (error: ApiError) => {
+        console.error(error.message);
+        this.loading = false;
+      });
   }
 
-  edit(wallet: Wallet) {
-    alert("Edit: "+JSON.stringify(wallet));
-  }
-
-  delete(wallet: Wallet) {
-    alert("Delete: "+JSON.stringify(wallet));
-  }
 }

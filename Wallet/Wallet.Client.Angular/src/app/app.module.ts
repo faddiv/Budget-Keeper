@@ -1,19 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 //import {} from "ngx-bootstrap";
 
-import { BASE_PATH, WalletApi } from "../walletApi/index";
+import { BASE_PATH, WalletApiModule } from "../walletApi/index";
 import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { HomeComponent } from './home/home.component';
 import { WalletTableComponent } from './wallets/wallet-table/wallet-table.component';
-import { WalletTableRowComponent } from './wallets/wallet-table/wallet-table-row/wallet-table-row.component';
+import { GlobalErrorHandler } from "common/globalErrorHandler";
+import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-filter-row.component';
 
 @NgModule({
   declarations: [
@@ -21,13 +22,14 @@ import { WalletTableRowComponent } from './wallets/wallet-table/wallet-table-row
     WalletsComponent,
     HomeComponent,
     WalletTableComponent,
-    WalletTableRowComponent
+    WalletsFilterRowComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
     CommonModule,
     FormsModule,
+    WalletApiModule,
     RouterModule.forRoot([
   {
     path: "wallets",
@@ -41,8 +43,9 @@ import { WalletTableRowComponent } from './wallets/wallet-table/wallet-table-row
 ])
   ],
   providers: [
-    WalletApi,
-    {provide: BASE_PATH, useValue: environment.WALLET_API_PATH}],
+    {provide: BASE_PATH, useValue: environment.WALLET_API_PATH},
+    {provide: ErrorHandler, useClass: GlobalErrorHandler}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
