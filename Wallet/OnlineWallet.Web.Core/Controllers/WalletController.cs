@@ -8,7 +8,7 @@ namespace OnlineWallet.Web.Controllers
 {
     [SwaggerResponse((int)HttpStatusCode.Created, typeof(Wallet))]
     [SwaggerResponse((int)HttpStatusCode.OK, typeof(Wallet))]
-    public class WalletController : CrudController<Wallet>
+    public class WalletController : CrudController<Wallet, int>
     {
         public WalletController(IWalletDbContext db) : base(db)
         {

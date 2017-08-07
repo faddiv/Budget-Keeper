@@ -12,31 +12,50 @@ export class WalletTableComponent implements OnInit {
   @Input("wallets")
   wallets: Wallet[];
 
-  selected: Wallet;
+  @Output("save")
+  save = new EventEmitter();
+
+  @Output("delete")
+  delete = new EventEmitter<Wallet>();
+
+  @Input("edited")
+  edited: Wallet;
+
+  @Output("editedChange")
+  editedChange = new EventEmitter<Wallet>();
 
   constructor() { }
 
   ngOnInit() {
+    /*this.save.subscribe(result => {
+      console.log("save success:", result);
+      result.name = this.selected.name;
+      this.selected = null;
+    });*/
   }
 
   onEditBtnClicked(wallet: Wallet) {
-    this.selected = {...wallet};
+    this.setEdited({ ...wallet });
   }
 
   onDeleteBtnClicked(wallet: Wallet) {
-    
+    this.delete.emit(wallet);
   }
 
   onSaveBtnClicked(wallet: Wallet) {
-    wallet.name = this.selected.name;
-    this.selected = null;
+    this.save.emit();
   }
 
   onCancelBtnClicked(wallet: Wallet) {
-    this.selected = null;
+    this.setEdited(null);
   }
 
-  isSelected(wallet: Wallet) {
-    return this.selected && this.selected.moneyWalletId === wallet.moneyWalletId;
+  inEditMode(wallet: Wallet) {
+    return this.edited && this.edited.moneyWalletId === wallet.moneyWalletId;
+  }
+
+  private setEdited(wallet: Wallet) {
+    this.edited = wallet;
+    this.editedChange.emit(wallet);
   }
 }

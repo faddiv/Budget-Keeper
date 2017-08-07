@@ -41,6 +41,8 @@ namespace OnlineWallet.Web
                 options.AddPolicy("ApiCors", builder =>
                 {
                     builder.WithOrigins("http://localhost:4200");
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
                 });
             });
 

@@ -13,7 +13,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace OnlineWallet.Web.Controllers.Abstractions
 {
     [Route("api/v1/[controller]")]
-    public abstract class CrudController<TEntity> : Controller where TEntity : class
+    public abstract class CrudController<TEntity, TKey> : Controller where TEntity : class
     {
         #region  Constructors
 
@@ -37,9 +37,9 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         [HttpDelete("{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
-        public async Task<ActionResult> Delete(object id, CancellationToken token)
+        public async Task<ActionResult> Delete(TKey id, CancellationToken token)
         {
-            var entity = await DbSet.FindAsync(new[] {id}, token);
+            var entity = await DbSet.FindAsync(new object[] {id}, token);
             if (entity == null)
             {
                 return new NotFoundResult();
@@ -66,9 +66,9 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         }
 
         [HttpGet("{id}")]
-        public async Task<TEntity> GetById(object id, CancellationToken token)
+        public async Task<TEntity> GetById(TKey id, CancellationToken token)
         {
-            var value = await DbSet.FindAsync(new[] {id}, token);
+            var value = await DbSet.FindAsync(new object[] {id}, token);
             return value;
         }
 
@@ -102,13 +102,13 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         [SwaggerGenericResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "There is a validation error")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
-        public async Task<ActionResult> Put(object id, [FromBody] TEntity value, CancellationToken token)
+        public async Task<ActionResult> Put(TKey id, [FromBody] TEntity value, CancellationToken token)
         {
             if (!ModelState.IsValid)
             {
                 return ValidationError();
             }
-            var entity = await DbSet.FindAsync(new[] {id}, token);
+            var entity = await DbSet.FindAsync(new object[] {id}, token);
             if (entity == null)
             {
                 return new NotFoundResult();

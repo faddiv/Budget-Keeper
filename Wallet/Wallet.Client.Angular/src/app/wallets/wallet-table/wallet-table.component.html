@@ -9,17 +9,42 @@
     </thead>
     <tbody>
       <tr *ngFor="let wallet of wallets">
-        <td><span>{{wallet.moneyWalletId}}</span></td>
-        <td><span>{{wallet.name}}</span></td>
-        <td>
-          <button class="btn btn-danger pull-right" type="button" (click)="onDeleteBtnClicked(wallet)">
+        <td *ngIf="inEditMode(wallet); then editTemplate; else viewTemplate"></td>
+
+        <ng-template #viewTemplate>
+          <td>
+            <span>{{wallet.moneyWalletId}}</span>
+          </td>
+          <td>
+            <span>{{wallet.name}}</span>
+          </td>
+          <td>
+            <button class="btn btn-danger pull-right" type="button" (click)="onDeleteBtnClicked(wallet)">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
-          <button class="btn btn-primary pull-right" type="button" (click)="onEditBtnClicked(wallet)">
+            <button class="btn btn-primary pull-right" type="button" (click)="onEditBtnClicked(wallet)">
               <span class="glyphicon glyphicon-edit">
             </span>
         </button>
-        </td>
+          </td>
+        </ng-template>
+        <ng-template #editTemplate>
+          <td>
+            <span>{{edited.moneyWalletId}}</span>
+          </td>
+          <td>
+            <input type="text" name="name" [(ngModel)]="edited.name" class="form-control">
+          </td>
+          <td>
+            <button class="btn btn-danger pull-right" type="button" (click)="onCancelBtnClicked(edited)">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button class="btn btn-success pull-right" type="button" (click)="onSaveBtnClicked(edited)">
+              <span class="glyphicon glyphicon-ok">
+            </span>
+        </button>
+          </td>
+        </ng-template>
       </tr>
     </tbody>
   </table>

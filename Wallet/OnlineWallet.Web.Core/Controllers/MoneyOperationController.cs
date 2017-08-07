@@ -4,7 +4,7 @@ using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.Controllers
 {
-    public class MoneyOperationController : CrudController<MoneyOperation>
+    public class MoneyOperationController : CrudController<MoneyOperation, long>
     {
         public MoneyOperationController(IWalletDbContext db) : base(db)
         {

@@ -18,6 +18,10 @@ export class WalletService {
         return this.decorateCommonCatch(this.api.apiV1WalletGet(query.take, query.skip));
     }
 
+    update(wallet: Wallet)  : Observable<Wallet> {
+        return this.decorateCommonCatch(this.api.apiV1WalletByIdPut(wallet.moneyWalletId, wallet));
+    }
+
     private decorateCommonCatch<T>(observable: Observable<T>) : Observable<T> {
         return observable.catch((error: Response) => {
                 return Observable.throw(new ApiError(error, error.statusText || "Couldn't connect to the server"));
