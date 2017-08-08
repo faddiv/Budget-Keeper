@@ -46,7 +46,7 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             }
             DbSet.Remove(entity);
             await Db.SaveChangesAsync(token);
-            return new OkResult();
+            return Ok(new { success = true});
         }
 
         [HttpGet]

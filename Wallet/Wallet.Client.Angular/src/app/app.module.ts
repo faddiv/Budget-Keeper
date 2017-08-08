@@ -15,6 +15,7 @@ import { HomeComponent } from './home/home.component';
 import { WalletTableComponent } from './wallets/wallet-table/wallet-table.component';
 import { GlobalErrorHandler } from "common/globalErrorHandler";
 import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-filter-row.component';
+import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-
     WalletsComponent,
     HomeComponent,
     WalletTableComponent,
-    WalletsFilterRowComponent
+    WalletsFilterRowComponent,
+    WalletAddComponent
   ],
   imports: [
     BrowserModule,

@@ -10,21 +10,29 @@ import { ApiError } from "walletApi/apiError";
 @Injectable()
 export class WalletService {
     constructor(private api: WalletApi) {
-        
+
     }
 
-    getAll(query?: QueryParams) : Observable<Wallet[]> {
+    getAll(query?: QueryParams): Observable<Wallet[]> {
         query = query || {};
         return this.decorateCommonCatch(this.api.apiV1WalletGet(query.take, query.skip));
     }
 
-    update(wallet: Wallet)  : Observable<Wallet> {
+    update(wallet: Wallet): Observable<Wallet> {
         return this.decorateCommonCatch(this.api.apiV1WalletByIdPut(wallet.moneyWalletId, wallet));
     }
 
-    private decorateCommonCatch<T>(observable: Observable<T>) : Observable<T> {
+    insert(wallet: Wallet): Observable<Wallet> {
+        return this.decorateCommonCatch(this.api.apiV1WalletPost(null, wallet.name));
+    }
+
+    delete(wallet: Wallet): Observable<any> {
+        return this.decorateCommonCatch(this.api.apiV1WalletByIdDelete(wallet.moneyWalletId));
+    }
+    
+    private decorateCommonCatch<T>(observable: Observable<T>): Observable<T> {
         return observable.catch((error: Response) => {
-                return Observable.throw(new ApiError(error, error.statusText || "Couldn't connect to the server"));
-            })
+            return Observable.throw(new ApiError(error, error.statusText || "Couldn't connect to the server"));
+        })
     }
 }

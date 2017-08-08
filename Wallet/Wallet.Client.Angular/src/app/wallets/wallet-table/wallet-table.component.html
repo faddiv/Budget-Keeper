@@ -1,4 +1,4 @@
-<form action="">
+<form action="" (submit)="onSaveBtnClicked(edited, $event)">
   <table class="table table-responsive table-hover table-middle">
     <thead>
       <tr>
@@ -39,7 +39,7 @@
             <button class="btn btn-danger pull-right" type="button" (click)="onCancelBtnClicked(edited)">
               <span class="glyphicon glyphicon-remove"></span>
             </button>
-            <button class="btn btn-success pull-right" type="button" (click)="onSaveBtnClicked(edited)">
+            <button class="btn btn-success pull-right" type="submit">
               <span class="glyphicon glyphicon-ok">
             </span>
         </button>

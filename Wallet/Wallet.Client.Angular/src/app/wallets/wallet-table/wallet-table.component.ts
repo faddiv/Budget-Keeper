@@ -13,7 +13,7 @@ export class WalletTableComponent implements OnInit {
   wallets: Wallet[];
 
   @Output("save")
-  save = new EventEmitter();
+  save = new EventEmitter<Wallet>();
 
   @Output("delete")
   delete = new EventEmitter<Wallet>();
@@ -42,8 +42,9 @@ export class WalletTableComponent implements OnInit {
     this.delete.emit(wallet);
   }
 
-  onSaveBtnClicked(wallet: Wallet) {
-    this.save.emit();
+  onSaveBtnClicked(wallet: Wallet, $event: Event) {
+    $event.preventDefault();
+    this.save.emit(wallet);
   }
 
   onCancelBtnClicked(wallet: Wallet) {

@@ -34,26 +34,47 @@ export class WalletsComponent implements OnInit {
       });
   }
 
-  public save(wallet: Wallet) {
-    this.walletService.update(this.edited)
+  public insert(wallet: Wallet) {
+    this.edited = null;
+    this.walletService.insert(wallet)
       .subscribe(result => {
-        this.updateListItem(this.edited);
+        this.updateOrInsertListItem(result);
+      });
+
+  }
+
+  public update(wallet: Wallet) {
+    this.walletService.update(wallet)
+      .subscribe(result => {
+        this.updateOrInsertListItem(result);
         this.edited = null;
       });
 
   }
 
   public delete(wallet: Wallet) {
-    console.log("Delete:", wallet);
+    this.walletService.delete(wallet)
+      .subscribe(result => {
+        var  index = this.getElementIndex(wallet);
+        this.wallets.splice(index, 1);
+      });
   }
 
-  private updateListItem(wallet: Wallet) {
+  private updateOrInsertListItem(wallet: Wallet) {
+    var index = this.getElementIndex(wallet);
+    if (index === -1) {
+      this.wallets.push(wallet);
+    } else {
+      this.wallets[index] = wallet;
+    }
+  }
+
+  private getElementIndex(wallet: Wallet) {
     for (var index = 0; index < this.wallets.length; index++) {
       if (this.wallets[index].moneyWalletId == wallet.moneyWalletId) {
-        this.wallets[index] = wallet;
-        return;
+        return index
       }
     }
-    console.error("Wallet not found item:", wallet, "List:", this.wallets);
+    return -1;
   }
 }
