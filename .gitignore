@@ -24,6 +24,7 @@ launchSettings.json
 #misc
 Wallet/swagger/walletApi/
 Wallet/swagger/swagger-codegen-cli-2.2.3.jar
+*.jar
 
 # System Files
 .DS_Store

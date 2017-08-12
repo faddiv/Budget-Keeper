@@ -54,6 +54,10 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         public Task<List<TEntity>> GetAll(QueryRequest request, CancellationToken token)
         {
             var query = DbSet.AsQueryable();
+            if (!string.IsNullOrEmpty(request.Search))
+            {
+                query = GenericSearch(query, request.Search);
+            }
             if (request.Take.HasValue)
             {
                 query = query.Take(request.Take.Value);
@@ -63,6 +67,11 @@ namespace OnlineWallet.Web.Controllers.Abstractions
                 query = query.Skip(request.Skip.Value);
             }
             return query.ToAsyncEnumerable().ToList(token);
+        }
+
+        private IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string requestSearch)
+        {
+            throw new System.NotImplementedException();
         }
 
         [HttpGet("{id}")]

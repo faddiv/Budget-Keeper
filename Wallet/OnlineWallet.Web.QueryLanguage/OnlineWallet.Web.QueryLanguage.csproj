@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <PreBuildEvent>echo MSBuildBinPath: $(MSBuildBinPath)</PreBuildEvent>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.CodeGenerator" Version="4.6.4" />
+    <PackageReference Include="Antlr4.Runtime" Version="4.6.4" />
+  </ItemGroup>
+
+</Project>
