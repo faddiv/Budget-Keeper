@@ -9,16 +9,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Services.Swagger
 {
-    public class ApplyGenericResponseType :  IOperationFilter
+    public class ApplyGenericResponseType : IOperationFilter
     {
-        private static List<TAttribute> GetActionAttributes<TAttribute>(ApiDescription apiDesc)
-        {
-            return apiDesc.ControllerAttributes()
-                .OfType<TAttribute>()
-                .Union(apiDesc.ActionAttributes()
-                    .OfType<TAttribute>())
-                .ToList();
-        }
+        #region  Public Methods
+
         public void Apply(Operation operation, OperationFilterContext context)
         {
             var actionAttributes = GetActionAttributes<SwaggerGenericResponseAttribute>(context.ApiDescription);
@@ -33,7 +27,12 @@ namespace OnlineWallet.Web.Services.Swagger
                 ApplyAttribute(operation, context, attribute, actionDescriptor);
         }
 
-        private static void ApplyAttribute(Operation operation, OperationFilterContext context, SwaggerGenericResponseAttribute attribute, ControllerActionDescriptor actionDescriptor)
+        #endregion
+
+        #region  Nonpublic Methods
+
+        private static void ApplyAttribute(Operation operation, OperationFilterContext context,
+            SwaggerGenericResponseAttribute attribute, ControllerActionDescriptor actionDescriptor)
         {
             string key = attribute.StatusCode.ToString();
             Response response;
@@ -52,6 +51,15 @@ namespace OnlineWallet.Web.Services.Swagger
             operation.Responses[key] = response;
         }
 
+        private static List<TAttribute> GetActionAttributes<TAttribute>(ApiDescription apiDesc)
+        {
+            return apiDesc.ControllerAttributes()
+                .OfType<TAttribute>()
+                .Union(apiDesc.ActionAttributes()
+                    .OfType<TAttribute>())
+                .ToList();
+        }
+
         private static Type GetGenericArgument(TypeInfo typeInfo)
         {
             while (true)
@@ -65,5 +73,7 @@ namespace OnlineWallet.Web.Services.Swagger
                 typeInfo = typeInfo.BaseType.GetTypeInfo();
             }
         }
+
+        #endregion
     }
 }

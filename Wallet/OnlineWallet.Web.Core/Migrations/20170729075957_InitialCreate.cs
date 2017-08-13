@@ -1,12 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineWallet.Web.Migrations
 {
     public partial class InitialCreate : Migration
     {
+        #region  Nonpublic Methods
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "MoneyOperations");
+
+            migrationBuilder.DropTable(
+                name: "Wallets");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -14,20 +24,19 @@ namespace OnlineWallet.Web.Migrations
                 columns: table => new
                 {
                     MoneyWalletId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Wallets", x => x.MoneyWalletId);
-                });
+                constraints: table => { table.PrimaryKey("PK_Wallets", x => x.MoneyWalletId); });
 
             migrationBuilder.CreateTable(
                 name: "MoneyOperations",
                 columns: table => new
                 {
                     MoneyOperationId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Comment = table.Column<string>(maxLength: 2147483647, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     Direction = table.Column<int>(nullable: false),
@@ -52,13 +61,6 @@ namespace OnlineWallet.Web.Migrations
                 column: "WalletId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "MoneyOperations");
-
-            migrationBuilder.DropTable(
-                name: "Wallets");
-        }
+        #endregion
     }
 }

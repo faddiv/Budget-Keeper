@@ -5,14 +5,24 @@ namespace OnlineWallet.Web.Services
 {
     public class ReplaceParameter : ExpressionVisitor
     {
+        #region Fields
+
         private readonly ParameterExpression _source;
         private readonly ParameterExpression _target;
+
+        #endregion
+
+        #region  Constructors
 
         public ReplaceParameter(ParameterExpression source, ParameterExpression target)
         {
             _source = source;
             _target = target;
         }
+
+        #endregion
+
+        #region  Nonpublic Methods
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
@@ -22,5 +32,7 @@ namespace OnlineWallet.Web.Services
             }
             return base.VisitParameter(node);
         }
+
+        #endregion
     }
 }

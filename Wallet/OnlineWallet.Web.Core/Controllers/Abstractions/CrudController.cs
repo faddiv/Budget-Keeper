@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Models;
 using OnlineWallet.Web.Models.Queries;
 using OnlineWallet.Web.QueryLanguage;
-using OnlineWallet.Web.QueryLanguage.Parser;
 using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -31,17 +29,17 @@ namespace OnlineWallet.Web.Controllers.Abstractions
 
         public IWalletDbContext Db { get; }
 
-        protected abstract DbSet<TEntity> DbSet { get; }
-
         protected abstract ConditionVisitorBase<TEntity> ConditionBuilder { get; }
+
+        protected abstract DbSet<TEntity> DbSet { get; }
 
         #endregion
 
         #region  Public Methods
 
         [HttpDelete("{id}")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
+        [SwaggerResponse((int) HttpStatusCode.OK)]
+        [SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
         public async Task<ActionResult> Delete(TKey id, CancellationToken token)
         {
             var entity = await DbSet.FindAsync(new object[] {id}, token);
@@ -51,7 +49,7 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             }
             DbSet.Remove(entity);
             await Db.SaveChangesAsync(token);
-            return Ok(new { success = true});
+            return Ok(new {success = true});
         }
 
         [HttpGet]
@@ -74,16 +72,6 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             return query.ToAsyncEnumerable().ToList(token);
         }
 
-        protected virtual IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string searchText)
-        {
-            var parser = new QueryLanguageParser();
-            var condition = parser.Parse(searchText);
-            if (condition == null)
-                return query;
-            query = query.Where(ConditionBuilder.Visit(condition));
-            return query;
-        }
-
         [HttpGet("{id}")]
         public async Task<TEntity> GetById(TKey id, CancellationToken token)
         {
@@ -92,8 +80,8 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         }
 
         [HttpPost]
-        [SwaggerGenericResponse((int)HttpStatusCode.Created)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "There is a validation error")]
+        [SwaggerGenericResponse((int) HttpStatusCode.Created)]
+        [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
         public async Task<ActionResult> Post(TEntity value, CancellationToken token)
         {
             if (!ModelState.IsValid)
@@ -104,23 +92,14 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             await Db.SaveChangesAsync(token);
             return new JsonResult(value)
             {
-                StatusCode = (int)HttpStatusCode.Created
-            };
-        }
-
-        private ContentResult ValidationError()
-        {
-            return new ContentResult
-            {
-                Content = GetFirstError(),
-                StatusCode = (int)HttpStatusCode.BadRequest
+                StatusCode = (int) HttpStatusCode.Created
             };
         }
 
         [HttpPut("{id}")]
-        [SwaggerGenericResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "There is a validation error")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
+        [SwaggerGenericResponse((int) HttpStatusCode.OK)]
+        [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
+        [SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
         public async Task<ActionResult> Put(TKey id, [FromBody] TEntity value, CancellationToken token)
         {
             if (!ModelState.IsValid)
@@ -136,13 +115,36 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             await Db.SaveChangesAsync(token);
             return new JsonResult(value)
             {
-                StatusCode = (int)HttpStatusCode.OK
+                StatusCode = (int) HttpStatusCode.OK
             };
+        }
+
+        #endregion
+
+        #region  Nonpublic Methods
+
+        protected virtual IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string searchText)
+        {
+            var parser = new QueryLanguageParser();
+            var condition = parser.Parse(searchText);
+            if (condition == null)
+                return query;
+            query = query.Where(ConditionBuilder.Visit(condition));
+            return query;
         }
 
         private string GetFirstError()
         {
             return ModelState.Values.SelectMany(e => e.Errors).FirstOrDefault().ErrorMessage;
+        }
+
+        private ContentResult ValidationError()
+        {
+            return new ContentResult
+            {
+                Content = GetFirstError(),
+                StatusCode = (int) HttpStatusCode.BadRequest
+            };
         }
 
         #endregion

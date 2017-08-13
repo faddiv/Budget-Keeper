@@ -2,14 +2,20 @@
 {
     public class JsonResponse
     {
-        public bool Success { get; set; }
+        #region Properties
+
         public string Message { get; set; }
+        public bool Success { get; set; }
+
+        #endregion
     }
+
     public class JsonResponse<TData> : JsonResponse
     {
+        #region  Constructors
+
         public JsonResponse()
         {
-            
         }
 
         public JsonResponse(TData data, string message)
@@ -18,6 +24,13 @@
             Success = true;
             Message = message;
         }
+
+        #endregion
+
+        #region Properties
+
         public TData Data { get; set; }
+
+        #endregion
     }
 }

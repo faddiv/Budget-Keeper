@@ -7,11 +7,17 @@ namespace OnlineWallet.Web.Models.Queries
 {
     public abstract class ConditionVisitorBase<T>
     {
+        #region  Public Methods
+
         public Expression<Func<T, bool>> Visit(ICondition condition)
         {
             var par = Expression.Parameter(typeof(T));
             return Expression.Lambda<Func<T, bool>>(VisitInternal(condition, par), par);
         }
+
+        #endregion
+
+        #region  Nonpublic Methods
 
         protected Expression VisitInternal(ICondition condition, ParameterExpression par)
         {
@@ -30,7 +36,8 @@ namespace OnlineWallet.Web.Models.Queries
             throw new Exception();
         }
 
-        protected virtual Expression VisitLogicalOperatorCondition(LogicalOperatorCondition condition, ParameterExpression par)
+        protected virtual Expression VisitLogicalOperatorCondition(LogicalOperatorCondition condition,
+            ParameterExpression par)
         {
             if (condition.Operands.Count == 0) throw new Exception();
             Expression expr = VisitInternal(condition.Operands[0], par);
@@ -39,13 +46,16 @@ namespace OnlineWallet.Web.Models.Queries
                 if (condition.Operator == LogicalOperator.And)
                 {
                     expr = Expression.AndAlso(expr, VisitInternal(condition.Operands[i], par));
-                } else
+                }
+                else
                 {
                     expr = Expression.OrElse(expr, VisitInternal(condition.Operands[i], par));
                 }
             }
             return expr;
         }
+
+        protected abstract Expression<Func<T, bool>> VisitSearchTermCondition(SearchTermCondition condition);
 
         private Expression VisitSearchTermConditionCore(SearchTermCondition condition, ParameterExpression par)
         {
@@ -54,6 +64,7 @@ namespace OnlineWallet.Web.Models.Queries
             var body = replacer.Visit(searchTerm.Body);
             return body;
         }
-        protected abstract Expression<Func<T, bool>> VisitSearchTermCondition(SearchTermCondition condition);
+
+        #endregion
     }
 }

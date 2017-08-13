@@ -10,17 +10,23 @@ namespace OnlineWallet.Web.Core.Modules.WalletModule
 {
     public class TestLogicalOperatorsInConditionVisitorBase
     {
+        #region Fields
+
         private readonly WalletConditionBuilder _builder = new WalletConditionBuilder();
+
+        #endregion
+
+        #region  Public Methods
 
         [Fact(DisplayName = "It applies and operator")]
         public void AppliesAndOperator()
         {
             var wallets = new List<Wallet>
             {
-                new Wallet { Name = "1" },
-                new Wallet { Name = "2" },
-                new Wallet { Name = "3" },
-                new Wallet { Name = "1 2 3" }
+                new Wallet {Name = "1"},
+                new Wallet {Name = "2"},
+                new Wallet {Name = "3"},
+                new Wallet {Name = "1 2 3"}
             };
             var condition = new LogicalOperatorCondition(LogicalOperator.And)
             {
@@ -41,10 +47,10 @@ namespace OnlineWallet.Web.Core.Modules.WalletModule
         {
             var wallets = new List<Wallet>
             {
-                new Wallet { Name = "1" },
-                new Wallet { Name = "2" },
-                new Wallet { Name = "3" },
-                new Wallet { Name = "1 2 3" }
+                new Wallet {Name = "1"},
+                new Wallet {Name = "2"},
+                new Wallet {Name = "3"},
+                new Wallet {Name = "1 2 3"}
             };
             var condition = new LogicalOperatorCondition(LogicalOperator.Or)
             {
@@ -59,5 +65,7 @@ namespace OnlineWallet.Web.Core.Modules.WalletModule
             result.Should().HaveCount(3);
             result.Should().OnlyContain(e => e.Name.Contains("1") || e.Name.Contains("2"));
         }
+
+        #endregion
     }
 }

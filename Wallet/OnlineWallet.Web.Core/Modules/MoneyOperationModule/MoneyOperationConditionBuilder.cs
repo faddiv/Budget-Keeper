@@ -8,9 +8,14 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
 {
     public class MoneyOperationConditionBuilder : ConditionVisitorBase<MoneyOperation>
     {
-        protected override Expression<Func<MoneyOperation, bool>> VisitSearchTermCondition(SearchTermCondition condition)
+        #region  Nonpublic Methods
+
+        protected override Expression<Func<MoneyOperation, bool>> VisitSearchTermCondition(
+            SearchTermCondition condition)
         {
             return moneyOperation => moneyOperation.Name.Contains(condition.SearchTerm);
         }
+
+        #endregion
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,6 +7,8 @@ namespace OnlineWallet.Web.Services.Swagger
 {
     public class ApplySummariesOperationFilter : IOperationFilter
     {
+        #region  Public Methods
+
         public void Apply(Operation operation, OperationFilterContext context)
         {
             var controllerActionDescriptor = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
@@ -42,10 +42,14 @@ namespace OnlineWallet.Web.Services.Swagger
                 operation.Parameters[0].Description = $"a unique id for the {resourceName}";
             }
         }
+
+        #endregion
     }
 
     public class ApplyArrayOnGetAllOperationFilter : IOperationFilter
     {
+        #region  Public Methods
+
         public void Apply(Operation operation, OperationFilterContext context)
         {
             var controllerActionDescriptor = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
@@ -76,6 +80,7 @@ namespace OnlineWallet.Web.Services.Swagger
                 }
             }
         }
-    }
 
+        #endregion
+    }
 }

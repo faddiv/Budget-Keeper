@@ -6,6 +6,8 @@ namespace OnlineWallet.Web
 {
     public class Program
     {
+        #region  Public Methods
+
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
@@ -19,5 +21,7 @@ namespace OnlineWallet.Web
 
             host.Run();
         }
+
+        #endregion
     }
 }

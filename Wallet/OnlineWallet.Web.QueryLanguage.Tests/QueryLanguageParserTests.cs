@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using OnlineWallet.Web.QueryLanguage.Conditions;
 using Xunit;
@@ -7,7 +6,27 @@ namespace OnlineWallet.Web.QueryLanguage
 {
     public class QueryLanguageParserTests
     {
+        #region Fields
+
         private readonly QueryLanguageParser _parser = new QueryLanguageParser();
+
+        #endregion
+
+        #region  Public Methods
+
+        [Theory(DisplayName = "Can combine And and Or with right precedence")]
+        [InlineData("exp1 Or exp2 And exp3 Or exp4", "(exp1 Or exp2) And (exp3 Or exp4)")]
+        [InlineData("exp1 Or exp2 And exp3", "(exp1 Or exp2) And exp3")]
+        [InlineData("exp1 And exp3 Or exp4", "exp1 And (exp3 Or exp4)")]
+        [InlineData("exp1 Or exp2", "exp1 Or exp2")]
+        public void CanCombineAndAndOrWithRightPrecedence(string searchTerm, string expected)
+        {
+            //Act
+            var condition = _parser.Parse(searchTerm);
+            condition.Should().NotBeNull();
+            condition.Should().BeOfType<LogicalOperatorCondition>();
+            condition.ToString().Should().Be(expected);
+        }
 
         [Fact(DisplayName = "Empty and null string parsed to null")]
         public void EmptyAndNullStringParsedToNull()
@@ -15,17 +34,6 @@ namespace OnlineWallet.Web.QueryLanguage
             //Act
             _parser.Parse(null).Should().BeNull();
             _parser.Parse(string.Empty).Should().BeNull();
-        }
-
-        [Fact(DisplayName = "Parses simple word")]
-        public void ParsesSimpleWord()
-        {
-            //Act
-            var condition = _parser.Parse("Valami");
-            condition.Should().NotBeNull();
-            condition.Should().BeOfType<SearchTermCondition>();
-            var term = (SearchTermCondition) condition;
-            term.SearchTerm.Should().Be("Valami");
         }
 
         [Theory(DisplayName = "Parses more word")]
@@ -66,19 +74,17 @@ namespace OnlineWallet.Web.QueryLanguage
             condition.ToString().Should().Be(expected);
         }
 
-
-        [Theory(DisplayName = "Can combine And and Or with right precedence")]
-        [InlineData("exp1 Or exp2 And exp3 Or exp4", "(exp1 Or exp2) And (exp3 Or exp4)")]
-        [InlineData("exp1 Or exp2 And exp3", "(exp1 Or exp2) And exp3")]
-        [InlineData("exp1 And exp3 Or exp4", "exp1 And (exp3 Or exp4)")]
-        [InlineData("exp1 Or exp2", "exp1 Or exp2")]
-        public void CanCombineAndAndOrWithRightPrecedence(string searchTerm, string expected)
+        [Fact(DisplayName = "Parses simple word")]
+        public void ParsesSimpleWord()
         {
             //Act
-            var condition = _parser.Parse(searchTerm);
+            var condition = _parser.Parse("Valami");
             condition.Should().NotBeNull();
-            condition.Should().BeOfType<LogicalOperatorCondition>();
-            condition.ToString().Should().Be(expected);
+            condition.Should().BeOfType<SearchTermCondition>();
+            var term = (SearchTermCondition) condition;
+            term.SearchTerm.Should().Be("Valami");
         }
+
+        #endregion
     }
 }

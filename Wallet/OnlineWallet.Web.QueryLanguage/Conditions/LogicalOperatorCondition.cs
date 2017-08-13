@@ -1,19 +1,28 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace OnlineWallet.Web.QueryLanguage.Conditions
 {
     public class LogicalOperatorCondition : CommonCondition
     {
+        #region  Constructors
+
         public LogicalOperatorCondition(LogicalOperator @operator)
         {
             Operator = @operator;
             Operands = new List<ICondition>();
         }
-        public LogicalOperator Operator { get; }
+
+        #endregion
+
+        #region Properties
 
         public List<ICondition> Operands { get; }
+        public LogicalOperator Operator { get; }
+
+        #endregion
+
+        #region  Nonpublic Methods
 
         internal override void ToStringInternal(StringBuilder builder, bool topLevel)
         {
@@ -28,12 +37,14 @@ namespace OnlineWallet.Web.QueryLanguage.Conditions
                 {
                     builder.Append(' ').Append(Operator).Append(' ');
                 }
-                ((CommonCondition)Operands[i]).ToStringInternal(builder, false);
+                ((CommonCondition) Operands[i]).ToStringInternal(builder, false);
             }
             if (addParentheses)
             {
                 builder.Append(")");
             }
         }
+
+        #endregion
     }
 }

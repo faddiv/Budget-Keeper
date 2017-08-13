@@ -1,5 +1,4 @@
-﻿using System;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using OnlineWallet.Web.QueryLanguage.Conditions;
 using OnlineWallet.Web.QueryLanguage.Parser;
 using OnlineWallet.Web.QueryLanguage.Visitors;
@@ -8,6 +7,8 @@ namespace OnlineWallet.Web.QueryLanguage
 {
     public class QueryLanguageParser
     {
+        #region  Public Methods
+
         public ICondition Parse(string input)
         {
             if (string.IsNullOrEmpty(input)) return null;
@@ -25,7 +26,8 @@ namespace OnlineWallet.Web.QueryLanguage
             var visitor = new ConditionVisitor();
             var condition = visitor.Visit(root);
             return condition;
-
         }
+
+        #endregion
     }
 }

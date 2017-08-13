@@ -8,6 +8,8 @@ namespace OnlineWallet.Web.QueryLanguage.Conditions
 
     public abstract class CommonCondition : ICondition
     {
+        #region  Public Methods
+
         public override string ToString()
         {
             var builder = new StringBuilder();
@@ -15,6 +17,12 @@ namespace OnlineWallet.Web.QueryLanguage.Conditions
             return builder.ToString();
         }
 
+        #endregion
+
+        #region  Nonpublic Methods
+
         internal abstract void ToStringInternal(StringBuilder builder, bool topLevel);
+
+        #endregion
     }
 }

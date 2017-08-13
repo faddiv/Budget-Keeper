@@ -2,8 +2,12 @@
 {
     public class QueryRequest
     {
-        public int? Take { get; set; }
-        public int? Skip { get; set; }
+        #region Properties
+
         public string Search { get; set; }
+        public int? Skip { get; set; }
+        public int? Take { get; set; }
+
+        #endregion
     }
 }
