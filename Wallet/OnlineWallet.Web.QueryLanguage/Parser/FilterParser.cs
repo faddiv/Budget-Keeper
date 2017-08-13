@@ -33,10 +33,10 @@ public partial class FilterParser : Parser {
 	public const int
 		AND=1, OR=2, WORD=3, WHITESPACE=4;
 	public const int
-		RULE_filter = 0, RULE_primary = 1, RULE_orTerm = 2, RULE_andTerm = 3, 
+		RULE_filter = 0, RULE_primary = 1, RULE_andTerm = 2, RULE_orTerm = 3, 
 		RULE_searchTerm = 4;
 	public static readonly string[] ruleNames = {
-		"filter", "primary", "orTerm", "andTerm", "searchTerm"
+		"filter", "primary", "andTerm", "orTerm", "searchTerm"
 	};
 
 	private static readonly string[] _LiteralNames = {
@@ -142,11 +142,11 @@ public partial class FilterParser : Parser {
 	}
 
 	public partial class PrimaryContext : ParserRuleContext {
-		public OrTermContext[] orTerm() {
-			return GetRuleContexts<OrTermContext>();
+		public AndTermContext[] andTerm() {
+			return GetRuleContexts<AndTermContext>();
 		}
-		public OrTermContext orTerm(int i) {
-			return GetRuleContext<OrTermContext>(i);
+		public AndTermContext andTerm(int i) {
+			return GetRuleContext<AndTermContext>(i);
 		}
 		public PrimaryContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -182,7 +182,7 @@ public partial class FilterParser : Parser {
 			do {
 				{
 				{
-				State = 13; orTerm();
+				State = 13; andTerm();
 				}
 				}
 				State = 16;
@@ -202,79 +202,12 @@ public partial class FilterParser : Parser {
 		return _localctx;
 	}
 
-	public partial class OrTermContext : ParserRuleContext {
-		public AndTermContext[] andTerm() {
-			return GetRuleContexts<AndTermContext>();
-		}
-		public AndTermContext andTerm(int i) {
-			return GetRuleContext<AndTermContext>(i);
-		}
-		public ITerminalNode[] OR() { return GetTokens(FilterParser.OR); }
-		public ITerminalNode OR(int i) {
-			return GetToken(FilterParser.OR, i);
-		}
-		public OrTermContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_orTerm; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			IFilterParserListener typedListener = listener as IFilterParserListener;
-			if (typedListener != null) typedListener.EnterOrTerm(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			IFilterParserListener typedListener = listener as IFilterParserListener;
-			if (typedListener != null) typedListener.ExitOrTerm(this);
-		}
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IFilterParserVisitor<TResult> typedVisitor = visitor as IFilterParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOrTerm(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public OrTermContext orTerm() {
-		OrTermContext _localctx = new OrTermContext(_ctx, State);
-		EnterRule(_localctx, 4, RULE_orTerm);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 18; andTerm();
-			State = 23;
-			_errHandler.Sync(this);
-			_la = _input.La(1);
-			while (_la==OR) {
-				{
-				{
-				State = 19; Match(OR);
-				State = 20; andTerm();
-				}
-				}
-				State = 25;
-				_errHandler.Sync(this);
-				_la = _input.La(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.ReportError(this, re);
-			_errHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
 	public partial class AndTermContext : ParserRuleContext {
-		public SearchTermContext[] searchTerm() {
-			return GetRuleContexts<SearchTermContext>();
+		public OrTermContext[] orTerm() {
+			return GetRuleContexts<OrTermContext>();
 		}
-		public SearchTermContext searchTerm(int i) {
-			return GetRuleContext<SearchTermContext>(i);
+		public OrTermContext orTerm(int i) {
+			return GetRuleContext<OrTermContext>(i);
 		}
 		public ITerminalNode[] AND() { return GetTokens(FilterParser.AND); }
 		public ITerminalNode AND(int i) {
@@ -303,7 +236,74 @@ public partial class FilterParser : Parser {
 	[RuleVersion(0)]
 	public AndTermContext andTerm() {
 		AndTermContext _localctx = new AndTermContext(_ctx, State);
-		EnterRule(_localctx, 6, RULE_andTerm);
+		EnterRule(_localctx, 4, RULE_andTerm);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 18; orTerm();
+			State = 23;
+			_errHandler.Sync(this);
+			_la = _input.La(1);
+			while (_la==AND) {
+				{
+				{
+				State = 19; Match(AND);
+				State = 20; orTerm();
+				}
+				}
+				State = 25;
+				_errHandler.Sync(this);
+				_la = _input.La(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.ReportError(this, re);
+			_errHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class OrTermContext : ParserRuleContext {
+		public SearchTermContext[] searchTerm() {
+			return GetRuleContexts<SearchTermContext>();
+		}
+		public SearchTermContext searchTerm(int i) {
+			return GetRuleContext<SearchTermContext>(i);
+		}
+		public ITerminalNode[] OR() { return GetTokens(FilterParser.OR); }
+		public ITerminalNode OR(int i) {
+			return GetToken(FilterParser.OR, i);
+		}
+		public OrTermContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_orTerm; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IFilterParserListener typedListener = listener as IFilterParserListener;
+			if (typedListener != null) typedListener.EnterOrTerm(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IFilterParserListener typedListener = listener as IFilterParserListener;
+			if (typedListener != null) typedListener.ExitOrTerm(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IFilterParserVisitor<TResult> typedVisitor = visitor as IFilterParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOrTerm(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public OrTermContext orTerm() {
+		OrTermContext _localctx = new OrTermContext(_ctx, State);
+		EnterRule(_localctx, 6, RULE_orTerm);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
@@ -312,10 +312,10 @@ public partial class FilterParser : Parser {
 			State = 31;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
-			while (_la==AND) {
+			while (_la==OR) {
 				{
 				{
-				State = 27; Match(AND);
+				State = 27; Match(OR);
 				State = 28; searchTerm();
 				}
 				}
@@ -388,10 +388,10 @@ public partial class FilterParser : Parser {
 		"\x10\x3\x2\x2\x2\x6\x14\x3\x2\x2\x2\b\x1C\x3\x2\x2\x2\n$\x3\x2\x2\x2\f"+
 		"\r\x5\x4\x3\x2\r\xE\a\x2\x2\x3\xE\x3\x3\x2\x2\x2\xF\x11\x5\x6\x4\x2\x10"+
 		"\xF\x3\x2\x2\x2\x11\x12\x3\x2\x2\x2\x12\x10\x3\x2\x2\x2\x12\x13\x3\x2"+
-		"\x2\x2\x13\x5\x3\x2\x2\x2\x14\x19\x5\b\x5\x2\x15\x16\a\x4\x2\x2\x16\x18"+
+		"\x2\x2\x13\x5\x3\x2\x2\x2\x14\x19\x5\b\x5\x2\x15\x16\a\x3\x2\x2\x16\x18"+
 		"\x5\b\x5\x2\x17\x15\x3\x2\x2\x2\x18\x1B\x3\x2\x2\x2\x19\x17\x3\x2\x2\x2"+
 		"\x19\x1A\x3\x2\x2\x2\x1A\a\x3\x2\x2\x2\x1B\x19\x3\x2\x2\x2\x1C!\x5\n\x6"+
-		"\x2\x1D\x1E\a\x3\x2\x2\x1E \x5\n\x6\x2\x1F\x1D\x3\x2\x2\x2 #\x3\x2\x2"+
+		"\x2\x1D\x1E\a\x4\x2\x2\x1E \x5\n\x6\x2\x1F\x1D\x3\x2\x2\x2 #\x3\x2\x2"+
 		"\x2!\x1F\x3\x2\x2\x2!\"\x3\x2\x2\x2\"\t\x3\x2\x2\x2#!\x3\x2\x2\x2$%\a"+
 		"\x5\x2\x2%\v\x3\x2\x2\x2\x5\x12\x19!";
 	public static readonly ATN _ATN =

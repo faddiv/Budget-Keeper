@@ -47,18 +47,18 @@ public interface IFilterParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitPrimary([NotNull] FilterParser.PrimaryContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="FilterParser.orTerm"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitOrTerm([NotNull] FilterParser.OrTermContext context);
-
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="FilterParser.andTerm"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAndTerm([NotNull] FilterParser.AndTermContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="FilterParser.orTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOrTerm([NotNull] FilterParser.OrTermContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="FilterParser.searchTerm"/>.

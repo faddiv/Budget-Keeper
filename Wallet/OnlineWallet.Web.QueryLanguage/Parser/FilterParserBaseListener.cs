@@ -62,19 +62,6 @@ public partial class FilterParserBaseListener : IFilterParserListener {
 	public virtual void ExitPrimary([NotNull] FilterParser.PrimaryContext context) { }
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="FilterParser.orTerm"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOrTerm([NotNull] FilterParser.OrTermContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="FilterParser.orTerm"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOrTerm([NotNull] FilterParser.OrTermContext context) { }
-
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="FilterParser.andTerm"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -86,6 +73,19 @@ public partial class FilterParserBaseListener : IFilterParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAndTerm([NotNull] FilterParser.AndTermContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FilterParser.orTerm"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOrTerm([NotNull] FilterParser.OrTermContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FilterParser.orTerm"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOrTerm([NotNull] FilterParser.OrTermContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="FilterParser.searchTerm"/>.

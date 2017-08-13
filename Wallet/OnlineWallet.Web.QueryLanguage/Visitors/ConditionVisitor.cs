@@ -8,9 +8,16 @@ namespace OnlineWallet.Web.QueryLanguage.Visitors
 {
     class ConditionVisitor : FilterParserBaseVisitor<ICondition>
     {
+
+        public override ICondition VisitFilter(FilterParser.FilterContext context)
+        {
+            var visitFilter = base.VisitFilter(context);
+            return visitFilter;
+        }
+
         public override ICondition VisitPrimary(FilterParser.PrimaryContext context)
         {
-            var childTerms = context.orTerm();
+            var childTerms = context.andTerm();
             if (childTerms.Length == 1)
                 return Visit(childTerms[0]);
             var andCondition = new LogicalOperatorCondition(LogicalOperator.And);
@@ -23,7 +30,7 @@ namespace OnlineWallet.Web.QueryLanguage.Visitors
 
         public override ICondition VisitAndTerm(FilterParser.AndTermContext context)
         {
-            var childTerms = context.searchTerm();
+            var childTerms = context.orTerm();
             if (childTerms.Length == 1)
                 return Visit(childTerms[0]);
             var andCondition = new LogicalOperatorCondition(LogicalOperator.And);
@@ -36,14 +43,15 @@ namespace OnlineWallet.Web.QueryLanguage.Visitors
 
         public override ICondition VisitOrTerm(FilterParser.OrTermContext context)
         {
-            var condition = base.VisitOrTerm(context);
-            return condition;
-        }
-
-        public override ICondition VisitFilter(FilterParser.FilterContext context)
-        {
-            var visitFilter = base.VisitFilter(context);
-            return visitFilter;
+            var childTerms = context.searchTerm();
+            if (childTerms.Length == 1)
+                return Visit(childTerms[0]);
+            var andCondition = new LogicalOperatorCondition(LogicalOperator.Or);
+            foreach (var term in childTerms)
+            {
+                andCondition.Operands.Add(Visit(term));
+            }
+            return andCondition;
         }
 
 

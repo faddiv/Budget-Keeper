@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace OnlineWallet.Web.Models
+﻿namespace OnlineWallet.Web.Models.Queries
 {
     public class QueryRequest
     {

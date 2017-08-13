@@ -52,5 +52,33 @@ namespace OnlineWallet.Web.QueryLanguage
             condition.Should().BeOfType<LogicalOperatorCondition>();
             condition.ToString().Should().Be(expected);
         }
+
+        [Theory(DisplayName = "Parses more word connected or operator")]
+        [InlineData("exp1 Or exp2", "exp1 Or exp2")]
+        [InlineData("exp1 Or exp2 Or exp3", "exp1 Or exp2 Or exp3")]
+        [InlineData("exp1 or exp2", "exp1 Or exp2")]
+        public void ParsesMoreWordConnectedOrOperator(string searchTerm, string expected)
+        {
+            //Act
+            var condition = _parser.Parse(searchTerm);
+            condition.Should().NotBeNull();
+            condition.Should().BeOfType<LogicalOperatorCondition>();
+            condition.ToString().Should().Be(expected);
+        }
+
+
+        [Theory(DisplayName = "Can combine And and Or with right precedence")]
+        [InlineData("exp1 Or exp2 And exp3 Or exp4", "(exp1 Or exp2) And (exp3 Or exp4)")]
+        [InlineData("exp1 Or exp2 And exp3", "(exp1 Or exp2) And exp3")]
+        [InlineData("exp1 And exp3 Or exp4", "exp1 And (exp3 Or exp4)")]
+        [InlineData("exp1 Or exp2", "exp1 Or exp2")]
+        public void CanCombineAndAndOrWithRightPrecedence(string searchTerm, string expected)
+        {
+            //Act
+            var condition = _parser.Parse(searchTerm);
+            condition.Should().NotBeNull();
+            condition.Should().BeOfType<LogicalOperatorCondition>();
+            condition.ToString().Should().Be(expected);
+        }
     }
 }

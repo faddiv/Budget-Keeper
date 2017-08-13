@@ -1,6 +1,9 @@
-﻿namespace OnlineWallet.Web.QueryLanguage.Conditions
+﻿using System;
+using System.Text;
+
+namespace OnlineWallet.Web.QueryLanguage.Conditions
 {
-    public class SearchTermCondition : ICondition
+    public class SearchTermCondition : CommonCondition
     {
 
         public SearchTermCondition(string searchTerm)
@@ -10,9 +13,9 @@
 
         public string SearchTerm { get; }
 
-        public override string ToString()
+        internal override void ToStringInternal(StringBuilder builder, bool topLevel)
         {
-            return SearchTerm;
+            builder.Append(SearchTerm);
         }
     }
 }

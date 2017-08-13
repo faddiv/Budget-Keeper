@@ -7,16 +7,17 @@ filter
 	;
 
 primary
-	: orTerm+
-	;
-
-orTerm
-	: andTerm (OR andTerm)*
+	: andTerm+
 	;
 	
 andTerm
-	: searchTerm (AND searchTerm)*
+	: orTerm (AND orTerm)*
 	;
+
+orTerm
+	: searchTerm (OR searchTerm)*
+	;
+	
 
 searchTerm
 	: WORD

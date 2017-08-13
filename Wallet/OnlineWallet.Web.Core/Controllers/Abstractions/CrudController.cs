@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Models;
+using OnlineWallet.Web.Models.Queries;
+using OnlineWallet.Web.QueryLanguage;
+using OnlineWallet.Web.QueryLanguage.Parser;
 using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -29,6 +32,8 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         public IWalletDbContext Db { get; }
 
         protected abstract DbSet<TEntity> DbSet { get; }
+
+        protected abstract ConditionVisitorBase<TEntity> ConditionBuilder { get; }
 
         #endregion
 
@@ -69,9 +74,14 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             return query.ToAsyncEnumerable().ToList(token);
         }
 
-        private IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string requestSearch)
+        protected virtual IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string searchText)
         {
-            throw new System.NotImplementedException();
+            var parser = new QueryLanguageParser();
+            var condition = parser.Parse(searchText);
+            if (condition == null)
+                return query;
+            query = query.Where(ConditionBuilder.Visit(condition));
+            return query;
         }
 
         [HttpGet("{id}")]
