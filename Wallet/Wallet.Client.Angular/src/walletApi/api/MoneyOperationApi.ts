@@ -93,11 +93,12 @@ export class MoneyOperationApi {
     /**
      * 
      * @summary Returns all MoneyOperations
+     * @param search 
      * @param take 
      * @param skip 
      */
-    public apiV1MoneyOperationGet(take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
-        return this.apiV1MoneyOperationGetWithHttpInfo(take, skip, extraHttpRequestParams)
+    public apiV1MoneyOperationGet(search?: string, take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
+        return this.apiV1MoneyOperationGetWithHttpInfo(search, skip, take, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -113,14 +114,14 @@ export class MoneyOperationApi {
      * @param moneyOperationId a MoneyOperation representation
      * @param createdAt 
      * @param name 
-     * @param value 
+     * @param value  
      * @param direction 
-     * @param comment 
+     * @param comment
      * @param walletId 
      * @param walletMoneyWalletId 
-     * @param walletName 
+     * @param walletName
      */
-    public apiV1MoneyOperationPost(moneyOperationId?: number, createdAt?: Date, name?: string, value?: number, direction?: number, comment?: string, walletId?: number, walletMoneyWalletId?: number, walletName?: string, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+       public apiV1MoneyOperationPost(moneyOperationId?: number, createdAt?: Date, name?: string, value?: number, direction?: number, comment?: string, walletId?: number, walletMoneyWalletId?: number, walletName?: string, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
         return this.apiV1MoneyOperationPostWithHttpInfo(moneyOperationId, createdAt, name, value, direction, comment, walletId, walletMoneyWalletId, walletName, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -153,6 +154,9 @@ export class MoneyOperationApi {
 
         // to determine the Accept header
         let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
@@ -234,6 +238,9 @@ export class MoneyOperationApi {
 
         // to determine the Accept header
         let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
 
         headers.set('Content-Type', 'application/json');
@@ -256,18 +263,24 @@ export class MoneyOperationApi {
     /**
      * Returns all MoneyOperations
      * 
+     * @param search 
      * @param take 
      * @param skip 
      */
-    public apiV1MoneyOperationGetWithHttpInfo(take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public apiV1MoneyOperationGetWithHttpInfo(search?: string, take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/MoneyOperation';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        
+        if (search !== undefined) {
+            queryParameters.set('Search', <any>search);
+        }
+
         if (take !== undefined) {
             queryParameters.set('Take', <any>take);
         }
-
+        
         if (skip !== undefined) {
             queryParameters.set('Skip', <any>skip);
         }

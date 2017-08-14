@@ -1,4 +1,4 @@
-<app-wallets-filter-row (reload)="reload()"></app-wallets-filter-row>
+<app-wallets-filter-row (reload)="reload($event)"></app-wallets-filter-row>
 <app-wallet-add (save)="insert($event)"></app-wallet-add>
 <app-wallet-table 
     *ngIf="!loading; else loadingTmpl"

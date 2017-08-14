@@ -1,4 +1,4 @@
-<form id="walletFilterRow" class="form-inline">
+<form id="walletFilterRow" class="form-inline" (submit)="onReload($event)">
 
   <div class="form-group">
     <label for="searchText">Search</label>
@@ -6,7 +6,8 @@
            class="form-control" 
            id="searchText" 
            name="searchText" 
+           [(ngModel)]="searchText"
            placeholder="Start typing">
   </div>
-  <button type="button" class="btn btn-default pull-right" (click)="onReload()"><span class="glyphicon glyphicon-refresh"></span>Reload</button>
+  <button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh"></span>Reload</button>
 </form>

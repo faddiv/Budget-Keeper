@@ -6,6 +6,7 @@ import { QueryParams } from "./queryParams";
 import "rxjs/add/operator/catch"
 import "rxjs/add/observable/throw"
 import { ApiError } from "walletApi/apiError";
+import { decorateCommonCatch } from "./serviceHelpers";
 
 @Injectable()
 export class WalletService {
@@ -15,24 +16,18 @@ export class WalletService {
 
     getAll(query?: QueryParams): Observable<Wallet[]> {
         query = query || {};
-        return this.decorateCommonCatch(this.api.apiV1WalletGet(query.take, query.skip));
+        return decorateCommonCatch(this.api.apiV1WalletGet(query.search, query.take, query.skip));
     }
 
     update(wallet: Wallet): Observable<Wallet> {
-        return this.decorateCommonCatch(this.api.apiV1WalletByIdPut(wallet.moneyWalletId, wallet));
+        return decorateCommonCatch(this.api.apiV1WalletByIdPut(wallet.moneyWalletId, wallet));
     }
 
     insert(wallet: Wallet): Observable<Wallet> {
-        return this.decorateCommonCatch(this.api.apiV1WalletPost(null, wallet.name));
+        return decorateCommonCatch(this.api.apiV1WalletPost(null, wallet.name));
     }
 
     delete(wallet: Wallet): Observable<any> {
-        return this.decorateCommonCatch(this.api.apiV1WalletByIdDelete(wallet.moneyWalletId));
-    }
-    
-    private decorateCommonCatch<T>(observable: Observable<T>): Observable<T> {
-        return observable.catch((error: Response) => {
-            return Observable.throw(new ApiError(error, error.statusText || "Couldn't connect to the server"));
-        })
+        return decorateCommonCatch(this.api.apiV1WalletByIdDelete(wallet.moneyWalletId));
     }
 }

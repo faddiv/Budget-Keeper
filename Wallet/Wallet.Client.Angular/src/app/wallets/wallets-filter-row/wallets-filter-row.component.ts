@@ -8,14 +8,17 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 export class WalletsFilterRowComponent implements OnInit {
 
   @Output()
-  reload = new EventEmitter(false);
+  reload = new EventEmitter<string>(false);
+
+  searchText: string;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  onReload() {
-    this.reload.emit();
+  onReload($event: Event) {
+    $event.preventDefault();
+    this.reload.emit(this.searchText);
   }
 }

@@ -3,7 +3,7 @@ import { Wallet, WalletService, ApiError } from "walletApi";
 import { Observable } from "rxjs/Observable";
 
 @Component({
-  moduleId: `${module.id}`,
+  moduleId: module.id,
   selector: "app-wallets",
   templateUrl: './wallets.component.html',
   styleUrls: ['./wallets.component.css']
@@ -21,17 +21,22 @@ export class WalletsComponent implements OnInit {
     this.reload();
   }
 
-  reload() {
+  reload(searchText?: string) {
     this.wallets = [];
     this.loading = true;
-    this.walletService.getAll()
-      .subscribe(value => {
-        this.wallets = value;
-        this.loading = false;
-      }, (error: ApiError) => {
-        console.error(error.message);
-        this.loading = false;
-      });
+    this.walletService.getAll({
+      search: searchText
+    }).subscribe(value => {
+      this.wallets = value;
+      this.loading = false;
+    }, (error: ApiError) => {
+      console.error(error.message);
+      this.loading = false;
+    });
+  }
+
+  public search() {
+
   }
 
   public insert(wallet: Wallet) {
@@ -55,7 +60,7 @@ export class WalletsComponent implements OnInit {
   public delete(wallet: Wallet) {
     this.walletService.delete(wallet)
       .subscribe(result => {
-        var  index = this.getElementIndex(wallet);
+        var index = this.getElementIndex(wallet);
         this.wallets.splice(index, 1);
       });
   }

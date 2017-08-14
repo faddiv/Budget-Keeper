@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Wallet } from "walletApi";
 
 @Component({
-  moduleId: `${module.id}`,
+  moduleId: module.id,
   selector: 'app-wallet-table',
   templateUrl: './wallet-table.component.html',
   styleUrls: ['./wallet-table.component.scss']

@@ -93,11 +93,12 @@ export class WalletApi {
     /**
      * 
      * @summary Returns all Wallets
-     * @param take 
+     * @param search 
      * @param skip 
+     * @param take 
      */
-    public apiV1WalletGet(take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Array<models.Wallet>> {
-        return this.apiV1WalletGetWithHttpInfo(take, skip, extraHttpRequestParams)
+    public apiV1WalletGet(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.Wallet>> {
+        return this.apiV1WalletGetWithHttpInfo(search, skip, take, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -255,20 +256,25 @@ export class WalletApi {
     /**
      * Returns all Wallets
      * 
-     * @param take 
+     * @param search 
      * @param skip 
+     * @param take 
      */
-    public apiV1WalletGetWithHttpInfo(take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public apiV1WalletGetWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Wallet';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (take !== undefined) {
-            queryParameters.set('Take', <any>take);
+        if (search !== undefined) {
+            queryParameters.set('Search', <any>search);
         }
 
         if (skip !== undefined) {
             queryParameters.set('Skip', <any>skip);
+        }
+
+        if (take !== undefined) {
+            queryParameters.set('Take', <any>take);
         }
 
         // to determine the Content-Type header
