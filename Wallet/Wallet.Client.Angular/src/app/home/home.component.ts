@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { MoneyOperation } from "walletApi";
 
 @Component({
   moduleId: module.id,
@@ -8,9 +9,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  linesToSave: MoneyOperation[];
+  nameValue: string;
+  price: string;
 
-  ngOnInit() {
+  @ViewChild("name")
+  nameElement: ElementRef;
+
+  @ViewChild("#price")
+  priceElement;
+
+  constructor() { 
+
   }
 
+  startNew() {
+    this.linesToSave = [];
+  }
+
+  ngOnInit() {
+    this.startNew();
+  }
+
+  add($event: Event) {
+    $event.preventDefault();
+    console.log(this);
+    if(!name) {
+      
+    }
+  }
 }

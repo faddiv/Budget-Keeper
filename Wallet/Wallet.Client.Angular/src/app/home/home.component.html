@@ -1,3 +1,16 @@
-<p>
-  home works!
-</p>
+<section class="row">
+  <form (submit)="add($event)">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" class="form-control" #name [(ngModel)]="nameValue">
+    </div>
+    <div class="form-group">
+      <label for="price">price</label>
+      <input type="text" id="price" name="price" class="form-control" [(ngModel)]="price">
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+</section>
+<section class="row">
+
+</section>
