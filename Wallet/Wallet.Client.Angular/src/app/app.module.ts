@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -31,6 +31,7 @@ import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
     HttpModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     WalletApiModule,
     RouterModule.forRoot([
   {
