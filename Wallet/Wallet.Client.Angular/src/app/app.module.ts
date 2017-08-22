@@ -16,6 +16,8 @@ import { WalletTableComponent } from './wallets/wallet-table/wallet-table.compon
 import { GlobalErrorHandler } from "common/globalErrorHandler";
 import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-filter-row.component';
 import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
+import { AddTransactionComponent } from './home/add-transaction/add-transaction.component';
+import { DirectivesModule } from "directives";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
     HomeComponent,
     WalletTableComponent,
     WalletsFilterRowComponent,
-    WalletAddComponent
+    WalletAddComponent,
+    AddTransactionComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +36,7 @@ import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
     FormsModule,
     ReactiveFormsModule,
     WalletApiModule,
+    DirectivesModule,
     RouterModule.forRoot([
   {
     path: "wallets",

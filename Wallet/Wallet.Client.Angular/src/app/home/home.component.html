@@ -1,15 +1,6 @@
 <section class="row">
-  <form [formGroup]="form" (ngSubmit)="add()">
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" class="form-control" formControlName="name">
-    </div>
-    <div class="form-group">
-      <label for="price">price</label>
-      <input type="text" id="price" name="price" class="form-control" formControlName="price">
-    </div>
-    <button type="submit" class="btn btn-primary">Add</button>
-  </form>
+  <app-add-transaction (add)="addLine($event)">
+  </app-add-transaction>
 </section>
 <section class="row">
   <table class="table">

@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="onAdd()">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" class="form-control" formControlName="name" [focus-command]="focusName" autofocus>
+    <div *ngIf="name.invalid && submitted" class="alert alert-danger">
+      <div *ngIf="name.errors.required">
+        Name is required.
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="price">price</label>
+    <input type="text" id="price" name="price" class="form-control" formControlName="price">
+    <div *ngIf="price.invalid && submitted" class="alert alert-danger">
+      <div *ngIf="price.errors.required">
+        Price is required.
+      </div>
+      <div *ngIf="price.errors.pattern">
+        Price must be a number.
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Add</button>
+</form>
