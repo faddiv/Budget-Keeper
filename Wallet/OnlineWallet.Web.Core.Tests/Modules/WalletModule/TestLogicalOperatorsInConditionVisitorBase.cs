@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.WalletModule;
 using OnlineWallet.Web.QueryLanguage.Conditions;
 using Xunit;
 
-namespace OnlineWallet.Web.Core.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.WalletModule
 {
+    [Trait("Logical operators in condition", null)]
     public class TestLogicalOperatorsInConditionVisitorBase
     {
         #region Fields
@@ -18,7 +18,7 @@ namespace OnlineWallet.Web.Core.Modules.WalletModule
 
         #region  Public Methods
 
-        [Fact(DisplayName = "It applies and operator")]
+        [Fact(DisplayName = "Applies and operator")]
         public void AppliesAndOperator()
         {
             var wallets = new List<Wallet>
@@ -42,7 +42,7 @@ namespace OnlineWallet.Web.Core.Modules.WalletModule
             result.Should().Contain(e => e.Name == "1 2 3");
         }
 
-        [Fact(DisplayName = "It applies or operator")]
+        [Fact(DisplayName = "Applies or operator")]
         public void ItAppliesOrOperator()
         {
             var wallets = new List<Wallet>

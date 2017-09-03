@@ -13,17 +13,17 @@
 import * as models from './models';
 
 export interface MoneyOperation {
-    moneyOperationId?: number;
+    comment?: string;
 
     createdAt: Date;
+
+    direction: MoneyOperation.DirectionEnum;
+
+    moneyOperationId?: number;
 
     name: string;
 
     value: number;
-
-    direction: MoneyOperation.DirectionEnum;
-
-    comment?: string;
 
     walletId: number;
 

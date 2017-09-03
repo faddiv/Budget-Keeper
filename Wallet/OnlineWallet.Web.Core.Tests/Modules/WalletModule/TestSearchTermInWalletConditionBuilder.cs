@@ -2,12 +2,12 @@
 using System.Linq;
 using FluentAssertions;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.WalletModule;
 using OnlineWallet.Web.QueryLanguage.Conditions;
 using Xunit;
 
-namespace OnlineWallet.Web.Core.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.WalletModule
 {
+    [Trait("Search term in WalletConditionBuilder", null)]
     public class TestSearchTermInWalletConditionBuilder
     {
         #region Fields

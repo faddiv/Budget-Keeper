@@ -18,6 +18,7 @@ import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-
 import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
 import { AddTransactionComponent } from './home/add-transaction/add-transaction.component';
 import { DirectivesModule } from "directives";
+import { ImportTransactionsComponent } from './home/import-transactions/import-transactions.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { DirectivesModule } from "directives";
     WalletTableComponent,
     WalletsFilterRowComponent,
     WalletAddComponent,
-    AddTransactionComponent
+    AddTransactionComponent,
+    ImportTransactionsComponent
   ],
   imports: [
     BrowserModule,

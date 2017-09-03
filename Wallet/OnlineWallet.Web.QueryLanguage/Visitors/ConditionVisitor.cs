@@ -3,7 +3,7 @@ using OnlineWallet.Web.QueryLanguage.Parser;
 
 namespace OnlineWallet.Web.QueryLanguage.Visitors
 {
-    class ConditionVisitor : FilterParserBaseVisitor<ICondition>
+    internal class ConditionVisitor : FilterParserBaseVisitor<ICondition>
     {
         #region  Public Methods
 

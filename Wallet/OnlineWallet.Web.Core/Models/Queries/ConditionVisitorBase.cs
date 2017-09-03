@@ -23,13 +23,11 @@ namespace OnlineWallet.Web.Models.Queries
         {
             if (condition == null)
                 return null;
-            var searchTermCondition = condition as SearchTermCondition;
-            if (searchTermCondition != null)
+            if (condition is SearchTermCondition searchTermCondition)
             {
                 return VisitSearchTermConditionCore(searchTermCondition, par);
             }
-            var logicalOperatorCondition = condition as LogicalOperatorCondition;
-            if (logicalOperatorCondition != null)
+            if (condition is LogicalOperatorCondition logicalOperatorCondition)
             {
                 return VisitLogicalOperatorCondition(logicalOperatorCondition, par);
             }
@@ -43,13 +41,16 @@ namespace OnlineWallet.Web.Models.Queries
             Expression expr = VisitInternal(condition.Operands[0], par);
             for (int i = 1; i < condition.Operands.Count; i++)
             {
-                if (condition.Operator == LogicalOperator.And)
+                switch (condition.Operator)
                 {
-                    expr = Expression.AndAlso(expr, VisitInternal(condition.Operands[i], par));
-                }
-                else
-                {
-                    expr = Expression.OrElse(expr, VisitInternal(condition.Operands[i], par));
+                    case LogicalOperator.And:
+                        expr = Expression.AndAlso(expr, VisitInternal(condition.Operands[i], par));
+                        break;
+                    case LogicalOperator.Or:
+                        expr = Expression.OrElse(expr, VisitInternal(condition.Operands[i], par));
+                        break;
+                    default:
+                        throw new Exception();
                 }
             }
             return expr;

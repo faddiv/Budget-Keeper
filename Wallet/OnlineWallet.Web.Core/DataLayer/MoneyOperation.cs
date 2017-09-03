@@ -26,7 +26,7 @@ namespace OnlineWallet.Web.DataLayer
         public string Name { get; set; }
 
         [Required]
-        public double Value { get; set; }
+        public int Value { get; set; }
 
         [JsonIgnore]
         public Wallet Wallet { get; set; }

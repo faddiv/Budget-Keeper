@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
+    <PackageReference Include="CsvHelper" Version="2.16.3" />
     <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="1.1.10" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
@@ -27,6 +28,7 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OnlineWallet.ExportImport\OnlineWallet.ExportImport.csproj" />
     <ProjectReference Include="..\OnlineWallet.Web.QueryLanguage\OnlineWallet.Web.QueryLanguage.csproj" />
   </ItemGroup>
 

@@ -1,8 +1,8 @@
 ﻿namespace OnlineWallet.Web.DataLayer
 {
-    public enum MoneyDirection
+    public enum MoneyDirection : short
     {
-        Spending = -1,
+        Expense = -1,
         Income = 1
     }
 }

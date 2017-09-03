@@ -3,9 +3,7 @@ import { Wallet } from "./model/models";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { QueryParams } from "./queryParams";
-import "rxjs/add/operator/catch"
-import "rxjs/add/observable/throw"
-import { ApiError } from "walletApi/apiError";
+import { ApiError } from "./apiError";
 import { decorateCommonCatch } from "./serviceHelpers";
 
 @Injectable()
@@ -16,7 +14,7 @@ export class WalletService {
 
     getAll(query?: QueryParams): Observable<Wallet[]> {
         query = query || {};
-        return decorateCommonCatch(this.api.apiV1WalletGet(query.search, query.take, query.skip));
+        return decorateCommonCatch(this.api.apiV1WalletGet(query.search, query.skip, query.take));
     }
 
     update(wallet: Wallet): Observable<Wallet> {

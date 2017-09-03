@@ -46,7 +46,7 @@ export class WalletApi {
      * @summary Deletes a Wallet by unique id
      * @param id a unique id for the Wallet
      */
-    public apiV1WalletByIdDelete(id: number, extraHttpRequestParams?: any): Observable<{}> {
+    public apiV1WalletByIdDelete(id: number, extraHttpRequestParams?: any): Observable<models.Wallet> {
         return this.apiV1WalletByIdDeleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -224,9 +224,10 @@ export class WalletApi {
         }
         // to determine the Content-Type header
         let consumes: string[] = [
+            'application/json-patch+json',
             'application/json',
             'text/json',
-            'application/json-patch+json'
+            'application/_*+json'
         ];
 
         // to determine the Accept header

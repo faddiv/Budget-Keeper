@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.Swagger;
@@ -93,11 +94,14 @@ namespace OnlineWallet.Web
                         Title = "Wallet API"
                     }
                 );
-
+                
                 c.OperationFilter<ApplySummariesOperationFilter>();
                 c.OperationFilter<ApplyGenericResponseType>();
                 c.OperationFilter<ApplyArrayOnGetAllOperationFilter>();
+                c.OperationFilter<ApplyFileUploadOperationFilter>();
             });
+
+            services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 
         #endregion

@@ -4,6 +4,7 @@ using Xunit;
 
 namespace OnlineWallet.Web.QueryLanguage
 {
+    [Trait("QueryLanguageParser", null)]
     public class QueryLanguageParserTests
     {
         #region Fields

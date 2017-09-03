@@ -11,9 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.Core.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.QueryLanguage.Tests", "OnlineWallet.Web.QueryLanguage.Tests\OnlineWallet.Web.QueryLanguage.Tests.csproj", "{F600C559-D33C-4CE2-ABAC-D6E942E6706A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineWallet.Migration", "OnlineWallet.Migration\OnlineWallet.Migration.csproj", "{8E9166AF-2D77-40D0-BEF3-6FF23A72A772}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineWallet.Migration.Tests", "OnlineWallet.Migration.Tests\OnlineWallet.Migration.Tests.csproj", "{C1FAE23C-2D7F-48EF-879D-197D10FF8FA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineWallet.ExportImport", "OnlineWallet.ExportImport\OnlineWallet.ExportImport.csproj", "{835981C1-58F2-43D1-B272-7C1FA899EC82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +35,10 @@ Global
 		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8E9166AF-2D77-40D0-BEF3-6FF23A72A772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E9166AF-2D77-40D0-BEF3-6FF23A72A772}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E9166AF-2D77-40D0-BEF3-6FF23A72A772}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E9166AF-2D77-40D0-BEF3-6FF23A72A772}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1FAE23C-2D7F-48EF-879D-197D10FF8FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1FAE23C-2D7F-48EF-879D-197D10FF8FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1FAE23C-2D7F-48EF-879D-197D10FF8FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1FAE23C-2D7F-48EF-879D-197D10FF8FA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -46,7 +46,7 @@ export class MoneyOperationApi {
      * @summary Deletes a MoneyOperation by unique id
      * @param id a unique id for the MoneyOperation
      */
-    public apiV1MoneyOperationByIdDelete(id: number, extraHttpRequestParams?: any): Observable<{}> {
+    public apiV1MoneyOperationByIdDelete(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
         return this.apiV1MoneyOperationByIdDeleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -94,10 +94,10 @@ export class MoneyOperationApi {
      * 
      * @summary Returns all MoneyOperations
      * @param search 
-     * @param take 
      * @param skip 
+     * @param take 
      */
-    public apiV1MoneyOperationGet(search?: string, take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
+    public apiV1MoneyOperationGet(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
         return this.apiV1MoneyOperationGetWithHttpInfo(search, skip, take, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -111,18 +111,18 @@ export class MoneyOperationApi {
     /**
      * 
      * @summary Creates a MoneyOperation
-     * @param moneyOperationId a MoneyOperation representation
+     * @param comment a MoneyOperation representation
      * @param createdAt 
-     * @param name 
-     * @param value  
      * @param direction 
-     * @param comment
-     * @param walletId 
+     * @param moneyOperationId 
+     * @param name 
+     * @param value 
      * @param walletMoneyWalletId 
-     * @param walletName
+     * @param walletName 
+     * @param walletId 
      */
-       public apiV1MoneyOperationPost(moneyOperationId?: number, createdAt?: Date, name?: string, value?: number, direction?: number, comment?: string, walletId?: number, walletMoneyWalletId?: number, walletName?: string, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
-        return this.apiV1MoneyOperationPostWithHttpInfo(moneyOperationId, createdAt, name, value, direction, comment, walletId, walletMoneyWalletId, walletName, extraHttpRequestParams)
+    public apiV1MoneyOperationPost(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+        return this.apiV1MoneyOperationPostWithHttpInfo(comment, createdAt, direction, moneyOperationId, name, value, walletMoneyWalletId, walletName, walletId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -231,9 +231,10 @@ export class MoneyOperationApi {
         }
         // to determine the Content-Type header
         let consumes: string[] = [
+            'application/json-patch+json',
             'application/json',
             'text/json',
-            'application/json-patch+json'
+            'application/_*+json'
         ];
 
         // to determine the Accept header
@@ -264,25 +265,24 @@ export class MoneyOperationApi {
      * Returns all MoneyOperations
      * 
      * @param search 
-     * @param take 
      * @param skip 
+     * @param take 
      */
-    public apiV1MoneyOperationGetWithHttpInfo(search?: string, take?: number, skip?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public apiV1MoneyOperationGetWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/MoneyOperation';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        
         if (search !== undefined) {
             queryParameters.set('Search', <any>search);
         }
 
-        if (take !== undefined) {
-            queryParameters.set('Take', <any>take);
-        }
-        
         if (skip !== undefined) {
             queryParameters.set('Skip', <any>skip);
+        }
+
+        if (take !== undefined) {
+            queryParameters.set('Take', <any>take);
         }
 
         // to determine the Content-Type header
@@ -313,27 +313,35 @@ export class MoneyOperationApi {
     /**
      * Creates a MoneyOperation
      * 
-     * @param moneyOperationId a MoneyOperation representation
+     * @param comment a MoneyOperation representation
      * @param createdAt 
+     * @param direction 
+     * @param moneyOperationId 
      * @param name 
      * @param value 
-     * @param direction 
-     * @param comment 
-     * @param walletId 
      * @param walletMoneyWalletId 
      * @param walletName 
+     * @param walletId 
      */
-    public apiV1MoneyOperationPostWithHttpInfo(moneyOperationId?: number, createdAt?: Date, name?: string, value?: number, direction?: number, comment?: string, walletId?: number, walletMoneyWalletId?: number, walletName?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public apiV1MoneyOperationPostWithHttpInfo(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/MoneyOperation';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (moneyOperationId !== undefined) {
-            queryParameters.set('MoneyOperationId', <any>moneyOperationId);
+        if (comment !== undefined) {
+            queryParameters.set('Comment', <any>comment);
         }
 
         if (createdAt !== undefined) {
             queryParameters.set('CreatedAt', <any>createdAt.toISOString());
+        }
+
+        if (direction !== undefined) {
+            queryParameters.set('Direction', <any>direction);
+        }
+
+        if (moneyOperationId !== undefined) {
+            queryParameters.set('MoneyOperationId', <any>moneyOperationId);
         }
 
         if (name !== undefined) {
@@ -344,18 +352,6 @@ export class MoneyOperationApi {
             queryParameters.set('Value', <any>value);
         }
 
-        if (direction !== undefined) {
-            queryParameters.set('Direction', <any>direction);
-        }
-
-        if (comment !== undefined) {
-            queryParameters.set('Comment', <any>comment);
-        }
-
-        if (walletId !== undefined) {
-            queryParameters.set('WalletId', <any>walletId);
-        }
-
         if (walletMoneyWalletId !== undefined) {
             queryParameters.set('Wallet.MoneyWalletId', <any>walletMoneyWalletId);
         }
@@ -364,12 +360,19 @@ export class MoneyOperationApi {
             queryParameters.set('Wallet.Name', <any>walletName);
         }
 
+        if (walletId !== undefined) {
+            queryParameters.set('WalletId', <any>walletId);
+        }
+
         // to determine the Content-Type header
         let consumes: string[] = [
         ];
 
         // to determine the Accept header
         let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
         ];
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
