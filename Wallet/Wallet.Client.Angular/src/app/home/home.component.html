@@ -3,6 +3,10 @@
   </app-add-transaction>
 </section>
 <section class="row">
+    <app-import-transactions (load)="addLines($event)">
+    </app-import-transactions>
+</section>
+<section class="row">
   <table class="table">
     <thead>
       <tr>

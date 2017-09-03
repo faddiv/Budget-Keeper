@@ -1,3 +1,12 @@
-<p>
-  import-transactions works!
-</p>
+<form [formGroup]="form" (ngSubmit)="onLoad()">
+  <div class="form-group">
+    <label for="file">File</label>
+    <input type="file" id="file" name="file" class="form-control" formControlName="file">
+    <div *ngIf="name.invalid && submitted" class="alert alert-danger">
+      <div *ngIf="name.errors.required">
+        Please select a file.
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Upload</button>
+</form>

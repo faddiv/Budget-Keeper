@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MoneyOperation } from "walletApi";
+import { MoneyOperation, ExportImportRow } from "walletApi";
 
 @Component({
   moduleId: module.id,
@@ -10,7 +10,7 @@ import { MoneyOperation } from "walletApi";
 export class HomeComponent implements OnInit {
   linesToSave: MoneyOperation[];
 
-  constructor() { 
+  constructor() {
 
   }
 
@@ -24,5 +24,19 @@ export class HomeComponent implements OnInit {
 
   addLine(newItem: MoneyOperation) {
     this.linesToSave.push(newItem);
+  }
+
+  addLines(newItems: Array<ExportImportRow>) {
+    for (var index = 0; index < newItems.length; index++) {
+      var element = newItems[index];
+      this.linesToSave.push({
+        comment: element.comment,
+        createdAt: element.created,
+        direction: element.direction,
+        name: element.name,
+        value: element.amount,
+        walletId: 0
+      });
+    }
   }
 }
