@@ -12,6 +12,7 @@ namespace OnlineWallet.Web.Services.Swagger
             if (context.ApiDescription.ActionDescriptor.Parameters.Count != 1) return;
             var param = context.ApiDescription.ActionDescriptor.Parameters[0];
             if (param.ParameterType != typeof(IFormFile)) return;
+            operation.Consumes.Clear();
             operation.Consumes.Add("multipart/form-data");
             operation.Parameters.Clear();
             operation.Parameters.Add(new NonBodyParameter

@@ -26,7 +26,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
 
         #region  Public Methods
 
-        [HttpPost("transactions")]
+        [HttpPost("[action]")]
         public List<ExportImportRow> Transactions(IFormFile file)
         {
             var list = _csvExportImport.ImportMoneyOperations(file.OpenReadStream()).ToList();

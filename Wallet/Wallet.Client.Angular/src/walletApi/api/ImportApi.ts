@@ -62,12 +62,11 @@ export class ImportApi {
      * 
      * @param file 
      */
-    public apiV1ImportTransactionsPostWithHttpInfo(file: any, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/Import/transactions';
+    public apiV1ImportTransactionsPostWithHttpInfo(file: File, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Import/Transactions';
 
-        let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        let formParams = new URLSearchParams();
+        let formData = new FormData();
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
@@ -85,17 +84,14 @@ export class ImportApi {
             'text/json'
         ];
 
-        headers.set('Content-Type', 'application/x-www-form-urlencoded');
-
         if (file !== undefined) {
-            formParams.set('file', <any>file);
+            formData.append('file', <any>file, file.name);
         }
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
-            body: formParams.toString(),
-            search: queryParameters,
+            body: formData,
             withCredentials:this.configuration.withCredentials
         });
         // https://github.com/swagger-api/swagger-codegen/issues/4037
