@@ -1,0 +1,18 @@
+<form (ngSubmit)="onLoad()">
+  <div class="form-group">
+    <label for="file">File</label>
+    <input type="file" id="file" name="file" class="form-control" [(fvFile)]="fileList">
+    <div *ngIf="errors.invalid" class="alert alert-danger">
+      <span *ngIf="!errors.validFile">
+        Invalid File. Please select a valid .csv file.
+      </span>
+      <span *ngIf="!errors.filled">
+        Please select a .csv file.
+      </span>
+      <button type="button" class="close" (click)="dismissError()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" [ngClass]="{disabled: loading}">{{loading ? 'Uploading...' : 'Upload'}}</button>
+</form>

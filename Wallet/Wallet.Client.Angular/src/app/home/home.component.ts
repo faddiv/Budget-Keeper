@@ -26,17 +26,4 @@ export class HomeComponent implements OnInit {
     this.linesToSave.push(newItem);
   }
 
-  addLines(newItems: Array<ExportImportRow>) {
-    for (var index = 0; index < newItems.length; index++) {
-      var element = newItems[index];
-      this.linesToSave.push({
-        comment: element.comment,
-        createdAt: element.created,
-        direction: element.direction,
-        name: element.name,
-        value: element.amount,
-        walletId: 0
-      });
-    }
-  }
 }

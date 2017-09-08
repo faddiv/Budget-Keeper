@@ -13,6 +13,6 @@ export class ImportService {
     }
 
     uploadTransactions(file: File): Observable<ExportImportRow[]> {
-        return decorateCommonCatch(this.api.apiV1ImportTransactionsPost(file));
+        return decorateCommonCatch(this.api.apiV1ImportProcessTransactionsPost(file));
     }
 }

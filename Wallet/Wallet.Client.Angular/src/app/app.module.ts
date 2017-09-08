@@ -18,7 +18,8 @@ import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-
 import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
 import { AddTransactionComponent } from './home/add-transaction/add-transaction.component';
 import { DirectivesModule } from "directives";
-import { ImportTransactionsComponent } from './home/import-transactions/import-transactions.component';
+import { ImportTransactionsComponent } from './import/import-transactions/import-transactions.component';
+import { ImportComponent } from './import/import.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ImportTransactionsComponent } from './home/import-transactions/import-t
     WalletsFilterRowComponent,
     WalletAddComponent,
     AddTransactionComponent,
-    ImportTransactionsComponent
+    ImportTransactionsComponent,
+    ImportComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +45,10 @@ import { ImportTransactionsComponent } from './home/import-transactions/import-t
   {
     path: "wallets",
     component: WalletsComponent
+  },
+  {
+    path: "import",
+    component: ImportComponent
   },
   {
     path: "",

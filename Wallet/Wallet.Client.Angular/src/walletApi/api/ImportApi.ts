@@ -45,8 +45,8 @@ export class ImportApi {
      * 
      * @param file 
      */
-    public apiV1ImportTransactionsPost(file: any, extraHttpRequestParams?: any): Observable<Array<models.ExportImportRow>> {
-        return this.apiV1ImportTransactionsPostWithHttpInfo(file, extraHttpRequestParams)
+    public apiV1ImportProcessTransactionsPost(file: any, extraHttpRequestParams?: any): Observable<Array<models.ExportImportRow>> {
+        return this.apiV1ImportProcessTransactionsPostWithHttpInfo(file, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -62,15 +62,15 @@ export class ImportApi {
      * 
      * @param file 
      */
-    public apiV1ImportTransactionsPostWithHttpInfo(file: File, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/Import/Transactions';
+    public apiV1ImportProcessTransactionsPostWithHttpInfo(file: File, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Import/ProcessTransactions';
 
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         let formData = new FormData();
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling apiV1ImportTransactionsPost.');
+            throw new Error('Required parameter file was null or undefined when calling apiV1ImportProcessTransactionsPost.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
