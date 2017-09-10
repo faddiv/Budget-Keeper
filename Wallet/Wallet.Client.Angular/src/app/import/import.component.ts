@@ -9,6 +9,7 @@ import { ExportImportRow } from "walletApi";
 export class ImportComponent implements OnInit {
   linesToSave: ExportImportRow[] = [];
   current: string;
+  fullListEnabled = false;
 
   constructor() { }
 
@@ -20,9 +21,18 @@ export class ImportComponent implements OnInit {
 
   addLines(newItems: Array<ExportImportRow>) {
     this.linesToSave = newItems || [];
+    this.enableView();
   }
 
   show(menu: string) {
     this.current = menu;
+    this.enableView();
+  }
+
+  private enableView() {
+    if(!this.linesToSave || !this.linesToSave.length) return;
+    if(this.current === 'full') {
+      this.fullListEnabled = true;
+    }
   }
 }
