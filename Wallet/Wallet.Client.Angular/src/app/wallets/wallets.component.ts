@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Wallet, WalletService, ApiError } from "walletApi";
+import { ListHelpers } from "walletCommon";
 import { Observable } from "rxjs/Observable";
+import { WalletViewModel } from "./WalletViewModel";
 
 @Component({
   moduleId: module.id,
@@ -10,7 +12,7 @@ import { Observable } from "rxjs/Observable";
 })
 export class WalletsComponent implements OnInit {
 
-  wallets: Wallet[] = [];
+  wallets: WalletViewModel[] = [];
   edited: Wallet;
   loading: boolean = false;
 
@@ -26,6 +28,8 @@ export class WalletsComponent implements OnInit {
     this.loading = true;
     this.walletService.getAll({
       search: searchText
+    }).map(walletList => {
+      return walletList.map(item => new WalletViewModel(item));
     }).subscribe(value => {
       this.wallets = value;
       this.loading = false;
@@ -39,47 +43,39 @@ export class WalletsComponent implements OnInit {
 
   }
 
-  public insert(wallet: Wallet) {
+  public insert(wallet: WalletViewModel) {
     this.edited = null;
-    this.walletService.insert(wallet)
-      .subscribe(result => {
-        this.updateOrInsertListItem(result);
-      });
+    this.walletService.insert(wallet).map(walletEntity => {
+      return new WalletViewModel(walletEntity);
+    }).subscribe(result => {
+      this.updateOrInsertListItem(result);
+    });
 
   }
 
   public update(wallet: Wallet) {
-    this.walletService.update(wallet)
-      .subscribe(result => {
-        this.updateOrInsertListItem(result);
-        this.edited = null;
-      });
+    this.walletService.update(wallet).map(walletEntity => {
+      return new WalletViewModel(walletEntity);
+    }).subscribe(result => {
+      this.updateOrInsertListItem(result);
+      this.edited = null;
+    });
 
   }
 
   public delete(wallet: Wallet) {
     this.walletService.delete(wallet)
       .subscribe(result => {
-        var index = this.getElementIndex(wallet);
-        this.wallets.splice(index, 1);
+        ListHelpers.remove(this.wallets, wallet);
       });
   }
 
-  private updateOrInsertListItem(wallet: Wallet) {
-    var index = this.getElementIndex(wallet);
+  private updateOrInsertListItem(wallet: WalletViewModel) {
+    var index = ListHelpers.indexById(this.wallets, wallet);
     if (index === -1) {
       this.wallets.push(wallet);
     } else {
       this.wallets[index] = wallet;
     }
-  }
-
-  private getElementIndex(wallet: Wallet) {
-    for (var index = 0; index < this.wallets.length; index++) {
-      if (this.wallets[index].moneyWalletId == wallet.moneyWalletId) {
-        return index
-      }
-    }
-    return -1;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Wallet } from "walletApi";
+import { WalletViewModel } from 'app/wallets/WalletViewModel';
 
 @Component({
   moduleId: module.id,
@@ -10,19 +10,19 @@ import { Wallet } from "walletApi";
 export class WalletTableComponent implements OnInit {
 
   @Input("wallets")
-  wallets: Wallet[];
+  wallets: WalletViewModel[];
 
   @Output("save")
-  save = new EventEmitter<Wallet>();
+  save = new EventEmitter<WalletViewModel>();
 
   @Output("delete")
-  delete = new EventEmitter<Wallet>();
+  delete = new EventEmitter<WalletViewModel>();
 
   @Input("edited")
-  edited: Wallet;
+  edited: WalletViewModel;
 
   @Output("editedChange")
-  editedChange = new EventEmitter<Wallet>();
+  editedChange = new EventEmitter<WalletViewModel>();
 
   constructor() { }
 
@@ -34,28 +34,28 @@ export class WalletTableComponent implements OnInit {
     });*/
   }
 
-  onEditBtnClicked(wallet: Wallet) {
+  onEditBtnClicked(wallet: WalletViewModel) {
     this.setEdited({ ...wallet });
   }
 
-  onDeleteBtnClicked(wallet: Wallet) {
+  onDeleteBtnClicked(wallet: WalletViewModel) {
     this.delete.emit(wallet);
   }
 
-  onSaveBtnClicked(wallet: Wallet, $event: Event) {
+  onSaveBtnClicked(wallet: WalletViewModel, $event: Event) {
     $event.preventDefault();
     this.save.emit(wallet);
   }
 
-  onCancelBtnClicked(wallet: Wallet) {
+  onCancelBtnClicked(wallet: WalletViewModel) {
     this.setEdited(null);
   }
 
-  inEditMode(wallet: Wallet) {
+  inEditMode(wallet: WalletViewModel) {
     return this.edited && this.edited.moneyWalletId === wallet.moneyWalletId;
   }
 
-  private setEdited(wallet: Wallet) {
+  private setEdited(wallet: WalletViewModel) {
     this.edited = wallet;
     this.editedChange.emit(wallet);
   }

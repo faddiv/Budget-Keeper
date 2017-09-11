@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Wallet } from "walletApi";
+import { WalletViewModel } from 'app/wallets/WalletViewModel';
 
 @Component({
   selector: 'app-wallet-add',
@@ -9,7 +10,7 @@ import { Wallet } from "walletApi";
 export class WalletAddComponent implements OnInit {
 
   @Output()
-  save = new EventEmitter<Wallet>();
+  save = new EventEmitter<WalletViewModel>();
   name: string;
 
   constructor() { }
@@ -19,9 +20,9 @@ export class WalletAddComponent implements OnInit {
 
   onSubmit($event: Event) {
     $event.preventDefault();
-    this.save.emit({
+    this.save.emit(new WalletViewModel({
       name: this.name
-    });
+    }));
     this.name = "";
   }
 }

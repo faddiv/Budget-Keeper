@@ -6,14 +6,14 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 //import {} from "ngx-bootstrap";
 
-import { BASE_PATH, WalletApiModule } from "../walletApi/index";
+import { BASE_PATH, WalletApiModule } from "walletApi";
 import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { HomeComponent } from './home/home.component';
 import { WalletTableComponent } from './wallets/wallet-table/wallet-table.component';
-import { GlobalErrorHandler } from "common/globalErrorHandler";
+import { GlobalErrorHandler } from "walletCommon";
 import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-filter-row.component';
 import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
 import { AddTransactionComponent } from './home/add-transaction/add-transaction.component';

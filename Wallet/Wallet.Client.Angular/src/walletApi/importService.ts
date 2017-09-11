@@ -1,5 +1,5 @@
 import { ImportApi } from "./api/api";
-import { ExportImportRow } from "./model/models";
+import { ExportImportRow } from "./model/index";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { QueryParams } from "./queryParams";

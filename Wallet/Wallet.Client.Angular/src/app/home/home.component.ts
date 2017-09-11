@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MoneyOperation, ExportImportRow } from "walletApi";
+import { MoneyOperation, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
+import { ListHelpers } from 'walletCommon';
 
 @Component({
   moduleId: module.id,
@@ -9,8 +10,9 @@ import { MoneyOperation, ExportImportRow } from "walletApi";
 })
 export class HomeComponent implements OnInit {
   linesToSave: MoneyOperation[];
+  wallets: Wallet[] = [];
 
-  constructor() {
+  constructor(private walletService: WalletService) {
 
   }
 
@@ -19,6 +21,13 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.walletService.getAll({
+      search: ""
+    }).subscribe(value => {
+      this.wallets = value;
+    }, (error: ApiError) => {
+      console.error(error.message);
+    });
     this.startNew();
   }
 
@@ -26,4 +35,11 @@ export class HomeComponent implements OnInit {
     this.linesToSave.push(newItem);
   }
 
+  onDeleteBtnClicked(item: MoneyOperation) {
+    ListHelpers.remove(this.linesToSave, item);
+  }
+
+  walletNameById(walletId: number) {
+    return this.wallets.filter(wallet => wallet.moneyWalletId == walletId).map(wallet => wallet.name)[0];
+  }
 }

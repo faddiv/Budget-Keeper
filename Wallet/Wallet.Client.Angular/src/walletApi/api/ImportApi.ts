@@ -20,7 +20,7 @@ import { Response, ResponseContentType }                     from '@angular/http
 import { Observable }                                        from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import * as models                                           from '../model/models';
+import * as models                                           from '../model/index';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
