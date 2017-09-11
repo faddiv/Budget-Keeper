@@ -13,6 +13,7 @@ packages/
 # IDE - Visual Studio
 .vs/
 launchSettings.json
+*.user
 
 # IDE - VSCode
 .vscode/*
