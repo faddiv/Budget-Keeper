@@ -20,7 +20,7 @@ import { AddTransactionComponent } from './home/add-transaction/add-transaction.
 import { DirectivesModule } from "directives";
 import { ImportTransactionsComponent } from './import/import-transactions/import-transactions.component';
 import { ImportComponent } from './import/import.component';
-import { AskIfFormDirtyServiceService } from './common/ask-if-form-dirty-service.service';
+import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
 
 @NgModule({
   declarations: [
@@ -54,7 +54,7 @@ import { AskIfFormDirtyServiceService } from './common/ask-if-form-dirty-service
   {
     path: "",
     component: HomeComponent,
-    canDeactivate: [AskIfFormDirtyServiceService]
+    canDeactivate: [AskIfFormDirtyService]
   },
   
 ])
@@ -62,7 +62,7 @@ import { AskIfFormDirtyServiceService } from './common/ask-if-form-dirty-service
   providers: [
     {provide: BASE_PATH, useValue: environment.WALLET_API_PATH},
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
-    AskIfFormDirtyServiceService
+    AskIfFormDirtyService
   ],
   bootstrap: [AppComponent]
 })

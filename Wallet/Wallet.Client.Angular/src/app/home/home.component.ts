@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MoneyOperation, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
 import { ListHelpers } from 'walletCommon';
-import { IDirtyForm } from 'app/common/ask-if-form-dirty-service.service';
+import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
 
 @Component({
   moduleId: module.id,
@@ -9,7 +9,7 @@ import { IDirtyForm } from 'app/common/ask-if-form-dirty-service.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, IDirtyForm {
+export class HomeComponent implements OnInit, ICleanForm {
   linesToSave: MoneyOperation[];
   wallets: Wallet[] = [];
 
@@ -44,7 +44,8 @@ export class HomeComponent implements OnInit, IDirtyForm {
     return this.wallets.filter(wallet => wallet.moneyWalletId == walletId).map(wallet => wallet.name)[0];
   }
 
-  isDirtyForm() {
-    return this.linesToSave.length;
+  @HostListener('window:beforeunload')
+  isCleanForm() {
+    return !this.linesToSave.length;
   }
 }
