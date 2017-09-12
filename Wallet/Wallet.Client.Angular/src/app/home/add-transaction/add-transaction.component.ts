@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { MoneyOperation, Wallet, ApiError } from "walletApi";
 import { ICommand } from "directives";
@@ -8,7 +8,7 @@ import { ICommand } from "directives";
   templateUrl: './add-transaction.component.html',
   styleUrls: ['./add-transaction.component.scss']
 })
-export class AddTransactionComponent implements OnInit {
+export class AddTransactionComponent implements OnInit, OnChanges {
 
   form = new FormGroup({
     wallet: new FormControl("", [
@@ -27,7 +27,7 @@ export class AddTransactionComponent implements OnInit {
   submitted = false;
 
   @Input("wallets")
-  wallets: Wallet[] = [];
+  wallets: Wallet[];
 
   focusName: ICommand<any> = {};
 
@@ -37,6 +37,14 @@ export class AddTransactionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.wallets && this.wallets.length && !this.wallet.enabled) {
+      this.wallet.enable();
+    } else {
+      this.wallet.disable();
+    }
   }
 
   get wallet(): FormControl {

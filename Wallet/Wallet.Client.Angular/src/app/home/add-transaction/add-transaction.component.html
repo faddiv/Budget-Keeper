@@ -6,6 +6,14 @@
           <option *ngFor="let item of wallets" [value]="item.moneyWalletId">{{item.name}}</option>
         </select>
       </div>
+      <div *ngIf="wallet.invalid && submitted" class="alert alert-danger col-sm-12">
+        <span *ngIf="wallet.errors.required">
+          Wallet is required.
+        </span>
+        <button type="button" class="close" (click)="dismissError()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
     </div>
   <div class="form-group">
     <label for="name" class="col-sm-2">Name</label>
