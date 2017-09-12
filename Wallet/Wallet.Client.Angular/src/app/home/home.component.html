@@ -1,5 +1,5 @@
 <section class="row">
-  <app-add-transaction (add)="addLine($event)" [wallets]="wallets">
+  <app-add-transaction (add)="addLine($event)" [wallets]="wallets" (save)="saveAll($event)">
   </app-add-transaction>
 </section>
 <section class="row">

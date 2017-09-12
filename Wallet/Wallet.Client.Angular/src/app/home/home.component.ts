@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit, ICleanForm {
   }
 
   ngOnInit() {
+    this.startNew();
     this.walletService.getAll({
       search: ""
     }).subscribe(value => {
@@ -29,11 +30,15 @@ export class HomeComponent implements OnInit, ICleanForm {
     }, (error: ApiError) => {
       console.error(error.message);
     });
-    this.startNew();
   }
 
   addLine(newItem: MoneyOperation) {
     this.linesToSave.push(newItem);
+  }
+
+  saveAll() {
+    alert("save");
+    this.startNew();
   }
 
   onDeleteBtnClicked(item: MoneyOperation) {

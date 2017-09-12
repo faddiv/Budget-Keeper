@@ -34,6 +34,9 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   @Output("add")
   add = new EventEmitter<MoneyOperation>();
 
+  @Output("save")
+  save = new EventEmitter<any>();
+
   constructor() { }
 
   ngOnInit() {
