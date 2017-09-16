@@ -1,4 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Controllers.Abstractions;
 using OnlineWallet.Web.DataLayer;
@@ -27,5 +33,28 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
         protected override DbSet<MoneyOperation> DbSet => Db.MoneyOperations;
 
         #endregion
+
+        [HttpPost("batchSave")]
+        public async Task BatchSave(List<MoneyOperation> operations, CancellationToken token)
+        {
+            var existingIds = operations.Where(e => e.MoneyOperationId > 0).Select(e => e.MoneyOperationId).ToList();
+            var existingEntities = DbSet.Where(e => existingIds.Contains(e.MoneyOperationId)).ToList();
+            foreach (var operation in operations)
+            {
+                if (operation.MoneyOperationId != 0)
+                {
+                    var existingEntity = existingEntities.Find(e => e.MoneyOperationId == operation.MoneyOperationId);
+                    if (existingEntity == null)
+                    {
+                        throw new Exception("Money operation doesn't exists");
+                    }
+                    Db.UpdateEntityValues(existingEntity, operation);
+                } else {
+                    await DbSet.AddAsync(operation, token);
+                    token.ThrowIfCancellationRequested();
+                }
+            }
+            await Db.SaveChangesAsync(token);
+        }
     }
 }

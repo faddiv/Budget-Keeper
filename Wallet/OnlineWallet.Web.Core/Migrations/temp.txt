@@ -1,0 +1,8 @@
+﻿
+            migrationBuilder.InsertData("Wallets",
+                new[] { "MoneyWalletId", "Name" },
+                new object[,]
+                {
+                    {1,"Cash"},
+                    {2,"BankAccount"}
+                });

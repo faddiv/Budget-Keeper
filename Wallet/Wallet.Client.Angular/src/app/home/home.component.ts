@@ -37,6 +37,10 @@ export class HomeComponent implements OnInit, ICleanForm {
   }
 
   saveAll() {
+    if(!this.linesToSave.length) {
+      alert("Nothing to save");
+      return;
+    }
     alert("save");
     this.startNew();
   }

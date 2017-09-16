@@ -11,7 +11,7 @@ using System;
 namespace OnlineWallet.Web.Migrations
 {
     [DbContext(typeof(WalletDbContext))]
-    [Migration("20170904184534_Initial")]
+    [Migration("20170916160601_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,9 @@ namespace OnlineWallet.Web.Migrations
                 {
                     b.Property<long>("MoneyOperationId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(200);
 
                     b.Property<string>("Comment")
                         .HasMaxLength(2147483647);

@@ -28,6 +28,7 @@ namespace OnlineWallet.Web.Migrations
                 {
                     MoneyOperationId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Category = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", maxLength: 2147483647, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Direction = table.Column<short>(type: "smallint", nullable: false),
@@ -46,11 +47,6 @@ namespace OnlineWallet.Web.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_MoneyOperations_WalletId",
-                table: "MoneyOperations",
-                column: "WalletId");
-
             migrationBuilder.InsertData("Wallets",
                 new[] { "MoneyWalletId", "Name" },
                 new object[,]
@@ -58,6 +54,11 @@ namespace OnlineWallet.Web.Migrations
                     {1,"Cash"},
                     {2,"BankAccount"}
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MoneyOperations_WalletId",
+                table: "MoneyOperations",
+                column: "WalletId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -68,6 +69,5 @@ namespace OnlineWallet.Web.Migrations
             migrationBuilder.DropTable(
                 name: "Wallets");
         }
-
     }
 }

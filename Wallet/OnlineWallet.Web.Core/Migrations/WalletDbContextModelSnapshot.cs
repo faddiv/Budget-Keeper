@@ -25,6 +25,9 @@ namespace OnlineWallet.Web.Migrations
                     b.Property<long>("MoneyOperationId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Category")
+                        .HasMaxLength(200);
+
                     b.Property<string>("Comment")
                         .HasMaxLength(2147483647);
 

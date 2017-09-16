@@ -15,6 +15,7 @@ namespace OnlineWallet.ExportImport
         public int? Amount { get; set; }
         public MoneySource Source { get; set; }
         public MoneyDirection Direction { get; set; }
+        public long? MatchingId { get; set; }
 
         public bool ContentEquals(ExportImportRow other)
         {
