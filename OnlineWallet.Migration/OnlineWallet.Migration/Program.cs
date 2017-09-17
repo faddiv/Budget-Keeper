@@ -23,12 +23,12 @@ namespace OnlineWallet.Migration
             {
                 var exporter = new CsvExportImport();
                 var xlstLoader = new XlstLoader();
-                exporter.ExportMoneyOperations(programParameters.InputFiles
+                exporter.ExportTransactions(programParameters.InputFiles
                         .CollectFileList()
                         .ReadIncomes(xlstLoader)
                         .FilterZeroEntries(),
                     AddExtension(programParameters.IncomeOutput));
-                exporter.ExportMoneyOperations(programParameters.InputFiles
+                exporter.ExportTransactions(programParameters.InputFiles
                         .CollectFileList()
                         .ReadExpenses(xlstLoader),
                     AddExtension(programParameters.ExpenseOutput));

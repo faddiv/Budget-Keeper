@@ -23,15 +23,15 @@ namespace OnlineWallet.Migration
             var exporter = new CsvExportImport();
 
             //Act
-            exporter.ExportMoneyOperations(expenses, ExportresultCsv);
+            exporter.ExportTransactions(expenses, ExportresultCsv);
 
             //Assert
             File.ReadAllText(ExportresultCsv).Should().Be(
                 File.ReadAllText(ExpectedExpensesPath));
         }
 
-        [Fact(DisplayName = "Imports MoneyOperations")]
-        public void ImportsMoneyOperations()
+        [Fact(DisplayName = "Imports Transactions")]
+        public void ImportsTransactions()
         {
             //Arrange
             var expectation = GetSampleData();
@@ -40,7 +40,7 @@ namespace OnlineWallet.Migration
             //Act
             List<ExportImportRow> result;
             using (var fileStream = new FileStream(ExpectedExpensesPath, FileMode.Open))
-                result = exporter.ImportMoneyOperations(fileStream).ToList();
+                result = exporter.ImportTransactions(fileStream).ToList();
 
             //Assert
             result.Should().NotBeNullOrEmpty();
