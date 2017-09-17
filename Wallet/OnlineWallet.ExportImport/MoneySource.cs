@@ -2,7 +2,7 @@
 {
     public enum MoneySource
     {
-        Cash,
-        BankAccount
+        Cash = 1,
+        BankAccount = 2
     }
 }

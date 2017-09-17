@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExportImportRow } from "walletApi";
+import { ExportImportRow, Transaction } from "walletApi";
 
 @Component({
   selector: 'app-import',
@@ -7,7 +7,7 @@ import { ExportImportRow } from "walletApi";
   styleUrls: ['./import.component.scss']
 })
 export class ImportComponent implements OnInit {
-  linesToSave: ExportImportRow[] = [];
+  linesToSave: Transaction[] = [];
   current: string;
   fullListEnabled = false;
 
@@ -19,8 +19,17 @@ export class ImportComponent implements OnInit {
   ngOnInit() {
   }
 
-  addLines(newItems: Array<ExportImportRow>) {
-    this.linesToSave = newItems || [];
+  addLines(newItems: Array<ExportImportRow> = []) {
+    this.linesToSave = newItems.map(e => <Transaction>{
+      comment: e.comment,
+      createdAt: e.created,
+      direction: e.direction,
+      name: e.name,
+      transactionId: e.matchingId,
+      value: e.amount,
+      walletId: e.source,
+      category: e.category
+    });
     this.enableView();
   }
 

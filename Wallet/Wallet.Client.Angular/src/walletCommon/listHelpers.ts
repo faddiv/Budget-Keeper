@@ -10,6 +10,7 @@ export module ListHelpers {
         }
         return index;
     }
+
     export function indexById<T>(list: T[], key: T): number {
         if (!list || !list.length) return -1;
         var idProperty = getKey(list[0]);
@@ -18,6 +19,10 @@ export module ListHelpers {
         } else {
             return list.findIndex(item => item[idProperty] === key[idProperty]);
         }
+    }
+
+    export function selectMap<T, V>(list: T[], where: (val: T) => boolean, select: (val: T) => V) {
+        return list && list.filter(where).map(select)[0];
     }
     function getKey(target: any): string {
         for (var key in target) {

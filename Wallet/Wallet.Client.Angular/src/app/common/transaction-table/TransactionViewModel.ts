@@ -1,0 +1,22 @@
+import { Transaction, Wallet } from "walletApi";
+import { ListHelpers } from "walletCommon";
+
+export class TransactionViewModel implements Transaction {
+    comment?: string;
+    createdAt: Date;
+    direction: Transaction.DirectionEnum;
+    transactionId?: number;
+    name: string;
+    value: number;
+    walletId: number;
+    walletName: string;
+
+    constructor(original: Transaction, wallets: Wallet[]) {
+        Object.assign(this, original);
+        this.walletName = ListHelpers.selectMap<Wallet,string>(wallets, w => w.moneyWalletId == this.walletId, w => w.name);
+    }
+
+    get price() {
+        return this.value + this.direction;
+    }
+}

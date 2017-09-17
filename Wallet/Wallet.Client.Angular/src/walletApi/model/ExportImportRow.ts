@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import * as models from './models';
+
 export interface ExportImportRow {
     created?: Date;
 
@@ -24,6 +26,8 @@ export interface ExportImportRow {
     source?: ExportImportRow.SourceEnum;
 
     direction?: ExportImportRow.DirectionEnum;
+
+    matchingId?: number;
 
 }
 export namespace ExportImportRow {

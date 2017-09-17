@@ -1,0 +1,37 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>createdAt</th>
+      <th>name</th>
+      <th>price</th>
+      <th>walletName</th>
+      <th>category</th>
+      <th>comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of pageItems">
+      <td>{{item.createdAt | date: 'yyyy-MM-dd'}}</td>
+      <td>{{item.name}}</td>
+      <td>{{item.price}}</td>
+      <td>{{item.walletName}}</td>
+      <td>{{item.category}}</td>
+      <td>{{item.comment}}</td>
+    </tr>
+    <tbody>
+</table>
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a (click)="first()" aria-label="First">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+    <li *ngFor="let pg of pages" [ngClass]="{active:pg == page}"><a (click)="select(pg)">{{pg}}</a></li>
+    <li>
+      <a (click)="last()" aria-label="Last">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+  </ul>
+</nav>

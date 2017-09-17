@@ -10,6 +10,8 @@
  * Do not edit the class manually.
  */
 
+import * as models from './models';
+
 export interface Transaction {
     comment?: string;
 
@@ -20,6 +22,8 @@ export interface Transaction {
     transactionId?: number;
 
     name: string;
+
+    category?: string;
 
     value: number;
 

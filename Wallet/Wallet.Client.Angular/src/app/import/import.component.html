@@ -15,30 +15,7 @@
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'full', in: current === 'full' }">
       <div *ngIf="fullListEnabled">
-        <table>
-          <thead>
-            <tr>
-                <th>created</th>
-                <th>name</th>
-                <th>amount</th>
-                <th>direction</th>
-                <th>source</th>
-                <th>comment</th>
-                <th>category</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of linesToSave">
-              <td>{{item.created}}</td>
-              <td>{{item.name}}</td>
-              <td>{{item.amount}}</td>
-              <td>{{item.direction}}</td>
-              <td>{{item.source}}</td>
-              <td>{{item.comment}}</td>
-              <td>{{item.category}}</td>
-            </tr>
-            <tbody>
-        </table>
+        <app-transaction-table [items]="linesToSave"></app-transaction-table>
       </div>
     </div>
     <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'groupStock', in: current === 'groupStock' }">
