@@ -1,0 +1,6 @@
+<div *ngFor="let item of alerts" class="alert col-sm-12" [ngClass]="item.cssClass">
+    {{item.text}}
+    <button type="button" class="close" (click)="dismiss(item)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>

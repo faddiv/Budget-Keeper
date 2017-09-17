@@ -20,7 +20,7 @@ import { Response, ResponseContentType }                     from '@angular/http
 import { Observable }                                        from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import * as models                                           from '../model/index';
+import * as models                                           from '../model/models';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
@@ -45,8 +45,8 @@ export class ImportApi {
      * 
      * @param file 
      */
-    public apiV1ImportProcessTransactionsPost(file: any, extraHttpRequestParams?: any): Observable<Array<models.ExportImportRow>> {
-        return this.apiV1ImportProcessTransactionsPostWithHttpInfo(file, extraHttpRequestParams)
+    public processTransactions(file: any, extraHttpRequestParams?: any): Observable<Array<models.ExportImportRow>> {
+        return this.processTransactionsWithHttpInfo(file, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -62,7 +62,7 @@ export class ImportApi {
      * 
      * @param file 
      */
-    public apiV1ImportProcessTransactionsPostWithHttpInfo(file: File, extraHttpRequestParams?: any): Observable<Response> {
+    public processTransactionsWithHttpInfo(file: File, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Import/ProcessTransactions';
 
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845

@@ -99,6 +99,7 @@ namespace OnlineWallet.Web
                 c.OperationFilter<ApplyGenericResponseType>();
                 c.OperationFilter<ApplyArrayOnGetAllOperationFilter>();
                 c.OperationFilter<ApplyFileUploadOperationFilter>();
+                c.OperationFilter<ApplyCompositeInputModelOperationFilter>();
             });
 
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());

@@ -20,7 +20,7 @@ import { Response, ResponseContentType }                     from '@angular/http
 import { Observable }                                        from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import * as models                                           from '../model/index';
+import * as models                                           from '../model/models';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
@@ -46,41 +46,8 @@ export class WalletApi {
      * @summary Deletes a Wallet by unique id
      * @param id a unique id for the Wallet
      */
-    public apiV1WalletByIdDelete(id: number, extraHttpRequestParams?: any): Observable<models.Wallet> {
-        return this.apiV1WalletByIdDeleteWithHttpInfo(id, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json() || {};
-                }
-            });
-    }
-
-    /**
-     * 
-     * @summary Retrieves a Wallet by unique id
-     * @param id 
-     */
-    public apiV1WalletByIdGet(id: number, extraHttpRequestParams?: any): Observable<models.Wallet> {
-        return this.apiV1WalletByIdGetWithHttpInfo(id, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json() || {};
-                }
-            });
-    }
-
-    /**
-     * 
-     * @summary Updates a Wallet by unique id
-     * @param id a unique id for the Wallet
-     * @param value a Wallet representation
-     */
-    public apiV1WalletByIdPut(id: number, value?: models.Wallet, extraHttpRequestParams?: any): Observable<models.Wallet> {
-        return this.apiV1WalletByIdPutWithHttpInfo(id, value, extraHttpRequestParams)
+    public _delete(id: number, extraHttpRequestParams?: any): Observable<models.Wallet> {
+        return this._deleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -97,8 +64,24 @@ export class WalletApi {
      * @param skip 
      * @param take 
      */
-    public apiV1WalletGet(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.Wallet>> {
-        return this.apiV1WalletGetWithHttpInfo(search, skip, take, extraHttpRequestParams)
+    public getAll(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.Wallet>> {
+        return this.getAllWithHttpInfo(search, skip, take, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @summary Retrieves a Wallet by unique id
+     * @param id 
+     */
+    public getById(id: number, extraHttpRequestParams?: any): Observable<models.Wallet> {
+        return this.getByIdWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -114,8 +97,25 @@ export class WalletApi {
      * @param moneyWalletId a Wallet representation
      * @param name 
      */
-    public apiV1WalletPost(moneyWalletId?: number, name?: string, extraHttpRequestParams?: any): Observable<models.Wallet> {
-        return this.apiV1WalletPostWithHttpInfo(moneyWalletId, name, extraHttpRequestParams)
+    public post(moneyWalletId?: number, name?: string, extraHttpRequestParams?: any): Observable<models.Wallet> {
+        return this.postWithHttpInfo(moneyWalletId, name, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @summary Updates a Wallet by unique id
+     * @param id a unique id for the Wallet
+     * @param value a Wallet representation
+     */
+    public put(id: number, value?: models.Wallet, extraHttpRequestParams?: any): Observable<models.Wallet> {
+        return this.putWithHttpInfo(id, value, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -131,7 +131,7 @@ export class WalletApi {
      * 
      * @param id a unique id for the Wallet
      */
-    public apiV1WalletByIdDeleteWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
+    public _deleteWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Wallet/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
@@ -139,7 +139,7 @@ export class WalletApi {
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling apiV1WalletByIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling _delete.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -167,101 +167,13 @@ export class WalletApi {
     }
 
     /**
-     * Retrieves a Wallet by unique id
-     * 
-     * @param id 
-     */
-    public apiV1WalletByIdGetWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/Wallet/${id}'
-                    .replace('${' + 'id' + '}', String(id));
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling apiV1WalletByIdGet.');
-        }
-        // to determine the Content-Type header
-        let consumes: string[] = [
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters,
-            withCredentials:this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Updates a Wallet by unique id
-     * 
-     * @param id a unique id for the Wallet
-     * @param value a Wallet representation
-     */
-    public apiV1WalletByIdPutWithHttpInfo(id: number, value?: models.Wallet, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/Wallet/${id}'
-                    .replace('${' + 'id' + '}', String(id));
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling apiV1WalletByIdPut.');
-        }
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json-patch+json',
-            'application/json',
-            'text/json',
-            'application/_*+json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-
-        headers.set('Content-Type', 'application/json');
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Put,
-            headers: headers,
-            body: value == null ? '' : JSON.stringify(value), // https://github.com/angular/angular/issues/10612
-            search: queryParameters,
-            withCredentials:this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
      * Returns all Wallets
      * 
      * @param search 
      * @param skip 
      * @param take 
      */
-    public apiV1WalletGetWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Wallet';
 
         let queryParameters = new URLSearchParams();
@@ -304,12 +216,52 @@ export class WalletApi {
     }
 
     /**
+     * Retrieves a Wallet by unique id
+     * 
+     * @param id 
+     */
+    public getByIdWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Wallet/${id}'
+                    .replace('${' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getById.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
      * Creates a Wallet
      * 
      * @param moneyWalletId a Wallet representation
      * @param name 
      */
-    public apiV1WalletPostWithHttpInfo(moneyWalletId?: number, name?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public postWithHttpInfo(moneyWalletId?: number, name?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Wallet';
 
         let queryParameters = new URLSearchParams();
@@ -336,6 +288,54 @@ export class WalletApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Updates a Wallet by unique id
+     * 
+     * @param id a unique id for the Wallet
+     * @param value a Wallet representation
+     */
+    public putWithHttpInfo(id: number, value?: models.Wallet, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Wallet/${id}'
+                    .replace('${' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling put.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json-patch+json',
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Put,
+            headers: headers,
+            body: value == null ? '' : JSON.stringify(value), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });

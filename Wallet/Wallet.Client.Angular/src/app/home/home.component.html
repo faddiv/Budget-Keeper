@@ -1,4 +1,7 @@
 <section class="row">
+  <app-alerts [alerts]="alerts"></app-alerts>
+</section>
+<section class="row">
   <app-add-transaction (add)="addLine($event)" [wallets]="wallets" (save)="saveAll($event)">
   </app-add-transaction>
 </section>
@@ -20,7 +23,7 @@
         <td>{{walletNameById(item.walletId)}}</td>
         <td>{{item.comment}}</td>
         <td>
-            <button class="btn btn-danger pull-right" type="button" (click)="onDeleteBtnClicked(item)">
+          <button class="btn btn-danger pull-right" type="button" (click)="onDeleteBtnClicked(item)">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
         </td>

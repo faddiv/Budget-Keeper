@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular
 import { MoneyOperation, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
 import { ListHelpers } from 'walletCommon';
 import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
+import { TrasactionsService } from 'walletApi';
+import { AlertModel } from 'app/common/alerts/AlertModel';
 
 @Component({
   moduleId: module.id,
@@ -12,8 +14,11 @@ import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
 export class HomeComponent implements OnInit, ICleanForm {
   linesToSave: MoneyOperation[];
   wallets: Wallet[] = [];
+  alerts: AlertModel[] = [];
 
-  constructor(private walletService: WalletService) {
+  constructor(
+    private walletService: WalletService,
+    private transactionsService: TrasactionsService) {
 
   }
 
@@ -28,7 +33,7 @@ export class HomeComponent implements OnInit, ICleanForm {
     }).subscribe(value => {
       this.wallets = value;
     }, (error: ApiError) => {
-      console.error(error.message);
+      this.alerts.push(AlertModel.error(error.message));
     });
   }
 
@@ -37,12 +42,17 @@ export class HomeComponent implements OnInit, ICleanForm {
   }
 
   saveAll() {
-    if(!this.linesToSave.length) {
-      alert("Nothing to save");
+    if (!this.linesToSave.length) {
+      this.alerts.push(AlertModel.warning("Nothing to save"));
       return;
     }
-    alert("save");
-    this.startNew();
+    this.transactionsService.batchUpdate(this.linesToSave).subscribe(result => {
+      
+      this.alerts.push(AlertModel.success("Transactions are saved successfully."));
+      this.startNew();
+    }, error => {
+      this.alerts.push(AlertModel.error(error.message));
+    })
   }
 
   onDeleteBtnClicked(item: MoneyOperation) {

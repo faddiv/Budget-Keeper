@@ -1,5 +1,5 @@
 import { ImportApi } from "./api/api";
-import { ExportImportRow } from "./model/index";
+import { ExportImportRow } from "./model/models";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { QueryParams } from "./queryParams";
@@ -13,6 +13,6 @@ export class ImportService {
     }
 
     uploadTransactions(file: File): Observable<ExportImportRow[]> {
-        return decorateCommonCatch(this.api.apiV1ImportProcessTransactionsPost(file));
+        return decorateCommonCatch(this.api.processTransactions(file));
     }
 }

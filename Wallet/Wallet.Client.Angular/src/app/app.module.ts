@@ -21,6 +21,7 @@ import { DirectivesModule } from "directives";
 import { ImportTransactionsComponent } from './import/import-transactions/import-transactions.component';
 import { ImportComponent } from './import/import.component';
 import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
+import { AlertsComponent } from './common/alerts/alerts.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
     WalletAddComponent,
     AddTransactionComponent,
     ImportTransactionsComponent,
-    ImportComponent
+    ImportComponent,
+    AlertsComponent
   ],
   imports: [
     BrowserModule,

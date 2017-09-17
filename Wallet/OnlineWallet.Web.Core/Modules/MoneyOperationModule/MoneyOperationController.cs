@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -35,12 +36,15 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
         #endregion
 
         [HttpPost("batchSave")]
-        public async Task BatchSave(List<MoneyOperation> operations, CancellationToken token)
+        [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<MoneyOperation>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<MoneyOperation>))]
+        public async Task<List<MoneyOperation>> BatchSave([FromBody, Required]List<MoneyOperation> operations, CancellationToken token)
         {
             var existingIds = operations.Where(e => e.MoneyOperationId > 0).Select(e => e.MoneyOperationId).ToList();
             var existingEntities = DbSet.Where(e => existingIds.Contains(e.MoneyOperationId)).ToList();
             foreach (var operation in operations)
             {
+                operation.CreatedAt = operation.CreatedAt.Date;
                 if (operation.MoneyOperationId != 0)
                 {
                     var existingEntity = existingEntities.Find(e => e.MoneyOperationId == operation.MoneyOperationId);
@@ -55,6 +59,7 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 }
             }
             await Db.SaveChangesAsync(token);
+            return operations;
         }
     }
 }

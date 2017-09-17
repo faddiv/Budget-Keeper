@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using OnlineWallet.Web.Utils;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -17,7 +17,7 @@ namespace OnlineWallet.Web.Services.Swagger
         {
             var actionAttributes = GetActionAttributes<SwaggerGenericResponseAttribute>(context.ApiDescription);
             var actionDescriptor = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
-            if (actionAttributes == null || !Enumerable.Any<SwaggerGenericResponseAttribute>(actionAttributes))
+            if (actionAttributes == null || !actionAttributes.Any())
                 return;
             if (actionDescriptor == null)
                 return;
@@ -35,10 +35,9 @@ namespace OnlineWallet.Web.Services.Swagger
             SwaggerGenericResponseAttribute attribute, ControllerActionDescriptor actionDescriptor)
         {
             string key = attribute.StatusCode.ToString();
-            Response response;
-            if (!operation.Responses.TryGetValue(key, out response))
+            if (!operation.Responses.TryGetValue(key, out var response))
                 response = new Response();
-            var type = GetGenericArgument(actionDescriptor.ControllerTypeInfo);
+            var type = TypeHelpers.GetGenericArgument(actionDescriptor.ControllerTypeInfo);
             if (attribute.Wrapper != null)
             {
                 if (!attribute.Wrapper.IsGenericTypeDefinition || attribute.Wrapper.GenericTypeParameters.Length != 1)
@@ -58,20 +57,6 @@ namespace OnlineWallet.Web.Services.Swagger
                 .Union(apiDesc.ActionAttributes()
                     .OfType<TAttribute>())
                 .ToList();
-        }
-
-        private static Type GetGenericArgument(TypeInfo typeInfo)
-        {
-            while (true)
-            {
-                if (typeInfo == null)
-                    return null;
-                if (typeInfo.IsGenericType)
-                    return typeInfo.GenericTypeArguments.FirstOrDefault();
-                if (typeInfo.BaseType == null)
-                    return null;
-                typeInfo = typeInfo.BaseType.GetTypeInfo();
-            }
         }
 
         #endregion

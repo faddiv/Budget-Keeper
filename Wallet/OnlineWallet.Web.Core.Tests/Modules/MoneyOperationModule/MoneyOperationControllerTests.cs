@@ -86,12 +86,15 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 }
             };
             //act
-            await controller.BatchSave(moneyOperations, CancellationToken.None);
+            var result = await controller.BatchSave(moneyOperations, CancellationToken.None);
 
             //assert
             _fixture.DbContext.MoneyOperations.Count().Should().Be(4);
             _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "third");
             _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "fourth");
+
+            result.Should().NotBeNullOrEmpty();
+            result.Should().OnlyContain(e => e.MoneyOperationId > 0, "all element got an id");
         }
 
 
@@ -134,6 +137,36 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
             _fixture.DbContext.MoneyOperations.Count().Should().Be(2);
             _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "third");
             _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "fourth");
+        }
+
+        [Fact(DisplayName = "BatchSave only saves date not time")]
+        public async Task BatchSave_only_saves_date_not_time()
+        {
+            //precondition
+            _fixture.DbContext.MoneyOperations.Count().Should().Be(2);
+            //arrange
+            var controller = new MoneyOperationController(_fixture.DbContext);
+            var moneyOperations = new List<MoneyOperation>
+            {
+                new MoneyOperation
+                {
+                    Name = "third",
+                    Category = "cat",
+                    Comment = "comment",
+                    CreatedAt = DateTime.Parse("2017-09-16 13:12"),
+                    Direction = MoneyDirection.Expense,
+                    Value = 101,
+                    WalletId = _fixture.Wallet1.MoneyWalletId
+                }
+            };
+            //act
+            var result = await controller.BatchSave(moneyOperations, CancellationToken.None);
+
+            //assert
+            var dateTime = DateTime.Parse("2017-09-16 00:00");
+            result[0].CreatedAt.Should().Be(dateTime, "it removes time part in the result");
+            var entity = _fixture.DbContext.MoneyOperations.Find(result[0].MoneyOperationId);
+            entity.CreatedAt.Should().Be(dateTime, "it removes time part in the database");
         }
 
         public void Dispose()

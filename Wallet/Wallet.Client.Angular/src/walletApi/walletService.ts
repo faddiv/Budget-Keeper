@@ -1,5 +1,5 @@
 import { WalletApi } from "./api/api";
-import { Wallet } from "./model/index";
+import { Wallet } from "./model/models";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { QueryParams } from "./queryParams";
@@ -14,18 +14,18 @@ export class WalletService {
 
     getAll(query?: QueryParams): Observable<Wallet[]> {
         query = query || {};
-        return decorateCommonCatch(this.api.apiV1WalletGet(query.search, query.skip, query.take));
+        return decorateCommonCatch(this.api.getAll(query.search, query.skip, query.take));
     }
 
     update(wallet: Wallet): Observable<Wallet> {
-        return decorateCommonCatch(this.api.apiV1WalletByIdPut(wallet.moneyWalletId, wallet));
+        return decorateCommonCatch(this.api.put(wallet.moneyWalletId, wallet));
     }
 
     insert(wallet: Wallet): Observable<Wallet> {
-        return decorateCommonCatch(this.api.apiV1WalletPost(null, wallet.name));
+        return decorateCommonCatch(this.api.post(null, wallet.name));
     }
 
     delete(wallet: Wallet): Observable<any> {
-        return decorateCommonCatch(this.api.apiV1WalletByIdDelete(wallet.moneyWalletId));
+        return decorateCommonCatch(this.api._delete(wallet.moneyWalletId));
     }
 }

@@ -1,8 +1,9 @@
 import { NgModule } from "@angular/core";
 import { HttpModule } from '@angular/http';
-import { WalletApi, ImportApi } from "./api/api";
+import { WalletApi, ImportApi, MoneyOperationApi } from "./api/api";
 import { WalletService } from "./walletService";
 import { ImportService } from "./importService";
+import { TrasactionsService } from "./transactionsService";
 
 @NgModule({
     imports: [
@@ -12,8 +13,10 @@ import { ImportService } from "./importService";
     providers: [
         WalletApi,
         ImportApi,
+        MoneyOperationApi,
         WalletService,
-        ImportService
+        ImportService,
+        TrasactionsService
     ]
 })
 export class WalletApiModule { }

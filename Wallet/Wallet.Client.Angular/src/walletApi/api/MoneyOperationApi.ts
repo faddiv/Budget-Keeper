@@ -20,7 +20,7 @@ import { Response, ResponseContentType }                     from '@angular/http
 import { Observable }                                        from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import * as models                                           from '../model/index';
+import * as models                                           from '../model/models';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
@@ -46,8 +46,8 @@ export class MoneyOperationApi {
      * @summary Deletes a MoneyOperation by unique id
      * @param id a unique id for the MoneyOperation
      */
-    public apiV1MoneyOperationByIdDelete(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
-        return this.apiV1MoneyOperationByIdDeleteWithHttpInfo(id, extraHttpRequestParams)
+    public _delete(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+        return this._deleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -59,28 +59,10 @@ export class MoneyOperationApi {
 
     /**
      * 
-     * @summary Retrieves a MoneyOperation by unique id
-     * @param id 
+     * @param operations 
      */
-    public apiV1MoneyOperationByIdGet(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
-        return this.apiV1MoneyOperationByIdGetWithHttpInfo(id, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json() || {};
-                }
-            });
-    }
-
-    /**
-     * 
-     * @summary Updates a MoneyOperation by unique id
-     * @param id a unique id for the MoneyOperation
-     * @param value a MoneyOperation representation
-     */
-    public apiV1MoneyOperationByIdPut(id: number, value?: models.MoneyOperation, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
-        return this.apiV1MoneyOperationByIdPutWithHttpInfo(id, value, extraHttpRequestParams)
+    public batchSave(operations?: Array<models.MoneyOperation>, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
+        return this.batchSaveWithHttpInfo(operations, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -97,8 +79,24 @@ export class MoneyOperationApi {
      * @param skip 
      * @param take 
      */
-    public apiV1MoneyOperationGet(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
-        return this.apiV1MoneyOperationGetWithHttpInfo(search, skip, take, extraHttpRequestParams)
+    public getAll(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
+        return this.getAllWithHttpInfo(search, skip, take, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @summary Retrieves a MoneyOperation by unique id
+     * @param id 
+     */
+    public getById(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+        return this.getByIdWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -116,13 +114,31 @@ export class MoneyOperationApi {
      * @param direction 
      * @param moneyOperationId 
      * @param name 
+     * @param category 
      * @param value 
      * @param walletMoneyWalletId 
      * @param walletName 
      * @param walletId 
      */
-    public apiV1MoneyOperationPost(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
-        return this.apiV1MoneyOperationPostWithHttpInfo(comment, createdAt, direction, moneyOperationId, name, value, walletMoneyWalletId, walletName, walletId, extraHttpRequestParams)
+    public post(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+        return this.postWithHttpInfo(comment, createdAt, direction, moneyOperationId, name, category, value, walletMoneyWalletId, walletName, walletId, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @summary Updates a MoneyOperation by unique id
+     * @param id a unique id for the MoneyOperation
+     * @param value a MoneyOperation representation
+     */
+    public put(id: number, value?: models.MoneyOperation, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+        return this.putWithHttpInfo(id, value, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -138,7 +154,7 @@ export class MoneyOperationApi {
      * 
      * @param id a unique id for the MoneyOperation
      */
-    public apiV1MoneyOperationByIdDeleteWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
+    public _deleteWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/MoneyOperation/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
@@ -146,7 +162,7 @@ export class MoneyOperationApi {
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling apiV1MoneyOperationByIdDelete.');
+            throw new Error('Required parameter id was null or undefined when calling _delete.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -174,61 +190,15 @@ export class MoneyOperationApi {
     }
 
     /**
-     * Retrieves a MoneyOperation by unique id
      * 
-     * @param id 
+     * 
+     * @param operations 
      */
-    public apiV1MoneyOperationByIdGetWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
-                    .replace('${' + 'id' + '}', String(id));
+    public batchSaveWithHttpInfo(operations?: Array<models.MoneyOperation>, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/MoneyOperation/batchSave';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling apiV1MoneyOperationByIdGet.');
-        }
-        // to determine the Content-Type header
-        let consumes: string[] = [
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Get,
-            headers: headers,
-            search: queryParameters,
-            withCredentials:this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Updates a MoneyOperation by unique id
-     * 
-     * @param id a unique id for the MoneyOperation
-     * @param value a MoneyOperation representation
-     */
-    public apiV1MoneyOperationByIdPutWithHttpInfo(id: number, value?: models.MoneyOperation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
-                    .replace('${' + 'id' + '}', String(id));
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'id' is not null or undefined
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling apiV1MoneyOperationByIdPut.');
-        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json-patch+json',
@@ -247,9 +217,9 @@ export class MoneyOperationApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Put,
+            method: RequestMethod.Post,
             headers: headers,
-            body: value == null ? '' : JSON.stringify(value), // https://github.com/angular/angular/issues/10612
+            body: operations == null ? '' : JSON.stringify(operations), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
@@ -268,7 +238,7 @@ export class MoneyOperationApi {
      * @param skip 
      * @param take 
      */
-    public apiV1MoneyOperationGetWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/MoneyOperation';
 
         let queryParameters = new URLSearchParams();
@@ -311,6 +281,46 @@ export class MoneyOperationApi {
     }
 
     /**
+     * Retrieves a MoneyOperation by unique id
+     * 
+     * @param id 
+     */
+    public getByIdWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
+                    .replace('${' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getById.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
      * Creates a MoneyOperation
      * 
      * @param comment a MoneyOperation representation
@@ -318,12 +328,13 @@ export class MoneyOperationApi {
      * @param direction 
      * @param moneyOperationId 
      * @param name 
+     * @param category 
      * @param value 
      * @param walletMoneyWalletId 
      * @param walletName 
      * @param walletId 
      */
-    public apiV1MoneyOperationPostWithHttpInfo(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public postWithHttpInfo(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/MoneyOperation';
 
         let queryParameters = new URLSearchParams();
@@ -346,6 +357,10 @@ export class MoneyOperationApi {
 
         if (name !== undefined) {
             queryParameters.set('Name', <any>name);
+        }
+
+        if (category !== undefined) {
+            queryParameters.set('Category', <any>category);
         }
 
         if (value !== undefined) {
@@ -378,6 +393,54 @@ export class MoneyOperationApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Updates a MoneyOperation by unique id
+     * 
+     * @param id a unique id for the MoneyOperation
+     * @param value a MoneyOperation representation
+     */
+    public putWithHttpInfo(id: number, value?: models.MoneyOperation, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
+                    .replace('${' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling put.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json-patch+json',
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Put,
+            headers: headers,
+            body: value == null ? '' : JSON.stringify(value), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
