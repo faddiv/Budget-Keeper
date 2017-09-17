@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { MoneyOperation, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
+import { Transaction, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
 import { ListHelpers } from 'walletCommon';
 import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
 import { TrasactionsService } from 'walletApi';
@@ -12,7 +12,7 @@ import { AlertModel } from 'app/common/alerts/AlertModel';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, ICleanForm {
-  linesToSave: MoneyOperation[];
+  linesToSave: Transaction[];
   wallets: Wallet[] = [];
   alerts: AlertModel[] = [];
 
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, ICleanForm {
     });
   }
 
-  addLine(newItem: MoneyOperation) {
+  addLine(newItem: Transaction) {
     this.linesToSave.push(newItem);
   }
 
@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit, ICleanForm {
     })
   }
 
-  onDeleteBtnClicked(item: MoneyOperation) {
+  onDeleteBtnClicked(item: Transaction) {
     ListHelpers.remove(this.linesToSave, item);
   }
 

@@ -5,29 +5,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.MoneyOperationModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    [Trait("MoneyOperationController", null)]
+    [Trait("TransactionControllerTests", null)]
     [Collection("Database collection")]
-    public class MoneyOperationControllerTests : IDisposable
+    public class TransactionControllerTests : IDisposable
     {
         #region Fields
 
         private readonly DatabaseFixture _fixture;
-        private readonly MoneyOperation _moneyOperation1;
-        private readonly MoneyOperation _moneyOperation2;
+        private readonly Transaction _transaction1;
+        private readonly Transaction _transaction2;
 
         #endregion
 
         #region  Constructors
 
-        public MoneyOperationControllerTests(DatabaseFixture fixture)
+        public TransactionControllerTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
-            _moneyOperation1 = new MoneyOperation
+            _transaction1 = new Transaction
             {
                 Name = "first",
                 Category = "cat",
@@ -37,7 +38,7 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 Value = 101,
                 WalletId = _fixture.Wallet1.MoneyWalletId
             };
-            _moneyOperation2 = new MoneyOperation
+            _transaction2 = new Transaction
             {
                 Name = "second",
                 Category = "cat",
@@ -47,7 +48,7 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 Value = 102,
                 WalletId = _fixture.Wallet2.MoneyWalletId
             };
-            _fixture.DbContext.MoneyOperations.AddRange(_moneyOperation1, _moneyOperation2);
+            _fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2);
             _fixture.DbContext.SaveChanges();
         }
 
@@ -55,16 +56,16 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
 
         #region  Public Methods
 
-        [Fact(DisplayName = "BatchSave saves new MoneyOperations")]
-        public async Task BatchSave_saves_new_MoneyOperations()
+        [Fact(DisplayName = "BatchSave saves new Transactions")]
+        public async Task BatchSave_saves_new_Transactions()
         {
             //precondition
-            _fixture.DbContext.MoneyOperations.Count().Should().Be(2);
+            _fixture.DbContext.Transactions.Count().Should().Be(2);
             //arrange
-            var controller = new MoneyOperationController(_fixture.DbContext);
-            var moneyOperations = new List<MoneyOperation>
+            var controller = new TransactionController(_fixture.DbContext);
+            var transactions = new List<Transaction>
             {
-                new MoneyOperation
+                new Transaction
                 {
                     Name = "third",
                     Category = "cat",
@@ -74,7 +75,7 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                     Value = 101,
                     WalletId = _fixture.Wallet1.MoneyWalletId
                 },
-                new MoneyOperation
+                new Transaction
                 {
                     Name = "fourth",
                     Category = "cat",
@@ -86,30 +87,30 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 }
             };
             //act
-            var result = await controller.BatchSave(moneyOperations, CancellationToken.None);
+            var result = await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
-            _fixture.DbContext.MoneyOperations.Count().Should().Be(4);
-            _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "third");
-            _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "fourth");
+            _fixture.DbContext.Transactions.Count().Should().Be(4);
+            _fixture.DbContext.Transactions.Should().Contain(e => e.Name == "third");
+            _fixture.DbContext.Transactions.Should().Contain(e => e.Name == "fourth");
 
             result.Should().NotBeNullOrEmpty();
-            result.Should().OnlyContain(e => e.MoneyOperationId > 0, "all element got an id");
+            result.Should().OnlyContain(e => e.TransactionId > 0, "all element got an id");
         }
 
 
-        [Fact(DisplayName = "BatchSave updates existing MoneyOperations")]
-        public async Task BatchSave_updates_existing_MoneyOperations()
+        [Fact(DisplayName = "BatchSave updates existing Transactions")]
+        public async Task BatchSave_updates_existing_Transactions()
         {
             //precondition
-            _fixture.DbContext.MoneyOperations.Count().Should().Be(2);
+            _fixture.DbContext.Transactions.Count().Should().Be(2);
             //arrange
-            var controller = new MoneyOperationController(_fixture.DbContext);
-            var moneyOperations = new List<MoneyOperation>
+            var controller = new TransactionController(_fixture.DbContext);
+            var transactions = new List<Transaction>
             {
-                new MoneyOperation
+                new Transaction
                 {
-                    MoneyOperationId = _moneyOperation1.MoneyOperationId,
+                    TransactionId = _transaction1.TransactionId,
                     Name = "third",
                     Category = "cat",
                     Comment = "comment",
@@ -118,9 +119,9 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                     Value = 101,
                     WalletId = _fixture.Wallet1.MoneyWalletId
                 },
-                new MoneyOperation
+                new Transaction
                 {
-                    MoneyOperationId = _moneyOperation2.MoneyOperationId,
+                    TransactionId = _transaction2.TransactionId,
                     Name = "fourth",
                     Category = "cat",
                     Comment = "comment",
@@ -131,24 +132,24 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 }
             };
             //act
-            await controller.BatchSave(moneyOperations, CancellationToken.None);
+            await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
-            _fixture.DbContext.MoneyOperations.Count().Should().Be(2);
-            _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "third");
-            _fixture.DbContext.MoneyOperations.Should().Contain(e => e.Name == "fourth");
+            _fixture.DbContext.Transactions.Count().Should().Be(2);
+            _fixture.DbContext.Transactions.Should().Contain(e => e.Name == "third");
+            _fixture.DbContext.Transactions.Should().Contain(e => e.Name == "fourth");
         }
 
         [Fact(DisplayName = "BatchSave only saves date not time")]
         public async Task BatchSave_only_saves_date_not_time()
         {
             //precondition
-            _fixture.DbContext.MoneyOperations.Count().Should().Be(2);
+            _fixture.DbContext.Transactions.Count().Should().Be(2);
             //arrange
-            var controller = new MoneyOperationController(_fixture.DbContext);
-            var moneyOperations = new List<MoneyOperation>
+            var controller = new TransactionController(_fixture.DbContext);
+            var transactions = new List<Transaction>
             {
-                new MoneyOperation
+                new Transaction
                 {
                     Name = "third",
                     Category = "cat",
@@ -160,18 +161,18 @@ namespace OnlineWallet.Web.Modules.MoneyOperationModule
                 }
             };
             //act
-            var result = await controller.BatchSave(moneyOperations, CancellationToken.None);
+            var result = await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
             var dateTime = DateTime.Parse("2017-09-16 00:00");
             result[0].CreatedAt.Should().Be(dateTime, "it removes time part in the result");
-            var entity = _fixture.DbContext.MoneyOperations.Find(result[0].MoneyOperationId);
+            var entity = _fixture.DbContext.Transactions.Find(result[0].TransactionId);
             entity.CreatedAt.Should().Be(dateTime, "it removes time part in the database");
         }
 
         public void Dispose()
         {
-            _fixture.DbContext.RemoveRange(_fixture.DbContext.MoneyOperations);
+            _fixture.DbContext.RemoveRange(_fixture.DbContext.Transactions);
             _fixture.DbContext.SaveChanges();
         }
 

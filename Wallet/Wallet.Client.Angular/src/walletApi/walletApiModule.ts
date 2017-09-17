@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { HttpModule } from '@angular/http';
-import { WalletApi, ImportApi, MoneyOperationApi } from "./api/api";
+import { WalletApi, ImportApi, TransactionApi } from "./api/api";
 import { WalletService } from "./walletService";
 import { ImportService } from "./importService";
 import { TrasactionsService } from "./transactionsService";
@@ -13,7 +13,7 @@ import { TrasactionsService } from "./transactionsService";
     providers: [
         WalletApi,
         ImportApi,
-        MoneyOperationApi,
+        TransactionApi,
         WalletService,
         ImportService,
         TrasactionsService

@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class MoneyOperationApi {
+export class TransactionApi {
 
     protected basePath = 'https://localhost';
     public defaultHeaders: Headers = new Headers();
@@ -43,10 +43,10 @@ export class MoneyOperationApi {
 
     /**
      * 
-     * @summary Deletes a MoneyOperation by unique id
-     * @param id a unique id for the MoneyOperation
+     * @summary Deletes a Transaction by unique id
+     * @param id a unique id for the Transaction
      */
-    public _delete(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+    public _delete(id: number, extraHttpRequestParams?: any): Observable<models.Transaction> {
         return this._deleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -61,7 +61,7 @@ export class MoneyOperationApi {
      * 
      * @param operations 
      */
-    public batchSave(operations?: Array<models.MoneyOperation>, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
+    public batchSave(operations?: Array<models.Transaction>, extraHttpRequestParams?: any): Observable<Array<models.Transaction>> {
         return this.batchSaveWithHttpInfo(operations, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -74,12 +74,12 @@ export class MoneyOperationApi {
 
     /**
      * 
-     * @summary Returns all MoneyOperations
+     * @summary Returns all Transactions
      * @param search 
      * @param skip 
      * @param take 
      */
-    public getAll(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.MoneyOperation>> {
+    public getAll(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.Transaction>> {
         return this.getAllWithHttpInfo(search, skip, take, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -92,10 +92,10 @@ export class MoneyOperationApi {
 
     /**
      * 
-     * @summary Retrieves a MoneyOperation by unique id
+     * @summary Retrieves a Transaction by unique id
      * @param id 
      */
-    public getById(id: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+    public getById(id: number, extraHttpRequestParams?: any): Observable<models.Transaction> {
         return this.getByIdWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -108,11 +108,11 @@ export class MoneyOperationApi {
 
     /**
      * 
-     * @summary Creates a MoneyOperation
-     * @param comment a MoneyOperation representation
+     * @summary Creates a Transaction
+     * @param comment a Transaction representation
      * @param createdAt 
      * @param direction 
-     * @param moneyOperationId 
+     * @param transactionId 
      * @param name 
      * @param category 
      * @param value 
@@ -120,8 +120,8 @@ export class MoneyOperationApi {
      * @param walletName 
      * @param walletId 
      */
-    public post(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
-        return this.postWithHttpInfo(comment, createdAt, direction, moneyOperationId, name, category, value, walletMoneyWalletId, walletName, walletId, extraHttpRequestParams)
+    public post(comment?: string, createdAt?: Date, direction?: number, transactionId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<models.Transaction> {
+        return this.postWithHttpInfo(comment, createdAt, direction, transactionId, name, category, value, walletMoneyWalletId, walletName, walletId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -133,11 +133,11 @@ export class MoneyOperationApi {
 
     /**
      * 
-     * @summary Updates a MoneyOperation by unique id
-     * @param id a unique id for the MoneyOperation
-     * @param value a MoneyOperation representation
+     * @summary Updates a Transaction by unique id
+     * @param id a unique id for the Transaction
+     * @param value a Transaction representation
      */
-    public put(id: number, value?: models.MoneyOperation, extraHttpRequestParams?: any): Observable<models.MoneyOperation> {
+    public put(id: number, value?: models.Transaction, extraHttpRequestParams?: any): Observable<models.Transaction> {
         return this.putWithHttpInfo(id, value, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -150,12 +150,12 @@ export class MoneyOperationApi {
 
 
     /**
-     * Deletes a MoneyOperation by unique id
+     * Deletes a Transaction by unique id
      * 
-     * @param id a unique id for the MoneyOperation
+     * @param id a unique id for the Transaction
      */
     public _deleteWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
+        const path = this.basePath + '/api/v1/Transaction/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
@@ -194,8 +194,8 @@ export class MoneyOperationApi {
      * 
      * @param operations 
      */
-    public batchSaveWithHttpInfo(operations?: Array<models.MoneyOperation>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation/batchSave';
+    public batchSaveWithHttpInfo(operations?: Array<models.Transaction>, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Transaction/batchSave';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -232,14 +232,14 @@ export class MoneyOperationApi {
     }
 
     /**
-     * Returns all MoneyOperations
+     * Returns all Transactions
      * 
      * @param search 
      * @param skip 
      * @param take 
      */
     public getAllWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation';
+        const path = this.basePath + '/api/v1/Transaction';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -281,12 +281,12 @@ export class MoneyOperationApi {
     }
 
     /**
-     * Retrieves a MoneyOperation by unique id
+     * Retrieves a Transaction by unique id
      * 
      * @param id 
      */
     public getByIdWithHttpInfo(id: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
+        const path = this.basePath + '/api/v1/Transaction/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
@@ -321,12 +321,12 @@ export class MoneyOperationApi {
     }
 
     /**
-     * Creates a MoneyOperation
+     * Creates a Transaction
      * 
-     * @param comment a MoneyOperation representation
+     * @param comment a Transaction representation
      * @param createdAt 
      * @param direction 
-     * @param moneyOperationId 
+     * @param transactionId 
      * @param name 
      * @param category 
      * @param value 
@@ -334,8 +334,8 @@ export class MoneyOperationApi {
      * @param walletName 
      * @param walletId 
      */
-    public postWithHttpInfo(comment?: string, createdAt?: Date, direction?: number, moneyOperationId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation';
+    public postWithHttpInfo(comment?: string, createdAt?: Date, direction?: number, transactionId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Transaction';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -351,8 +351,8 @@ export class MoneyOperationApi {
             queryParameters.set('Direction', <any>direction);
         }
 
-        if (moneyOperationId !== undefined) {
-            queryParameters.set('MoneyOperationId', <any>moneyOperationId);
+        if (transactionId !== undefined) {
+            queryParameters.set('TransactionId', <any>transactionId);
         }
 
         if (name !== undefined) {
@@ -405,13 +405,13 @@ export class MoneyOperationApi {
     }
 
     /**
-     * Updates a MoneyOperation by unique id
+     * Updates a Transaction by unique id
      * 
-     * @param id a unique id for the MoneyOperation
-     * @param value a MoneyOperation representation
+     * @param id a unique id for the Transaction
+     * @param value a Transaction representation
      */
-    public putWithHttpInfo(id: number, value?: models.MoneyOperation, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/MoneyOperation/${id}'
+    public putWithHttpInfo(id: number, value?: models.Transaction, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Transaction/${id}'
                     .replace('${' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();

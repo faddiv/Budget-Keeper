@@ -20,9 +20,9 @@ namespace OnlineWallet.Web.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("OnlineWallet.Web.DataLayer.MoneyOperation", b =>
+            modelBuilder.Entity("OnlineWallet.Web.DataLayer.Transaction", b =>
                 {
-                    b.Property<long>("MoneyOperationId")
+                    b.Property<long>("TransactionId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Category")
@@ -43,11 +43,11 @@ namespace OnlineWallet.Web.Migrations
 
                     b.Property<int>("WalletId");
 
-                    b.HasKey("MoneyOperationId");
+                    b.HasKey("TransactionId");
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("MoneyOperations");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("OnlineWallet.Web.DataLayer.Wallet", b =>
@@ -62,7 +62,7 @@ namespace OnlineWallet.Web.Migrations
                     b.ToTable("Wallets");
                 });
 
-            modelBuilder.Entity("OnlineWallet.Web.DataLayer.MoneyOperation", b =>
+            modelBuilder.Entity("OnlineWallet.Web.DataLayer.Transaction", b =>
                 {
                     b.HasOne("OnlineWallet.Web.DataLayer.Wallet", "Wallet")
                         .WithMany()

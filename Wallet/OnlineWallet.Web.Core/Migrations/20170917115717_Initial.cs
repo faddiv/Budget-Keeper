@@ -23,10 +23,10 @@ namespace OnlineWallet.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MoneyOperations",
+                name: "Transactions",
                 columns: table => new
                 {
-                    MoneyOperationId = table.Column<long>(type: "bigint", nullable: false)
+                    TransactionId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Category = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", maxLength: 2147483647, nullable: true),
@@ -38,9 +38,9 @@ namespace OnlineWallet.Web.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MoneyOperations", x => x.MoneyOperationId);
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
                     table.ForeignKey(
-                        name: "FK_MoneyOperations_Wallets_WalletId",
+                        name: "FK_Transactions_Wallets_WalletId",
                         column: x => x.WalletId,
                         principalTable: "Wallets",
                         principalColumn: "MoneyWalletId",
@@ -56,15 +56,15 @@ namespace OnlineWallet.Web.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoneyOperations_WalletId",
-                table: "MoneyOperations",
+                name: "IX_Transactions_WalletId",
+                table: "Transactions",
                 column: "WalletId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MoneyOperations");
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "Wallets");

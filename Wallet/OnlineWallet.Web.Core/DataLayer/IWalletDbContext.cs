@@ -8,7 +8,7 @@ namespace OnlineWallet.Web.DataLayer
     {
         #region Properties
 
-        DbSet<MoneyOperation> MoneyOperations { get; }
+        DbSet<Transaction> Transactions { get; }
         DbSet<Wallet> Wallets { get; }
 
         #endregion

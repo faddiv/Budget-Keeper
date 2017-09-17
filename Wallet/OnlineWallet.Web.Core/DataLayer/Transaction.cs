@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace OnlineWallet.Web.DataLayer
 {
-    public class MoneyOperation
+    public class Transaction
     {
         #region Properties
 
@@ -19,7 +19,7 @@ namespace OnlineWallet.Web.DataLayer
         public MoneyDirection Direction { get; set; }
 
         [Key]
-        public long MoneyOperationId { get; set; }
+        public long TransactionId { get; set; }
 
         [Required]
         [StringLength(200)]

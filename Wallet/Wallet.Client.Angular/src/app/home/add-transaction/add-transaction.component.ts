@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { MoneyOperation, Wallet, ApiError } from "walletApi";
+import { Transaction, Wallet, ApiError } from "walletApi";
 import { ICommand } from "directives";
 
 @Component({
@@ -32,7 +32,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   focusName: ICommand<any> = {};
 
   @Output("add")
-  add = new EventEmitter<MoneyOperation>();
+  add = new EventEmitter<Transaction>();
 
   @Output("save")
   save = new EventEmitter<any>();
@@ -70,13 +70,13 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   onAdd() {
     this.submitted = true;
     if (this.form.invalid) return;
-    var newItem: MoneyOperation = {
+    var newItem: Transaction = {
       comment: this.comment.value,
       createdAt: new Date(),
-      direction: MoneyOperation.DirectionEnum.NUMBER_1,
+      direction: Transaction.DirectionEnum.NUMBER_1,
       name: this.name.value,
       value: this.price.value,
-      moneyOperationId: 0,
+      transactionId: 0,
       walletId: this.wallet.value
     };
     this.add.emit(newItem);

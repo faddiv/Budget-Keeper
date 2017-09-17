@@ -23,7 +23,7 @@ namespace OnlineWallet.ExportImport
 
         #region  Public Methods
 
-        public void ExportMoneyOperations(IEnumerable<ExportImportRow> imports, string path)
+        public void ExportTransactions(IEnumerable<ExportImportRow> imports, string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Create))
             using (var fileWriter = new StreamWriter(fileStream))
@@ -36,15 +36,15 @@ namespace OnlineWallet.ExportImport
             }
         }
 
-        public IEnumerable<ExportImportRow> ImportMoneyOperations(Stream stream)
+        public IEnumerable<ExportImportRow> ImportTransactions(Stream stream)
         {
             using (var fileWriter = new StreamReader(stream))
             {
                 using (var csvWriter = new CsvReader(fileWriter, _configuration))
                 {
-                    foreach (var moneyOperation in csvWriter.GetRecords<ExportImportRow>())
+                    foreach (var exportImportRow in csvWriter.GetRecords<ExportImportRow>())
                     {
-                        yield return moneyOperation;
+                        yield return exportImportRow;
                     }
                 }
             }

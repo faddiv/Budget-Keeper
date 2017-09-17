@@ -39,7 +39,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
 
         public void Dispose()
         {
-            _fixture.DbContext.RemoveRange(_fixture.DbContext.MoneyOperations);
+            _fixture.DbContext.RemoveRange(_fixture.DbContext.Transactions);
             _fixture.DbContext.SaveChanges();
         }
 
@@ -50,7 +50,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
             {
                 //Arrange
                 var dbContext = _fixture.DbContext;
-                var moneyOperation = new MoneyOperation
+                var transaction = new Transaction
                 {
                     Name = "expense 1",
                     Value = 111,
@@ -59,7 +59,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     Category = "Category 1",
                     CreatedAt = DateTime.Parse("2017-08-26")
                 };
-                dbContext.MoneyOperations.Add(moneyOperation);
+                dbContext.Transactions.Add(transaction);
                 dbContext.SaveChanges();
                 var controller = new ImportController(new CsvExportImport(), dbContext);
                 var formFile = new Mock<IFormFile>();
@@ -72,7 +72,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 //Assert
                 var value = result.FirstOrDefault(e => e.Name == "expense 1");
                 value.Should().NotBeNull();
-                value.MatchingId.Should().Be(moneyOperation.MoneyOperationId);
+                value.MatchingId.Should().Be(transaction.TransactionId);
             }
         }
 
@@ -83,7 +83,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
             {
                 //Arrange
                 var dbContext = _fixture.DbContext;
-                var moneyOperation = new MoneyOperation
+                var transaction = new Transaction
                 {
                     Name = "Original Name",
                     Value = 123,
@@ -92,7 +92,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     Category = "Category 1",
                     CreatedAt = DateTime.Parse("2017-08-26")
                 };
-                dbContext.MoneyOperations.Add(moneyOperation);
+                dbContext.Transactions.Add(transaction);
                 dbContext.SaveChanges();
                 var controller = new ImportController(new CsvExportImport(), dbContext);
                 var formFile = new Mock<IFormFile>();
@@ -105,7 +105,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 //Assert
                 var value = result.FirstOrDefault(e => e.Name == "expense 1");
                 value.Should().NotBeNull();
-                value.MatchingId.Should().Be(moneyOperation.MoneyOperationId);
+                value.MatchingId.Should().Be(transaction.TransactionId);
             }
         }
 

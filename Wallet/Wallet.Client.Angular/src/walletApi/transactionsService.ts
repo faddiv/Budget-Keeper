@@ -1,5 +1,5 @@
-import { MoneyOperationApi } from "./api/api";
-import { MoneyOperation } from "./model/models";
+import { TransactionApi } from "./api/api";
+import { Transaction } from "./model/models";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { QueryParams } from "./queryParams";
@@ -8,11 +8,11 @@ import { decorateCommonCatch } from "./serviceHelpers";
 
 @Injectable()
 export class TrasactionsService {
-    constructor(private api: MoneyOperationApi) {
+    constructor(private api: TransactionApi) {
 
     }
 
-    batchUpdate(transactions: MoneyOperation[]): Observable<MoneyOperation[]> {
+    batchUpdate(transactions: Transaction[]): Observable<Transaction[]> {
         return decorateCommonCatch(this.api.batchSave(transactions));
     }
 }

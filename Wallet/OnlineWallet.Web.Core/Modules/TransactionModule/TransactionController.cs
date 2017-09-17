@@ -12,42 +12,42 @@ using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Models.Queries;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Modules.MoneyOperationModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    [SwaggerResponse((int) HttpStatusCode.Created, typeof(MoneyOperation))]
-    [SwaggerResponse((int) HttpStatusCode.OK, typeof(MoneyOperation))]
-    public class MoneyOperationController : CrudController<MoneyOperation, long>
+    [SwaggerResponse((int) HttpStatusCode.Created, typeof(Transaction))]
+    [SwaggerResponse((int) HttpStatusCode.OK, typeof(Transaction))]
+    public class TransactionController : CrudController<Transaction, long>
     {
         #region  Constructors
 
-        public MoneyOperationController(IWalletDbContext db) : base(db)
+        public TransactionController(IWalletDbContext db) : base(db)
         {
-            ConditionBuilder = new MoneyOperationConditionBuilder();
+            ConditionBuilder = new TransactionConditionBuilder();
         }
 
         #endregion
 
         #region Properties
 
-        protected override ConditionVisitorBase<MoneyOperation> ConditionBuilder { get; }
+        protected override ConditionVisitorBase<Transaction> ConditionBuilder { get; }
 
-        protected override DbSet<MoneyOperation> DbSet => Db.MoneyOperations;
+        protected override DbSet<Transaction> DbSet => Db.Transactions;
 
         #endregion
 
         [HttpPost("batchSave")]
-        [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<MoneyOperation>))]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<MoneyOperation>))]
-        public async Task<List<MoneyOperation>> BatchSave([FromBody, Required]List<MoneyOperation> operations, CancellationToken token)
+        [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<Transaction>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
+        public async Task<List<Transaction>> BatchSave([FromBody, Required]List<Transaction> operations, CancellationToken token)
         {
-            var existingIds = operations.Where(e => e.MoneyOperationId > 0).Select(e => e.MoneyOperationId).ToList();
-            var existingEntities = DbSet.Where(e => existingIds.Contains(e.MoneyOperationId)).ToList();
+            var existingIds = operations.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
+            var existingEntities = DbSet.Where(e => existingIds.Contains(e.TransactionId)).ToList();
             foreach (var operation in operations)
             {
                 operation.CreatedAt = operation.CreatedAt.Date;
-                if (operation.MoneyOperationId != 0)
+                if (operation.TransactionId != 0)
                 {
-                    var existingEntity = existingEntities.Find(e => e.MoneyOperationId == operation.MoneyOperationId);
+                    var existingEntity = existingEntities.Find(e => e.TransactionId == operation.TransactionId);
                     if (existingEntity == null)
                     {
                         throw new Exception("Money operation doesn't exists");

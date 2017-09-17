@@ -10,14 +10,14 @@
  * Do not edit the class manually.
  */
 
-export interface MoneyOperation {
+export interface Transaction {
     comment?: string;
 
     createdAt: Date;
 
-    direction: MoneyOperation.DirectionEnum;
+    direction: Transaction.DirectionEnum;
 
-    moneyOperationId?: number;
+    transactionId?: number;
 
     name: string;
 
@@ -26,7 +26,7 @@ export interface MoneyOperation {
     walletId: number;
 
 }
-export namespace MoneyOperation {
+export namespace Transaction {
     export enum DirectionEnum {
         NUMBER_1 = <any> 1,
         NUMBER_MINUS_1 = <any> -1

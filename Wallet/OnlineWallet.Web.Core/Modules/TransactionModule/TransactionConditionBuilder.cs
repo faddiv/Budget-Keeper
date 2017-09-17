@@ -4,16 +4,16 @@ using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Models.Queries;
 using OnlineWallet.Web.QueryLanguage.Conditions;
 
-namespace OnlineWallet.Web.Modules.MoneyOperationModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    public class MoneyOperationConditionBuilder : ConditionVisitorBase<MoneyOperation>
+    public class TransactionConditionBuilder : ConditionVisitorBase<Transaction>
     {
         #region  Nonpublic Methods
 
-        protected override Expression<Func<MoneyOperation, bool>> VisitSearchTermCondition(
+        protected override Expression<Func<Transaction, bool>> VisitSearchTermCondition(
             SearchTermCondition condition)
         {
-            return moneyOperation => moneyOperation.Name.Contains(condition.SearchTerm);
+            return transaction => transaction.Name.Contains(condition.SearchTerm);
         }
 
         #endregion

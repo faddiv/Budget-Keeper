@@ -15,7 +15,7 @@ namespace OnlineWallet.Web.DataLayer
 
         #region Properties
 
-        public DbSet<MoneyOperation> MoneyOperations => Set<MoneyOperation>();
+        public DbSet<Transaction> Transactions => Set<Transaction>();
 
         public DbSet<Wallet> Wallets => Set<Wallet>();
 
