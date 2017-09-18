@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ExportImportRow, Transaction } from "walletApi";
+import { ExportImportRow, Transaction, TrasactionsService, ApiError } from "walletApi";
+import { AlertModel } from 'app/common/alerts/AlertModel';
+import { ListHelpers } from 'walletCommon';
 
 @Component({
   selector: 'app-import',
@@ -8,10 +10,13 @@ import { ExportImportRow, Transaction } from "walletApi";
 })
 export class ImportComponent implements OnInit {
   linesToSave: Transaction[] = [];
-  current: string;
-  fullListEnabled = false;
+  alerts: AlertModel[] = [];
+  current: string = 'full';
+  canSave = false;
 
-  constructor() { }
+  constructor(private transactionsService: TrasactionsService) {
+
+  }
 
   get numRow() {
     return this.linesToSave.length;
@@ -25,23 +30,27 @@ export class ImportComponent implements OnInit {
       createdAt: e.created,
       direction: e.direction,
       name: e.name,
-      transactionId: e.matchingId,
+      transactionId: e.matchingId || 0,
       value: e.amount,
       walletId: e.source,
       category: e.category
     });
-    this.enableView();
+    this.canSave = true;
   }
 
   show(menu: string) {
     this.current = menu;
-    this.enableView();
   }
 
-  private enableView() {
-    if(!this.linesToSave || !this.linesToSave.length) return;
-    if(this.current === 'full') {
-      this.fullListEnabled = true;
-    }
+  save() {
+    if (!this.canSave) return;
+    this.transactionsService.batchUpdate(this.linesToSave)
+      .subscribe(() => {
+        this.alerts.push(AlertModel.success("Items saved successfully"));
+        this.linesToSave = [];
+      }, (error: ApiError) => {
+        this.alerts.push(AlertModel.error(error.message));
+      })
   }
+
 }

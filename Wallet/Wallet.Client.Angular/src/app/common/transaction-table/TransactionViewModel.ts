@@ -17,6 +17,6 @@ export class TransactionViewModel implements Transaction {
     }
 
     get price() {
-        return this.value + this.direction;
+        return this.value * this.direction;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ExportImportRow, ImportService, ApiError } from "walletApi";
 
@@ -22,6 +22,12 @@ export class ImportTransactionsComponent implements OnInit {
 
   @Output("load")
   load = new EventEmitter<ExportImportRow[]>();
+
+  @Output("save")
+  save = new EventEmitter<any>();
+
+  @Input()
+  canSave: boolean;
 
   constructor(private importService: ImportService) { }
 

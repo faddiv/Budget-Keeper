@@ -1,5 +1,8 @@
+<section class="row">
+  <app-alerts [alerts]="alerts"></app-alerts>
+</section>
 <div class="row">
-  <app-import-transactions (load)="addLines($event)">
+  <app-import-transactions (load)="addLines($event)" (save)="save()" [canSave]="canSave">
   </app-import-transactions>
 </div>
 <div class="row">
@@ -13,12 +16,10 @@
   <li role="presentation" [ngClass]="{ active: current === 'groupStock' }"><a (click)="show('groupStock');">Group stock</a></li>
 </ul>
 <div class="tab-content">
-    <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'full', in: current === 'full' }">
-      <div *ngIf="fullListEnabled">
-        <app-transaction-table [items]="linesToSave"></app-transaction-table>
-      </div>
-    </div>
-    <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'groupStock', in: current === 'groupStock' }">
-        groupStock
-    </div>
+  <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'full', in: current === 'full' }">
+    <app-transaction-table [items]="linesToSave"></app-transaction-table>
   </div>
+  <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'groupStock', in: current === 'groupStock' }">
+    groupStock
+  </div>
+</div>

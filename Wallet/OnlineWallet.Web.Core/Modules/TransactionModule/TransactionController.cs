@@ -52,6 +52,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     {
                         throw new Exception("Money operation doesn't exists");
                     }
+                    //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
                     Db.UpdateEntityValues(existingEntity, operation);
                 } else {
                     await DbSet.AddAsync(operation, token);
