@@ -11,7 +11,7 @@ export class TransactionViewModel implements Transaction {
     walletId: number;
     walletName: string;
 
-    cssClass: string
+    cssClass: string;
 
     constructor(original: Transaction, wallets: Wallet[]) {
         Object.assign(this, original);
