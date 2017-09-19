@@ -23,6 +23,7 @@ import { ImportComponent } from './import/import.component';
 import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
 import { AlertsComponent } from './common/alerts/alerts.component';
 import { TransactionTableComponent } from './common/transaction-table/transaction-table.component';
+import { StockTableComponent } from './import/stock-table/stock-table.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { TransactionTableComponent } from './common/transaction-table/transactio
     ImportTransactionsComponent,
     ImportComponent,
     AlertsComponent,
-    TransactionTableComponent
+    TransactionTableComponent,
+    StockTableComponent
   ],
   imports: [
     BrowserModule,

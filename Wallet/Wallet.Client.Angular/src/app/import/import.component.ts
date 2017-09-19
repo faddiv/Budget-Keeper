@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExportImportRow, Transaction, TrasactionsService, ApiError } from "walletApi";
 import { AlertModel } from 'app/common/alerts/AlertModel';
 import { ListHelpers } from 'walletCommon';
+import { StockModel } from './stock-table/StockModel';
 
 @Component({
   selector: 'app-import',
@@ -10,6 +11,7 @@ import { ListHelpers } from 'walletCommon';
 })
 export class ImportComponent implements OnInit {
   linesToSave: Transaction[] = [];
+  stocks: StockModel[];
   alerts: AlertModel[] = [];
   current: string = 'full';
   canSave = false;
@@ -33,8 +35,28 @@ export class ImportComponent implements OnInit {
       transactionId: e.matchingId || 0,
       value: e.amount,
       walletId: e.source,
-      category: e.category
+      category: e.category,
+
     });
+    this.stocks = [];
+    var grouping: {
+      [name: string]: StockModel
+    } = {};
+    for (var index = 0; index < newItems.length; index++) {
+      var element = newItems[index];
+      if (grouping[element.name]) {
+        grouping[element.name].category = grouping[element.name].category || element.category;
+        grouping[element.name].count++;
+      } else {
+        grouping[element.name] = new StockModel(element.name, element.category, 1);
+      }
+    }
+    for (var key in grouping) {
+      if (grouping.hasOwnProperty(key)) {
+        this.stocks.push(grouping[key]);
+      }
+    }
+    this.stocks.sort((left, right) => right.count - left.count);
     this.canSave = true;
   }
 

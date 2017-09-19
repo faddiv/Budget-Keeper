@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  WALLET_API_PATH: "http://localhost:5000"//56491
+  WALLET_API_PATH: "http://localhost:56491"//
 };

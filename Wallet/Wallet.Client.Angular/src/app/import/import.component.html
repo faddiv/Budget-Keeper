@@ -20,6 +20,6 @@
     <app-transaction-table [items]="linesToSave"></app-transaction-table>
   </div>
   <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'groupStock', in: current === 'groupStock' }">
-    groupStock
+    <app-stock-table [stocks]="stocks"></app-stock-table>
   </div>
 </div>

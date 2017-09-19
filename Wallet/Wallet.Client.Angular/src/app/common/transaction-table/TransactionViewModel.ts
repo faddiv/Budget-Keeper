@@ -11,9 +11,12 @@ export class TransactionViewModel implements Transaction {
     walletId: number;
     walletName: string;
 
+    cssClass: string
+
     constructor(original: Transaction, wallets: Wallet[]) {
         Object.assign(this, original);
         this.walletName = ListHelpers.selectMap<Wallet,string>(wallets, w => w.moneyWalletId == this.walletId, w => w.name);
+        this.cssClass = this.transactionId ? "info" : undefined;
     }
 
     get price() {
