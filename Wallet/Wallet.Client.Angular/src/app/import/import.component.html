@@ -17,7 +17,7 @@
 </ul>
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'full', in: current === 'full' }">
-    <app-transaction-table [items]="linesToSave"></app-transaction-table>
+    <app-paged-transaction-table [items]="linesToSave"></app-paged-transaction-table>
   </div>
   <div role="tabpanel" class="tab-pane" [ngClass]="{ active: current === 'groupStock', in: current === 'groupStock' }">
     <app-stock-table [stocks]="stocks"></app-stock-table>

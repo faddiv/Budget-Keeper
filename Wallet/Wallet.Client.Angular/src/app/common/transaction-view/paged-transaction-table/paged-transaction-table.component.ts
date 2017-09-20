@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Transaction, Wallet, WalletService } from 'walletApi';
-import { TransactionViewModel } from './TransactionViewModel';
+import { TransactionViewModel } from '../models/TransactionViewModel';
 
 @Component({
-  selector: 'app-transaction-table',
-  templateUrl: './transaction-table.component.html',
-  styleUrls: ['./transaction-table.component.scss']
+  selector: 'app-paged-transaction-table',
+  templateUrl: './paged-transaction-table.component.html',
+  styleUrls: ['./paged-transaction-table.component.scss']
 })
 export class TransactionTableComponent implements OnInit, OnChanges {
 
