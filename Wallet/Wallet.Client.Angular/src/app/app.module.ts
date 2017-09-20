@@ -24,6 +24,7 @@ import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
 import { AlertsComponent } from './common/alerts/alerts.component';
 import { TransactionTableComponent } from './common/transaction-view';
 import { StockTableComponent } from './import/stock-table/stock-table.component';
+import { TransactionsComponent } from './transactions/transactions.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { StockTableComponent } from './import/stock-table/stock-table.component'
     ImportComponent,
     AlertsComponent,
     TransactionTableComponent,
-    StockTableComponent
+    StockTableComponent,
+    TransactionsComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +58,10 @@ import { StockTableComponent } from './import/stock-table/stock-table.component'
   {
     path: "import",
     component: ImportComponent
+  },
+  {
+    path: "transactions",
+    component: TransactionsComponent
   },
   {
     path: "",

@@ -15,4 +15,8 @@ export class TrasactionsService {
     batchUpdate(transactions: Transaction[]): Observable<Transaction[]> {
         return decorateCommonCatch(this.api.batchSave(transactions));
     }
+
+    fetch(query: QueryParams): Observable<Transaction[]> {
+        return decorateCommonCatch(this.api.getAll(query.search, query.skip, query.take));
+    }
 }

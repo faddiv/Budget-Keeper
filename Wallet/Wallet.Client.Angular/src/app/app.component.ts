@@ -17,6 +17,10 @@ export class AppComponent {
         path: [""]
       },
       {
+        title: "Transactions",
+        path: ["transactions"]
+      },
+      {
         title: "Import",
         path: ["import"]
       },

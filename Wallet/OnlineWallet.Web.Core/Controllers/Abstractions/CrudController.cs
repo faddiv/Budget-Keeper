@@ -126,7 +126,7 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         protected virtual IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string searchText)
         {
             var parser = new QueryLanguageParser();
-            var condition = parser.Parse(searchText);
+            var condition = parser.ParseFilter(searchText);
             if (condition == null)
                 return query;
             query = query.Where(ConditionBuilder.Visit(condition));
