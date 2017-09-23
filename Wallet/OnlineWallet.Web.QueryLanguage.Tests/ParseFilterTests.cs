@@ -7,12 +7,6 @@ namespace OnlineWallet.Web.QueryLanguage
     [Trait("ParseFilter", null)]
     public class ParseFilterTests
     {
-        #region Fields
-
-        private readonly QueryLanguageParser _parser = new QueryLanguageParser();
-
-        #endregion
-
         #region  Public Methods
 
         [Theory(DisplayName = "Can combine And and Or with right precedence")]
@@ -23,7 +17,7 @@ namespace OnlineWallet.Web.QueryLanguage
         public void CanCombineAndAndOrWithRightPrecedence(string searchTerm, string expected)
         {
             //Act
-            var condition = _parser.ParseFilter(searchTerm);
+            var condition = QueryLanguageParser.ParseFilter(searchTerm);
             condition.Should().NotBeNull();
             condition.Should().BeOfType<LogicalOperatorCondition>();
             condition.ToString().Should().Be(expected);
@@ -33,8 +27,8 @@ namespace OnlineWallet.Web.QueryLanguage
         public void EmptyAndNullStringParsedToNull()
         {
             //Act
-            _parser.ParseFilter(null).Should().BeNull();
-            _parser.ParseFilter(string.Empty).Should().BeNull();
+            QueryLanguageParser.ParseFilter(null).Should().BeNull();
+            QueryLanguageParser.ParseFilter(string.Empty).Should().BeNull();
         }
 
         [Theory(DisplayName = "Parses more word")]
@@ -43,7 +37,7 @@ namespace OnlineWallet.Web.QueryLanguage
         public void ParsesMoreWord(string searchTerm, string expected)
         {
             //Act
-            var condition = _parser.ParseFilter(searchTerm);
+            var condition = QueryLanguageParser.ParseFilter(searchTerm);
             condition.Should().NotBeNull();
             condition.Should().BeOfType<LogicalOperatorCondition>();
             condition.ToString().Should().Be(expected);
@@ -56,7 +50,7 @@ namespace OnlineWallet.Web.QueryLanguage
         public void ParsesMoreWordConnectedAndOperator(string searchTerm, string expected)
         {
             //Act
-            var condition = _parser.ParseFilter(searchTerm);
+            var condition = QueryLanguageParser.ParseFilter(searchTerm);
             condition.Should().NotBeNull();
             condition.Should().BeOfType<LogicalOperatorCondition>();
             condition.ToString().Should().Be(expected);
@@ -69,7 +63,7 @@ namespace OnlineWallet.Web.QueryLanguage
         public void ParsesMoreWordConnectedOrOperator(string searchTerm, string expected)
         {
             //Act
-            var condition = _parser.ParseFilter(searchTerm);
+            var condition = QueryLanguageParser.ParseFilter(searchTerm);
             condition.Should().NotBeNull();
             condition.Should().BeOfType<LogicalOperatorCondition>();
             condition.ToString().Should().Be(expected);
@@ -79,7 +73,7 @@ namespace OnlineWallet.Web.QueryLanguage
         public void ParsesSimpleWord()
         {
             //Act
-            var condition = _parser.ParseFilter("Valami");
+            var condition = QueryLanguageParser.ParseFilter("Valami");
             condition.Should().NotBeNull();
             condition.Should().BeOfType<SearchTermCondition>();
             var term = (SearchTermCondition) condition;

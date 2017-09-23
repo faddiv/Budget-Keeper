@@ -46,7 +46,8 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   select(pageNumber: number) {
     var pageSize = this.pageSize,
       items = this.items;
-    if (pageSize === 0 || items.length === 0) {
+
+    if (pageSize === 0 || !items || !items.length) {
       this.pageCount = 1;
     } else {
       this.pageCount = Math.floor(items.length / pageSize);
@@ -57,7 +58,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.page = pageNumber;
     var from = this.showItemsFrom();
     var to = this.showItemsTo();
-    this.pageItems = this.items.slice(from, to).map(v => new TransactionViewModel(v, this.wallets));
+    this.pageItems = this.items ? this.items.slice(from, to).map(v => new TransactionViewModel(v, this.wallets)) : [];
     var pages: number[] = [];
     var pagesFrom = Math.max(pageNumber - 5, 1);
     var pagesTo = Math.min(pagesFrom + 10, this.pageCount + 1);

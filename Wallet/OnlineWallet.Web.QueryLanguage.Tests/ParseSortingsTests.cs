@@ -7,17 +7,11 @@ namespace OnlineWallet.Web.QueryLanguage
     [Trait("ParseSortings", null)]
     public class ParseSortingsTests
     {
-        #region Fields
-
-        private readonly QueryLanguageParser _parser = new QueryLanguageParser();
-
-        #endregion
-
         [Fact(DisplayName = "Parses null and empty as null")]
         public void Parses_null_and_empty_as_null()
         {
-            _parser.ParseSortings("").Should().BeNull();
-            _parser.ParseSortings(null).Should().BeNull();
+            QueryLanguageParser.ParseSortings("").Should().BeNull();
+            QueryLanguageParser.ParseSortings(null).Should().BeNull();
         }
 
         [Fact(DisplayName = "Parses simple property")]
@@ -43,7 +37,7 @@ namespace OnlineWallet.Web.QueryLanguage
 
         private void Test(string input, params Sorting[] sortings)
         {
-            var result = _parser.ParseSortings(input);
+            var result = QueryLanguageParser.ParseSortings(input);
             result.Should().Equal(sortings);
         }
     }

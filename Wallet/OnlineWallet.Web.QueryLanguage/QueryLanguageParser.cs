@@ -12,7 +12,7 @@ namespace OnlineWallet.Web.QueryLanguage
     {
         #region  Public Methods
 
-        public ICondition ParseFilter(string input)
+        public static ICondition ParseFilter(string input)
         {
             if (string.IsNullOrEmpty(input)) return null;
             var antlrInputStream = new AntlrInputStream(input);
@@ -31,7 +31,7 @@ namespace OnlineWallet.Web.QueryLanguage
             return condition;
         }
 
-        public List<Sorting> ParseSortings(string input)
+        public static List<Sorting> ParseSortings(string input)
         {
             if (string.IsNullOrEmpty(input)) return null;
             var sortingStrings = input.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);

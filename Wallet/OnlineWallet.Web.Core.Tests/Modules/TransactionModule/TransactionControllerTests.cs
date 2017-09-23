@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Models.Queries;
 using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
@@ -168,6 +169,44 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result[0].CreatedAt.Should().Be(dateTime, "it removes time part in the result");
             var entity = _fixture.DbContext.Transactions.Find(result[0].TransactionId);
             entity.CreatedAt.Should().Be(dateTime, "it removes time part in the database");
+        }
+
+        [Fact(DisplayName = "CanSort GetAll Operation")]
+        public async Task CanSort_GetAll_Operation()
+        {
+            var transactions = new List<Transaction>
+            {
+                new Transaction
+                {
+                    Name = "third",
+                    Category = "cat",
+                    Comment = "comment",
+                    CreatedAt = DateTime.Parse("2017-09-16"),
+                    Direction = MoneyDirection.Expense,
+                    Value = 101,
+                    WalletId = _fixture.Wallet1.MoneyWalletId
+                },
+                new Transaction
+                {
+                    Name = "fourth",
+                    Category = "cat",
+                    Comment = "comment",
+                    CreatedAt = DateTime.Parse("2017-09-16"),
+                    Direction = MoneyDirection.Expense,
+                    Value = 102,
+                    WalletId = _fixture.Wallet2.MoneyWalletId
+                }
+            };
+            _fixture.DbContext.Transactions.AddRange(transactions);
+            _fixture.DbContext.SaveChanges();
+            var controller = new TransactionController(_fixture.DbContext);
+
+            var result = await controller.GetAll(new QueryRequest
+            {
+                Sorting = "Value, Name"
+            }, CancellationToken.None);
+            result.Should().NotBeNull();
+            result.Should().BeInAscendingOrder(e => e.Value);
         }
 
         public void Dispose()

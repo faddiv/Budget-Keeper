@@ -61,6 +61,12 @@ namespace OnlineWallet.Web.Controllers.Abstractions
             {
                 query = GenericSearch(query, request.Search);
             }
+            if (!string.IsNullOrEmpty(request.Sorting))
+            {
+                var sortings = QueryLanguageParser.ParseSortings(request.Sorting);
+                OrderByBuilder<TEntity> builder = new OrderByBuilder<TEntity>();
+                query = builder.Build(query, sortings);
+            }
             if (request.Take.HasValue)
             {
                 query = query.Take(request.Take.Value);
@@ -125,8 +131,7 @@ namespace OnlineWallet.Web.Controllers.Abstractions
 
         protected virtual IQueryable<TEntity> GenericSearch(IQueryable<TEntity> query, string searchText)
         {
-            var parser = new QueryLanguageParser();
-            var condition = parser.ParseFilter(searchText);
+            var condition = QueryLanguageParser.ParseFilter(searchText);
             if (condition == null)
                 return query;
             query = query.Where(ConditionBuilder.Visit(condition));
@@ -135,7 +140,7 @@ namespace OnlineWallet.Web.Controllers.Abstractions
 
         private string GetFirstError()
         {
-            return ModelState.Values.SelectMany(e => e.Errors).FirstOrDefault().ErrorMessage;
+            return ModelState.Values.SelectMany(e => e.Errors).FirstOrDefault()?.ErrorMessage;
         }
 
         private ContentResult ValidationError()

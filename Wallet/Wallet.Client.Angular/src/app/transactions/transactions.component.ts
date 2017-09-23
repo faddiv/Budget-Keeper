@@ -16,7 +16,7 @@ export class TransactionsComponent implements OnInit {
 
   ngOnInit() {
     this.trasactionsService.fetch({
-
+      sorting: "createdAt desc, transactionId desc"
     }).subscribe(transactions => {
       this.transactions = transactions;
     })

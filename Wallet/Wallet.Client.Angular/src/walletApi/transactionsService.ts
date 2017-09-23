@@ -2,7 +2,7 @@ import { TransactionApi } from "./api/api";
 import { Transaction } from "./model/models";
 import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs/Observable";
-import { QueryParams } from "./queryParams";
+import { QueryParams } from "./model/models";
 import { ApiError } from "./apiError";
 import { decorateCommonCatch } from "./serviceHelpers";
 
@@ -17,6 +17,6 @@ export class TrasactionsService {
     }
 
     fetch(query: QueryParams): Observable<Transaction[]> {
-        return decorateCommonCatch(this.api.getAll(query.search, query.skip, query.take));
+        return decorateCommonCatch(this.api.getAll(query.search, query.skip, query.take, query.sorting));
     }
 }

@@ -78,9 +78,10 @@ export class TransactionApi {
      * @param search 
      * @param skip 
      * @param take 
+     * @param sorting 
      */
-    public getAll(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Array<models.Transaction>> {
-        return this.getAllWithHttpInfo(search, skip, take, extraHttpRequestParams)
+    public getAll(search?: string, skip?: number, take?: number, sorting?: string, extraHttpRequestParams?: any): Observable<Array<models.Transaction>> {
+        return this.getAllWithHttpInfo(search, skip, take, sorting, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -237,8 +238,9 @@ export class TransactionApi {
      * @param search 
      * @param skip 
      * @param take 
+     * @param sorting 
      */
-    public getAllWithHttpInfo(search?: string, skip?: number, take?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public getAllWithHttpInfo(search?: string, skip?: number, take?: number, sorting?: string, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Transaction';
 
         let queryParameters = new URLSearchParams();
@@ -253,6 +255,10 @@ export class TransactionApi {
 
         if (take !== undefined) {
             queryParameters.set('Take', <any>take);
+        }
+
+        if (sorting !== undefined) {
+            queryParameters.set('Sorting', <any>sorting);
         }
 
         // to determine the Content-Type header
