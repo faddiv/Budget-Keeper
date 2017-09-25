@@ -12,6 +12,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   @Input("items")
   items: Transaction[];
 
+  @Input("coloring")
+  coloring: boolean;
+
   wallets: Wallet[];
 
   pageItems: TransactionViewModel[];
@@ -59,6 +62,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     var from = this.showItemsFrom();
     var to = this.showItemsTo();
     this.pageItems = this.items ? this.items.slice(from, to).map(v => new TransactionViewModel(v, this.wallets)) : [];
+    if(this.coloring) {
+      this.pageItems.forEach(defaultColoringFunction);
+    }
     var pages: number[] = [];
     var pagesFrom = Math.max(pageNumber - 5, 1);
     var pagesTo = Math.min(pagesFrom + 10, this.pageCount + 1);
@@ -87,4 +93,8 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       return 0;
     return Math.min(this.page * this.pageSize, this.items.length);
   }
+}
+
+function defaultColoringFunction(value:TransactionViewModel) {
+  value.cssClass = value.transactionId ? "info" : undefined;
 }
