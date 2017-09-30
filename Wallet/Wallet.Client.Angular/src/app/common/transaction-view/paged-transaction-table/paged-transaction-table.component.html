@@ -1,26 +1,64 @@
-<div *ngIf="pageItems && pageItems.length; else noElement">
+<div class="row">
+  <div class="col-md-12">
+    <button type="button" class="btn btn-success" [disabled]="!hasElements">Save</button>
+  </div>
+</div>
+<ng-container *ngIf="hasElements; else noElement">
   <table class="table">
     <thead>
       <tr>
-        <th>createdAt</th>
-        <th>name</th>
-        <th>price</th>
-        <th>walletName</th>
-        <th>category</th>
+        <th class="created-at">createdAt</th>
+        <th class="name">name</th>
+        <th class="price">price</th>
+        <th class="wallet-name">walletName</th>
+        <th class="category">category</th>
         <th>comment</th>
+        <th class="commands"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of pageItems" [ngClass]="item.cssClass">
-        <td>{{item.createdAt | date: 'yyyy-MM-dd'}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.price}}</td>
-        <td>{{item.walletName}}</td>
-        <td>{{item.category}}</td>
-        <td>{{item.comment}}</td>
+        <ng-container *ngIf="item.editMode; then editRow; else viewRow"></ng-container>
+        <ng-template #editRow>
+          <td><input type="date" class="form-control" [(ngModel)]="item.createdAtText" name="createdAt" /></td>
+          <td><input type="text" class="form-control" [(ngModel)]="item.name" name="name" /></td>
+          <td><input type="number" class="form-control" [(ngModel)]="item.price" name="price" /></td>
+          <td>
+            <select class="form-control" [(ngModel)]="item.walletId" name="walletId">
+              <option *ngFor="let wallet of wallets" [value]="wallet.moneyWalletId">{{wallet.name}}</option>
+            </select>
+          </td>
+          <td><input type="category" class="form-control" [(ngModel)]="item.category" name="category" /></td>
+          <td><input type="comment" class="form-control" [(ngModel)]="item.comment" name="comment" /></td>
+          <td>
+            <button class="btn btn-danger pull-right" type="button" (click)="item.cancel()">
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            <button class="btn btn-success pull-right" type="button" (click)="item.save()">
+                <span class="glyphicon glyphicon-ok"></span>
+              </button>
+          </td>
+        </ng-template>
+        <ng-template #viewRow>
+          <td>{{item.createdAtText}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.walletName}}</td>
+          <td>{{item.category}}</td>
+          <td>{{item.comment}}</td>
+          <td>
+            <button class="btn btn-danger pull-right" type="button" (click)="deleteTransaction(item)">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            <button class="btn btn-primary pull-right" type="button" (click)="editTransaction(item)">
+                <span class="glyphicon glyphicon-edit"></span>
+              </button>
+          </td>
+        </ng-template>
       </tr>
-      <tbody>
+    </tbody>
   </table>
+
   <nav aria-label="Page navigation">
     <ul class="pagination">
       <li>
@@ -36,7 +74,7 @@
       </li>
     </ul>
   </nav>
-</div>
+</ng-container>
 <ng-template #noElement>
   <div class="jumbotron">
     There is no row to show.

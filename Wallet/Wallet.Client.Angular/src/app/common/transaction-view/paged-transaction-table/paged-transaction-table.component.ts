@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Transaction, Wallet, WalletService } from 'walletApi';
 import { TransactionViewModel } from '../models/TransactionViewModel';
+import { ListHelpers } from 'walletCommon';
 
 @Component({
   selector: 'app-paged-transaction-table',
@@ -29,6 +30,10 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
   constructor(private walletService: WalletService) {
 
+  }
+
+  get hasElements() {
+    return this.pageItems && this.pageItems.length;
   }
 
   ngOnInit() {
@@ -62,7 +67,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     var from = this.showItemsFrom();
     var to = this.showItemsTo();
     this.pageItems = this.items ? this.items.slice(from, to).map(v => new TransactionViewModel(v, this.wallets)) : [];
-    if(this.coloring) {
+    if (this.coloring) {
       this.pageItems.forEach(defaultColoringFunction);
     }
     var pages: number[] = [];
@@ -72,6 +77,15 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       pages.push(index);
     }
     this.pages = pages;
+  }
+
+  editTransaction(item: TransactionViewModel) {
+    item.editMode = !item.editMode;
+  }
+
+  deleteTransaction(item: TransactionViewModel) {
+    ListHelpers.remove(this.items, item.original);
+    this.select(this.page);
   }
 
   first() {
@@ -95,6 +109,6 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   }
 }
 
-function defaultColoringFunction(value:TransactionViewModel) {
+function defaultColoringFunction(value: TransactionViewModel) {
   value.cssClass = value.transactionId ? "info" : undefined;
 }

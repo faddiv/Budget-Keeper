@@ -1,5 +1,8 @@
 import { Transaction, Wallet } from "walletApi";
 import { ListHelpers } from "walletCommon";
+import * as moment from "moment";
+
+
 
 export class TransactionViewModel implements Transaction {
     comment?: string;
@@ -12,13 +15,38 @@ export class TransactionViewModel implements Transaction {
     walletName: string;
 
     cssClass: string;
+    editMode: boolean;
 
-    constructor(original: Transaction, wallets: Wallet[]) {
+    constructor(
+        public original: Transaction, 
+        wallets: Wallet[]) {
         Object.assign(this, original);
         this.walletName = ListHelpers.selectMap<Wallet,string>(wallets, w => w.moneyWalletId == this.walletId, w => w.name);
     }
 
     get price() {
         return this.value * this.direction;
+    }
+
+    get createdAtText() {
+        return moment(this.createdAt).format("YYYY-MM-DD");
+    }
+
+    set createdAtText(value: string) {
+        this.createdAt = moment(value).toDate();
+    }
+
+    save() {
+        for (var key in this.original) {
+            if (this.original.hasOwnProperty(key)) {
+                this.original[key] = this[key];
+            }
+        }
+        this.editMode = false;
+    }
+
+    cancel() {
+        Object.assign(this, this.original);
+        this.editMode = false;
     }
 }
