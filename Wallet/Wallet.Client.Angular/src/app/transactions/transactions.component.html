@@ -1,1 +1,6 @@
-<app-paged-transaction-table [items]="transactions"></app-paged-transaction-table>
+<div class="row">
+    <div class="col-md-12">
+        <button type="button" class="btn btn-success" (click)="save()">Save</button>
+    </div>
+</div>
+<app-paged-transaction-table [items]="transactions" [changedItems]="changedItems"></app-paged-transaction-table>

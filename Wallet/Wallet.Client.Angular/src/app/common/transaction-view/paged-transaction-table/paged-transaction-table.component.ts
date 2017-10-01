@@ -13,6 +13,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   @Input("items")
   items: Transaction[];
 
+  @Input("changedItems")
+  changedItems: Transaction[];
+
   @Input("coloring")
   coloring: boolean;
 
@@ -86,6 +89,28 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   deleteTransaction(item: TransactionViewModel) {
     ListHelpers.remove(this.items, item.original);
     this.select(this.page);
+  }
+
+  saveTransaction(item: TransactionViewModel) {
+    for (var key in item.original) {
+      if (item.original.hasOwnProperty(key)) {
+        if (item.original[key] !== item[key]) {
+          item.original[key] = item[key];
+          item.changed = true;
+        }
+      }
+    }
+    item.walletName = ListHelpers.selectMap<Wallet,string>(this.wallets, w => w.moneyWalletId == item.walletId, w => w.name);
+    item.editMode = false;
+    if (this.changedItems) {
+      var changes = this.pageItems.filter(val => val.changed);
+      for (var index = 0; index < changes.length; index++) {
+        var item = changes[index];
+        if (this.changedItems.findIndex(e => e === item.original) === -1) {
+          this.changedItems.push(item.original);
+        }
+      }
+    }
   }
 
   first() {

@@ -1,14 +1,10 @@
-<div class="row">
-  <div class="col-md-12">
-    <button type="button" class="btn btn-success" [disabled]="!hasElements">Save</button>
-  </div>
-</div>
 <ng-container *ngIf="hasElements; else noElement">
   <table class="table">
     <thead>
       <tr>
         <th class="created-at">createdAt</th>
         <th class="name">name</th>
+        <th class="direction">dir</th>
         <th class="price">price</th>
         <th class="wallet-name">walletName</th>
         <th class="category">category</th>
@@ -22,7 +18,11 @@
         <ng-template #editRow>
           <td><input type="date" class="form-control" [(ngModel)]="item.createdAtText" name="createdAt" /></td>
           <td><input type="text" class="form-control" [(ngModel)]="item.name" name="name" /></td>
-          <td><input type="number" class="form-control" [(ngModel)]="item.price" name="price" /></td>
+          <td>
+              <span *ngIf="item.direction===-1" class="glyphicon glyphicon-log-out"></span>
+              <span *ngIf="item.direction===1" class="glyphicon glyphicon-log-in"></span>
+          </td>
+          <td><input type="number" class="form-control" [(ngModel)]="item.value" name="value" /></td>
           <td>
             <select class="form-control" [(ngModel)]="item.walletId" name="walletId">
               <option *ngFor="let wallet of wallets" [value]="wallet.moneyWalletId">{{wallet.name}}</option>
@@ -34,7 +34,7 @@
             <button class="btn btn-danger pull-right" type="button" (click)="item.cancel()">
                 <span class="glyphicon glyphicon-remove"></span>
               </button>
-            <button class="btn btn-success pull-right" type="button" (click)="item.save()">
+            <button class="btn btn-success pull-right" type="button" (click)="saveTransaction(item)">
                 <span class="glyphicon glyphicon-ok"></span>
               </button>
           </td>
@@ -42,7 +42,11 @@
         <ng-template #viewRow>
           <td>{{item.createdAtText}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.price}}</td>
+          <td>
+              <span *ngIf="item.direction===-1" class="glyphicon glyphicon-log-out"></span>
+              <span *ngIf="item.direction===1" class="glyphicon glyphicon-log-in"></span>
+          </td>
+          <td>{{item.value}}</td>
           <td>{{item.walletName}}</td>
           <td>{{item.category}}</td>
           <td>{{item.comment}}</td>

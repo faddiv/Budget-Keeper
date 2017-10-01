@@ -16,12 +16,13 @@ export class TransactionViewModel implements Transaction {
 
     cssClass: string;
     editMode: boolean;
+    changed: boolean;
 
     constructor(
-        public original: Transaction, 
+        public original: Transaction,
         wallets: Wallet[]) {
         Object.assign(this, original);
-        this.walletName = ListHelpers.selectMap<Wallet,string>(wallets, w => w.moneyWalletId == this.walletId, w => w.name);
+        this.walletName = ListHelpers.selectMap<Wallet, string>(wallets, w => w.moneyWalletId == this.walletId, w => w.name);
     }
 
     get price() {
@@ -34,15 +35,6 @@ export class TransactionViewModel implements Transaction {
 
     set createdAtText(value: string) {
         this.createdAt = moment(value).toDate();
-    }
-
-    save() {
-        for (var key in this.original) {
-            if (this.original.hasOwnProperty(key)) {
-                this.original[key] = this[key];
-            }
-        }
-        this.editMode = false;
     }
 
     cancel() {

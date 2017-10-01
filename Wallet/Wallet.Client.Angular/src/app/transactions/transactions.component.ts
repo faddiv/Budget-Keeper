@@ -9,6 +9,7 @@ import { Transaction, TrasactionsService } from 'walletApi';
 export class TransactionsComponent implements OnInit {
 
   transactions: Transaction[];
+  changedItems: Transaction[] = [];
 
   constructor(
     private trasactionsService: TrasactionsService
@@ -20,6 +21,13 @@ export class TransactionsComponent implements OnInit {
     }).subscribe(transactions => {
       this.transactions = transactions;
     })
+  }
+
+  save() {
+    this.trasactionsService.batchUpdate(this.changedItems)
+      .subscribe(result => {
+        this.changedItems.length = 0;
+      });
   }
 
 }
