@@ -25,6 +25,10 @@ export class AppComponent {
         path: ["import"]
       },
       {
+        title: "Export",
+        path: ["export"]
+      },
+      {
         title: "Wallets",
         path: ["wallets"]
       }

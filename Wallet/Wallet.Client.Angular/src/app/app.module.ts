@@ -25,6 +25,7 @@ import { AlertsComponent } from './common/alerts/alerts.component';
 import { TransactionTableComponent } from './common/transaction-view';
 import { StockTableComponent } from './import/stock-table/stock-table.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { ExportComponent } from './export/export.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
     AlertsComponent,
     TransactionTableComponent,
     StockTableComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    ExportComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,10 @@ import { TransactionsComponent } from './transactions/transactions.component';
   {
     path: "import",
     component: ImportComponent
+  },
+  {
+    path: "export",
+    component: ExportComponent
   },
   {
     path: "transactions",
