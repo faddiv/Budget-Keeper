@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 import { WalletApi, ImportApi, TransactionApi } from "./api/api";
 import { WalletService } from "./walletService";
 import { ImportService } from "./importService";
+import { ExportService } from "./exportService";
 import { TrasactionsService } from "./transactionsService";
 
 @NgModule({
@@ -16,6 +17,7 @@ import { TrasactionsService } from "./transactionsService";
         TransactionApi,
         WalletService,
         ImportService,
+        ExportService,
         TrasactionsService
     ]
 })

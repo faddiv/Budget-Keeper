@@ -1,6 +1,7 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import * as moment from "moment";
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { ExportService } from 'walletApi';
 
 @Component({
   selector: 'app-export',
@@ -42,7 +43,8 @@ export class ExportComponent implements OnInit {
     name: "From-To"
   }];
 
-  constructor() {
+  constructor(
+    private exportService: ExportService) {
     var now = moment();
     this.year.setValue(now.year());
     this.month.setValue(now.month() + 1);
@@ -57,7 +59,7 @@ export class ExportComponent implements OnInit {
   get rangeType() {
     return <FormControl>this.form.get("rangeType");
   }
-  
+
   get yearMonth() {
     return <FormGroup>this.form.get("yearMonth");
   }
@@ -67,7 +69,7 @@ export class ExportComponent implements OnInit {
   get month() {
     return <FormControl>this.yearMonth.get("month");
   }
-  
+
   get fromTo() {
     return <FormGroup>this.form.get("fromTo");
   }
@@ -77,7 +79,7 @@ export class ExportComponent implements OnInit {
   get rangeTo() {
     return <FormControl>this.fromTo.get("rangeTo");
   }
-  
+
   ngOnInit() {
     this.rangeType.valueChanges.subscribe(data => {
       this.setEnabled(this.yearMonth, data === "1");
@@ -86,13 +88,27 @@ export class ExportComponent implements OnInit {
   }
 
   setEnabled(control: AbstractControl, enabled: boolean) {
-    if(enabled) {
+    if (enabled) {
       control.enable();
     } else {
       control.disable();
     }
   }
   download() {
-    alert(this.form.valid);
+    if (this.form.invalid) {
+
+      return;
+    }
+    var rangeFrom: string;
+    var rangeTo: string;
+    if (this.rangeType.value == "1") {
+      var from = moment([parseInt(this.year.value), parseInt(this.month.value)-1, 1]);
+      rangeFrom = from.format("YYYY-MM-DD");
+      rangeTo = from.endOf("month").format("YYYY-MM-DD");
+    } else {
+      rangeFrom = this.rangeFrom.value;
+      rangeTo = this.rangeTo.value;
+    }
+    this.exportService.exportRange(rangeFrom, rangeTo, this.file.value);
   }
 }
