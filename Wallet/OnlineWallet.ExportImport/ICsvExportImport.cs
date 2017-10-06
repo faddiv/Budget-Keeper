@@ -5,7 +5,7 @@ namespace OnlineWallet.ExportImport
 {
     public interface ICsvExportImport
     {
-        void ExportTransactions(IEnumerable<ExportImportRow> imports, string path);
+        void ExportTransactions(IEnumerable<ExportImportRow> imports, Stream stream);
         IEnumerable<ExportImportRow> ImportTransactions(Stream stream);
     }
 }

@@ -23,7 +23,11 @@ namespace OnlineWallet.Migration
             var exporter = new CsvExportImport();
 
             //Act
-            exporter.ExportTransactions(expenses, ExportresultCsv);
+            using (var expenseFileStream =
+                new FileStream(ExportresultCsv, FileMode.Create))
+            {
+                exporter.ExportTransactions(expenses, expenseFileStream);
+            }
 
             //Assert
             File.ReadAllText(ExportresultCsv).Should().Be(
@@ -48,7 +52,7 @@ namespace OnlineWallet.Migration
         }
 
         #region SampleData
-        
+
         private static List<ExportImportRow> GetSampleData()
         {
             return new List<ExportImportRow>
@@ -60,7 +64,7 @@ namespace OnlineWallet.Migration
                     Category = "category 1",
                     Comment = "comment 1",
                     Created = DateTime.Parse("2017.08.26"),
-                    Source = MoneySource.BankAccount,
+                    Source = MoneySource.BankAccount.ToString(),
                     Direction = MoneyDirection.Expense
                 },
                 new ExportImportRow
@@ -68,7 +72,7 @@ namespace OnlineWallet.Migration
                     Name = "Salary by Cash",
                     Amount = 123,
                     Created = DateTime.Parse("2017.08.01"),
-                    Source = MoneySource.Cash,
+                    Source = MoneySource.Cash.ToString(),
                     Category = "xxx",
                     Comment = "comment 1",
                     Direction = MoneyDirection.Income

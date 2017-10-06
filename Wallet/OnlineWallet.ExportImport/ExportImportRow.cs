@@ -13,7 +13,7 @@ namespace OnlineWallet.ExportImport
         public string Comment { get; set; }
         public string Category { get; set; }
         public int? Amount { get; set; }
-        public MoneySource Source { get; set; }
+        public string Source { get; set; }
         public MoneyDirection Direction { get; set; }
         public long? MatchingId { get; set; }
 

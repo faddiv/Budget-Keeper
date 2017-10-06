@@ -77,7 +77,7 @@ namespace OnlineWallet.Migration
                                 Name = name,
                                 Category = category,
                                 Amount = amount.GetValueOrDefault(),
-                                Source = isCash ? MoneySource.Cash : MoneySource.BankAccount,
+                                Source = isCash ? MoneySource.Cash.ToString() : MoneySource.BankAccount.ToString(),
                                 Comment = comment,
                                 Direction = MoneyDirection.Expense
                             };
@@ -139,7 +139,7 @@ namespace OnlineWallet.Migration
                 Created = new DateTime(year, month, 1),
                 Amount = cashAmount,
                 Name = "Salary by " + moneySource,
-                Source = moneySource,
+                Source = moneySource.ToString(),
                 Category = null,
                 Comment = null,
                 Direction = MoneyDirection.Income

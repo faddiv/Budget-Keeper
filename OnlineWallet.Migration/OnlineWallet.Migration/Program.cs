@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CommandLine;
 using OnlineWallet.ExportImport;
 
@@ -21,19 +22,28 @@ namespace OnlineWallet.Migration
         {
             try
             {
-                var exporter = new CsvExportImport();
-                var xlstLoader = new XlstLoader();
-                exporter.ExportTransactions(programParameters.InputFiles
-                        .CollectFileList()
-                        .ReadIncomes(xlstLoader)
-                        .FilterZeroEntries(),
-                    AddExtension(programParameters.IncomeOutput));
-                exporter.ExportTransactions(programParameters.InputFiles
-                        .CollectFileList()
-                        .ReadExpenses(xlstLoader),
-                    AddExtension(programParameters.ExpenseOutput));
+
+                using (var incomeFileStream =
+                    new FileStream(AddExtension(programParameters.IncomeOutput), FileMode.Create))
+                using (var expenseFileStream =
+                    new FileStream(AddExtension(programParameters.ExpenseOutput), FileMode.Create))
+                {
+                    var exporter = new CsvExportImport();
+                    var xlstLoader = new XlstLoader();
+                    exporter.ExportTransactions(programParameters.InputFiles
+                            .CollectFileList()
+                            .ReadIncomes(xlstLoader)
+                            .FilterZeroEntries(),
+                            incomeFileStream
+                    );
+                    exporter.ExportTransactions(programParameters.InputFiles
+                            .CollectFileList()
+                            .ReadExpenses(xlstLoader),
+                            expenseFileStream
+                    );
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
                 Console.Error.WriteLine(ex.StackTrace);

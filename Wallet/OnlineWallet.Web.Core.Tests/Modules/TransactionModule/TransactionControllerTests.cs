@@ -37,7 +37,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 CreatedAt = DateTime.Parse("2017-09-16"),
                 Direction = MoneyDirection.Expense,
                 Value = 101,
-                WalletId = _fixture.Wallet1.MoneyWalletId
+                WalletId = _fixture.WalletCash.MoneyWalletId
             };
             _transaction2 = new Transaction
             {
@@ -47,7 +47,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 CreatedAt = DateTime.Parse("2017-09-16"),
                 Direction = MoneyDirection.Expense,
                 Value = 102,
-                WalletId = _fixture.Wallet2.MoneyWalletId
+                WalletId = _fixture.WalletBankAccount.MoneyWalletId
             };
             _fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2);
             _fixture.DbContext.SaveChanges();
@@ -74,7 +74,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
                     Value = 101,
-                    WalletId = _fixture.Wallet1.MoneyWalletId
+                    WalletId = _fixture.WalletCash.MoneyWalletId
                 },
                 new Transaction
                 {
@@ -84,7 +84,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
                     Value = 102,
-                    WalletId = _fixture.Wallet2.MoneyWalletId
+                    WalletId = _fixture.WalletBankAccount.MoneyWalletId
                 }
             };
             //act
@@ -118,7 +118,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
                     Value = 101,
-                    WalletId = _fixture.Wallet1.MoneyWalletId
+                    WalletId = _fixture.WalletCash.MoneyWalletId
                 },
                 new Transaction
                 {
@@ -129,7 +129,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
                     Value = 102,
-                    WalletId = _fixture.Wallet2.MoneyWalletId
+                    WalletId = _fixture.WalletBankAccount.MoneyWalletId
                 }
             };
             //act
@@ -158,7 +158,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16 13:12"),
                     Direction = MoneyDirection.Expense,
                     Value = 101,
-                    WalletId = _fixture.Wallet1.MoneyWalletId
+                    WalletId = _fixture.WalletCash.MoneyWalletId
                 }
             };
             //act
@@ -184,7 +184,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
                     Value = 101,
-                    WalletId = _fixture.Wallet1.MoneyWalletId
+                    WalletId = _fixture.WalletCash.MoneyWalletId
                 },
                 new Transaction
                 {
@@ -194,7 +194,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
                     Value = 102,
-                    WalletId = _fixture.Wallet2.MoneyWalletId
+                    WalletId = _fixture.WalletBankAccount.MoneyWalletId
                 }
             };
             _fixture.DbContext.Transactions.AddRange(transactions);

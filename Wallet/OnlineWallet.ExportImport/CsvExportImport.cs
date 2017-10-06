@@ -7,28 +7,27 @@ namespace OnlineWallet.ExportImport
 {
     public class CsvExportImport : ICsvExportImport
     {
-        private readonly CsvConfiguration _configuration;
+        private static readonly CsvConfiguration Configuration;
         #region  Constructors
 
-        public CsvExportImport()
+        static CsvExportImport()
         {
-            _configuration = new CsvConfiguration
+            Configuration = new CsvConfiguration
             {
                 HasHeaderRecord = true
             };
-            _configuration.RegisterClassMap(new ExportImportRowCsvClassMap());
+            Configuration.RegisterClassMap(new ExportImportRowCsvClassMap());
         }
 
         #endregion
 
         #region  Public Methods
 
-        public void ExportTransactions(IEnumerable<ExportImportRow> imports, string path)
+        public void ExportTransactions(IEnumerable<ExportImportRow> imports, Stream stream)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create))
-            using (var fileWriter = new StreamWriter(fileStream))
+            using (var fileWriter = new StreamWriter(stream))
             {
-                using (var csvWriter = new CsvWriter(fileWriter, _configuration))
+                using (var csvWriter = new CsvWriter(fileWriter, Configuration))
                 {
                     csvWriter.WriteRecords(imports);
                     fileWriter.Flush();
@@ -40,7 +39,7 @@ namespace OnlineWallet.ExportImport
         {
             using (var fileWriter = new StreamReader(stream))
             {
-                using (var csvWriter = new CsvReader(fileWriter, _configuration))
+                using (var csvWriter = new CsvReader(fileWriter, Configuration))
                 {
                     foreach (var exportImportRow in csvWriter.GetRecords<ExportImportRow>())
                     {

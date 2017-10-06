@@ -1,0 +1,4 @@
+Created,Name,Category,Amount,Source,Comment,Direction
+2017-10-01,tr3,cat 1,21,BankAccount,comm 1,Expense
+2017-10-15,tr5,cat 1,21,BankAccount,comm 1,Expense
+2017-10-31,tr4,cat 2,12,Cash,comm 2,Income

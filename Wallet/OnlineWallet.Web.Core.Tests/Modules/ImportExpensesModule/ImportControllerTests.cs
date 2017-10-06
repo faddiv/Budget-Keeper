@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
@@ -133,19 +132,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
         #endregion
 
         #region  Nonpublic Methods
-
-        private static WalletDbContext BuildDbContext()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
-            optionsBuilder.UseInMemoryDatabase("Wallet");
-            var dbContext = new WalletDbContext(optionsBuilder.Options);
-            dbContext.Wallets.AddRange(
-                new Wallet {MoneyWalletId = 1, Name = MoneySource.Cash.ToString()},
-                new Wallet {MoneyWalletId = 2, Name = MoneySource.BankAccount.ToString()});
-            dbContext.SaveChanges();
-            return dbContext;
-        }
-
+        
         private static List<ExportImportRow> GetSampleData()
         {
             return new List<ExportImportRow>
@@ -157,7 +144,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     Category = "category 1",
                     Comment = "comment 1",
                     Created = DateTime.Parse("2017.08.26"),
-                    Source = MoneySource.BankAccount,
+                    Source = MoneySource.BankAccount.ToString(),
                     Direction = MoneyDirection.Expense
                 },
                 new ExportImportRow
@@ -165,7 +152,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     Name = "Salary by Cash",
                     Amount = 123,
                     Created = DateTime.Parse("2017.08.01"),
-                    Source = MoneySource.Cash,
+                    Source = MoneySource.Cash.ToString(),
                     Category = "xxx",
                     Comment = "comment 1",
                     Direction = MoneyDirection.Income

@@ -10,8 +10,8 @@ namespace OnlineWallet.Web.TestHelpers
     public class DatabaseFixture : IDisposable
     {
         public WalletDbContext DbContext { get; set; }
-        public Wallet Wallet1 { get; set; }
-        public Wallet Wallet2 { get; set; }
+        public Wallet WalletCash { get; set; }
+        public Wallet WalletBankAccount { get; set; }
         public DatabaseFixture()
         {
             var optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
@@ -25,11 +25,11 @@ namespace OnlineWallet.Web.TestHelpers
                 })
             }));
             DbContext = new WalletDbContext(optionsBuilder.Options);
-            Wallet1 = new Wallet { Name = MoneySource.Cash.ToString() };
-            Wallet2 = new Wallet { Name = MoneySource.BankAccount.ToString() };
+            WalletCash = new Wallet { Name = MoneySource.Cash.ToString() };
+            WalletBankAccount = new Wallet { Name = MoneySource.BankAccount.ToString() };
             DbContext.Wallets.AddRange(
-                Wallet1,
-                Wallet2);
+                WalletCash,
+                WalletBankAccount);
             DbContext.SaveChanges();
 
         }
