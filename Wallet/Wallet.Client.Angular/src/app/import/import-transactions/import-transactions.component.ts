@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ExportImportRow, ImportService, ApiError } from "walletApi";
+import { AlertsService } from 'app/common/alerts';
 
 @Component({
   selector: 'app-import-transactions',
@@ -12,13 +13,6 @@ export class ImportTransactionsComponent implements OnInit {
   invalidFile = false;
   loading = false;
   fileList: FileList;
-  errors = {
-    validFile: true,
-    filled: true,
-    get invalid(): boolean {
-      return !this.validFile || !this.filled;
-    }
-  };
 
   @Output("load")
   load = new EventEmitter<ExportImportRow[]>();
@@ -29,15 +23,18 @@ export class ImportTransactionsComponent implements OnInit {
   @Input()
   canSave: boolean;
 
-  constructor(private importService: ImportService) { }
+  constructor(
+    private importService: ImportService,
+    private alertsService: AlertsService
+  ) { }
 
   ngOnInit() {
   }
 
   onLoad() {
-    this.dismissError();
+    this.alertsService.dismissAll();
     if (!this.fileList || !this.fileList.length) {
-      this.errors.filled = false;
+      this.alertsService.error("Please select a .csv file.");
       return;
     }
     this.loading = true;
@@ -47,13 +44,8 @@ export class ImportTransactionsComponent implements OnInit {
         this.loading = false;
         this.fileList = null;
       }, (error: ApiError) => {
-        this.errors.validFile = false;
+        this.alertsService.error("Invalid File. Please select a valid .csv file.");
         this.loading = false;
       });
-  }
-
-  dismissError() {
-    this.errors.filled = true;
-    this.errors.validFile = true;
   }
 }

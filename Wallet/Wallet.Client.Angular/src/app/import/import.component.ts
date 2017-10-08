@@ -3,6 +3,7 @@ import { ExportImportRow, Transaction, TrasactionsService, ApiError } from "wall
 import { AlertModel } from 'app/common/alerts/AlertModel';
 import { ListHelpers } from 'walletCommon';
 import { StockModel } from './stock-table/StockModel';
+import { AlertsService } from 'app/common/alerts';
 
 @Component({
   selector: 'app-import',
@@ -12,11 +13,12 @@ import { StockModel } from './stock-table/StockModel';
 export class ImportComponent implements OnInit {
   linesToSave: Transaction[] = [];
   stocks: StockModel[];
-  alerts: AlertModel[] = [];
   current: string = 'full';
   canSave = false;
 
-  constructor(private transactionsService: TrasactionsService) {
+  constructor(
+    private transactionsService: TrasactionsService,
+    private alertsService: AlertsService) {
 
   }
 
@@ -65,13 +67,16 @@ export class ImportComponent implements OnInit {
   }
 
   save() {
-    if (!this.canSave) return;
+    if (!this.canSave) {
+      return;
+    }
+    this.alertsService.dismissAll();
     this.transactionsService.batchUpdate(this.linesToSave)
       .subscribe(() => {
-        this.alerts.push(AlertModel.success("Items saved successfully"));
+        this.alertsService.success("Items saved successfully");
         this.linesToSave = [];
       }, (error: ApiError) => {
-        this.alerts.push(AlertModel.error(error.message));
+        this.alertsService.error(error.message);
       })
   }
 

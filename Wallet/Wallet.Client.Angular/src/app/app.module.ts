@@ -4,20 +4,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-//import {} from "ngx-bootstrap";
+import { AlertModule } from "ngx-bootstrap/alert";
 
-import { BASE_PATH, WalletApiModule } from "walletApi";
 import { environment } from '../environments/environment';
 
+import { BASE_PATH, WalletApiModule } from "walletApi";
+import { GlobalErrorHandler } from "walletCommon";
+import { DirectivesModule } from "directives";
 import { AppComponent } from './app.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { HomeComponent } from './home/home.component';
 import { WalletTableComponent } from './wallets/wallet-table/wallet-table.component';
-import { GlobalErrorHandler } from "walletCommon";
 import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-filter-row.component';
 import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
 import { AddTransactionComponent } from './home/add-transaction/add-transaction.component';
-import { DirectivesModule } from "directives";
 import { ImportTransactionsComponent } from './import/import-transactions/import-transactions.component';
 import { ImportComponent } from './import/import.component';
 import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
@@ -26,6 +26,7 @@ import { TransactionTableComponent } from './common/transaction-view';
 import { StockTableComponent } from './import/stock-table/stock-table.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { ExportComponent } from './export/export.component';
+import { DismissAlertsOnLeaveService, AlertsService } from 'app/common/alerts';
 
 @NgModule({
   declarations: [
@@ -50,37 +51,45 @@ import { ExportComponent } from './export/export.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    AlertModule.forRoot(),
     WalletApiModule,
     DirectivesModule,
     RouterModule.forRoot([
   {
-    path: "wallets",
-    component: WalletsComponent
-  },
-  {
-    path: "import",
-    component: ImportComponent
-  },
-  {
-    path: "export",
-    component: ExportComponent
-  },
-  {
-    path: "transactions",
-    component: TransactionsComponent
-  },
-  {
     path: "",
-    component: HomeComponent,
-    canDeactivate: [AskIfFormDirtyService]
-  },
-  
+    children: [
+      {
+        path: "wallets",
+        component: WalletsComponent
+      },
+      {
+        path: "import",
+        component: ImportComponent
+      },
+      {
+        path: "export",
+        component: ExportComponent
+      },
+      {
+        path: "transactions",
+        component: TransactionsComponent
+      },
+      {
+        path: "",
+        component: HomeComponent,
+        canDeactivate: [AskIfFormDirtyService]
+      }
+    ],
+    canDeactivate: [DismissAlertsOnLeaveService]
+  }  
 ])
   ],
   providers: [
     {provide: BASE_PATH, useValue: environment.WALLET_API_PATH},
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
-    AskIfFormDirtyService
+    AskIfFormDirtyService,
+    AlertsService,
+    DismissAlertsOnLeaveService
   ],
   bootstrap: [AppComponent]
 })

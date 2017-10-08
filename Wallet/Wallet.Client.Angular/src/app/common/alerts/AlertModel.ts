@@ -1,23 +1,23 @@
 export class AlertModel {
     constructor(
         public text: string,
-        public cssClass: string
+        public type: "success" | "info" | "warning" | "danger"
     ) {
     }
 
     public static error(text: string) {
-        return new AlertModel(text, "alert-danger");
+        return new AlertModel(text, "danger");
     }
-    
+
     public static success(text: string) {
-        return new AlertModel(text, "alert-success");
+        return new AlertModel(text, "success");
     }
 
     public static warning(text: string) {
-        return new AlertModel(text, "alert-warning");
+        return new AlertModel(text, "warning");
     }
-    
+
     public static info(text: string) {
-        return new AlertModel(text, "alert-info");
+        return new AlertModel(text, "info");
     }
 }

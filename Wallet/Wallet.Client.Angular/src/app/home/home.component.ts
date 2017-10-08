@@ -4,6 +4,7 @@ import { ListHelpers } from 'walletCommon';
 import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
 import { TrasactionsService } from 'walletApi';
 import { AlertModel } from 'app/common/alerts/AlertModel';
+import { AlertsService } from 'app/common/alerts';
 
 @Component({
   moduleId: module.id,
@@ -14,11 +15,11 @@ import { AlertModel } from 'app/common/alerts/AlertModel';
 export class HomeComponent implements OnInit, ICleanForm {
   linesToSave: Transaction[];
   wallets: Wallet[] = [];
-  alerts: AlertModel[] = [];
 
   constructor(
     private walletService: WalletService,
-    private transactionsService: TrasactionsService) {
+    private transactionsService: TrasactionsService,
+    private alertsService: AlertsService) {
 
   }
 
@@ -33,7 +34,7 @@ export class HomeComponent implements OnInit, ICleanForm {
     }).subscribe(value => {
       this.wallets = value;
     }, (error: ApiError) => {
-      this.alerts.push(AlertModel.error(error.message));
+      this.alertsService.error(error.message);
     });
   }
 
@@ -42,16 +43,17 @@ export class HomeComponent implements OnInit, ICleanForm {
   }
 
   saveAll() {
+    this.alertsService.dismissAll();
     if (!this.linesToSave.length) {
-      this.alerts.push(AlertModel.warning("Nothing to save"));
+      this.alertsService.warning("Nothing to save");
       return;
     }
     this.transactionsService.batchUpdate(this.linesToSave).subscribe(result => {
       
-      this.alerts.push(AlertModel.success("Transactions are saved successfully."));
+      this.alertsService.success("Transactions are saved successfully.");
       this.startNew();
     }, error => {
-      this.alerts.push(AlertModel.error(error.message));
+      this.alertsService.error(error.message);
     })
   }
 

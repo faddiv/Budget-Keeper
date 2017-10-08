@@ -1,6 +1,3 @@
-<section class="row">
-  <app-alerts [alerts]="alerts"></app-alerts>
-</section>
 <div class="row">
   <app-import-transactions (load)="addLines($event)" (save)="save()" [canSave]="canSave">
   </app-import-transactions>

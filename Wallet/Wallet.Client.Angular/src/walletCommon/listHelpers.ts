@@ -11,6 +11,10 @@ export module ListHelpers {
         return index;
     }
 
+    export function clear(list: any[]) {
+        list.length = 0;
+    }
+
     export function indexById<T>(list: T[], key: T): number {
         if (!list || !list.length) return -1;
         var idProperty = getKey(list[0]);

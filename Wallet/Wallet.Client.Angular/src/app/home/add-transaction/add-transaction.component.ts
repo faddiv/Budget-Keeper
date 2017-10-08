@@ -2,6 +2,7 @@ import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChange
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Transaction, Wallet, ApiError } from "walletApi";
 import { ICommand } from "directives";
+import { AlertsService } from 'app/common/alerts';
 
 @Component({
   selector: 'app-add-transaction',
@@ -24,8 +25,6 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     comment: new FormControl(""),
   });
 
-  submitted = false;
-
   @Input("wallets")
   wallets: Wallet[];
 
@@ -37,7 +36,9 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   @Output("save")
   save = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(
+    private alertsService: AlertsService
+  ) { }
 
   ngOnInit() {
   }
@@ -45,6 +46,9 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.wallets && this.wallets.length && !this.wallet.enabled) {
       this.wallet.enable();
+      if (!this.wallet.value) {
+        this.wallet.setValue("2");
+      }
     } else {
       this.wallet.disable();
     }
@@ -68,8 +72,11 @@ export class AddTransactionComponent implements OnInit, OnChanges {
 
 
   onAdd() {
-    this.submitted = true;
-    if (this.form.invalid) return;
+    this.alertsService.dismissAll();
+    if (this.form.invalid) {
+      this.showValidationErrors();
+      return;
+    }
     var newItem: Transaction = {
       comment: this.comment.value,
       createdAt: new Date(),
@@ -96,11 +103,24 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();
-    this.submitted = false;
     this.focusName.execute();
+    this.alertsService.dismissAll();
   }
 
-  dismissError() {
-    this.submitted = false;
+  showValidationErrors() {
+    if (this.wallet.errors && this.wallet.errors.required) {
+      this.alertsService.error("Wallet is required.")
+    }
+    if (this.name.errors && this.name.errors.required) {
+      this.alertsService.error("Name is required.")
+    }
+    if (this.price.errors) {
+      if (this.price.errors.required) {
+        this.alertsService.error("Price is required.")
+      }
+      if (this.price.errors.pattern) {
+        this.alertsService.error("Price must be a number.")
+      }
+    }
   }
 }

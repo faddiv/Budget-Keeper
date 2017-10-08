@@ -2,6 +2,7 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import * as moment from "moment";
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ExportService } from 'walletApi';
+import { AlertsService } from 'app/common/alerts';
 
 @Component({
   selector: 'app-export',
@@ -44,7 +45,8 @@ export class ExportComponent implements OnInit {
   }];
 
   constructor(
-    private exportService: ExportService) {
+    private exportService: ExportService,
+    private alertsService: AlertsService) {
     var now = moment();
     this.year.setValue(now.year());
     this.month.setValue(now.month() + 1);
@@ -95,8 +97,9 @@ export class ExportComponent implements OnInit {
     }
   }
   download() {
+    this.alertsService.dismissAll();
     if (this.form.invalid) {
-
+      this.showValidationErrors();
       return;
     }
     var rangeFrom: string;
@@ -110,5 +113,24 @@ export class ExportComponent implements OnInit {
       rangeTo = this.rangeTo.value;
     }
     this.exportService.exportRange(rangeFrom, rangeTo, this.file.value);
+  }
+
+  
+  showValidationErrors() {
+    if (this.file.errors && this.file.errors.required) {
+      this.alertsService.error("File name is required.")
+    }
+    if (this.year.errors && this.year.errors.required) {
+      this.alertsService.error("Year is required.")
+    }
+    if (this.month.errors && this.month.errors.required) {
+      this.alertsService.error("Month is required.")
+    }
+    if (this.rangeFrom.errors && this.rangeFrom.errors.required) {
+      this.alertsService.error("From is required.")
+    }
+    if (this.rangeTo.errors && this.rangeTo.errors.required) {
+      this.alertsService.error("To is required.")
+    }
   }
 }
