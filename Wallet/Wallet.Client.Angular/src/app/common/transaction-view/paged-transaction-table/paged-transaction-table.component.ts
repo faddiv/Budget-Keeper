@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Transaction, Wallet, WalletService } from 'walletApi';
-import { TransactionViewModel } from '../models/TransactionViewModel';
+import { TransactionViewModel, ITransactionTableExtFunction } from '../models';
 import { ListHelpers } from 'walletCommon';
 
 @Component({
@@ -8,7 +8,7 @@ import { ListHelpers } from 'walletCommon';
   templateUrl: './paged-transaction-table.component.html',
   styleUrls: ['./paged-transaction-table.component.scss']
 })
-export class TransactionTableComponent implements OnInit, OnChanges {
+export class PagedTransactionTableComponent implements OnInit, OnChanges {
 
   @Input("items")
   items: Transaction[];
@@ -16,12 +16,12 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   @Input("changedItems")
   changedItems: Transaction[];
 
-  @Input("coloring")
-  coloring: boolean;
+  @Input("rowColoring")
+  rowColoring: ITransactionTableExtFunction;
 
   wallets: Wallet[];
 
-  pageItems: TransactionViewModel[];
+  pageItems: Transaction[];
 
   pages: number[];
 
@@ -61,7 +61,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     if (pageSize === 0 || !items || !items.length) {
       this.pageCount = 1;
     } else {
-      this.pageCount = Math.floor(items.length / pageSize);
+      this.pageCount = Math.ceil(items.length / pageSize);
     }
     if (pageNumber > this.pageCount) {
       pageNumber == this.pageCount
@@ -69,10 +69,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.page = pageNumber;
     var from = this.showItemsFrom();
     var to = this.showItemsTo();
-    this.pageItems = this.items ? this.items.slice(from, to).map(v => new TransactionViewModel(v, this.wallets)) : [];
-    if (this.coloring) {
-      this.pageItems.forEach(defaultColoringFunction);
-    }
+    this.pageItems = this.items ? this.items.slice(from, to) : [];
     var pages: number[] = [];
     var pagesFrom = Math.max(pageNumber - 5, 1);
     var pagesTo = Math.min(pagesFrom + 10, this.pageCount + 1);
@@ -86,31 +83,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     item.editMode = !item.editMode;
   }
 
-  deleteTransaction(item: TransactionViewModel) {
+  transactionDeleted(item: TransactionViewModel) {
     ListHelpers.remove(this.items, item.original);
     this.select(this.page);
-  }
-
-  saveTransaction(item: TransactionViewModel) {
-    for (var key in item.original) {
-      if (item.original.hasOwnProperty(key)) {
-        if (item.original[key] !== item[key]) {
-          item.original[key] = item[key];
-          item.changed = true;
-        }
-      }
-    }
-    item.walletName = ListHelpers.selectMap<Wallet,string>(this.wallets, w => w.moneyWalletId == item.walletId, w => w.name);
-    item.editMode = false;
-    if (this.changedItems) {
-      var changes = this.pageItems.filter(val => val.changed);
-      for (var index = 0; index < changes.length; index++) {
-        var item = changes[index];
-        if (this.changedItems.findIndex(e => e === item.original) === -1) {
-          this.changedItems.push(item.original);
-        }
-      }
-    }
   }
 
   first() {
@@ -132,8 +107,4 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       return 0;
     return Math.min(this.page * this.pageSize, this.items.length);
   }
-}
-
-function defaultColoringFunction(value: TransactionViewModel) {
-  value.cssClass = value.transactionId ? "info" : undefined;
 }

@@ -5,6 +5,7 @@ import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
 import { TrasactionsService } from 'walletApi';
 import { AlertModel } from 'app/common/alerts/AlertModel';
 import { AlertsService } from 'app/common/alerts';
+import { TransactionViewModel, directionColoringFunction } from 'app/common/transaction-view';
 
 @Component({
   moduleId: module.id,
@@ -15,6 +16,7 @@ import { AlertsService } from 'app/common/alerts';
 export class HomeComponent implements OnInit, ICleanForm {
   linesToSave: Transaction[];
   wallets: Wallet[] = [];
+  rowColoring = directionColoringFunction;
 
   constructor(
     private walletService: WalletService,
@@ -39,7 +41,7 @@ export class HomeComponent implements OnInit, ICleanForm {
   }
 
   addLine(newItem: Transaction) {
-    this.linesToSave.push(newItem);
+    this.linesToSave = this.linesToSave.concat(newItem);
   }
 
   saveAll() {

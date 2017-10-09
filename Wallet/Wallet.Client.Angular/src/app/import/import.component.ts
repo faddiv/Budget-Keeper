@@ -4,6 +4,7 @@ import { AlertModel } from 'app/common/alerts/AlertModel';
 import { ListHelpers } from 'walletCommon';
 import { StockModel } from './stock-table/StockModel';
 import { AlertsService } from 'app/common/alerts';
+import { TransactionViewModel } from 'app/common/transaction-view';
 
 @Component({
   selector: 'app-import',
@@ -80,4 +81,7 @@ export class ImportComponent implements OnInit {
       })
   }
 
+  savedItemColoring(value: TransactionViewModel) {
+    value.cssClass = value.transactionId ? "info" : undefined;
+  }
 }

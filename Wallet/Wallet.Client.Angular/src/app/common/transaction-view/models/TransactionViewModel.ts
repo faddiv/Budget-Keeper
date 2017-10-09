@@ -1,9 +1,7 @@
-import { Transaction, Wallet } from "walletApi";
+import { Transaction } from "walletApi";
 import { ListHelpers } from "walletCommon";
 import * as moment from "moment";
 import { dateFormat } from "app/common/constants";
-
-
 
 export class TransactionViewModel implements Transaction {
     comment?: string;
@@ -20,10 +18,8 @@ export class TransactionViewModel implements Transaction {
     changed: boolean;
 
     constructor(
-        public original: Transaction,
-        wallets: Wallet[]) {
+        public original: Transaction) {
         Object.assign(this, original);
-        this.walletName = ListHelpers.selectMap<Wallet, string>(wallets, w => w.moneyWalletId == this.walletId, w => w.name);
     }
 
     get price() {

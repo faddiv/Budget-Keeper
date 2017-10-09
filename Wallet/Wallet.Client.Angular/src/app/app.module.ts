@@ -22,7 +22,7 @@ import { ImportTransactionsComponent } from './import/import-transactions/import
 import { ImportComponent } from './import/import.component';
 import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
 import { AlertsComponent } from './common/alerts/alerts.component';
-import { TransactionTableComponent } from './common/transaction-view';
+import { PagedTransactionTableComponent, TransactionTableComponent } from './common/transaction-view';
 import { StockTableComponent } from './import/stock-table/stock-table.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { ExportComponent } from './export/export.component';
@@ -40,6 +40,7 @@ import { DismissAlertsOnLeaveService, AlertsService } from 'app/common/alerts';
     ImportTransactionsComponent,
     ImportComponent,
     AlertsComponent,
+    PagedTransactionTableComponent,
     TransactionTableComponent,
     StockTableComponent,
     TransactionsComponent,

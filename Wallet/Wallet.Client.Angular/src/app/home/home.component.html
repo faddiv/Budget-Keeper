@@ -3,28 +3,5 @@
   </app-add-transaction>
 </section>
 <section class="row">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Source</th>
-        <th>Comment</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of linesToSave">
-        <td>{{item.name}}</td>
-        <td>{{item.value}}</td>
-        <td>{{walletNameById(item.walletId)}}</td>
-        <td>{{item.comment}}</td>
-        <td>
-          <button class="btn btn-danger pull-right" type="button" (click)="onDeleteBtnClicked(item)">
-              <span class="glyphicon glyphicon-trash"></span>
-            </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <app-transaction-table [items]="linesToSave" [rowModifier]="rowColoring" (deleted)="transactionDeleted($event)"></app-transaction-table>
 </section>
