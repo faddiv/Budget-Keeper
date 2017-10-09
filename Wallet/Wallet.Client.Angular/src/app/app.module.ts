@@ -55,38 +55,36 @@ import { DismissAlertsOnLeaveService, AlertsService } from 'app/common/alerts';
     WalletApiModule,
     DirectivesModule,
     RouterModule.forRoot([
-  {
-    path: "",
-    children: [
       {
         path: "wallets",
-        component: WalletsComponent
+        component: WalletsComponent,
+        canDeactivate: [DismissAlertsOnLeaveService]
       },
       {
         path: "import",
-        component: ImportComponent
+        component: ImportComponent,
+        canDeactivate: [DismissAlertsOnLeaveService]
       },
       {
         path: "export",
-        component: ExportComponent
+        component: ExportComponent,
+        canDeactivate: [DismissAlertsOnLeaveService]
       },
       {
         path: "transactions",
-        component: TransactionsComponent
+        component: TransactionsComponent,
+        canDeactivate: [DismissAlertsOnLeaveService]
       },
       {
         path: "",
         component: HomeComponent,
-        canDeactivate: [AskIfFormDirtyService]
+        canDeactivate: [AskIfFormDirtyService, DismissAlertsOnLeaveService]
       }
-    ],
-    canDeactivate: [DismissAlertsOnLeaveService]
-  }  
-])
+    ])
   ],
   providers: [
-    {provide: BASE_PATH, useValue: environment.WALLET_API_PATH},
-    {provide: ErrorHandler, useClass: GlobalErrorHandler},
+    { provide: BASE_PATH, useValue: environment.WALLET_API_PATH },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     AskIfFormDirtyService,
     AlertsService,
     DismissAlertsOnLeaveService

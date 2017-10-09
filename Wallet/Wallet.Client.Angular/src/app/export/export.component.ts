@@ -3,6 +3,7 @@ import * as moment from "moment";
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ExportService } from 'walletApi';
 import { AlertsService } from 'app/common/alerts';
+import { dateFormat } from 'app/common/constants';
 
 @Component({
   selector: 'app-export',
@@ -50,8 +51,8 @@ export class ExportComponent implements OnInit {
     var now = moment();
     this.year.setValue(now.year());
     this.month.setValue(now.month() + 1);
-    this.rangeFrom.setValue(now.startOf("month").format("YYYY-MM-DD"));
-    this.rangeTo.setValue(now.endOf("month").format("YYYY-MM-DD"));
+    this.rangeFrom.setValue(now.startOf("month").format(dateFormat));
+    this.rangeTo.setValue(now.endOf("month").format(dateFormat));
   }
 
   get file() {
@@ -106,8 +107,8 @@ export class ExportComponent implements OnInit {
     var rangeTo: string;
     if (this.rangeType.value == "1") {
       var from = moment([parseInt(this.year.value), parseInt(this.month.value)-1, 1]);
-      rangeFrom = from.format("YYYY-MM-DD");
-      rangeTo = from.endOf("month").format("YYYY-MM-DD");
+      rangeFrom = from.format(dateFormat);
+      rangeTo = from.endOf("month").format(dateFormat);
     } else {
       rangeFrom = this.rangeFrom.value;
       rangeTo = this.rangeTo.value;

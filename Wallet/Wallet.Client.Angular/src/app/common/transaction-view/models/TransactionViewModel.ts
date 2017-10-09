@@ -1,6 +1,7 @@
 import { Transaction, Wallet } from "walletApi";
 import { ListHelpers } from "walletCommon";
 import * as moment from "moment";
+import { dateFormat } from "app/common/constants";
 
 
 
@@ -30,7 +31,7 @@ export class TransactionViewModel implements Transaction {
     }
 
     get createdAtText() {
-        return moment(this.createdAt).format("YYYY-MM-DD");
+        return moment(this.createdAt).format(dateFormat);
     }
 
     set createdAtText(value: string) {

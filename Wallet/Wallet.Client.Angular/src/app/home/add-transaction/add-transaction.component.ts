@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Transaction, Wallet, ApiError } from "walletApi";
 import { ICommand } from "directives";
 import { AlertsService } from 'app/common/alerts';
+import * as moment from "moment";
+import { dateFormat } from 'app/common/constants';
 
 @Component({
   selector: 'app-add-transaction',
@@ -15,6 +17,9 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     wallet: new FormControl("", [
       Validators.required
     ]),
+    created: new FormControl(moment().format(dateFormat), [
+      Validators.required
+    ]),
     name: new FormControl("", [
       Validators.required
     ]),
@@ -23,6 +28,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
       Validators.pattern(/^\d+$/)
     ]),
     comment: new FormControl(""),
+    salary: new FormControl(false)
   });
 
   @Input("wallets")
@@ -57,6 +63,10 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   get wallet(): FormControl {
     return <FormControl>this.form.controls.wallet;
   }
+  
+  get created(): FormControl {
+    return <FormControl>this.form.controls.created;
+  }
 
   get name(): FormControl {
     return <FormControl>this.form.controls.name;
@@ -69,6 +79,10 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   get comment(): FormControl {
     return <FormControl>this.form.controls.comment;
   }
+  
+  get salary(): FormControl {
+    return <FormControl>this.form.controls.salary;
+  }
 
 
   onAdd() {
@@ -79,8 +93,8 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     }
     var newItem: Transaction = {
       comment: this.comment.value,
-      createdAt: new Date(),
-      direction: Transaction.DirectionEnum.NUMBER_1,
+      createdAt: moment(this.created.value).toDate(),
+      direction: this.salary.value ? Transaction.DirectionEnum.NUMBER_1 : Transaction.DirectionEnum.NUMBER_MINUS_1,
       name: this.name.value,
       value: this.price.value,
       transactionId: 0,
@@ -97,7 +111,8 @@ export class AddTransactionComponent implements OnInit, OnChanges {
         patch[key] = "";
       }
     }
-    patch.wallet = this.wallets.length && this.wallets[0].moneyWalletId;
+    patch.wallet = this.wallet.value;
+    patch.created = this.created.value;
     this.form.patchValue(patch, {
       emitEvent: false
     });
@@ -110,6 +125,9 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   showValidationErrors() {
     if (this.wallet.errors && this.wallet.errors.required) {
       this.alertsService.error("Wallet is required.")
+    }
+    if (this.created.errors && this.created.errors.required) {
+      this.alertsService.error("Date is required.")
     }
     if (this.name.errors && this.name.errors.required) {
       this.alertsService.error("Name is required.")

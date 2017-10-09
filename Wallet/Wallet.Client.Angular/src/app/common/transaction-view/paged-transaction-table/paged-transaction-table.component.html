@@ -31,10 +31,10 @@
           <td><input type="category" class="form-control" [(ngModel)]="item.category" name="category" /></td>
           <td><input type="comment" class="form-control" [(ngModel)]="item.comment" name="comment" /></td>
           <td>
-            <button class="btn btn-danger pull-right" type="button" (click)="item.cancel()">
+            <button class="btn btn-danger btn-sm pull-right" type="button" (click)="item.cancel()">
                 <span class="glyphicon glyphicon-remove"></span>
               </button>
-            <button class="btn btn-success pull-right" type="button" (click)="saveTransaction(item)">
+            <button class="btn btn-success btn-sm pull-right" type="button" (click)="saveTransaction(item)">
                 <span class="glyphicon glyphicon-ok"></span>
               </button>
           </td>
@@ -51,10 +51,10 @@
           <td>{{item.category}}</td>
           <td>{{item.comment}}</td>
           <td>
-            <button class="btn btn-danger pull-right" type="button" (click)="deleteTransaction(item)">
+            <button class="btn btn-danger btn-sm pull-right" type="button" (click)="deleteTransaction(item)">
                 <span class="glyphicon glyphicon-trash"></span>
               </button>
-            <button class="btn btn-primary pull-right" type="button" (click)="editTransaction(item)">
+            <button class="btn btn-primary btn-sm pull-right" type="button" (click)="editTransaction(item)">
                 <span class="glyphicon glyphicon-edit"></span>
               </button>
           </td>

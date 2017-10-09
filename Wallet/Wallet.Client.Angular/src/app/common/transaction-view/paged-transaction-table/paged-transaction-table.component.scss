@@ -1,14 +1,17 @@
 .created-at {
-    width: 96px;
+    width: 186px;
 }
 .name {
     width: 36%;
+}
+.direction {
+    width: 16px;
 }
 .price {
     width: 100px;
 }
 .wallet-name {
-    width: 120px;
+    width: 150px;
 }
 .category {
     width: 150px;
@@ -16,6 +19,6 @@
 .commands {
     width: 96px;
 }
-.direction {
-    width: 16px;
+.table>tbody>tr>td {
+    vertical-align: middle;
 }
