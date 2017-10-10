@@ -1,3 +1,4 @@
+import './css/site.css';
 import 'reflect-metadata';
 import 'zone.js';
 import 'bootstrap';

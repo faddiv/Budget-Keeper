@@ -1,34 +1,89 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { AlertModule } from "ngx-bootstrap/alert";
 
-import { AppComponent } from './components/app/app.component';
-import { NavMenuComponent } from './components/navmenu/navmenu.component';
-import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
+import { WalletApiModule } from "walletApi";
+import { GlobalErrorHandler } from "walletCommon";
+import { DirectivesModule } from "directives";
+import { AppComponent } from './app.component';
+import { WalletsComponent } from './wallets/wallets.component';
+import { HomeComponent } from './home/home.component';
+import { WalletTableComponent } from './wallets/wallet-table/wallet-table.component';
+import { WalletsFilterRowComponent } from './wallets/wallets-filter-row/wallets-filter-row.component';
+import { WalletAddComponent } from './wallets/wallet-add/wallet-add.component';
+import { AddTransactionComponent } from './home/add-transaction/add-transaction.component';
+import { ImportTransactionsComponent } from './import/import-transactions/import-transactions.component';
+import { ImportComponent } from './import/import.component';
+import { AskIfFormDirtyService } from './common/ask-if-form-dirty.service';
+import { AlertsComponent } from './common/alerts/alerts.component';
+import { PagedTransactionTableComponent, TransactionTableComponent } from './common/transaction-view';
+import { StockTableComponent } from './import/stock-table/stock-table.component';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { ExportComponent } from './export/export.component';
+import { DismissAlertsOnLeaveService, AlertsService } from './common/alerts';
 
 @NgModule({
     declarations: [
         AppComponent,
-        NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
-        HomeComponent
+        WalletsComponent,
+        HomeComponent,
+        WalletTableComponent,
+        WalletsFilterRowComponent,
+        WalletAddComponent,
+        AddTransactionComponent,
+        ImportTransactionsComponent,
+        ImportComponent,
+        AlertsComponent,
+        PagedTransactionTableComponent,
+        TransactionTableComponent,
+        StockTableComponent,
+        TransactionsComponent,
+        ExportComponent
     ],
     imports: [
-        CommonModule,
         HttpModule,
+        CommonModule,
         FormsModule,
+        ReactiveFormsModule,
+        AlertModule.forRoot(),
+        WalletApiModule,
+        DirectivesModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
-            { path: '**', redirectTo: 'home' }
+            {
+                path: "wallets",
+                component: WalletsComponent,
+                canDeactivate: [DismissAlertsOnLeaveService]
+            },
+            {
+                path: "import",
+                component: ImportComponent,
+                canDeactivate: [DismissAlertsOnLeaveService]
+            },
+            {
+                path: "export",
+                component: ExportComponent,
+                canDeactivate: [DismissAlertsOnLeaveService]
+            },
+            {
+                path: "transactions",
+                component: TransactionsComponent,
+                canDeactivate: [DismissAlertsOnLeaveService]
+            },
+            {
+                path: "",
+                component: HomeComponent,
+                canDeactivate: [AskIfFormDirtyService, DismissAlertsOnLeaveService]
+            }
         ])
+    ],
+    providers: [
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        AskIfFormDirtyService,
+        AlertsService,
+        DismissAlertsOnLeaveService
     ]
 })
 export class AppModuleShared {

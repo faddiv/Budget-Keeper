@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppModuleShared } from './app.module.shared';
-import { AppComponent } from './components/app/app.component';
+import { AppComponent } from './app.component';
+import { BASE_PATH } from 'walletApi';
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -10,7 +11,7 @@ import { AppComponent } from './components/app/app.component';
         AppModuleShared
     ],
     providers: [
-        { provide: 'BASE_URL', useFactory: getBaseUrl }
+        { provide: BASE_PATH, useFactory: getBaseUrl }
     ]
 })
 export class AppModule {

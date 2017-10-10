@@ -1,0 +1,11 @@
+<app-wallets-filter-row (reload)="reload($event)"></app-wallets-filter-row>
+<app-wallet-add (save)="insert($event)"></app-wallet-add>
+<app-wallet-table 
+    *ngIf="!loading; else loadingTmpl"
+    [wallets]="wallets"
+    [(edited)]="edited"
+    (save)="update($event)"
+    (delete)="delete($event)"></app-wallet-table>
+<ng-template #loadingTmpl>
+    <h1>Loading...</h1>
+</ng-template>

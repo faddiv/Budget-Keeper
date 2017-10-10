@@ -6,6 +6,7 @@ import { enableProdMode, ApplicationRef, NgZone, ValueProvider } from '@angular/
 import { platformDynamicServer, PlatformState, INITIAL_CONFIG } from '@angular/platform-server';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 import { AppModule } from './app/app.module.server';
+import { BASE_PATH } from "walletApi";
 
 enableProdMode();
 
@@ -13,7 +14,7 @@ export default createServerRenderer(params => {
     const providers = [
         { provide: INITIAL_CONFIG, useValue: { document: '<app></app>', url: params.url } },
         { provide: APP_BASE_HREF, useValue: params.baseUrl },
-        { provide: 'BASE_URL', useValue: params.origin + params.baseUrl },
+        { provide: BASE_PATH, useValue: params.origin + params.baseUrl },
     ];
 
     return platformDynamicServer(providers).bootstrapModule(AppModule).then(moduleRef => {
