@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.Core", "OnlineWallet.Web.Core\OnlineWallet.Web.Core.csproj", "{4879CD94-E1C1-42C7-B0F3-2F671CEA2876}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.QueryLanguage.Tests", "OnlineWallet.Web.QueryLanguage.Tests\OnlineWallet.Web.QueryLanguage.Tests.csproj", "{F600C559-D33C-4CE2-ABAC-D6E942E6706A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.ExportImport", "OnlineWallet.ExportImport\OnlineWallet.ExportImport.csproj", "{835981C1-58F2-43D1-B272-7C1FA899EC82}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineWallet.Web.Core2", "OnlineWallet.Web.Core2\OnlineWallet.Web.Core2.csproj", "{73079814-655C-4F3C-B8D9-0B02931F2208}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +39,6 @@ Global
 		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73079814-655C-4F3C-B8D9-0B02931F2208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73079814-655C-4F3C-B8D9-0B02931F2208}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73079814-655C-4F3C-B8D9-0B02931F2208}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73079814-655C-4F3C-B8D9-0B02931F2208}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

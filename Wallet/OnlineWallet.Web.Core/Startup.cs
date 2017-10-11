@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,12 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Services;
 using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web
 {
-    public class Startup
+  public class Startup
     {
         #region  Constructors
 
@@ -51,15 +52,21 @@ namespace OnlineWallet.Web
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseCors("ApiCors");
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseMvc();
             app.UseSwagger(options => { });
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
                 c.ShowJsonEditor();
             });
+            app.UseMvc(route =>
+            {
+                route.MapRoute("Default", "{controller}/{action}/{id?}");
+            });
+            app.UseMiddleware<ServeIndexHtmlMiddleware>();
         }
+
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -94,7 +101,7 @@ namespace OnlineWallet.Web
                         Title = "Wallet API"
                     }
                 );
-                
+
                 c.OperationFilter<ApplySummariesOperationFilter>();
                 c.OperationFilter<ApplyGenericResponseType>();
                 c.OperationFilter<ApplyArrayOnGetAllOperationFilter>();

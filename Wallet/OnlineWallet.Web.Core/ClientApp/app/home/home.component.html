@@ -1,0 +1,7 @@
+<section class="row">
+  <app-add-transaction (add)="addLine($event)" [wallets]="wallets" (save)="saveAll($event)">
+  </app-add-transaction>
+</section>
+<section class="row">
+  <app-transaction-table [items]="linesToSave" [rowModifier]="rowColoring" (deleted)="transactionDeleted($event)"></app-transaction-table>
+</section>
