@@ -10,23 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { MoneyDirection } from "./MoneyDirection";
+import { Transaction } from './Transaction';
 
-export interface ExportImportRow {
-    created?: Date;
+export interface TransactionOperationBatch {
+    save?: Array<Transaction>;
 
-    name?: string;
-
-    comment?: string;
-
-    category?: string;
-
-    amount?: number;
-
-    source?: string;
-
-    direction?: MoneyDirection;
-
-    matchingId?: number;
+    delete?: Array<number>;
 
 }

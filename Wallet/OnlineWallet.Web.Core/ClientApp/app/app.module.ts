@@ -27,6 +27,7 @@ import { StockTableComponent } from './import/stock-table/stock-table.component'
 import { TransactionsComponent } from './transactions/transactions.component';
 import { ExportComponent } from './export/export.component';
 import { DismissAlertsOnLeaveService, AlertsService } from 'app/common/alerts';
+import { BalanceComponent } from './transactions/balance/balance.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { DismissAlertsOnLeaveService, AlertsService } from 'app/common/alerts';
     TransactionTableComponent,
     StockTableComponent,
     TransactionsComponent,
-    ExportComponent
+    ExportComponent,
+    BalanceComponent
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular
 import { Transaction, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
 import { ListHelpers } from 'walletCommon';
 import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
-import { TrasactionsService } from 'walletApi';
+import { TransactionsService } from 'walletApi';
 import { AlertModel } from 'app/common/alerts/AlertModel';
 import { AlertsService } from 'app/common/alerts';
 import { TransactionViewModel, directionColoringFunction } from 'app/common/transaction-view';
@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit, ICleanForm {
 
   constructor(
     private walletService: WalletService,
-    private transactionsService: TrasactionsService,
+    private transactionsService: TransactionsService,
     private alertsService: AlertsService) {
 
   }

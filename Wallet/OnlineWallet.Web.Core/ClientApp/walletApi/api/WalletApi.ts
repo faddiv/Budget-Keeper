@@ -46,7 +46,7 @@ export class WalletApi {
      * @summary Deletes a Wallet by unique id
      * @param id a unique id for the Wallet
      */
-    public _delete(id: number, extraHttpRequestParams?: any): Observable<models.Wallet> {
+    public _delete(id: number, extraHttpRequestParams?: any): Observable<{}> {
         return this._deleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -95,11 +95,10 @@ export class WalletApi {
     /**
      * 
      * @summary Creates a Wallet
-     * @param moneyWalletId a Wallet representation
-     * @param name 
+     * @param value a Wallet representation
      */
-    public post(moneyWalletId?: number, name?: string, extraHttpRequestParams?: any): Observable<models.Wallet> {
-        return this.postWithHttpInfo(moneyWalletId, name, extraHttpRequestParams)
+    public post(value?: models.Wallet, extraHttpRequestParams?: any): Observable<models.Wallet> {
+        return this.postWithHttpInfo(value, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -148,9 +147,6 @@ export class WalletApi {
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
         ];
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
@@ -264,36 +260,31 @@ export class WalletApi {
     /**
      * Creates a Wallet
      * 
-     * @param moneyWalletId a Wallet representation
-     * @param name 
+     * @param value a Wallet representation
      */
-    public postWithHttpInfo(moneyWalletId?: number, name?: string, extraHttpRequestParams?: any): Observable<Response> {
+    public postWithHttpInfo(value?: models.Wallet, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Wallet';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (moneyWalletId !== undefined) {
-            queryParameters.set('MoneyWalletId', <any>moneyWalletId);
-        }
-
-        if (name !== undefined) {
-            queryParameters.set('Name', <any>name);
-        }
-
         // to determine the Content-Type header
         let consumes: string[] = [
+            'application/json-patch+json',
+            'application/json',
+            'text/json',
+            'application/_*+json'
         ];
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
         ];
+
+        headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
+            body: value == null ? '' : JSON.stringify(value), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
@@ -331,9 +322,6 @@ export class WalletApi {
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
         ];
 
         headers.set('Content-Type', 'application/json');

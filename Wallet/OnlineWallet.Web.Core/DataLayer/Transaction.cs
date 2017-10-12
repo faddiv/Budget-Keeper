@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using OnlineWallet.ExportImport;
 
 namespace OnlineWallet.Web.DataLayer
 {

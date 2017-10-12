@@ -10,23 +10,16 @@
  * Do not edit the class manually.
  */
 
-import { MoneyDirection } from "./MoneyDirection";
+import * as models from './models';
 
-export interface ExportImportRow {
-    created?: Date;
+export interface BalanceInfo {
+    spent?: number;
 
-    name?: string;
+    income?: number;
 
-    comment?: string;
+    toSaving?: number;
 
-    category?: string;
+    planned?: number;
 
-    amount?: number;
-
-    source?: string;
-
-    direction?: MoneyDirection;
-
-    matchingId?: number;
-
+    unused?: number;
 }

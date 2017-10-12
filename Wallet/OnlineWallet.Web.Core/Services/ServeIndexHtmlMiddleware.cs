@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,7 +16,6 @@ namespace OnlineWallet.Web.Services
 {
     public class ServeIndexHtmlMiddleware
     {
-        private readonly PathString _matchUrl;
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
         private readonly IFileProvider _fileProvider;
@@ -77,33 +76,33 @@ namespace OnlineWallet.Web.Services
             if (headers.Accept.FirstOrDefault()?.MediaType.Value == "text/html")
             {
                 var fileToServe = GetFileToServe();
-                if (ComputeIfModifiedSince(fileToServe, headers))
+                if (fileToServe != null)
                 {
-                    ApplyResponseHeaders(context.Response, 200, fileToServe);
-                    var sendFile = context.Features.Get<IHttpSendFileFeature>();
-                    if (sendFile != null)
+                    if (ComputeIfModifiedSince(fileToServe, headers))
                     {
-                        return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length, CancellationToken.None);
+                        ApplyResponseHeaders(context.Response, 200, fileToServe);
+                        var sendFile = context.Features.Get<IHttpSendFileFeature>();
+                        if (sendFile != null)
+                        {
+                            return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length, CancellationToken.None);
+                        }
+                        else
+                        {
+                            using (var readStream = fileToServe.File.CreateReadStream())
+                            {
+                                readStream.Seek(0, SeekOrigin.Begin);
+                                return StreamCopyOperation.CopyToAsync(readStream, context.Response.Body, fileToServe.Length, context.RequestAborted);
+                            }
+                        }
                     }
                     else
                     {
-                        using (var readStream = fileToServe.File.CreateReadStream())
-                        {
-                            readStream.Seek(0, SeekOrigin.Begin);
-                            return StreamCopyOperation.CopyToAsync(readStream, context.Response.Body, fileToServe.Length, context.RequestAborted);
-                        }
+                        ApplyResponseHeaders(context.Response, 304, fileToServe);
+                        return Task.FromResult(0);//TODO: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/Constants.cs CompletedTask 
                     }
                 }
-                else
-                {
-                    ApplyResponseHeaders(context.Response, 304, fileToServe);
-                    return Task.FromResult(0);//TODO: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/Constants.cs CompletedTask 
-                }
             }
-            else
-            {
-                return _next(context);
-            }
+            return _next(context);
         }
 
 

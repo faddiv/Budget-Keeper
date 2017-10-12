@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Controllers.Abstractions;
 using OnlineWallet.Web.DataLayer;
@@ -7,8 +7,6 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.WalletModule
 {
-    [SwaggerResponse((int) HttpStatusCode.Created, typeof(Wallet))]
-    [SwaggerResponse((int) HttpStatusCode.OK, typeof(Wallet))]
     public class WalletController : CrudController<Wallet, int>
     {
         #region  Constructors

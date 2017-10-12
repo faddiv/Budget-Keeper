@@ -33,12 +33,16 @@
     </div>
   </div>
   <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" id="salary" name="salary" formControlName="salary"> Salary
-        </label>
-      </div>
+    <div class="col-sm-offset-2 col-sm-10 radio">
+      <label class="radio-inline">
+      <input type="radio" name="direction" formControlName="direction" value="-1"> Expense
+    </label>
+      <label class="radio-inline">
+      <input type="radio" name="direction" formControlName="direction" value="0"> Plan
+    </label>
+      <label class="radio-inline">
+      <input type="radio" name="direction" formControlName="direction" value="1"> Salary
+    </label>
     </div>
   </div>
   <button type="submit" class="btn btn-primary">Add</button>

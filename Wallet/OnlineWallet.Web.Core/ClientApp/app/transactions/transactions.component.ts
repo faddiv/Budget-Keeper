@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Transaction, TrasactionsService } from 'walletApi';
+import { Transaction, TransactionsService } from 'walletApi';
 import { AlertsService } from 'app/common/alerts';
-import { directionColoringFunction } from 'app/common/transaction-view';
+import { directionColoringFunction, TransactionViewModel } from 'app/common/transaction-view';
 import * as moment from "moment";
 import { ListHelpers } from 'walletCommon';
 
@@ -15,6 +15,7 @@ export class TransactionsComponent implements OnInit {
   transactions: Transaction[];
   pageItems: Transaction[];
   changedItems: Transaction[] = [];
+  deletedItems: number[] = [];
   rowColoring = directionColoringFunction;
   selectedYear: string;
   selectedMonth: string;
@@ -22,7 +23,7 @@ export class TransactionsComponent implements OnInit {
   years: number[] = [];
 
   constructor(
-    private trasactionsService: TrasactionsService,
+    private trasactionsService: TransactionsService,
     private alertsService: AlertsService
   ) {
     this.selectedYear = this.now.year().toString();
@@ -67,15 +68,21 @@ export class TransactionsComponent implements OnInit {
 
   save() {
     this.alertsService.dismissAll();
-    if (this.changedItems.length === 0) {
+    if (this.changedItems.length === 0 && this.deletedItems.length === 0) {
       this.alertsService.warning("No data has changed.");
       return;
     }
-    this.trasactionsService.batchUpdate(this.changedItems)
+    this.trasactionsService.batchUpdate(this.changedItems, this.deletedItems)
       .subscribe(result => {
         this.changedItems.length = 0;
         this.alertsService.success("Changes saved successfully.");
       });
+  }
+
+  delete(item: TransactionViewModel) {
+    ListHelpers.remove(this.transactions, item.original);
+    this.deletedItems.push(item.transactionId);
+    this.select(this.selectedYear, this.selectedMonth);
   }
 
   monthColor(month: string) {
@@ -83,7 +90,7 @@ export class TransactionsComponent implements OnInit {
     var currentMonth = this.now.month() + 1;
     var selectedMonth = parseInt(this.selectedMonth);
     var inspectedMonth = parseInt(month);
-    if(inspectedMonth === selectedMonth) {
+    if (inspectedMonth === selectedMonth) {
       return "btn-primary";
     }
     if (year < this.now.year())

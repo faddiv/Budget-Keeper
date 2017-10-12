@@ -107,6 +107,8 @@ namespace OnlineWallet.Web
                 c.OperationFilter<ApplyArrayOnGetAllOperationFilter>();
                 c.OperationFilter<ApplyFileUploadOperationFilter>();
                 c.OperationFilter<ApplyCompositeInputModelOperationFilter>();
+                c.SchemaFilter<ApplyNewtonsoftJsonSchemaFilters>();
+
             });
 
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());

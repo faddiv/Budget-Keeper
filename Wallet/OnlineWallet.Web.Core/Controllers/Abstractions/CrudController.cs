@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -53,8 +53,8 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         }
 
         [HttpGet]
-        //[SwaggerGenericResponse((int)HttpStatusCode.OK, typeof(List<>))]
-        public Task<List<TEntity>> GetAll(QueryRequest request, CancellationToken token)
+        [SwaggerGenericResponse((int)HttpStatusCode.OK, typeof(List<>))]
+        public virtual Task<List<TEntity>> GetAll(QueryRequest request, CancellationToken token)
         {
             var query = DbSet.AsQueryable();
             if (!string.IsNullOrEmpty(request.Search))
@@ -79,7 +79,8 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         }
 
         [HttpGet("{id}")]
-        public async Task<TEntity> GetById(TKey id, CancellationToken token)
+        [SwaggerGenericResponse((int)HttpStatusCode.OK)]
+        public virtual async Task<TEntity> GetById(TKey id, CancellationToken token)
         {
             var value = await DbSet.FindAsync(new object[] {id}, token);
             return value;
@@ -88,7 +89,7 @@ namespace OnlineWallet.Web.Controllers.Abstractions
         [HttpPost]
         [SwaggerGenericResponse((int) HttpStatusCode.Created)]
         [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
-        public async Task<ActionResult> Post(TEntity value, CancellationToken token)
+        public async Task<ActionResult> Post([FromBody] TEntity value, CancellationToken token)
         {
             if (!ModelState.IsValid)
             {

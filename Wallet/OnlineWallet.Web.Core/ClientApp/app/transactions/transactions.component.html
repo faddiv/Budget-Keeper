@@ -10,9 +10,9 @@
         </div>
     </div>
 </form>
-
+<app-balance class="row" [year]="selectedYear" [month]="selectedMonth"></app-balance>
 <ng-container *ngIf="hasElements; else noElement">
-    <app-transaction-table [items]="pageItems" [changedItems]="changedItems" [rowModifier]="rowColoring" (deleted)="transactionDeleted($event)"></app-transaction-table>
+    <app-transaction-table [items]="pageItems" [changedItems]="changedItems" [rowModifier]="rowColoring" (deleted)="delete($event)"></app-transaction-table>
 </ng-container>
 <ng-template #noElement>
     <div class="jumbotron">

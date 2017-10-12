@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExportImportRow, Transaction, TrasactionsService, ApiError } from "walletApi";
+import { ExportImportRow, Transaction, TransactionsService, ApiError, WalletService, Wallet } from "walletApi";
 import { AlertModel } from 'app/common/alerts/AlertModel';
 import { ListHelpers } from 'walletCommon';
 import { StockModel } from './stock-table/StockModel';
@@ -15,10 +15,12 @@ export class ImportComponent implements OnInit {
   stocks: StockModel[];
   current: string = 'full';
   canSave = false;
+  wallets: Wallet[];
 
   constructor(
-    private transactionsService: TrasactionsService,
-    private alertsService: AlertsService) {
+    private transactionsService: TransactionsService,
+    private alertsService: AlertsService,
+    private walletService: WalletService) {
 
   }
 
@@ -26,9 +28,17 @@ export class ImportComponent implements OnInit {
     return this.linesToSave.length;
   }
   ngOnInit() {
+    this.walletService.getAll()
+      .subscribe(result => {
+        this.wallets = result;
+      });
   }
 
   addLines(newItems: Array<ExportImportRow> = []) {
+    if(!this.wallets) {
+      this.alertsService.error("The wallet list didn't load. Can't create transaction rows.");
+      return;
+    }
     this.linesToSave = newItems.map(e => <Transaction>{
       comment: e.comment,
       createdAt: e.created,
@@ -36,7 +46,7 @@ export class ImportComponent implements OnInit {
       name: e.name,
       transactionId: e.matchingId || 0,
       value: e.amount,
-      walletId: e.source,
+      walletId: this.getWalletId(e.source) || 1,
       category: e.category,
 
     });
@@ -82,5 +92,11 @@ export class ImportComponent implements OnInit {
 
   savedItemColoring(value: TransactionViewModel) {
     value.cssClass = value.transactionId ? "info" : undefined;
+  }
+
+  private getWalletId(name: string) : number|undefined {
+    if(!name) return undefined;
+    var wallet = this.wallets.find(w => w.name === name);
+    return wallet && wallet.moneyWalletId;
   }
 }

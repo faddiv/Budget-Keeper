@@ -4,7 +4,7 @@ import { WalletApi, ImportApi, TransactionApi } from "./api/api";
 import { WalletService } from "./walletService";
 import { ImportService } from "./importService";
 import { ExportService } from "./exportService";
-import { TrasactionsService } from "./transactionsService";
+import { TransactionsService } from "./transactionsService";
 
 @NgModule({
     imports: [
@@ -18,7 +18,7 @@ import { TrasactionsService } from "./transactionsService";
         WalletService,
         ImportService,
         ExportService,
-        TrasactionsService
+        TransactionsService
     ]
 })
 export class WalletApiModule { }

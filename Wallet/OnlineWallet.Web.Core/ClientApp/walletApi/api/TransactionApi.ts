@@ -46,7 +46,7 @@ export class TransactionApi {
      * @summary Deletes a Transaction by unique id
      * @param id a unique id for the Transaction
      */
-    public _delete(id: number, extraHttpRequestParams?: any): Observable<models.Transaction> {
+    public _delete(id: number, extraHttpRequestParams?: any): Observable<{}> {
         return this._deleteWithHttpInfo(id, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -59,10 +59,26 @@ export class TransactionApi {
 
     /**
      * 
-     * @param operations 
+     * @param year 
+     * @param month 
      */
-    public batchSave(operations?: Array<models.Transaction>, extraHttpRequestParams?: any): Observable<Array<models.Transaction>> {
-        return this.batchSaveWithHttpInfo(operations, extraHttpRequestParams)
+    public balanceInfo(year?: number, month?: number, extraHttpRequestParams?: any): Observable<models.BalanceInfo> {
+        return this.balanceInfoWithHttpInfo(year, month, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @param model 
+     */
+    public batchSave(model?: models.TransactionOperationBatch, extraHttpRequestParams?: any): Observable<Array<models.Transaction>> {
+        return this.batchSaveWithHttpInfo(model, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -110,19 +126,10 @@ export class TransactionApi {
     /**
      * 
      * @summary Creates a Transaction
-     * @param comment a Transaction representation
-     * @param createdAt 
-     * @param direction 
-     * @param transactionId 
-     * @param name 
-     * @param category 
-     * @param value 
-     * @param walletMoneyWalletId 
-     * @param walletName 
-     * @param walletId 
+     * @param value a Transaction representation
      */
-    public post(comment?: string, createdAt?: Date, direction?: number, transactionId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<models.Transaction> {
-        return this.postWithHttpInfo(comment, createdAt, direction, transactionId, name, category, value, walletMoneyWalletId, walletName, walletId, extraHttpRequestParams)
+    public post(value?: models.Transaction, extraHttpRequestParams?: any): Observable<models.Transaction> {
+        return this.postWithHttpInfo(value, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -171,9 +178,6 @@ export class TransactionApi {
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
         ];
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
@@ -193,10 +197,54 @@ export class TransactionApi {
     /**
      * 
      * 
-     * @param operations 
+     * @param year 
+     * @param month 
      */
-    public batchSaveWithHttpInfo(operations?: Array<models.Transaction>, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/api/v1/Transaction/batchSave';
+    public balanceInfoWithHttpInfo(year?: number, month?: number, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Transaction/BalanceInfo';
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        if (year !== undefined) {
+            queryParameters.set('year', <any>year);
+        }
+
+        if (month !== undefined) {
+            queryParameters.set('month', <any>month);
+        }
+
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * 
+     * 
+     * @param model 
+     */
+    public batchSaveWithHttpInfo(model?: models.TransactionOperationBatch, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/api/v1/Transaction/BatchSave';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -220,7 +268,7 @@ export class TransactionApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
-            body: operations == null ? '' : JSON.stringify(operations), // https://github.com/angular/angular/issues/10612
+            body: model == null ? '' : JSON.stringify(model), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
@@ -329,76 +377,31 @@ export class TransactionApi {
     /**
      * Creates a Transaction
      * 
-     * @param comment a Transaction representation
-     * @param createdAt 
-     * @param direction 
-     * @param transactionId 
-     * @param name 
-     * @param category 
-     * @param value 
-     * @param walletMoneyWalletId 
-     * @param walletName 
-     * @param walletId 
+     * @param value a Transaction representation
      */
-    public postWithHttpInfo(comment?: string, createdAt?: Date, direction?: number, transactionId?: number, name?: string, category?: string, value?: number, walletMoneyWalletId?: number, walletName?: string, walletId?: number, extraHttpRequestParams?: any): Observable<Response> {
+    public postWithHttpInfo(value?: models.Transaction, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/api/v1/Transaction';
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        if (comment !== undefined) {
-            queryParameters.set('Comment', <any>comment);
-        }
-
-        if (createdAt !== undefined) {
-            queryParameters.set('CreatedAt', <any>createdAt.toISOString());
-        }
-
-        if (direction !== undefined) {
-            queryParameters.set('Direction', <any>direction);
-        }
-
-        if (transactionId !== undefined) {
-            queryParameters.set('TransactionId', <any>transactionId);
-        }
-
-        if (name !== undefined) {
-            queryParameters.set('Name', <any>name);
-        }
-
-        if (category !== undefined) {
-            queryParameters.set('Category', <any>category);
-        }
-
-        if (value !== undefined) {
-            queryParameters.set('Value', <any>value);
-        }
-
-        if (walletMoneyWalletId !== undefined) {
-            queryParameters.set('Wallet.MoneyWalletId', <any>walletMoneyWalletId);
-        }
-
-        if (walletName !== undefined) {
-            queryParameters.set('Wallet.Name', <any>walletName);
-        }
-
-        if (walletId !== undefined) {
-            queryParameters.set('WalletId', <any>walletId);
-        }
-
         // to determine the Content-Type header
         let consumes: string[] = [
+            'application/json-patch+json',
+            'application/json',
+            'text/json',
+            'application/_*+json'
         ];
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
         ];
+
+        headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
+            body: value == null ? '' : JSON.stringify(value), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
@@ -436,9 +439,6 @@ export class TransactionApi {
 
         // to determine the Accept header
         let produces: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
         ];
 
         headers.set('Content-Type', 'application/json');

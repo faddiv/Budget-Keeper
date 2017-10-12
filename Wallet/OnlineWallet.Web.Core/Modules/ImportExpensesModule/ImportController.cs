@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LinqKit;
@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
-using MoneyDirection = OnlineWallet.Web.DataLayer.MoneyDirection;
 
 namespace OnlineWallet.Web.Modules.ImportExpensesModule
 {

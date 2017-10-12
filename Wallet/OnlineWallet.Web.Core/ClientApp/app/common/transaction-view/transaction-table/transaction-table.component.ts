@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { TransactionViewModel, ITransactionTableExtFunction } from '../models';
-import { Wallet, Transaction, WalletService } from 'walletApi';
+import { Wallet, Transaction, WalletService, MoneyDirection } from 'walletApi';
 import { ListHelpers } from 'walletCommon';
 
 @Component({
@@ -23,7 +23,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   @Input("rowModifier")
   rowModifier: ITransactionTableExtFunction;
 
-  @Output()
+  @Output("deleted")
   deleted = new EventEmitter<TransactionViewModel>();
 
   constructor(
@@ -49,11 +49,25 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.pageItems = this.items ? this.items.map(v => new TransactionViewModel(v)) : [];
 
     this.pageItems.forEach(item => {
-      this.setWalletName(item); 
+      this.setWalletName(item);
       if (this.rowModifier) {
         this.rowModifier(item);
       }
     });
+  }
+
+  changeDirection(item: TransactionViewModel) {
+    switch (item.direction) {
+      case MoneyDirection.Expense:
+        item.direction = MoneyDirection.Income;
+        break;
+      case MoneyDirection.Income:
+        item.direction = MoneyDirection.Plan;
+        break;
+      case MoneyDirection.Plan:
+        item.direction = MoneyDirection.Expense;
+        break;
+    }
   }
 
   editTransaction(item: TransactionViewModel) {
@@ -61,7 +75,6 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   }
 
   deleteTransaction(item: TransactionViewModel) {
-    ListHelpers.remove(this.items, item.original);
     this.deleted.emit(item);
   }
 

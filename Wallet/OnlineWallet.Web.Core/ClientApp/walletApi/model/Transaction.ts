@@ -10,14 +10,14 @@
  * Do not edit the class manually.
  */
 
-import * as models from './models';
+import { MoneyDirection } from "./MoneyDirection";
 
 export interface Transaction {
     comment?: string;
 
     createdAt: Date;
 
-    direction: Transaction.DirectionEnum;
+    direction: MoneyDirection;
 
     transactionId?: number;
 
@@ -29,10 +29,4 @@ export interface Transaction {
 
     walletId: number;
 
-}
-export namespace Transaction {
-    export enum DirectionEnum {
-        NUMBER_1 = <any> 1,
-        NUMBER_MINUS_1 = <any> -1
-    }
 }

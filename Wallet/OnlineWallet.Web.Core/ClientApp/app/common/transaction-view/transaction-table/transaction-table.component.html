@@ -17,9 +17,10 @@
       <ng-template #editRow>
         <td><input type="date" class="form-control" [(ngModel)]="item.createdAtText" name="createdAt" /></td>
         <td><input type="text" class="form-control" [(ngModel)]="item.name" name="name" /></td>
-        <td>
-          <span *ngIf="item.direction===-1" class="glyphicon glyphicon-log-out"></span>
-          <span *ngIf="item.direction===1" class="glyphicon glyphicon-log-in"></span>
+        <td (click)="changeDirection(item)">
+            <span *ngIf="item.direction===-1" class="glyphicon glyphicon-minus text-danger"></span>
+            <span *ngIf="item.direction===1" class="glyphicon glyphicon-plus text-success"></span>
+            <span *ngIf="item.direction===0" class="glyphicon glyphicon-bookmark"></span>
         </td>
         <td><input type="number" class="form-control" [(ngModel)]="item.value" name="value" /></td>
         <td>
@@ -42,8 +43,9 @@
         <td>{{item.createdAtText}}</td>
         <td>{{item.name}}</td>
         <td>
-          <span *ngIf="item.direction===-1" class="glyphicon glyphicon-log-out"></span>
-          <span *ngIf="item.direction===1" class="glyphicon glyphicon-log-in"></span>
+            <span *ngIf="item.direction===-1" class="glyphicon glyphicon-minus text-danger"></span>
+            <span *ngIf="item.direction===1" class="glyphicon glyphicon-plus text-success"></span>
+            <span *ngIf="item.direction===0" class="glyphicon glyphicon-bookmark"></span>
         </td>
         <td>{{item.value}}</td>
         <td>{{item.walletName}}</td>

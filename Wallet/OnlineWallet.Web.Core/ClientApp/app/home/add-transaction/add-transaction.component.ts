@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Transaction, Wallet, ApiError } from "walletApi";
+import { Transaction, Wallet, ApiError, MoneyDirection } from "walletApi";
 import { ICommand } from "directives";
 import { AlertsService } from 'app/common/alerts';
 import * as moment from "moment";
@@ -27,7 +27,9 @@ export class AddTransactionComponent implements OnInit, OnChanges {
       Validators.pattern(/^\d+$/)
     ]),
     comment: new FormControl(""),
-    salary: new FormControl(false)
+    direction: new FormControl("-1", [
+      Validators.required
+    ])
   });
 
   @Input("wallets")
@@ -79,8 +81,8 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     return <FormControl>this.form.controls.comment;
   }
   
-  get salary(): FormControl {
-    return <FormControl>this.form.controls.salary;
+  get direction(): FormControl {
+    return <FormControl>this.form.controls.direction;
   }
 
 
@@ -93,7 +95,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     var newItem: Transaction = {
       comment: this.comment.value,
       createdAt: moment(this.created.value).toDate(),
-      direction: this.salary.value ? Transaction.DirectionEnum.NUMBER_1 : Transaction.DirectionEnum.NUMBER_MINUS_1,
+      direction: this.direction.value,
       name: this.name.value,
       value: this.price.value,
       transactionId: 0,
@@ -112,6 +114,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     }
     patch.wallet = this.wallet.value;
     patch.created = this.created.value;
+    patch.direction = this.direction.value;
     this.form.patchValue(patch, {
       emitEvent: false
     });

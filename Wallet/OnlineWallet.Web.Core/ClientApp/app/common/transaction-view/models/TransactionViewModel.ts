@@ -1,4 +1,4 @@
-import { Transaction } from "walletApi";
+import { Transaction,MoneyDirection } from "walletApi";
 import { ListHelpers } from "walletCommon";
 import * as moment from "moment";
 import { dateFormat } from "app/common/constants";
@@ -6,7 +6,7 @@ import { dateFormat } from "app/common/constants";
 export class TransactionViewModel implements Transaction {
     comment?: string;
     createdAt: Date;
-    direction: Transaction.DirectionEnum;
+    direction: MoneyDirection;
     transactionId?: number;
     name: string;
     value: number;
@@ -20,6 +20,7 @@ export class TransactionViewModel implements Transaction {
     constructor(
         public original: Transaction) {
         Object.assign(this, original);
+        this.direction = this.direction && parseInt(<any>original.direction);
     }
 
     get price() {
