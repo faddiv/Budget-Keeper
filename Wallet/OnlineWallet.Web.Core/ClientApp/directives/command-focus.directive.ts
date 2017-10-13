@@ -1,30 +1,40 @@
-import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ICommand } from "directives/ICommand";
+import { Directive, ElementRef, Input, OnChanges, SimpleChanges, Renderer } from '@angular/core';
+import { ICommand } from "./ICommand";
+import { FocusService } from './focus.service';
 
 @Directive({
-  selector: '[focus-command]'
+  selector: '[focus-id]'
 })
 export class CommandFocusDirective implements OnChanges {
 
-  @Input("focus-command")
-  commandFocus: ICommand<any>;
+  @Input("focus-id")
+  focusId: string;
 
-  constructor(private element: ElementRef) {
-    if (!element.nativeElement.focus || typeof (element.nativeElement.focus) !== "function") {
-      throw "Element is not focusable: " + JSON.stringify(element.nativeElement);
-    }
+  private destroy: () => void;
+
+  constructor(
+    private element: ElementRef,
+    private renderer: Renderer,
+    private focusService: FocusService
+  ) {
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
-    this.setExecuteCommand();
-  }
-
-  setExecuteCommand() {
-    if (this.commandFocus && typeof (this.commandFocus) === "object" && !this.commandFocus.execute) {
-      this.commandFocus.execute = () => {
-        this.element.nativeElement.focus();
-      }
+    var change = changes["focusId"]
+    if (change) {
+      this.listenFocus();
     }
   }
 
+  listenFocus() {
+    if (this.destroy) {
+      this.destroy();
+    }
+    if (this.focusId) {
+      this.destroy =
+        this.focusService.subscribe(this.focusId, () => {
+          this.renderer.invokeElementMethod(this.element.nativeElement, "focus");
+        });
+    }
+  }
 }

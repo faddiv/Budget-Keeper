@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CommandFocusDirective } from './command-focus.directive';
 import { FvFileDirective } from "./fv-file.directive";
 import { RenderDirective } from "./render.directive";
+import { FocusService } from "./focus.service";
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { RenderDirective } from "./render.directive";
     CommandFocusDirective,
     FvFileDirective,
     RenderDirective
-  ]
+  ],
+  providers:[FocusService]
 })
 export class DirectivesModule { }

@@ -1,2 +1,2 @@
-export * from "./ICommand";
 export * from "./directives.module"
+export * from "./focus.service";

@@ -1,10 +1,10 @@
 import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Transaction, Wallet, ApiError, MoneyDirection } from "walletApi";
-import { ICommand } from "directives";
 import { AlertsService } from 'app/common/alerts';
 import * as moment from "moment";
 import { dateFormat } from 'app/common/constants';
+import { FocusService } from 'directives';
 
 @Component({
   selector: 'app-add-transaction',
@@ -35,8 +35,6 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   @Input("wallets")
   wallets: Wallet[];
 
-  focusName: ICommand<any> = {};
-
   @Output("add")
   add = new EventEmitter<Transaction>();
 
@@ -44,7 +42,8 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   save = new EventEmitter<any>();
 
   constructor(
-    private alertsService: AlertsService
+    private alertsService: AlertsService,
+    private focusService: FocusService
   ) { }
 
   ngOnInit() {
@@ -120,7 +119,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();
-    this.focusName.execute();
+    this.focusService.focus("name");
     this.alertsService.dismissAll();
   }
 
