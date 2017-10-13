@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit } from '@angular/core';
 import { Transaction, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
 import { ListHelpers } from 'walletCommon';
 import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
@@ -6,16 +6,21 @@ import { TransactionsService } from 'walletApi';
 import { AlertModel } from 'app/common/alerts/AlertModel';
 import { AlertsService } from 'app/common/alerts';
 import { TransactionViewModel, directionColoringFunction } from 'app/common/transaction-view';
+import { AddTransactionComponent } from 'app/home/add-transaction/add-transaction.component';
 
 @Component({
-  moduleId: module.id,
+  moduleId: module.id.toString(),
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit, ICleanForm {
+export class HomeComponent implements OnInit, AfterViewInit, ICleanForm {
+  
   linesToSave: Transaction[];
   wallets: Wallet[] = [];
   rowColoring = directionColoringFunction;
+
+  @ViewChild(AddTransactionComponent)
+  addTransaction: AddTransactionComponent;
 
   constructor(
     private walletService: WalletService,
@@ -38,6 +43,11 @@ export class HomeComponent implements OnInit, ICleanForm {
       this.alertsService.error(error.message);
     });
   }
+  
+  ngAfterViewInit(): void {
+    console.log("HomeComponent.ngAfterViewInit")
+    this.addTransaction.focusStart();
+  }
 
   addLine(newItem: Transaction) {
     this.linesToSave = this.linesToSave.concat(newItem);
@@ -53,6 +63,7 @@ export class HomeComponent implements OnInit, ICleanForm {
       
       this.alertsService.success("Transactions are saved successfully.");
       this.startNew();
+      this.addTransaction.clearFields();
     }, error => {
       this.alertsService.error(error.message);
     })

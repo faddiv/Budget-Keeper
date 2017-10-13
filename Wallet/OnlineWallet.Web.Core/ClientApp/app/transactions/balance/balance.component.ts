@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { TransactionsService, BalanceInfo } from 'walletApi';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-balance',
   templateUrl: './balance.component.html',
   styleUrls: ['./balance.component.scss']

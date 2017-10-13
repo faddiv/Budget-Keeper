@@ -3,6 +3,7 @@ import { Wallet } from "walletApi";
 import { WalletViewModel } from 'app/wallets/WalletViewModel';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-wallet-add',
   templateUrl: './wallet-add.component.html'
 })

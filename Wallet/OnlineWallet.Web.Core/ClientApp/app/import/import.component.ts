@@ -7,6 +7,7 @@ import { AlertsService } from 'app/common/alerts';
 import { TransactionViewModel } from 'app/common/transaction-view';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-import',
   templateUrl: './import.component.html'
 })

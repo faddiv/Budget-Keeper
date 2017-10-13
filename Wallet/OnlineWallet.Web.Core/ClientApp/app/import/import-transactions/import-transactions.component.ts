@@ -4,6 +4,7 @@ import { ExportImportRow, ImportService, ApiError } from "walletApi";
 import { AlertsService } from 'app/common/alerts';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-import-transactions',
   templateUrl: './import-transactions.component.html'
 })

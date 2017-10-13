@@ -6,6 +6,7 @@ import * as moment from "moment";
 import { ListHelpers } from 'walletCommon';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-transactions',
   templateUrl: './transactions.component.html'
 })

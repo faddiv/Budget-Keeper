@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Observable";
 import { WalletViewModel } from "./WalletViewModel";
 
 @Component({
-  moduleId: module.id,
+  moduleId: module.id.toString(),
   selector: "app-wallets",
   templateUrl: './wallets.component.html'
 })

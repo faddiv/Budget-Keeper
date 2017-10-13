@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, OnChanges, SimpleChanges, Renderer } from '@angular/core';
-import { ICommand } from "./ICommand";
 import { FocusService } from './focus.service';
 
 @Directive({

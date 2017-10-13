@@ -6,6 +6,7 @@ import { AlertsService } from 'app/common/alerts';
 import { dateFormat } from 'app/common/constants';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-export',
   templateUrl: './export.component.html'
 })

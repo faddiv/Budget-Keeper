@@ -4,6 +4,7 @@ import { ListHelpers } from 'walletCommon';
 import { AlertsService } from './alerts.service';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-alerts',
   templateUrl: './alerts.component.html'
 })

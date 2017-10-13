@@ -7,6 +7,7 @@ import { dateFormat } from 'app/common/constants';
 import { FocusService } from 'directives';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-add-transaction',
   templateUrl: './add-transaction.component.html'
 })
@@ -63,7 +64,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   get wallet(): FormControl {
     return <FormControl>this.form.controls.wallet;
   }
-  
+
   get created(): FormControl {
     return <FormControl>this.form.controls.created;
   }
@@ -79,7 +80,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   get comment(): FormControl {
     return <FormControl>this.form.controls.comment;
   }
-  
+
   get direction(): FormControl {
     return <FormControl>this.form.controls.direction;
   }
@@ -105,6 +106,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   }
 
   clearFields() {
+    console.log("clearFields");
     var patch: any = {};
     for (var key in this.form.controls) {
       if (this.form.controls.hasOwnProperty(key) && this.form.controls[key] instanceof FormControl) {
@@ -119,8 +121,12 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();
-    this.focusService.focus("name");
+    this.focusStart();
     this.alertsService.dismissAll();
+  }
+
+  focusStart() {
+    this.focusService.focus("name");
   }
 
   showValidationErrors() {

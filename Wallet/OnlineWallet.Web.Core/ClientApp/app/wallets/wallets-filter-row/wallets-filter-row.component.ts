@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-wallets-filter-row',
   templateUrl: './wallets-filter-row.component.html'
 })

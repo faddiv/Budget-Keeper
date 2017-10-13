@@ -4,6 +4,7 @@ import { Wallet, Transaction, WalletService, MoneyDirection } from 'walletApi';
 import { ListHelpers } from 'walletCommon';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-transaction-table',
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.scss']

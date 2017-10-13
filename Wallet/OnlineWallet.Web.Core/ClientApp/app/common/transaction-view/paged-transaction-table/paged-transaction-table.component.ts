@@ -4,6 +4,7 @@ import { TransactionViewModel, ITransactionTableExtFunction } from '../models';
 import { ListHelpers } from 'walletCommon';
 
 @Component({
+  moduleId: module.id.toString(),
   selector: 'app-paged-transaction-table',
   templateUrl: './paged-transaction-table.component.html'
 })

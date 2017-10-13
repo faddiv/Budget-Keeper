@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, OnChanges, SimpleChanges, EventEmitter, Output, HostListener } from '@angular/core';
-import { ICommand } from "directives/ICommand";
 
 @Directive({
   selector: '[fvFile][type=file]'
