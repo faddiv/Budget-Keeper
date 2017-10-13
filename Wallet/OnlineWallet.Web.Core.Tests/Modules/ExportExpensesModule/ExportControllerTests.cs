@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using FluentAssertions;
@@ -9,7 +7,6 @@ using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
-using MoneyDirection = OnlineWallet.Web.DataLayer.MoneyDirection;
 
 namespace OnlineWallet.Web.Modules.ExportExpensesModule
 {

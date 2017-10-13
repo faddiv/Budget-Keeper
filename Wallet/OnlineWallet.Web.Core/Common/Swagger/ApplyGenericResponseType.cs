@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using OnlineWallet.Web.Utils;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Services.Swagger
+namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyGenericResponseType : IOperationFilter
     {

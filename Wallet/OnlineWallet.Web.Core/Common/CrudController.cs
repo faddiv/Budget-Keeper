@@ -5,13 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineWallet.Web.Common.Queries;
+using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Models.Queries;
 using OnlineWallet.Web.QueryLanguage;
-using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Controllers.Abstractions
+namespace OnlineWallet.Web.Common
 {
     [Route("api/v1/[controller]")]
     public abstract class CrudController<TEntity, TKey> : Controller where TEntity : class

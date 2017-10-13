@@ -1,4 +1,4 @@
-﻿namespace OnlineWallet.Web.Models
+namespace OnlineWallet.Web.Common.Models
 {
     public class JsonResponse
     {

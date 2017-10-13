@@ -1,4 +1,4 @@
-﻿namespace OnlineWallet.Web.Models.Queries
+namespace OnlineWallet.Web.Common.Queries
 {
     public class QueryRequest
     {

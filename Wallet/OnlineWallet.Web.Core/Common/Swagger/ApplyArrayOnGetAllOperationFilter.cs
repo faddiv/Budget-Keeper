@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using System.Reflection;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Services.Swagger
+namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyArrayOnGetAllOperationFilter : IOperationFilter
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace OnlineWallet.Web.Services
+namespace OnlineWallet.Web.Common
 {
     public class ReplaceParameter : ExpressionVisitor
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using OnlineWallet.Web.QueryLanguage.Sortings;
 
-namespace OnlineWallet.Web.Models.Queries
+namespace OnlineWallet.Web.Common.Queries
 {
     public class OrderByBuilder<TModel>
     {

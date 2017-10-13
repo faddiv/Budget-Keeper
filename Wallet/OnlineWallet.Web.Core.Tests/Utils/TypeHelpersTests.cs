@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
+using OnlineWallet.Web.Common;
 using Xunit;
 
 namespace OnlineWallet.Web.Utils

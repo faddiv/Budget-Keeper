@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Reflection;
 
-namespace OnlineWallet.Web.Services.Swagger
+namespace OnlineWallet.Web.Common.Swagger
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public sealed class SwaggerGenericResponseAttribute : Attribute

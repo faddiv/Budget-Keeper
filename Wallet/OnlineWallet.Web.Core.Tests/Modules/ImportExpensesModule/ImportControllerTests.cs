@@ -54,7 +54,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     Name = "expense 1",
                     Value = 111,
                     WalletId = 2,
-                    Direction = DataLayer.MoneyDirection.Expense,
+                    Direction = MoneyDirection.Expense,
                     Category = "Category 1",
                     CreatedAt = DateTime.Parse("2017-08-26")
                 };
@@ -87,7 +87,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     Name = "Original Name",
                     Value = 123,
                     WalletId = 2,
-                    Direction = DataLayer.MoneyDirection.Expense,
+                    Direction = MoneyDirection.Expense,
                     Category = "Category 1",
                     CreatedAt = DateTime.Parse("2017-08-26")
                 };

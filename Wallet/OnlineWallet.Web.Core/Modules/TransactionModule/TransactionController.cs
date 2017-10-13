@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
-using OnlineWallet.Web.Controllers.Abstractions;
+using OnlineWallet.Web.Common;
+using OnlineWallet.Web.Common.Queries;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Models.Queries;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
@@ -41,8 +41,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             [FromBody, Required]TransactionOperationBatch model,
             CancellationToken token)
         {
-            var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
+            model.Save = model.Save ?? new List<Transaction>();
             model.Delete = model.Delete ?? new List<long>();
+            var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
             existingIds.AddRange(model.Delete);
             var existingEntities = DbSet.Where(e => existingIds.Contains(e.TransactionId)).ToList();
             foreach (var operation in model.Save)

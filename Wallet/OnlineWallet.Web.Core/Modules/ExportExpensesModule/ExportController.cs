@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
+using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using MoneyDirection = OnlineWallet.ExportImport.MoneyDirection;
 

@@ -12,7 +12,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
-namespace OnlineWallet.Web.Services
+namespace OnlineWallet.Web.Common
 {
     public class ServeIndexHtmlMiddleware
     {

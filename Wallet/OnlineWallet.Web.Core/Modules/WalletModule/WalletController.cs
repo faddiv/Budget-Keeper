@@ -1,9 +1,7 @@
-using System.Net;
 using Microsoft.EntityFrameworkCore;
-using OnlineWallet.Web.Controllers.Abstractions;
+using OnlineWallet.Web.Common;
+using OnlineWallet.Web.Common.Queries;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Models.Queries;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.WalletModule
 {

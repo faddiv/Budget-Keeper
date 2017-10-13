@@ -1,9 +1,8 @@
 using System;
 using System.Linq.Expressions;
 using OnlineWallet.Web.QueryLanguage.Conditions;
-using OnlineWallet.Web.Services;
 
-namespace OnlineWallet.Web.Models.Queries
+namespace OnlineWallet.Web.Common.Queries
 {
     public abstract class ConditionVisitorBase<T>
     {

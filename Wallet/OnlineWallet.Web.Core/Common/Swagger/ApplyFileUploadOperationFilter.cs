@@ -1,9 +1,8 @@
-﻿using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Services.Swagger
+namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyFileUploadOperationFilter : IOperationFilter
     {

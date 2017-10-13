@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
+using OnlineWallet.Web.Common.Queries;
 using OnlineWallet.Web.QueryLanguage.Sortings;
-using OnlineWallet.Web.Utils;
 using Xunit;
 
 namespace OnlineWallet.Web.Models.Queries

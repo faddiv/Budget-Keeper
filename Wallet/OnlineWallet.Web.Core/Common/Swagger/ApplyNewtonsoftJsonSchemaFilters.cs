@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Services.Swagger
+namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyNewtonsoftJsonSchemaFilters : ISchemaFilter
     {

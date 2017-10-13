@@ -6,14 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OnlineWallet.ExportImport;
+using OnlineWallet.Web.Common;
+using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Services;
-using OnlineWallet.Web.Services.Swagger;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web
 {
-  public class Startup
+    public class Startup
     {
         #region  Constructors
 
