@@ -5,6 +5,7 @@ import { AlertsService } from 'app/common/alerts';
 import * as moment from "moment";
 import { dateFormat } from 'app/common/constants';
 import { FocusService } from 'directives';
+import { toUTCDate } from 'walletCommon';
 
 @Component({
   moduleId: module.id.toString(),
@@ -94,7 +95,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     }
     var newItem: Transaction = {
       comment: this.comment.value,
-      createdAt: moment(this.created.value).toDate(),
+      createdAt: toUTCDate(this.created.value),
       direction: this.direction.value,
       name: this.name.value,
       value: this.price.value,

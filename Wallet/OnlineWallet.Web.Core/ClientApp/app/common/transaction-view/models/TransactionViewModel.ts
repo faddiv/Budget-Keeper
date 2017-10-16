@@ -1,5 +1,5 @@
 import { Transaction,MoneyDirection } from "walletApi";
-import { ListHelpers } from "walletCommon";
+import { ListHelpers, toUTCDate } from "walletCommon";
 import * as moment from "moment";
 import { dateFormat } from "app/common/constants";
 
@@ -32,7 +32,7 @@ export class TransactionViewModel implements Transaction {
     }
 
     set createdAtText(value: string) {
-        this.createdAt = moment(value).toDate();
+        this.createdAt = toUTCDate(value);
     }
 
     cancel() {

@@ -30,7 +30,7 @@ namespace OnlineWallet.Migration
             File.Delete(expensesPath);
 
             //Act
-            Program.Main(new []{ "InputFiles/Költségek *.xlsx" });
+            Program.Main(new []{ "InputFiles/Koltsegek *.xlsx" });
 
             //Assert
             File.Exists(inpomesPath).Should().BeTrue();
@@ -49,8 +49,7 @@ namespace OnlineWallet.Migration
             expenseText.Should().Contain("2012 kommentje", "reads comments");
             expenseText.Should().Contain(",Expense", "adds direction");
         }
-
-
+        
         [Fact(DisplayName = "Migration test: Meaningful error on checksum error")]
         public void MigrationTestMeaningfulErrorOnChecksumError()
         {
@@ -58,12 +57,66 @@ namespace OnlineWallet.Migration
             Console.SetError(new StringWriter(stringBuilder));
 
             //Act
-            Program.Main(new[] { "ChecksumError/Költségek *.xlsx" });
+            Program.Main(new[] { "Errors/Koltsegek *.xlsx" });
 
             //Assert
             var output = stringBuilder.ToString();
-            output.Should().Contain("Költségek 2011.xlsx");
+            output.Should().Contain("Koltsegek 2011.xlsx");
             output.Should().Contain("2011.12");
+        }
+
+        [Fact(DisplayName = "Migration test: Throw error on empty money")]
+        public void ThrowErrorOnEmptyMoney()
+        {
+            var stringBuilder = new StringBuilder();
+            Console.SetError(new StringWriter(stringBuilder));
+            var errorsHibasXlsx = "Errors\\Hibas 1.xlsx";
+
+            //Act
+            Program.Main(new[] { errorsHibasXlsx });
+
+            //Assert
+            var output = stringBuilder.ToString();
+            output.Should().Contain("No price was provided for");
+            output.Should().Contain(errorsHibasXlsx);
+            output.Should().Contain("2012.12");
+            output.Should().Contain("Line: 2");
+        }
+
+        [Fact(DisplayName = "Migration test: Throw error if no money wallet")]
+        public void ThrowErrorIfNoMoneyWallet()
+        {
+            var stringBuilder = new StringBuilder();
+            Console.SetError(new StringWriter(stringBuilder));
+            var errorsHibasXlsx = "Errors\\Hibas 2.xlsx";
+
+            //Act
+            Program.Main(new[] { errorsHibasXlsx });
+
+            //Assert
+            var output = stringBuilder.ToString();
+            output.Should().Contain("No wallet found for row.");
+            output.Should().Contain(errorsHibasXlsx);
+            output.Should().Contain("2012.12");
+            output.Should().Contain("Line: 2");
+        }
+
+        [Fact(DisplayName = "Migration test: Throw error if multiple money wallet")]
+        public void ThrowErrorIfMultipleMoneyWallet()
+        {
+            var stringBuilder = new StringBuilder();
+            Console.SetError(new StringWriter(stringBuilder));
+            var errorsHibasXlsx = "Errors\\Hibas 3.xlsx";
+
+            //Act
+            Program.Main(new[] { errorsHibasXlsx });
+
+            //Assert
+            var output = stringBuilder.ToString();
+            output.Should().Contain("Multiple wallet found for row.");
+            output.Should().Contain(errorsHibasXlsx);
+            output.Should().Contain("2012.12");
+            output.Should().Contain("Line: 2");
         }
     }
 }

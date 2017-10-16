@@ -49,8 +49,11 @@ namespace OnlineWallet.Migration
                         var created = row.GetCell(0)?.DateCellValue;
                         var name = row.GetCell(1)?.StringCellValue;
                         var category = row.GetCell(2)?.StringCellValue;
-                        var amount = row.GetCell(3)?.NumericCellValue.Round().CastInt();
-                        var isCash = !IsEmptyCell(row.GetCell(4));
+                        ICell amountCell = row.GetCell(3);
+                        var amount = (amountCell?.NumericCellValue.Round().CastInt()) ?? 0;
+                        ICell cashCell = row.GetCell(4);
+                        ICell bankAccountCell = row.GetCell(5);
+                        var isCash = !IsEmptyCell(cashCell);
                         var commentCell = row.GetCell(6);
                         var comment = commentCell?.CellType == CellType.String
                             ? commentCell.StringCellValue
@@ -68,20 +71,31 @@ namespace OnlineWallet.Migration
                         {
                             throw new Exception($"date does not match on row. File: {fileName} sheet: {_workbook.GetSheetName(i)} Line: {row.RowNum} Expected: {year}.{month} Actual: {created:yyyy-MM-dd}");
                         }
-                        if (amount.HasValue)
+                        if (amountCell == null || amountCell.CellType == CellType.Blank)
                         {
-                            actual += amount.Value;
-                            yield return new ExportImportRow
-                            {
-                                Created = created.GetValueOrDefault(),
-                                Name = name,
-                                Category = category,
-                                Amount = amount.GetValueOrDefault(),
-                                Source = isCash ? MoneySource.Cash.ToString() : MoneySource.BankAccount.ToString(),
-                                Comment = comment,
-                                Direction = MoneyDirection.Expense
-                            };
+                            throw new Exception($"No price was provided for: File: {fileName} sheet: {_workbook.GetSheetName(i)} Line: {row.RowNum}");
                         }
+                        if ((cashCell == null || cashCell.CellType == CellType.Blank)
+                            && (bankAccountCell == null || bankAccountCell.CellType == CellType.Blank))
+                        {
+                            throw new Exception($"No wallet found for row. File: {fileName} sheet: {_workbook.GetSheetName(i)} Line: {row.RowNum}");
+                        }
+                        if (cashCell != null && cashCell.CellType != CellType.Blank
+                            && bankAccountCell != null && bankAccountCell.CellType != CellType.Blank)
+                        {
+                            throw new Exception($"Multiple wallet found for row. File: {fileName} sheet: {_workbook.GetSheetName(i)} Line: {row.RowNum}");
+                        }
+                        actual += amount;
+                        yield return new ExportImportRow
+                        {
+                            Created = created.GetValueOrDefault(),
+                            Name = name,
+                            Category = category,
+                            Amount = amount,
+                            Source = isCash ? MoneySource.Cash.ToString() : MoneySource.BankAccount.ToString(),
+                            Comment = comment,
+                            Direction = MoneyDirection.Expense
+                        };
                     }
                     if (Math.Abs(Math.Abs(expected) - actual) > double.Epsilon)
                     {
@@ -159,7 +173,7 @@ namespace OnlineWallet.Migration
             }
             if (cell.CellType == CellType.Formula)
             {
-                var parts = cell.CellFormula.Split(new[] {'=', '+'}, StringSplitOptions.RemoveEmptyEntries);
+                var parts = cell.CellFormula.Split(new[] { '=', '+' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts)
                 {
                     yield return double.Parse(part).Round().CastInt();

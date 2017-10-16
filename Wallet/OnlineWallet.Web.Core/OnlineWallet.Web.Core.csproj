@@ -4,6 +4,20 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>OnlineWallet.Web</RootNamespace>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove=".angular-cli.json" />
+    <Content Remove="ClientApp\tsconfig.app.json" />
+    <Content Remove="ClientApp\tsconfig.spec.json" />
+    <Content Remove="e2e\tsconfig.e2e.json" />
+    <Content Remove="package.json" />
+    <Content Remove="tsconfig.json" />
+    <Content Remove="tslint.json" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
@@ -21,6 +35,15 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".angular-cli.json" />
+    <None Include="ClientApp\tsconfig.app.json" />
+    <None Include="ClientApp\tsconfig.spec.json" />
+    <None Include="e2e\tsconfig.e2e.json" />
+    <None Include="package.json" />
+    <None Include="tsconfig.json" />
+    <None Include="tslint.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OnlineWallet.ExportImport\OnlineWallet.ExportImport.csproj" />

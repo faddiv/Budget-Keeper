@@ -62,15 +62,15 @@ export class WalletsComponent implements OnInit {
 
   }
 
-  public delete(wallet: Wallet) {
+  public delete(wallet: WalletViewModel) {
     this.walletService.delete(wallet)
       .subscribe(result => {
-        ListHelpers.remove(this.wallets, wallet);
+        this.wallets = ListHelpers.remove(this.wallets, wallet);
       });
   }
 
   private updateOrInsertListItem(wallet: WalletViewModel) {
-    var index = ListHelpers.indexById(this.wallets, wallet);
+    var index = this.wallets.findIndex(w => w.moneyWalletId === wallet.moneyWalletId);
     if (index === -1) {
       this.wallets.push(wallet);
     } else {

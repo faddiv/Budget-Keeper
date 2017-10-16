@@ -22,7 +22,7 @@ export class WalletService {
     }
 
     insert(wallet: Wallet): Observable<Wallet> {
-        return decorateCommonCatch(this.api.post(null, wallet.name));
+        return decorateCommonCatch(this.api.post(wallet));
     }
 
     delete(wallet: Wallet): Observable<any> {

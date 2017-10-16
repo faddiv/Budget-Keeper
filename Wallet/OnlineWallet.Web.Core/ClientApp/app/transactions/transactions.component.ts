@@ -81,7 +81,7 @@ export class TransactionsComponent implements OnInit {
   }
 
   delete(item: TransactionViewModel) {
-    ListHelpers.remove(this.transactions, item.original);
+    this.transactions = ListHelpers.remove(this.transactions, item.original);
     this.deletedItems.push(item.transactionId);
     this.select(this.selectedYear, this.selectedMonth);
   }

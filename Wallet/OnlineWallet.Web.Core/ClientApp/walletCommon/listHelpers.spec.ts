@@ -9,26 +9,22 @@ describe("ListHelpers", () => {
             list = [itemToRemove, new Dummy1("bsd")];
         });
 
-        it("removes item by ref", () => {
-            ListHelpers.remove(list, itemToRemove);
-            expect(list.length).toBe(1);
-            expect(list).not.toContain(itemToRemove);
+        it("returns a new list without the itemToRemove", () => {
+            var newList = ListHelpers.remove(list, itemToRemove);
+            expect(newList.length).toBe(1);
+            expect(newList).not.toContain(itemToRemove);
         });
 
-        it("returns the index of the removed", () => {
-            var index = ListHelpers.remove(list, itemToRemove);
-            expect(index).toBe(0);
+        it("leaves the original list untouched", () => {
+            var newList = ListHelpers.remove(list, itemToRemove);
+            expect(list.length).toBe(2);
+            expect(list).toContain(itemToRemove);
         });
-    });
-    describe("indexById", () => {
-        beforeEach(() => {
-        });
-
-        it("use object as key if no ItemId is defined", () => {
-            var itemToRemove = new Dummy1("Asd");
-            var list = [new Dummy1("ccc"), itemToRemove, new Dummy1("bsd")];
-            var index = ListHelpers.indexById(list, itemToRemove);
-            expect(index).toBe(1);
+        
+        it("returns an empty list on undefined list", () => {
+            var newList = ListHelpers.remove<Dummy1>(<any>undefined, itemToRemove);
+            expect(newList).toBeDefined();
+            expect(newList.length).toBe(0);
         });
     });
     

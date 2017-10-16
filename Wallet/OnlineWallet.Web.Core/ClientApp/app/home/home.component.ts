@@ -69,12 +69,14 @@ export class HomeComponent implements OnInit, AfterViewInit, ICleanForm {
     })
   }
 
-  onDeleteBtnClicked(item: Transaction) {
-    ListHelpers.remove(this.linesToSave, item);
+  delete(item: TransactionViewModel) {
+    this.linesToSave = ListHelpers.remove(this.linesToSave, item.original);
   }
 
   walletNameById(walletId: number) {
-    return this.wallets.filter(wallet => wallet.moneyWalletId == walletId).map(wallet => wallet.name)[0];
+    return ListHelpers.selectMap(this.wallets,
+      wallet => wallet.moneyWalletId == walletId,
+      wallet => wallet.name);
   }
 
   @HostListener('window:beforeunload')
