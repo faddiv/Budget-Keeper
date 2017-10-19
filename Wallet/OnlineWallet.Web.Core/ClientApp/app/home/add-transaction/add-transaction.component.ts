@@ -1,11 +1,13 @@
 import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Transaction, Wallet, ApiError, MoneyDirection } from "walletApi";
+import { Transaction, Wallet, ApiError, MoneyDirection, ArticleService, ArticleModel } from "walletApi";
 import { AlertsService } from 'app/common/alerts';
 import * as moment from "moment";
 import { dateFormat } from 'app/common/constants';
 import { FocusService } from 'directives';
 import { toUTCDate } from 'walletCommon';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 @Component({
   moduleId: module.id.toString(),
@@ -29,6 +31,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
       Validators.pattern(/^\d+$/)
     ]),
     comment: new FormControl(""),
+    category: new FormControl(""),
     direction: new FormControl("-1", [
       Validators.required
     ])
@@ -45,7 +48,8 @@ export class AddTransactionComponent implements OnInit, OnChanges {
 
   constructor(
     private alertsService: AlertsService,
-    private focusService: FocusService
+    private focusService: FocusService,
+    private articleService:ArticleService
   ) { }
 
   ngOnInit() {
@@ -82,6 +86,10 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     return <FormControl>this.form.controls.comment;
   }
 
+  get category(): FormControl {
+    return <FormControl>this.form.controls.category;
+  }
+  
   get direction(): FormControl {
     return <FormControl>this.form.controls.direction;
   }
@@ -97,7 +105,8 @@ export class AddTransactionComponent implements OnInit, OnChanges {
       comment: this.comment.value,
       createdAt: toUTCDate(this.created.value),
       direction: this.direction.value,
-      name: this.name.value,
+      name: this.name.value && this.name.value.name,
+      category: this.category.value,
       value: this.price.value,
       transactionId: 0,
       walletId: this.wallet.value
@@ -148,5 +157,27 @@ export class AddTransactionComponent implements OnInit, OnChanges {
         this.alertsService.error("Price must be a number.")
       }
     }
+  }
+
+  nameFilter(keyword: string): Observable<any[]> {
+    
+    if (keyword) {
+      return this.articleService.filterBy(keyword);
+    } else {
+      return Observable.of([]);
+    }
+  }
+
+  nameListFormatter(data: ArticleModel) {
+    return data.nameHighlighted;
+  }
+
+  autofill(data: ArticleModel) {
+    this.form.patchValue({
+      category: data.category,
+      price: data.lastPrice
+    }, {
+      emitEvent: true
+    });
   }
 }

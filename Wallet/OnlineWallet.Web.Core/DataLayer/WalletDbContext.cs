@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace OnlineWallet.Web.DataLayer
 {
@@ -38,6 +38,12 @@ namespace OnlineWallet.Web.DataLayer
             }
         }
 
+        public void SetReadonly(bool isReadonly)
+        {
+            this.ChangeTracker.QueryTrackingBehavior = isReadonly
+                ? QueryTrackingBehavior.NoTracking
+                : QueryTrackingBehavior.TrackAll;
+        }
         #endregion
     }
 }

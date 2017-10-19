@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +18,11 @@ namespace OnlineWallet.Web.DataLayer
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         void UpdateEntityValues(object dbEntity, object newEntity);
+
+        /// <summary>
+        /// If setted to true, then sets QueryTrackingBehavior to NoTracking.
+        /// </summary>
+        void SetReadonly(bool isReadonly);
 
         #endregion
     }

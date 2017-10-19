@@ -38,8 +38,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
 
         public void Dispose()
         {
-            _fixture.DbContext.RemoveRange(_fixture.DbContext.Transactions);
-            _fixture.DbContext.SaveChanges();
+            _fixture.Cleanup();
         }
 
         [Fact(DisplayName = "ProcessTransactions detects if amount changes while name and direction remain same")]

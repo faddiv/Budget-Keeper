@@ -89,8 +89,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         public void Dispose()
         {
-            _fixture.DbContext.RemoveRange(_fixture.DbContext.Transactions);
-            _fixture.DbContext.SaveChanges();
+            _fixture.Cleanup();
         }
 
         #endregion

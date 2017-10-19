@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using OnlineWallet.Web.Common.Queries;
 using OnlineWallet.Web.QueryLanguage.Sortings;
 using Xunit;
 
-namespace OnlineWallet.Web.Models.Queries
+namespace OnlineWallet.Web.Common.Queries
 {
     [Trait("OrderBuilder", null)]
     public class OrderBuilderTests

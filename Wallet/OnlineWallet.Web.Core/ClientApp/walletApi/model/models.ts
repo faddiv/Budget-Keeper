@@ -1,3 +1,4 @@
+export * from './ArticleModel';
 export * from './BalanceInfo';
 export * from './ExportImportRow';
 export * from './Transaction';

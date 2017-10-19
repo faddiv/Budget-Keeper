@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace OnlineWallet.Web.Common
+namespace OnlineWallet.Web.Common.Helpers
 {
     public static class TypeHelpers
     {

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using OnlineWallet.Web.Common;
 using Xunit;
 
-namespace OnlineWallet.Web.Utils
+namespace OnlineWallet.Web.Common.Helpers
 {
     [Trait("TypeHelpers", null)]
     public class TypeHelpersTests

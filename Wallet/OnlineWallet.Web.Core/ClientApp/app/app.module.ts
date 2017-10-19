@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AlertModule } from "ngx-bootstrap/alert";
+import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 
 import { environment } from '../environments/environment';
 
@@ -57,6 +58,7 @@ import { BalanceComponent } from './transactions/balance/balance.component';
     AlertModule.forRoot(),
     WalletApiModule,
     DirectivesModule,
+    NguiAutoCompleteModule,
     RouterModule.forRoot([
       {
         path: "wallets",

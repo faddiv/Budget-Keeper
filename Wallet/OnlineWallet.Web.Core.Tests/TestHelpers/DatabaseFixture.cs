@@ -33,7 +33,11 @@ namespace OnlineWallet.Web.TestHelpers
             DbContext.SaveChanges();
 
         }
-
+        public void Cleanup()
+        {
+            DbContext.RemoveRange(DbContext.Transactions);
+            DbContext.SaveChanges();
+        }
         public void Dispose()
         {
             DbContext.Dispose();
