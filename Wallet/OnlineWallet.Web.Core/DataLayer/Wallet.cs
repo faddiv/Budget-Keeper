@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineWallet.Web.DataLayer
 {
@@ -9,6 +9,7 @@ namespace OnlineWallet.Web.DataLayer
         [Key]
         public int MoneyWalletId { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         #endregion

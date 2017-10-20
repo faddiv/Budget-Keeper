@@ -47,9 +47,17 @@ namespace OnlineWallet.Web.Common
             {
                 return new NotFoundResult();
             }
+            await ValidateDelete(entity);
+            if(!ModelState.IsValid)
+            {
+                return ValidationError();
+            }
             DbSet.Remove(entity);
             await Db.SaveChangesAsync(token);
-            return Ok(new {success = true});
+            return new JsonResult(new { success = true })
+            {
+                StatusCode = (int)HttpStatusCode.OK
+            };
         }
 
         [HttpGet]
@@ -144,7 +152,12 @@ namespace OnlineWallet.Web.Common
             return ModelState.Values.SelectMany(e => e.Errors).FirstOrDefault()?.ErrorMessage;
         }
 
-        private ContentResult ValidationError()
+        protected virtual Task ValidateDelete(TEntity entity)
+        {
+            return Task.FromResult(0);
+        }
+
+        protected ContentResult ValidationError()
         {
             return new ContentResult
             {

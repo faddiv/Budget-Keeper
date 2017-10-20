@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -36,6 +37,7 @@ namespace OnlineWallet.Web.TestHelpers
         public void Cleanup()
         {
             DbContext.RemoveRange(DbContext.Transactions);
+            DbContext.RemoveRange(DbContext.Wallets.Skip(2));
             DbContext.SaveChanges();
         }
         public void Dispose()

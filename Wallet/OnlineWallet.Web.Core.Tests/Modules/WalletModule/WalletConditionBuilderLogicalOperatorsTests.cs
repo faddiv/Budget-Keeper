@@ -7,8 +7,8 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.WalletModule
 {
-    [Trait("Logical operators in condition", null)]
-    public class TestLogicalOperatorsInConditionVisitorBase
+    [Trait("WalletConditionBuilder", "Logical operators in condition")]
+    public class WalletConditionBuilderLogicalOperatorsTests
     {
         #region Fields
 

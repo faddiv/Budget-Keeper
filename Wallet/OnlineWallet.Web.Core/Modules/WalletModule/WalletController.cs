@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.Common.Queries;
@@ -23,5 +25,13 @@ namespace OnlineWallet.Web.Modules.WalletModule
         protected override DbSet<Wallet> DbSet => Db.Wallets;
 
         #endregion
+
+        protected override async Task ValidateDelete(Wallet entity)
+        {
+            if(await Db.Transactions.AnyAsync(e => e.Wallet == entity))
+            {
+                ModelState.AddModelError("", "Wallet already used in transaction.");
+            }
+        }
     }
 }

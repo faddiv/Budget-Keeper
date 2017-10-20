@@ -7,8 +7,8 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.WalletModule
 {
-    [Trait("Search term in WalletConditionBuilder", null)]
-    public class TestSearchTermInWalletConditionBuilder
+    [Trait("WalletConditionBuilder", "Search terms")]
+    public class WalletConditionBuilderSearchTermsTests
     {
         #region Fields
 
@@ -18,7 +18,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
 
         #region  Constructors
 
-        public TestSearchTermInWalletConditionBuilder()
+        public WalletConditionBuilderSearchTermsTests()
         {
             var builder = new WalletConditionBuilder();
             var wallets = new List<Wallet>
