@@ -7,12 +7,12 @@ namespace OnlineWallet.ExportImport
 {
     public class CsvExportImport : ICsvExportImport
     {
-        private static readonly CsvConfiguration Configuration;
+        private static readonly Configuration Configuration;
         #region  Constructors
 
         static CsvExportImport()
         {
-            Configuration = new CsvConfiguration
+            Configuration = new Configuration
             {
                 HasHeaderRecord = true
             };

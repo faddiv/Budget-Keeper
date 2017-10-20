@@ -45,8 +45,12 @@ namespace OnlineWallet.Migration
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
-                Console.Error.WriteLine(ex.StackTrace);
+                while (ex != null)
+                {
+                    Console.Error.WriteLine(ex.Message);
+                    Console.Error.WriteLine(ex.StackTrace);
+                    ex = ex.InnerException;
+                }
             }
         }
 

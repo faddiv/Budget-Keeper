@@ -2,11 +2,11 @@
 
 namespace OnlineWallet.ExportImport
 {
-    internal class ExportImportRowCsvClassMap : CsvClassMap<ExportImportRow>
+    internal class ExportImportRowCsvClassMap : ClassMap<ExportImportRow>
     {
         public ExportImportRowCsvClassMap()
         {
-            Map(e => e.Created).Index(0).TypeConverterOption("yyyy-MM-dd");
+            Map(e => e.Created).Index(0).TypeConverterOption.Format("yyyy-MM-dd");
             Map(e => e.Name).Index(1);
             Map(e => e.Category).Index(2);
             Map(e => e.Amount).Index(3);
