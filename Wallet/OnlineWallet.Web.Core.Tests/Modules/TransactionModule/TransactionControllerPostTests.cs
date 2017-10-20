@@ -3,26 +3,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.Web.TestHelpers;
+using OnlineWallet.Web.TestHelpers.Builders;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    [Trait("WalletController", "Post")]
-    public class WalletControllerPostTests : WalletControllerTests
+    [Trait("TransactionController", "Post")]
+    public class TransactionControllerPostTests : TransactionControllerTests
     {
-        public WalletControllerPostTests(DatabaseFixture fixture) 
-            : base(fixture)
+        public TransactionControllerPostTests(DatabaseFixture fixture) : base(fixture)
         {
         }
+
 
         [Fact(DisplayName = "Post_returns_BadRequest_if_no_name_provided")]
         public async Task Post_returns_BadRequest_if_no_name_provided()
         {
             //Arrange
-            var entity = new DataLayer.Wallet
-            {
-                Name = null
-            };
+            var entity = new TransactionBuilder().WithName(null).Build();
             ControllerTestHelpers.AddModelErrorsFrom(entity, Controller);
 
             //Act
@@ -33,14 +31,11 @@ namespace OnlineWallet.Web.Modules.WalletModule
         }
 
 
-        [Fact(DisplayName = "Post_saves_new_wallet_if_everything_is_ok")]
-        public async Task Post_saves_new_wallet_if_everything_is_ok()
+        [Fact(DisplayName = "Post_saves_new_transaction_if_everything_is_ok")]
+        public async Task Post_saves_new_transaction_if_everything_is_ok()
         {
             //Arrange
-            var entity = new DataLayer.Wallet
-            {
-                Name = "New Wallet"
-            };
+            var entity = new TransactionBuilder().WithName("New Transaction").Build();
             ControllerTestHelpers.AddModelErrorsFrom(entity, Controller);
 
             //Act
@@ -48,8 +43,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.Created);
-            DbSet.Should().Contain(e => e.Name == "New Wallet");
+            DbSet.Should().Contain(e => e.Name == "New Transaction");
         }
-
     }
 }

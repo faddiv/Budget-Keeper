@@ -1,18 +1,19 @@
 ﻿using OnlineWallet.Web.Common;
+using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
 
 namespace OnlineWallet.Web.Modules.WalletModule
 {
-    public class WalletControllerTests : CrudControllerTests
+    public class WalletControllerTests : CrudControllerTests<Wallet>
     {
         protected WalletController Controller { get; }
-        protected DataLayer.Wallet TestWallet { get; }
+        protected Wallet TestWallet { get; }
 
         public WalletControllerTests(DatabaseFixture fixture)
             : base(fixture)
         {
             Controller = new WalletController(Fixture.DbContext);
-            TestWallet = new DataLayer.Wallet
+            TestWallet = new Wallet
             {
                 Name = "Test"
             };

@@ -32,7 +32,11 @@ namespace OnlineWallet.Web.TestHelpers
                 WalletCash,
                 WalletBankAccount);
             DbContext.SaveChanges();
-
+            AutoMapper.Mapper.Initialize(config =>
+            {
+                config.CreateMap(typeof(Transaction), typeof(Transaction));
+                config.CreateMap(typeof(Wallet), typeof(Wallet));
+            });
         }
         public void Cleanup()
         {
@@ -43,6 +47,11 @@ namespace OnlineWallet.Web.TestHelpers
         public void Dispose()
         {
             DbContext.Dispose();
+        }
+
+        public TEntity Clone<TEntity>(TEntity original)
+        {
+            return AutoMapper.Mapper.Map<TEntity>(original);
         }
     }
 }

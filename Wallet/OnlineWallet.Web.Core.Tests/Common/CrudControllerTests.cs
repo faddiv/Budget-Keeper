@@ -2,15 +2,19 @@
 using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
 namespace OnlineWallet.Web.Common
 {
     [Collection("Database collection")]
-    public class CrudControllerTests : IDisposable
+    public class CrudControllerTests<TEntity> : IDisposable where TEntity : class
     {
         protected DatabaseFixture Fixture { get; }
+
+        protected DbSet<TEntity> DbSet => Fixture?.DbContext.Set<TEntity>();
+
 
         public CrudControllerTests(DatabaseFixture fixture)
         {

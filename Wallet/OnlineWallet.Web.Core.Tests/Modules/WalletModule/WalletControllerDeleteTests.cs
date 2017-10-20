@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
 using OnlineWallet.Web.TestHelpers.Builders;
 using Xunit;
@@ -26,7 +25,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.OK);
-            Fixture.DbContext.Wallets.Should().NotContain(e => e.MoneyWalletId == TestWallet.MoneyWalletId);
+            DbSet.Should().NotContain(e => e.MoneyWalletId == TestWallet.MoneyWalletId);
 
         }
 
