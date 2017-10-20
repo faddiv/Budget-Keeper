@@ -27,7 +27,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var result = await Controller.Post(entity, CancellationToken.None);
 
             //Assert
-            ResultShouldBeBadRequest(result);
+            ControllerTestHelpers.ResultShouldBeBadRequest(result);
         }
 
 

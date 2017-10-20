@@ -37,10 +37,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [HttpPost("BatchSave")]
         [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<Transaction>))]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
-        public async Task<List<Transaction>> BatchSave(
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, typeof(object))]
+        public async Task<ActionResult> BatchSave(
             [FromBody, Required]TransactionOperationBatch model,
             CancellationToken token)
         {
+            if(!ModelState.IsValid)
+            {
+                return ValidationError();
+            }
             model.Save = model.Save ?? new List<Transaction>();
             model.Delete = model.Delete ?? new List<long>();
             var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
@@ -74,7 +79,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 }
             }
             await Db.SaveChangesAsync(token);
-            return model.Save;
+            return new JsonResult(model.Save)
+            {
+                StatusCode = (int)HttpStatusCode.OK
+            };
         }
 
         [HttpGet("BalanceInfo")]

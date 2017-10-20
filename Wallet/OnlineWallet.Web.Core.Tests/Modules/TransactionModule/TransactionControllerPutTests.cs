@@ -27,7 +27,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var result = await Controller.Put(entity.TransactionId, entity, CancellationToken.None);
 
             //Assert
-            ResultShouldBeBadRequest(result);
+            ControllerTestHelpers.ResultShouldBeBadRequest(result);
         }
 
         [Fact(DisplayName = "Post_saves_new_wallet_if_everything_is_ok")]

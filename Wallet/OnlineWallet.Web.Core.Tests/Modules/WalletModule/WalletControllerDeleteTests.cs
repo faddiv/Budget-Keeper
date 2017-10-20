@@ -51,7 +51,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
             var result = await Controller.Delete(TestWallet.MoneyWalletId, CancellationToken.None);
 
             //Assert
-            ResultShouldBeBadRequest(result);
+            ControllerTestHelpers.ResultShouldBeBadRequest(result);
         }
 
     }

@@ -29,7 +29,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
             var result = await Controller.Post(entity, CancellationToken.None);
 
             //Assert
-            ResultShouldBeBadRequest(result);
+            ControllerTestHelpers.ResultShouldBeBadRequest(result);
         }
 
 

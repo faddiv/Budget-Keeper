@@ -21,15 +21,6 @@ namespace OnlineWallet.Web.Common
             Fixture = fixture;
         }
 
-        protected static void ResultShouldBeBadRequest(ActionResult result)
-        {
-            result.Should()
-                .NotBeNull().And
-                .BeOfType(typeof(ContentResult));
-            var contentResult = (ContentResult)result;
-            contentResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
-
         protected void ResultShouldBeOk(ActionResult result, HttpStatusCode statusCode)
         {
             result.Should()
