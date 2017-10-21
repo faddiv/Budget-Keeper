@@ -49,5 +49,14 @@ namespace OnlineWallet.Web.Common.Helpers
 
             result.Should().Be("xxx<strong>ga</strong>");
         }
+
+        [Fact(DisplayName = "Highlight_is_case_insensitive")]
+        public void Highlight_is_case_insensitive()
+        {
+            var result = StringExtensions.Highlight("xGAxCFx", "<strong>", "</strong>", "gacf");
+
+            result.Should().Be("x<strong>GA</strong>x<strong>CF</strong>x");
+        }
+
     }
 }

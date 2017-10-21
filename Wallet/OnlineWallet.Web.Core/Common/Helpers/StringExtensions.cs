@@ -31,7 +31,7 @@ namespace OnlineWallet.Web.Common.Helpers
             var closed = true;
             foreach (var ch in input)
             {
-                if(index < search.Length && ch == search[index])
+                if(index < search.Length && char.ToLower(ch) == char.ToLower(search[index]))
                 {
                     if(closed)
                     {

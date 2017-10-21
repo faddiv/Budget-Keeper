@@ -218,7 +218,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .HaveCount(2).And
                 .OnlyContain(e => e.LastPrice == 1);
         }
-
+        
         [Fact(DisplayName = "Highlights_the_match_in_name")]
         public void Highlights_the_match_in_name()
         {
@@ -226,29 +226,17 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheFirst(3).WithName("alfa1")
                 .TheNext(3).WithName("2alfa")
                 .TheNext(3).WithName("3alfa3")
-            );
-
-            var result = controller.GetBy("alfa");
-
-            result.Should()
-                .HaveCount(3).And
-                .Contain(e => e.NameHighlighted == "<strong>alfa</strong>1").And
-                .Contain(e => e.NameHighlighted == "2<strong>alfa</strong>").And
-                .Contain(e => e.NameHighlighted == "3<strong>alfa</strong>3");
-        }
-
-        [Fact(DisplayName = "Highlights_the_match_in_name_if_sparse")]
-        public void Highlights_the_match_in_name_if_sparse()
-        {
-            PrepareDataWith(tr => tr
-                .TheFirst(3).WithName("xaclafaa")
+                .TheNext(3).WithName("xaclafaa")
                 .TheNext(3).WithName("xalxfax")
             );
 
             var result = controller.GetBy("alfa");
 
             result.Should()
-                .HaveCount(2).And
+                .HaveCount(5).And
+                .Contain(e => e.NameHighlighted == "<strong>alfa</strong>1").And
+                .Contain(e => e.NameHighlighted == "2<strong>alfa</strong>").And
+                .Contain(e => e.NameHighlighted == "3<strong>alfa</strong>3").And
                 .Contain(e => e.NameHighlighted == "x<strong>al</strong>x<strong>fa</strong>x");
         }
     }
