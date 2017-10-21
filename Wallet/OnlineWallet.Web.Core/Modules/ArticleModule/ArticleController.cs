@@ -25,8 +25,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         public List<ArticleModel> GetBy(string search = "", int limit = 10)
         {
             search = search ?? "";
-            search = search.Replace(" ", "");
-            var querySearch = search.ToLower().FillWith('%');
+            var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
             var transactionQuery = _db.Transactions
                 .Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch));
             var requiredTransactions = transactionQuery.GroupBy(e => e.Name)
@@ -55,6 +54,15 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 })
                 .OrderByDescending(a => a.Occurence)
                 .ToList();
+            if(result.Count == 0)
+            {
+                result.Add(new ArticleModel
+                {
+                    Name = search,
+                    Occurence = 0,
+                    NameHighlighted = search
+                });
+            }
             return result;
         }
 

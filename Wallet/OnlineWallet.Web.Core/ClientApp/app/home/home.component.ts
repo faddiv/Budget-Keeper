@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit } from '@angular/core';
-import { Transaction, ExportImportRow, WalletService, Wallet, ApiError } from "walletApi";
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Transaction, WalletService, Wallet, ApiError } from "walletApi";
 import { ListHelpers } from 'walletCommon';
 import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
 import { TransactionsService } from 'walletApi';
-import { AlertModel } from 'app/common/alerts/AlertModel';
 import { AlertsService } from 'app/common/alerts';
 import { TransactionViewModel, directionColoringFunction } from 'app/common/transaction-view';
 import { AddTransactionComponent } from 'app/home/add-transaction/add-transaction.component';
@@ -13,7 +12,7 @@ import { AddTransactionComponent } from 'app/home/add-transaction/add-transactio
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit, AfterViewInit, ICleanForm {
+export class HomeComponent implements OnInit, ICleanForm {
   
   linesToSave: Transaction[];
   wallets: Wallet[] = [];
@@ -35,18 +34,11 @@ export class HomeComponent implements OnInit, AfterViewInit, ICleanForm {
 
   ngOnInit() {
     this.startNew();
-    this.walletService.getAll({
-      search: ""
-    }).subscribe(value => {
+    this.walletService.getAll().subscribe(value => {
       this.wallets = value;
     }, (error: ApiError) => {
       this.alertsService.error(error.message);
     });
-  }
-  
-  ngAfterViewInit(): void {
-    console.log("HomeComponent.ngAfterViewInit")
-    this.addTransaction.focusStart();
   }
 
   addLine(newItem: Transaction) {

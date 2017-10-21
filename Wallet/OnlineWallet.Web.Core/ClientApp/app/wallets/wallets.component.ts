@@ -25,7 +25,7 @@ export class WalletsComponent implements OnInit {
   reload(searchText?: string) {
     this.wallets = [];
     this.loading = true;
-    this.walletService.getAll({
+    this.walletService.searchBy({
       search: searchText
     }).map(walletList => {
       return walletList.map(item => new WalletViewModel(item));

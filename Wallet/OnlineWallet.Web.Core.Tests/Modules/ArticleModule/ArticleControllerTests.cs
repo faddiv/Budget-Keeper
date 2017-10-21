@@ -113,6 +113,21 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Name.ToLower().Contains("xaxlxfxax"));
         }
 
+        [Fact(DisplayName = "If_no_match_returns_with_the_search_text")]
+        public void If_no_match_returns_with_the_search_text()
+        {
+            //This test a workaround for the ng-ui autocomplete tab bug when no result.
+            PrepareDataWith(tr => tr);
+
+
+            var result = controller.GetBy("Alfa Beta", 10);
+            result.Should()
+                .NotBeNullOrEmpty().And
+                .HaveCount(1).And
+                .OnlyContain(e => e.Name.Contains("Alfa Beta")).And
+                .OnlyContain(e => e.NameHighlighted.Contains("Alfa Beta"));
+        }
+
         [Fact(DisplayName = "Returns_with_the_most_common_Category_value")]
         public void Returns_with_the_most_common_Category_value()
         {

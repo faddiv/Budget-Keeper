@@ -1,6 +1,6 @@
-import { Component, OnInit, OnChanges, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Transaction, Wallet, ApiError, MoneyDirection, ArticleService, ArticleModel } from "walletApi";
+import { Transaction, Wallet, ArticleService, ArticleModel, WalletService } from "walletApi";
 import { AlertsService } from 'app/common/alerts';
 import * as moment from "moment";
 import { dateFormat } from 'app/common/constants';
@@ -14,10 +14,10 @@ import 'rxjs/add/observable/of';
   selector: 'app-add-transaction',
   templateUrl: './add-transaction.component.html'
 })
-export class AddTransactionComponent implements OnInit, OnChanges {
+export class AddTransactionComponent implements OnInit, AfterViewInit {
 
   form = new FormGroup({
-    wallet: new FormControl("", [
+    wallet: new FormControl("2", [
       Validators.required
     ]),
     created: new FormControl(moment().format(dateFormat), [
@@ -37,33 +37,29 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     ])
   });
 
-  @Input("wallets")
-  wallets: Wallet[];
-
   @Output("add")
   add = new EventEmitter<Transaction>();
 
   @Output("save")
   save = new EventEmitter<any>();
 
+  wallets: Wallet[];
+
   constructor(
     private alertsService: AlertsService,
     private focusService: FocusService,
-    private articleService:ArticleService
+    private articleService: ArticleService,
+    private walletService: WalletService
   ) { }
 
   ngOnInit() {
+    this.walletService.getAll().subscribe(wallets => {
+      this.wallets = wallets;
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.wallets && this.wallets.length && !this.wallet.enabled) {
-      this.wallet.enable();
-      if (!this.wallet.value) {
-        this.wallet.setValue("2");
-      }
-    } else {
-      this.wallet.disable();
-    }
+  ngAfterViewInit(): void {
+    setTimeout(() => { this.focusStart(); });
   }
 
   get wallet(): FormControl {
@@ -89,7 +85,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   get category(): FormControl {
     return <FormControl>this.form.controls.category;
   }
-  
+
   get direction(): FormControl {
     return <FormControl>this.form.controls.direction;
   }
@@ -105,7 +101,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
       comment: this.comment.value,
       createdAt: toUTCDate(this.created.value),
       direction: this.direction.value,
-      name: this.name.value && this.name.value.name,
+      name: this.getName(),
       category: this.category.value,
       value: this.price.value,
       transactionId: 0,
@@ -160,7 +156,7 @@ export class AddTransactionComponent implements OnInit, OnChanges {
   }
 
   nameFilter(keyword: string): Observable<any[]> {
-    
+
     if (keyword) {
       return this.articleService.filterBy(keyword);
     } else {
@@ -172,12 +168,20 @@ export class AddTransactionComponent implements OnInit, OnChanges {
     return data.nameHighlighted;
   }
 
-  autofill(data: ArticleModel) {
-    this.form.patchValue({
-      category: data.category,
-      price: data.lastPrice
-    }, {
-      emitEvent: true
-    });
+  autofill(data: ArticleModel | string) {
+    if (typeof (data) !== "string") {
+      this.form.patchValue({
+        category: data.category,
+        price: data.lastPrice
+      }, {
+          emitEvent: true
+        });
+    }
+  }
+
+  private getName() {
+    if (!this.name.value) return undefined;
+    if (typeof this.name.value === 'object') return this.name.value.name;
+    return this.name.value;
   }
 }
