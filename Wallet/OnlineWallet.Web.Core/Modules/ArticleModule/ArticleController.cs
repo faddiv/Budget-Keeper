@@ -54,15 +54,6 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 })
                 .OrderByDescending(a => a.Occurence)
                 .ToList();
-            if(result.Count == 0)
-            {
-                result.Add(new ArticleModel
-                {
-                    Name = search,
-                    Occurence = 0,
-                    NameHighlighted = search
-                });
-            }
             return result;
         }
 

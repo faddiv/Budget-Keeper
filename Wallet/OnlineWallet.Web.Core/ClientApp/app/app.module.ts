@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AlertModule } from "ngx-bootstrap/alert";
-import { NguiAutoCompleteModule } from '@ngui/auto-complete';
+import { NguiAutoCompleteModule } from 'ngui/auto-complete';
 
 import { environment } from '../environments/environment';
 
