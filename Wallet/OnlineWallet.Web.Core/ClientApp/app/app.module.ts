@@ -4,14 +4,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { AlertModule } from "ngx-bootstrap/alert";
 import { NguiAutoCompleteModule } from 'ngui/auto-complete';
+import { BASE_PATH, WalletApiModule } from "walletApi";
+import { DirectivesModule } from "directives";
 
 import { environment } from '../environments/environment';
 
-import { BASE_PATH, WalletApiModule } from "walletApi";
 import { GlobalErrorHandler } from "walletCommon";
-import { DirectivesModule } from "directives";
 import { AppComponent } from './app.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { HomeComponent } from './home/home.component';
@@ -29,6 +30,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { ExportComponent } from './export/export.component';
 import { DismissAlertsOnLeaveService, AlertsService } from 'app/common/alerts';
 import { BalanceComponent } from './transactions/balance/balance.component';
+import { IRootState, rootReducer, createInitialState, freezeState } from "app/redux";
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import { BalanceComponent } from './transactions/balance/balance.component';
     AlertModule.forRoot(),
     WalletApiModule,
     DirectivesModule,
+    NgReduxModule,
     NguiAutoCompleteModule,
     RouterModule.forRoot([
       {
@@ -96,4 +99,10 @@ import { BalanceComponent } from './transactions/balance/balance.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(ngRedux: NgRedux<IRootState>) {
+    ngRedux.configureStore(rootReducer, createInitialState(), [
+      freezeState
+    ]);
+  }
+}
