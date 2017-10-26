@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
 import { Transaction, WalletService, Wallet, ApiError } from "walletApi";
-import { ListHelpers } from 'walletCommon';
-import { ICleanForm } from 'app/common/ask-if-form-dirty.service';
-import { TransactionsService } from 'walletApi';
-import { AlertsService } from 'app/common/alerts';
-import { TransactionViewModel, directionColoringFunction } from 'app/common/transaction-view';
-import { AddTransactionComponent } from 'app/home/add-transaction/add-transaction.component';
+import { ListHelpers } from "walletCommon";
+import { ICleanForm } from "app/common/ask-if-form-dirty.service";
+import { TransactionsService } from "walletApi";
+import { AlertsService } from "app/common/alerts";
+import { TransactionViewModel, directionColoringFunction } from "app/common/transaction-view";
+import { AddTransactionComponent } from "app/home/add-transaction/add-transaction.component";
 
 @Component({
   moduleId: module.id.toString(),
-  selector: 'app-home',
-  templateUrl: './home.component.html'
+  selector: "app-home",
+  templateUrl: "./home.component.html"
 })
 export class HomeComponent implements OnInit, ICleanForm {
 
@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit, ICleanForm {
       wallet => wallet.name);
   }
 
-  @HostListener('window:beforeunload')
+  @HostListener("window:beforeunload")
   isCleanForm() {
     return !this.linesToSave.length;
   }
