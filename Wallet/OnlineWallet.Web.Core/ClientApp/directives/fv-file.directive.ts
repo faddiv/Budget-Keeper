@@ -4,7 +4,7 @@ import { Directive, ElementRef, Input, OnChanges, SimpleChanges, EventEmitter, O
   selector: '[fvFile][type=file]'
 })
 export class FvFileDirective {
-  
+
   @Input("fvFile")
   model: FileList;
 
@@ -12,12 +12,12 @@ export class FvFileDirective {
   update = new EventEmitter<FileList>();
 
   constructor(private element: ElementRef) {
-    
+
   }
-  
+
   @HostListener("change", ["$event"]) onChange($event: Event) {
-    var input =(<HTMLInputElement>$event.target);
-    var files = input.files;
+    const input = (<HTMLInputElement>$event.target);
+    const files = input.files;
     this.update.emit(files);
   }
 

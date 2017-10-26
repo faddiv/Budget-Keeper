@@ -13,7 +13,7 @@ import { AddTransactionComponent } from 'app/home/add-transaction/add-transactio
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, ICleanForm {
-  
+
   linesToSave: Transaction[];
   wallets: Wallet[] = [];
   rowColoring = directionColoringFunction;
@@ -52,13 +52,13 @@ export class HomeComponent implements OnInit, ICleanForm {
       return;
     }
     this.transactionsService.batchUpdate(this.linesToSave).subscribe(result => {
-      
+
       this.alertsService.success("Transactions are saved successfully.");
       this.startNew();
       this.addTransaction.clearFields();
     }, error => {
       this.alertsService.error(error.message);
-    })
+    });
   }
 
   delete(item: TransactionViewModel) {
@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, ICleanForm {
 
   walletNameById(walletId: number) {
     return ListHelpers.selectMap(this.wallets,
-      wallet => wallet.moneyWalletId == walletId,
+      wallet => wallet.moneyWalletId === walletId,
       wallet => wallet.name);
   }
 

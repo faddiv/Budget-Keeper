@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { ExportImportRow, Transaction, TransactionsService, ApiError, WalletService, Wallet } from "walletApi";
-import { AlertModel } from 'app/common/alerts/AlertModel';
-import { ListHelpers } from 'walletCommon';
-import { StockModel } from './stock-table/StockModel';
-import { AlertsService } from 'app/common/alerts';
-import { TransactionViewModel } from 'app/common/transaction-view';
+import { AlertModel } from "app/common/alerts/AlertModel";
+import { ListHelpers } from "walletCommon";
+import { StockModel } from "./stock-table/StockModel";
+import { AlertsService } from "app/common/alerts";
+import { TransactionViewModel } from "app/common/transaction-view";
 
 @Component({
   moduleId: module.id.toString(),
-  selector: 'app-import',
-  templateUrl: './import.component.html'
+  selector: "app-import",
+  templateUrl: "./import.component.html"
 })
 export class ImportComponent implements OnInit {
   linesToSave: Transaction[] = [];
   stocks: StockModel[];
-  current: string = 'full';
+  current = "full";
   canSave = false;
   wallets: Wallet[];
 
@@ -36,7 +36,7 @@ export class ImportComponent implements OnInit {
   }
 
   addLines(newItems: Array<ExportImportRow> = []) {
-    if(!this.wallets) {
+    if (!this.wallets) {
       this.alertsService.error("The wallet list didn't load. Can't create transaction rows.");
       return;
     }
@@ -52,11 +52,11 @@ export class ImportComponent implements OnInit {
 
     });
     this.stocks = [];
-    var grouping: {
+    const grouping: {
       [name: string]: StockModel
     } = {};
-    for (var index = 0; index < newItems.length; index++) {
-      var element = newItems[index];
+    for (let index = 0; index < newItems.length; index++) {
+      const element = newItems[index];
       if (grouping[element.name]) {
         grouping[element.name].category = grouping[element.name].category || element.category;
         grouping[element.name].count++;
@@ -64,7 +64,7 @@ export class ImportComponent implements OnInit {
         grouping[element.name] = new StockModel(element.name, element.category, 1);
       }
     }
-    for (var key in grouping) {
+    for (const key in grouping) {
       if (grouping.hasOwnProperty(key)) {
         this.stocks.push(grouping[key]);
       }
@@ -88,16 +88,16 @@ export class ImportComponent implements OnInit {
         this.linesToSave = [];
       }, (error: ApiError) => {
         this.alertsService.error(error.message);
-      })
+      });
   }
 
   savedItemColoring(value: TransactionViewModel) {
     value.cssClass = value.transactionId ? "info" : undefined;
   }
 
-  private getWalletId(name: string) : number|undefined {
-    if(!name) return undefined;
-    var wallet = this.wallets.find(w => w.name === name);
+  private getWalletId(name: string): number | undefined {
+    if (!name) { return undefined; }
+    const wallet = this.wallets.find(w => w.name === name);
     return wallet && wallet.moneyWalletId;
   }
 }

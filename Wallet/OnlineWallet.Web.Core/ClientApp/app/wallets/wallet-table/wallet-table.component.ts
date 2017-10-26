@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { WalletViewModel } from 'app/wallets/WalletViewModel';
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
+import { WalletViewModel } from "app/wallets/WalletViewModel";
 
 @Component({
   moduleId: module.id.toString(),
-  selector: 'app-wallet-table',
-  templateUrl: './wallet-table.component.html'
+  selector: "app-wallet-table",
+  templateUrl: "./wallet-table.component.html"
 })
 export class WalletTableComponent implements OnInit {
 

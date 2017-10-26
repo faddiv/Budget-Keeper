@@ -1,13 +1,13 @@
-import { CommandFocusDirective } from './command-focus.directive';
+import { CommandFocusDirective } from "./command-focus.directive";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 
-import { FocusService } from './focus.service';
-import { ElementRef, Component, NO_ERRORS_SCHEMA } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { FocusService } from "./focus.service";
+import { ElementRef, Component, NO_ERRORS_SCHEMA } from "@angular/core";
+import { By } from "@angular/platform-browser";
 
-describe('CommandFocusDirective', () => {
+describe("CommandFocusDirective", () => {
 
-  var fixture: ComponentFixture<TestComponent>;
+  let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
@@ -18,15 +18,15 @@ describe('CommandFocusDirective', () => {
     fixture.detectChanges();
   });
 
-  it('should create an instance', inject([FocusService], (focusService: FocusService) => {
+  it("should create an instance", inject([FocusService], (focusService: FocusService) => {
     expect(focusService).toBeTruthy();
-    var result = fixture.debugElement.queryAll(By.directive(CommandFocusDirective));
+    const result = fixture.debugElement.queryAll(By.directive(CommandFocusDirective));
     expect(result).toBeTruthy();
     expect(result.length).toBe(2);
   }));
 
-  it('should focus an element if focusService.focus called on it', inject([FocusService], (focusService: FocusService) => {
-    var first = fixture.debugElement.queryAll(By.directive(CommandFocusDirective))[0];
+  it("should focus an element", inject([FocusService], (focusService: FocusService) => {
+    const first = fixture.debugElement.queryAll(By.directive(CommandFocusDirective))[0];
     expect(first).toBeTruthy();
     expect(first.nativeElement).not.toBe(document.activeElement);
 
@@ -35,8 +35,8 @@ describe('CommandFocusDirective', () => {
     expect(first.nativeElement).toBe(document.activeElement);
   }));
 
-  it('should focus an element with dynamic name if focusService.focus called on it', inject([FocusService], (focusService: FocusService) => {
-    var second = fixture.debugElement.queryAll(By.directive(CommandFocusDirective))[1];
+  it("should focus an element with dynamic name", inject([FocusService], (focusService: FocusService) => {
+    const second = fixture.debugElement.queryAll(By.directive(CommandFocusDirective))[1];
     expect(second).toBeTruthy();
     expect(second.nativeElement).not.toBe(document.activeElement);
 

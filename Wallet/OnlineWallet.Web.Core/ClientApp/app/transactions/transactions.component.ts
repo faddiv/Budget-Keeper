@@ -1,14 +1,14 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Transaction, TransactionsService } from 'walletApi';
-import { AlertsService } from 'app/common/alerts';
-import { directionColoringFunction, TransactionViewModel } from 'app/common/transaction-view';
+import { Component, OnInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Transaction, TransactionsService } from "walletApi";
+import { AlertsService } from "app/common/alerts";
+import { directionColoringFunction, TransactionViewModel } from "app/common/transaction-view";
 import * as moment from "moment";
-import { ListHelpers } from 'walletCommon';
+import { ListHelpers } from "walletCommon";
 
 @Component({
   moduleId: module.id.toString(),
-  selector: 'app-transactions',
-  templateUrl: './transactions.component.html'
+  selector: "app-transactions",
+  templateUrl: "./transactions.component.html"
 })
 export class TransactionsComponent implements OnInit {
 
@@ -41,7 +41,7 @@ export class TransactionsComponent implements OnInit {
     }).subscribe(transactions => {
       this.transactions = transactions;
       this.generateDateSelector();
-      this.select(this.selectedYear, this.selectedMonth)
+      this.select(this.selectedYear, this.selectedMonth);
     });
   }
 
@@ -55,14 +55,14 @@ export class TransactionsComponent implements OnInit {
   }
 
   select(year: string, month: string) {
-    var start = moment(year + "-" + month + "-01");
-    var end = moment(start).endOf("month");
+    const start = moment(year + "-" + month + "-01");
+    const end = moment(start).endOf("month");
     this.selectedYear = year;
     this.selectedMonth = month;
     this.pageItems = this.transactions && this.transactions.length
       ? this.transactions.filter(tr => {
-        var created = moment(tr.createdAt);
-        return created.isSameOrAfter(start) && created.isSameOrBefore(end)
+        const created = moment(tr.createdAt);
+        return created.isSameOrAfter(start) && created.isSameOrBefore(end);
       })
       : [];
   }
@@ -87,17 +87,19 @@ export class TransactionsComponent implements OnInit {
   }
 
   monthColor(month: string) {
-    var year = parseInt(this.selectedYear);
-    var currentMonth = this.now.month() + 1;
-    var selectedMonth = parseInt(this.selectedMonth);
-    var inspectedMonth = parseInt(month);
+    const year = parseInt(this.selectedYear, 10);
+    const currentMonth = this.now.month() + 1;
+    const selectedMonth = parseInt(this.selectedMonth, 10);
+    const inspectedMonth = parseInt(month, 10);
     if (inspectedMonth === selectedMonth) {
       return "btn-primary";
     }
-    if (year < this.now.year())
+    if (year < this.now.year()) {
       return "btn-default";
-    if (year > this.now.year())
+    }
+    if (year > this.now.year()) {
       return "disabled";
+    }
     return inspectedMonth > currentMonth
       ? "disabled"
       : "btn-default";
@@ -105,7 +107,6 @@ export class TransactionsComponent implements OnInit {
 
   private generateDateSelector() {
     this.years = ListHelpers.createRange(2009, this.now.year());
-    //var month = parseInt(this.selectedYear) === this.now.year() ? this.now.month() + 1 : 12;
     this.months = ListHelpers.createRange(1, 12);
   }
 }

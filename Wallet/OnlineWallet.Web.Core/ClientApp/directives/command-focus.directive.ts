@@ -19,8 +19,7 @@ export class CommandFocusDirective implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    var change = changes["focusId"]
-    if (change) {
+    if (changes["focusId"]) {
       this.listenFocus();
     }
   }

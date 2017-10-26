@@ -16,7 +16,7 @@ export class AlertsService {
         this.observers.push(handler);
         return () => {
             ListHelpers.remove(this.observers, handler);
-        }
+        };
     }
 
     public error(text: string) {
@@ -44,9 +44,8 @@ export class AlertsService {
     }
 
     private foreachObserver(handler: (IAlertObserver) => void) {
-        for (var i = 0; i < this.observers.length; i++) {
-            var observer = this.observers[i];
-            handler(observer);
+        for (let i = 0; i < this.observers.length; i++) {
+            handler(this.observers[i]);
         }
     }
 }

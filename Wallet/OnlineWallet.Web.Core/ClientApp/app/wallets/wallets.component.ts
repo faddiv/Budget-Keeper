@@ -70,7 +70,7 @@ export class WalletsComponent implements OnInit {
   }
 
   private updateOrInsertListItem(wallet: WalletViewModel) {
-    var index = this.wallets.findIndex(w => w.moneyWalletId === wallet.moneyWalletId);
+    const index = this.wallets.findIndex(w => w.moneyWalletId === wallet.moneyWalletId);
     if (index === -1) {
       this.wallets.push(wallet);
     } else {

@@ -27,7 +27,7 @@ export class PagedTransactionTableComponent implements OnInit, OnChanges {
 
   page: number;
 
-  pageSize: number = 10;
+  pageSize = 10;
 
   pageCount: number;
 
@@ -55,8 +55,8 @@ export class PagedTransactionTableComponent implements OnInit, OnChanges {
   }
 
   select(pageNumber: number) {
-    var pageSize = this.pageSize,
-      items = this.items;
+    const pageSize = this.pageSize;
+    const items = this.items;
 
     if (pageSize === 0 || !items || !items.length) {
       this.pageCount = 1;
@@ -64,16 +64,16 @@ export class PagedTransactionTableComponent implements OnInit, OnChanges {
       this.pageCount = Math.ceil(items.length / pageSize);
     }
     if (pageNumber > this.pageCount) {
-      pageNumber == this.pageCount
+      pageNumber = this.pageCount;
     }
     this.page = pageNumber;
-    var from = this.showItemsFrom();
-    var to = this.showItemsTo();
+    const from = this.showItemsFrom();
+    const to = this.showItemsTo();
     this.pageItems = this.items ? this.items.slice(from, to) : [];
-    var pages: number[] = [];
-    var pagesFrom = Math.max(pageNumber - 5, 1);
-    var pagesTo = Math.min(pagesFrom + 10, this.pageCount + 1);
-    for (var index = pagesFrom; index < pagesTo; index++) {
+    const pages: number[] = [];
+    const pagesFrom = Math.max(pageNumber - 5, 1);
+    const pagesTo = Math.min(pagesFrom + 10, this.pageCount + 1);
+    for (let index = pagesFrom; index < pagesTo; index++) {
       pages.push(index);
     }
     this.pages = pages;
@@ -97,14 +97,12 @@ export class PagedTransactionTableComponent implements OnInit, OnChanges {
   }
 
   showItemsFrom(): number {
-    if (!this.items || !this.items.length)
-      return 0;
+    if (!this.items || !this.items.length) { return 0; }
     return Math.min((this.page - 1) * this.pageSize, this.items.length);
   }
 
   showItemsTo(): number {
-    if (!this.items || !this.items.length)
-      return 0;
+    if (!this.items || !this.items.length) { return 0; }
     return Math.min(this.page * this.pageSize, this.items.length);
   }
 }

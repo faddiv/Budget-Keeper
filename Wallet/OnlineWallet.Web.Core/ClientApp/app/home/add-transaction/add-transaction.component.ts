@@ -1,18 +1,18 @@
-import { Component, OnInit, EventEmitter, Output, AfterViewInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, AfterViewInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Transaction, Wallet, ArticleService, ArticleModel, WalletService } from "walletApi";
-import { AlertsService } from 'app/common/alerts';
+import { AlertsService } from "app/common/alerts";
 import * as moment from "moment";
-import { dateFormat } from 'app/common/constants';
-import { FocusService } from 'directives';
-import { toUTCDate } from 'walletCommon';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { dateFormat } from "app/common/constants";
+import { FocusService } from "directives";
+import { toUTCDate } from "walletCommon";
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/of";
 
 @Component({
   moduleId: module.id.toString(),
-  selector: 'app-add-transaction',
-  templateUrl: './add-transaction.component.html'
+  selector: "app-add-transaction",
+  templateUrl: "./add-transaction.component.html"
 })
 export class AddTransactionComponent implements OnInit, AfterViewInit {
 
@@ -97,7 +97,7 @@ export class AddTransactionComponent implements OnInit, AfterViewInit {
       this.showValidationErrors();
       return;
     }
-    var newItem: Transaction = {
+    const newItem: Transaction = {
       comment: this.comment.value,
       createdAt: toUTCDate(this.created.value),
       direction: this.direction.value,
@@ -113,8 +113,8 @@ export class AddTransactionComponent implements OnInit, AfterViewInit {
 
   clearFields() {
     console.log("clearFields");
-    var patch: any = {};
-    for (var key in this.form.controls) {
+    const patch: any = {};
+    for (const key in this.form.controls) {
       if (this.form.controls.hasOwnProperty(key) && this.form.controls[key] instanceof FormControl) {
         patch[key] = "";
       }
@@ -137,20 +137,20 @@ export class AddTransactionComponent implements OnInit, AfterViewInit {
 
   showValidationErrors() {
     if (this.wallet.errors && this.wallet.errors.required) {
-      this.alertsService.error("Wallet is required.")
+      this.alertsService.error("Wallet is required.");
     }
     if (this.created.errors && this.created.errors.required) {
-      this.alertsService.error("Date is required.")
+      this.alertsService.error("Date is required.");
     }
     if (this.name.errors && this.name.errors.required) {
-      this.alertsService.error("Name is required.")
+      this.alertsService.error("Name is required.");
     }
     if (this.price.errors) {
       if (this.price.errors.required) {
-        this.alertsService.error("Price is required.")
+        this.alertsService.error("Price is required.");
       }
       if (this.price.errors.pattern) {
-        this.alertsService.error("Price must be a number.")
+        this.alertsService.error("Price must be a number.");
       }
     }
   }
@@ -180,8 +180,8 @@ export class AddTransactionComponent implements OnInit, AfterViewInit {
   }
 
   private getName() {
-    if (!this.name.value) return undefined;
-    if (typeof this.name.value === 'object') return this.name.value.name;
+    if (!this.name.value) { return undefined; }
+    if (typeof this.name.value === "object") { return this.name.value.name; }
     return this.name.value;
   }
 }

@@ -1,4 +1,5 @@
-//import "reflect-metadata" //This causes the following error in angular: Unexpected value imported by the module Please add a @NgModule annotation.
+//import "reflect-metadata" 
+//This causes the following error in angular: Unexpected value imported by the module Please add a @NgModule annotation.
 
 export module ListHelpers {
     export function remove<TElement>(list: TElement[], item: TElement): TElement[] {
@@ -10,8 +11,8 @@ export module ListHelpers {
     }
 
     export function createRange(from: number, to: number) {
-        var list = [];
-        for (var index = from; index <= to; index++) {
+        const list = [];
+        for (let index = from; index <= to; index++) {
             list.push(index);
         }
         return list;

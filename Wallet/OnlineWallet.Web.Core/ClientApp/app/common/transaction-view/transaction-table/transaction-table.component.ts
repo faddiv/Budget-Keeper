@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { TransactionViewModel, ITransactionTableExtFunction } from '../models';
-import { Wallet, Transaction, WalletService, MoneyDirection } from 'walletApi';
-import { ListHelpers } from 'walletCommon';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from "@angular/core";
+import { TransactionViewModel, ITransactionTableExtFunction } from "../models";
+import { Wallet, Transaction, WalletService, MoneyDirection } from "walletApi";
+import { ListHelpers } from "walletCommon";
 
 @Component({
   moduleId: module.id.toString(),
-  selector: 'app-transaction-table',
-  templateUrl: './transaction-table.component.html',
-  styleUrls: ['./transaction-table.component.scss']
+  selector: "app-transaction-table",
+  templateUrl: "./transaction-table.component.html",
+  styleUrls: ["./transaction-table.component.scss"]
 })
 export class TransactionTableComponent implements OnInit, OnChanges {
 
@@ -80,7 +80,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   }
 
   saveTransaction(item: TransactionViewModel) {
-    for (var key in item.original) {
+    for (const key in item.original) {
       if (item.original.hasOwnProperty(key)) {
         if (item.original[key] !== item[key]) {
           item.original[key] = item[key];
@@ -91,16 +91,17 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     this.setWalletName(item);
     item.editMode = false;
     if (this.changedItems) {
-      var changes = this.pageItems.filter(val => val.changed);
-      for (var index = 0; index < changes.length; index++) {
-        var item = changes[index];
-        if (this.changedItems.findIndex(e => e === item.original) === -1) {
-          this.changedItems.push(item.original);
+      const changes = this.pageItems.filter(val => val.changed);
+      for (let index = 0; index < changes.length; index++) {
+        const cangedItem = changes[index];
+        if (this.changedItems.findIndex(e => e === cangedItem.original) === -1) {
+          this.changedItems.push(cangedItem.original);
         }
       }
     }
   }
+
   private setWalletName(item: TransactionViewModel) {
-    item.walletName = ListHelpers.selectMap<Wallet, string>(this.wallets, w => w.moneyWalletId == item.walletId, w => w.name);
+    item.walletName = ListHelpers.selectMap<Wallet, string>(this.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
   }
 }

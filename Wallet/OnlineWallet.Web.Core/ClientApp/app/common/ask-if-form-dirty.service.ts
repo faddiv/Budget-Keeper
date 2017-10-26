@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Injectable } from "@angular/core";
+import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class AskIfFormDirtyService implements CanDeactivate<ICleanForm> {

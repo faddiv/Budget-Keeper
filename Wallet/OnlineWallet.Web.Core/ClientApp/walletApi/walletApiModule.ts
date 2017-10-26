@@ -10,7 +10,6 @@ import { ArticleService } from './articleService';
 @NgModule({
     imports: [
         HttpModule
-        //,CommonModule
     ],
     providers: [
         WalletApi,
