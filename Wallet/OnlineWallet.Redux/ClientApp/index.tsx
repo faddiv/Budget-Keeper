@@ -1,7 +1,11 @@
 import "./site.scss";
 import * as React from "react";
-console.log(React);
-for (var index = 0; index < 10; index++) {
-    document.writeln(`<div>${index}</div>`);
-    
-}
+import * as ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { Route, Router, Switch } from "react-router";
+import { Layout } from "./layout";
+
+ReactDOM.render(
+    <Layout />,
+    document.getElementById("body")
+);

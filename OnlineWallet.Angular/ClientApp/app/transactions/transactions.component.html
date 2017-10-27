@@ -1,0 +1,21 @@
+<form class="form-inline">
+    <button type="button" class="btn btn-success" (click)="save()" name="saveBtn">Save</button>
+    <div class="input-group pull-right">
+        <select class="form-control" [ngModel]="selectedYear" (ngModelChange)="selectYear($event)" name="selectedYear">
+          <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
+        <div class="input-group-btn">
+            <button *ngFor="let month of months" class="btn" type="button" (click)="selectMonth(month)" [ngClass]="monthColor(month)"
+                name="selectedMonth">{{ month }}</button>
+        </div>
+    </div>
+</form>
+<app-balance class="row" [year]="selectedYear" [month]="selectedMonth"></app-balance>
+<ng-container *ngIf="hasElements; else noElement">
+    <app-transaction-table [items]="pageItems" [changedItems]="changedItems" [rowModifier]="rowColoring" (deleted)="delete($event)"></app-transaction-table>
+</ng-container>
+<ng-template #noElement>
+    <div class="jumbotron">
+        There is no row to show.
+    </div>
+</ng-template>

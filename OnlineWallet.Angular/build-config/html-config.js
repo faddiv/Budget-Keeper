@@ -20,6 +20,7 @@ module.exports =
                                 minimize: true,
                                 removeAttributeQuotes: false,
                                 keepClosingSlash: true,
+                                ignoreCustomFragments: [/\{\{.*?}}/,/\[.*?\]/],
                             }
                         }
                     ]

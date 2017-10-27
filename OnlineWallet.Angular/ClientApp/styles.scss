@@ -1,0 +1,18 @@
+body {
+    margin-top: 60px;
+}
+
+.main-container {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.table-middle {
+    tbody {
+        tr {
+            td {
+                vertical-align: middle;
+            }
+        }
+    }
+}
