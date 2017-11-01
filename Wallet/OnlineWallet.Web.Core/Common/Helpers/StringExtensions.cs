@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineWallet.Web.Common.Helpers
 {
     public static class StringExtensions
     {
-        public static string[] SplitWithoutEmptyEntries(this string text, params char[] ch)
-        {
-            return text.Split(ch, StringSplitOptions.RemoveEmptyEntries);
-        }
+        #region  Public Methods
 
         public static string FillWith(this string text, char ch)
         {
@@ -31,15 +25,16 @@ namespace OnlineWallet.Web.Common.Helpers
             var closed = true;
             foreach (var ch in input)
             {
-                if(index < search.Length && char.ToLower(ch) == char.ToLower(search[index]))
+                if (index < search.Length && char.ToLower(ch) == char.ToLower(search[index]))
                 {
-                    if(closed)
+                    if (closed)
                     {
                         builder.Append(start);
                         closed = false;
                     }
                     index++;
-                } else if(!closed)
+                }
+                else if (!closed)
                 {
                     builder.Append(end);
                     closed = true;
@@ -52,5 +47,12 @@ namespace OnlineWallet.Web.Common.Helpers
             }
             return builder.ToString();
         }
+
+        public static string[] SplitWithoutEmptyEntries(this string text, params char[] ch)
+        {
+            return text.Split(ch, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        #endregion
     }
 }

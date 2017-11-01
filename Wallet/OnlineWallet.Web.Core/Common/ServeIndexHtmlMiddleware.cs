@@ -56,10 +56,10 @@ namespace OnlineWallet.Web.Common
         }
         private FileToServe GetFileToServe()
         {
-            var _fileInfo = _fileProvider.GetFileInfo("index.html");
-            if (_fileInfo.Exists)
+            var fileInfo = _fileProvider.GetFileInfo("index.html");
+            if (fileInfo.Exists)
             {
-                return new FileToServe(_fileInfo);
+                return new FileToServe(fileInfo);
             }
             return null;
         }
@@ -106,12 +106,12 @@ namespace OnlineWallet.Web.Common
         }
 
 
-        private bool ComputeIfModifiedSince(FileToServe file, RequestHeaders _requestHeaders)
+        private bool ComputeIfModifiedSince(FileToServe file, RequestHeaders requestHeaders)
         {
             var now = DateTimeOffset.UtcNow;
 
             // 14.25 If-Modified-Since
-            var ifModifiedSince = _requestHeaders.IfModifiedSince;
+            var ifModifiedSince = requestHeaders.IfModifiedSince;
             if (ifModifiedSince.HasValue && ifModifiedSince <= now)
             {
                 bool modified = ifModifiedSince < file.LastModified;
@@ -119,7 +119,7 @@ namespace OnlineWallet.Web.Common
             }
 
             // 14.28 If-Unmodified-Since
-            var ifUnmodifiedSince = _requestHeaders.IfUnmodifiedSince;
+            var ifUnmodifiedSince = requestHeaders.IfUnmodifiedSince;
             if (ifUnmodifiedSince.HasValue && ifUnmodifiedSince <= now)
             {
                 bool unmodified = ifUnmodifiedSince >= file.LastModified;
@@ -128,26 +128,26 @@ namespace OnlineWallet.Web.Common
             return true;
         }
 
-        private void ApplyResponseHeaders(HttpResponse _response, int statusCode, FileToServe file)
+        private void ApplyResponseHeaders(HttpResponse response, int statusCode, FileToServe file)
         {
-            _response.StatusCode = statusCode;
+            response.StatusCode = statusCode;
             if (statusCode < 400)
             {
                 // these headers are returned for 200, 206, and 304
                 // they are not returned for 412 and 416
 
-                _response.ContentType = "text/html";
-                var _responseHeaders = _response.GetTypedHeaders();
-                _responseHeaders.LastModified = file.LastModified;
-                _responseHeaders.ETag = file.ETag;
-                _responseHeaders.Headers[HeaderNames.AcceptRanges] = "bytes";
+                response.ContentType = "text/html";
+                var responseHeaders = response.GetTypedHeaders();
+                responseHeaders.LastModified = file.LastModified;
+                responseHeaders.ETag = file.ETag;
+                responseHeaders.Headers[HeaderNames.AcceptRanges] = "bytes";
             }
             if (statusCode == 200)
             {
                 // this header is only returned here for 200
                 // it already set to the returned range for 206
                 // it is not returned for 304, 412, and 416
-                _response.ContentLength = file.Length;
+                response.ContentLength = file.Length;
             }
         }
 

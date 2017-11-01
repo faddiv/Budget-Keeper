@@ -13,12 +13,12 @@ namespace OnlineWallet.Web.Modules.ArticleModule
     public class ArticleControllerTests : IDisposable
     {
         private readonly DatabaseFixture _fixture;
-        private readonly ArticleController controller;
+        private readonly ArticleController _controller;
 
         public ArticleControllerTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
-            controller = new ArticleController(_fixture.DbContext);
+            _controller = new ArticleController(_fixture.DbContext);
         }
         private void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules)
         {
@@ -42,7 +42,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(5).WithName("alfa")
             );
 
-            var result = controller.GetBy("");
+            var result = _controller.GetBy();
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -59,7 +59,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             );
             
 
-            var result = controller.GetBy("alfa", 10);
+            var result = _controller.GetBy("alfa");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa"));
@@ -74,7 +74,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             );
 
 
-            var result = controller.GetBy("alfa", 10);
+            var result = _controller.GetBy("alfa");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa"));
@@ -91,7 +91,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(5).WithName("beta alfa")
             );
 
-            var result = controller.GetBy("alfa beta", 10);
+            var result = _controller.GetBy("alfa beta");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa")).And
@@ -107,7 +107,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             );
 
 
-            var result = controller.GetBy("alfa", 10);
+            var result = _controller.GetBy("alfa");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("xaxlxfxax"));
@@ -122,7 +122,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(10).WithName("alfa").WithCategory("second common")
             );
 
-            var result = controller.GetBy("alfa", 10);
+            var result = _controller.GetBy("alfa");
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -138,7 +138,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(10).WithName("alfa").WithCategory("most common")
             );
 
-            var result = controller.GetBy("alfa", 10);
+            var result = _controller.GetBy("alfa");
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -154,7 +154,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(10).WithName("alfa2")
             );
 
-            var result = controller.GetBy("alfa", 10);
+            var result = _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(3);
@@ -175,7 +175,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(5).WithName("alfa6")
             );
 
-            var result = controller.GetBy("alfa", 5);
+            var result = _controller.GetBy("alfa", 5);
 
             result.Should()
                 .HaveCount(5);
@@ -197,7 +197,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(1).WithCreatedAt("2017-10-13").WithValue(3)
             );
 
-            var result = controller.GetBy("alfa");
+            var result = _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(2).And
@@ -215,7 +215,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(3).WithName("xalxfax")
             );
 
-            var result = controller.GetBy("alfa");
+            var result = _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(5).And

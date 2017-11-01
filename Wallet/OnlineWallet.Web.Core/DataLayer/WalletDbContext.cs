@@ -40,7 +40,7 @@ namespace OnlineWallet.Web.DataLayer
 
         public void SetReadonly(bool isReadonly)
         {
-            this.ChangeTracker.QueryTrackingBehavior = isReadonly
+            ChangeTracker.QueryTrackingBehavior = isReadonly
                 ? QueryTrackingBehavior.NoTracking
                 : QueryTrackingBehavior.TrackAll;
         }

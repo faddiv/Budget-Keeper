@@ -34,15 +34,35 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #endregion
 
+        #region  Public Methods
+
+        [HttpGet("BalanceInfo")]
+        [SwaggerResponse((int) HttpStatusCode.OK, typeof(BalanceInfo))]
+        public async Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token)
+        {
+            var transactions = await Db.Transactions
+                .Where(e => e.CreatedAt.Year == year && e.CreatedAt.Month == month)
+                .ToListAsync(token);
+            int income = transactions.Where(e => e.Direction == MoneyDirection.Income).Sum(e => e.Value);
+            var balanceInfo = new BalanceInfo
+            {
+                Income = income,
+                Spent = transactions.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Value),
+                ToSaving = (int) Math.Round(income * 0.25, MidpointRounding.AwayFromZero),
+                Planned = transactions.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Value)
+            };
+            return balanceInfo;
+        }
+
         [HttpPost("BatchSave")]
-        [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<Transaction>))]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, typeof(object))]
+        [SwaggerResponse((int) HttpStatusCode.Created, typeof(List<Transaction>))]
+        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
+        [SwaggerResponse((int) HttpStatusCode.BadRequest, typeof(object))]
         public async Task<ActionResult> BatchSave(
-            [FromBody, Required]TransactionOperationBatch model,
+            [FromBody, Required] TransactionOperationBatch model,
             CancellationToken token)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return ValidationError();
             }
@@ -73,7 +93,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             foreach (var id in model.Delete)
             {
                 var existingEntity = existingEntities.Find(e => e.TransactionId == id);
-                if(existingEntity != null)
+                if (existingEntity != null)
                 {
                     Db.Transactions.Remove(existingEntity);
                 }
@@ -81,26 +101,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             await Db.SaveChangesAsync(token);
             return new JsonResult(model.Save)
             {
-                StatusCode = (int)HttpStatusCode.OK
+                StatusCode = (int) HttpStatusCode.OK
             };
         }
 
-        [HttpGet("BalanceInfo")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(BalanceInfo))]
-        public async Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token)
-        {
-            var transactions = await Db.Transactions
-              .Where(e => e.CreatedAt.Year == year && e.CreatedAt.Month == month)
-              .ToListAsync(token);
-            int income = transactions.Where(e => e.Direction == MoneyDirection.Income).Sum(e => e.Value);
-            var balanceInfo = new BalanceInfo
-            {
-                Income = income,
-                Spent = transactions.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Value),
-                ToSaving = (int)Math.Round(income * 0.25, MidpointRounding.AwayFromZero),
-                Planned = transactions.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Value)
-            };
-            return balanceInfo;
-        }
+        #endregion
     }
 }

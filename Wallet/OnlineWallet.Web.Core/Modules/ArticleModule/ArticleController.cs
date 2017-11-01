@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Common.Helpers;
@@ -14,12 +10,22 @@ namespace OnlineWallet.Web.Modules.ArticleModule
     [Route("api/v1/[controller]")]
     public class ArticleController : Controller
     {
+        #region Fields
+
         private readonly IWalletDbContext _db;
+
+        #endregion
+
+        #region  Constructors
 
         public ArticleController(IWalletDbContext db)
         {
             _db = db;
         }
+
+        #endregion
+
+        #region  Public Methods
 
         [HttpGet]
         public List<ArticleModel> GetBy(string search = "", int limit = 10)
@@ -29,16 +35,16 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             var transactionQuery = _db.Transactions
                 .Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch));
             var requiredTransactions = transactionQuery.GroupBy(e => e.Name)
-            .OrderByDescending(a => a.Count())
-            .Take(limit)
-            .SelectMany(g => g.Select(e => new
-            {
-                e.Name,
-                e.Category,
-                e.Value,
-                e.CreatedAt
-            }))
-            .ToList();
+                .OrderByDescending(a => a.Count())
+                .Take(limit)
+                .SelectMany(g => g.Select(e => new
+                {
+                    e.Name,
+                    e.Category,
+                    e.Value,
+                    e.CreatedAt
+                }))
+                .ToList();
             var result = requiredTransactions
                 .GroupBy(e => e.Name)
                 .Select(g => new ArticleModel
@@ -57,14 +63,6 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             return result;
         }
 
-    }
-
-    public class ArticleModel
-    {
-        public string Name { get; set; }
-        public string NameHighlighted { get; set; }
-        public int Occurence { get; set; }
-        public string Category { get; set; }
-        public int LastPrice { get; set; }
+        #endregion
     }
 }

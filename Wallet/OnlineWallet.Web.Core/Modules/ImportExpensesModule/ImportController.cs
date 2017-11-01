@@ -85,9 +85,12 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
             {
                 var wallet = wallets.Find(e => e.Name?.ToLower() == item.Source.ToString().ToLower());
                 var index = savedItems.FindIndex(e => e.CreatedAt == item.Created
-                                                       && (
-                                                       ((int) e.Direction == (int) item.Direction && string.Equals(e.Name, item.Name, StringComparison.CurrentCultureIgnoreCase))
-                                                       || (e.WalletId == wallet?.MoneyWalletId && e.Value == item.Amount))
+                                                      && (
+                                                          (int) e.Direction == (int) item.Direction &&
+                                                          string.Equals(e.Name, item.Name,
+                                                              StringComparison.CurrentCultureIgnoreCase)
+                                                          || e.WalletId == wallet?.MoneyWalletId &&
+                                                          e.Value == item.Amount)
                 );
                 if (index > -1)
                 {
