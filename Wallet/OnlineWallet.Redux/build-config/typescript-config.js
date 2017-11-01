@@ -1,5 +1,7 @@
-const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
-const typescriptCheckerPlugin = new CheckerPlugin();
+const ts = require("awesome-typescript-loader");
+const typescriptCheckerPlugin = new ts.CheckerPlugin();
+const typescriptConfigPathsPlugin = new ts.TsConfigPathsPlugin();
+
 
 /**
  * This file contains the typescript related webpack config.
