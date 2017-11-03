@@ -1,3 +1,5 @@
+import { Wallet } from "./model/models";
+
 var baseUrl = "http://localhost:56491";
 
 class WalletService {
@@ -7,13 +9,6 @@ class WalletService {
                 return <Promise<Wallet[]>>response.json();
             });
     }
-}
-
-export interface Wallet {
-    moneyWalletId?: number;
-
-    name?: string;
-
 }
 
 export var walletService = new WalletService();

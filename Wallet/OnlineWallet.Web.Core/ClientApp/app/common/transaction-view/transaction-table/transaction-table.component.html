@@ -18,9 +18,7 @@
         <td><input type="date" class="form-control" [(ngModel)]="item.createdAtText" name="createdAt" /></td>
         <td><input type="text" class="form-control" [(ngModel)]="item.name" name="name" /></td>
         <td (click)="changeDirection(item)">
-            <span *ngIf="item.direction===-1" class="glyphicon glyphicon-minus text-danger"></span>
-            <span *ngIf="item.direction===1" class="glyphicon glyphicon-plus text-success"></span>
-            <span *ngIf="item.direction===0" class="glyphicon glyphicon-bookmark"></span>
+          <span [ngClass]="directionCssClass(item)"></span>
         </td>
         <td><input type="number" class="form-control" [(ngModel)]="item.value" name="value" /></td>
         <td>
@@ -28,24 +26,22 @@
               <option *ngFor="let wallet of wallets" [value]="wallet.moneyWalletId">{{wallet.name}}</option>
             </select>
         </td>
-        <td><input type="category" class="form-control" [(ngModel)]="item.category" name="category" /></td>
-        <td><input type="comment" class="form-control" [(ngModel)]="item.comment" name="comment" /></td>
+        <td><input type="text" class="form-control" [(ngModel)]="item.category" name="category" /></td>
+        <td><input type="text" class="form-control" [(ngModel)]="item.comment" name="comment" /></td>
         <td>
           <button class="btn btn-danger btn-sm pull-right" type="button" (click)="item.cancel()">
-                <span class="glyphicon glyphicon-remove"></span>
-              </button>
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
           <button class="btn btn-success btn-sm pull-right" type="button" (click)="saveTransaction(item)">
-                <span class="glyphicon glyphicon-ok"></span>
-              </button>
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
         </td>
       </ng-template>
       <ng-template #viewRow>
         <td>{{item.createdAtText}}</td>
         <td>{{item.name}}</td>
         <td>
-            <span *ngIf="item.direction===-1" class="glyphicon glyphicon-minus text-danger"></span>
-            <span *ngIf="item.direction===1" class="glyphicon glyphicon-plus text-success"></span>
-            <span *ngIf="item.direction===0" class="glyphicon glyphicon-bookmark"></span>
+            <span [ngClass]="directionCssClass(item)"></span>
         </td>
         <td>{{item.value}}</td>
         <td>{{item.walletName}}</td>

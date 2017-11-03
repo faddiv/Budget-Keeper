@@ -104,4 +104,15 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   private setWalletName(item: TransactionViewModel) {
     item.walletName = ListHelpers.selectMap<Wallet, string>(this.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
   }
+  
+  private directionCssClass(item: TransactionViewModel) {
+    switch (item.direction) {
+      case -1:
+        return "glyphicon glyphicon-minus text-danger";
+      case 1:
+        return "glyphicon glyphicon-plus text-success";
+      default:
+        return "glyphicon glyphicon-bookmark";
+    }
+  }
 }
