@@ -1,18 +1,20 @@
 import * as React from "react";
-import { Transaction, Wallet } from "walletApi";
+import { Transaction, Wallet, MoneyDirection } from "walletApi";
 import { ITransactionTableExtFunction, TransactionViewModel } from "common/transactions-view/models";
+import { ListHelpers } from "walletCommon";
 
 export namespace TransactionTableRow {
     export interface Props {
-        item: TransactionViewModel;
+        item: Transaction;
         wallets: Wallet[];
         rowModifier: ITransactionTableExtFunction;
-        saveTransaction(item: TransactionViewModel): void;
-        deleteTransaction(item: TransactionViewModel): void;
+        saveTransaction(newItem: Transaction, originalItem: Transaction): void;
+        deleteTransaction(item: Transaction): void;
     }
 
     export interface State {
         editMode: boolean;
+        item: TransactionViewModel;
     }
 }
 
@@ -21,44 +23,103 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     constructor(props: TransactionTableRow.Props) {
         super(props);
         this.state = {
-            editMode: false
+            editMode: false,
+            item: this.createTransactionViewModel(props.item)
         };
         this.changeDirection = this.changeDirection.bind(this);
+        this.cancelTransaction = this.cancelTransaction.bind(this);
         this.saveTransaction = this.saveTransaction.bind(this);
         this.deleteTransaction = this.deleteTransaction.bind(this);
         this.editTransaction = this.editTransaction.bind(this);
     }
 
-    private directionCssClass() {
-        switch (this.props.item.direction) {
-            case -1:
-                return "glyphicon glyphicon-minus text-danger";
-            case 1:
-                return "glyphicon glyphicon-plus text-success";
-            default:
-                return "glyphicon glyphicon-bookmark";
+    componentWillReceiveProps(nextProps: Readonly<TransactionTableRow.Props>) {
+        if (this.state.item.original !== nextProps.item) {
+            this.setState({
+                item: this.createTransactionViewModel(nextProps.item)
+            });
         }
     }
 
-    private changeDirection() {
+    private createTransactionViewModel(original: Transaction, modifications?: any) {
+        var model = new TransactionViewModel(original);
+        model.walletName = this.getWalletName(model);
+        this.props.rowModifier(model);
+        if (modifications) {
+            Object.assign(model, modifications);
+        }
+        return model;
+    }
 
+    private directionCssClass() {
+        switch (this.state.item.direction) {
+            case -1:
+                return "fa fa-minus text-danger";
+            case 1:
+                return "fa fa-plus text-success";
+            default:
+                return "fa fa-bookmark";
+        }
+    }
+
+    private getWalletName(item: TransactionViewModel) {
+        return ListHelpers.selectMap<Wallet, string>(this.props.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
+    }
+
+    private changeDirection() {
+        this.setState((prevState, props) => {
+            var model = this.createTransactionViewModel(prevState.item.original, {
+                direction: this.nextDirection(prevState.item.direction)
+            });
+            return {
+                item: model
+            };
+        })
+    }
+
+    private nextDirection(direction: MoneyDirection) {
+        switch (direction) {
+            case MoneyDirection.Expense:
+                return MoneyDirection.Income;
+            case MoneyDirection.Income:
+                return MoneyDirection.Plan;
+            case MoneyDirection.Plan:
+                return MoneyDirection.Expense;
+        }
     }
 
     private saveTransaction() {
+        var newTransaction = this.newOriginal(this.state.item);
+        this.props.saveTransaction(newTransaction, this.state.item.original);
+        this.setState({
+            editMode: false
+        });
+    }
+
+    private newOriginal(item: TransactionViewModel): Transaction {
+        var original: any = {};
+        for (const key in item.original) {
+            if (item.original.hasOwnProperty(key)) {
+                original[key] = item[key];
+            }
+        }
+        return original;
     }
 
     private deleteTransaction() {
+        this.props.deleteTransaction(this.state.item.original);
     }
 
     private editTransaction() {
         this.setState((prevState, props) => ({
-            editMode: !prevState.editMode
+            editMode: true
         }));
     }
-    
+
     private cancelTransaction() {
         this.setState((prevState, props) => ({
-            editMode: !prevState.editMode
+            editMode: false,
+            item: this.createTransactionViewModel(props.item)
         }));
     }
 
@@ -68,27 +129,27 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     private renderEditRow() {
         return (
-            <tr className={this.props.item.cssClass}>
-                <td><input type="date" className="form-control" value={this.props.item.createdAtText} name="createdAt" /></td>
-                <td><input type="text" className="form-control" value={this.props.item.name} name="name" /></td>
+            <tr className={this.state.item.cssClass}>
+                <td><input type="date" className="form-control" value={this.state.item.createdAtText} name="createdAt" /></td>
+                <td><input type="text" className="form-control" value={this.state.item.name} name="name" /></td>
                 <td onClick={this.changeDirection}>
                     <span className={this.directionCssClass()}></span>
                 </td>
-                <td><input type="number" className="form-control" value={this.props.item.value} name="value" /></td>
+                <td><input type="number" className="form-control" value={this.state.item.value} name="value" /></td>
                 <td>
-                    <select className="form-control" value={this.props.item.walletId} name="walletId">
+                    <select className="form-control" value={this.state.item.walletId} name="walletId">
                         {this.props.wallets.map(wallet =>
                             <option value={wallet.moneyWalletId}>{wallet.name}</option>)}
                     </select>
                 </td>
-                <td><input type="text" className="form-control" value={this.props.item.category} name="category" /></td>
-                <td><input type="comment" className="form-control" value={this.props.item.comment} name="comment" /></td>
+                <td><input type="text" className="form-control" value={this.state.item.category} name="category" /></td>
+                <td><input type="comment" className="form-control" value={this.state.item.comment} name="comment" /></td>
                 <td>
-                    <button className="btn btn-danger btn-sm pull-right" type="button" onClick={this.props.item.cancel}>
-                        <span className="glyphicon glyphicon-remove"></span>
+                    <button className="btn btn-danger btn-sm pull-right" type="button" onClick={this.cancelTransaction}>
+                        <span className="fa fa-ban"></span>
                     </button>
                     <button className="btn btn-success btn-sm pull-right" type="button" onClick={this.saveTransaction}>
-                        <span className="glyphicon glyphicon-ok"></span>
+                        <span className="fa fa-check"></span>
                     </button>
                 </td>
             </tr>
@@ -97,22 +158,22 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     private renderViewRow() {
         return (
-            <tr className={this.props.item.cssClass}>
-                <td>{this.props.item.createdAtText}</td>
-                <td>{this.props.item.name}</td>
+            <tr className={this.state.item.cssClass}>
+                <td>{this.state.item.createdAtText}</td>
+                <td>{this.state.item.name}</td>
                 <td>
                     <span className={this.directionCssClass()}></span>
                 </td>
-                <td>{this.props.item.value}</td>
-                <td>{this.props.item.walletName}</td>
-                <td>{this.props.item.category}</td>
-                <td>{this.props.item.comment}</td>
+                <td>{this.state.item.value}</td>
+                <td>{this.state.item.walletName}</td>
+                <td>{this.state.item.category}</td>
+                <td>{this.state.item.comment}</td>
                 <td>
                     <button className="btn btn-danger btn-sm pull-right" type="button" onClick={this.deleteTransaction}>
-                        <span className="glyphicon glyphicon-trash"></span>
+                        <span className="fa fa-trash"></span>
                     </button>
                     <button className="btn btn-primary btn-sm pull-right" type="button" onClick={this.editTransaction}>
-                        <span className="glyphicon glyphicon-edit"></span>
+                        <span className="fa fa-pencil"></span>
                     </button>
                 </td>
             </tr>

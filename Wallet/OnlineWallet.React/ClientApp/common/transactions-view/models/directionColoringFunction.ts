@@ -5,10 +5,10 @@ import { MoneyDirection } from "walletApi";
 export function directionColoringFunction(item: TransactionViewModel): void {
     switch (item.direction) {
         case MoneyDirection.Income:
-            item.cssClass = "success";
+            item.cssClass = "table-success";
             break;
         case MoneyDirection.Plan:
-            item.cssClass = "warning";
+            item.cssClass = "table-warning";
             break;
         default:
             item.cssClass = undefined;

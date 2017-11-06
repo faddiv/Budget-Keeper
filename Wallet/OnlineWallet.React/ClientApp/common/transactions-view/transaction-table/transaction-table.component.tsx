@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Wallet, Transaction } from "walletApi";
+import { Wallet, Transaction, walletService } from "walletApi";
 import { TransactionViewModel, ITransactionTableExtFunction } from "../models";
 import { ListHelpers } from "walletCommon";
 import { TransactionTableRow } from "./transaction-table-row.component";
@@ -9,52 +9,47 @@ export namespace TransactionTable {
     items: Transaction[];
     changedItems: Transaction[];
     rowModifier: ITransactionTableExtFunction;
-    deleted(item: TransactionViewModel): void;
+    update(items: Transaction[], changedItems: Transaction[]): void;
+    deleted(items: Transaction): void;
   }
 
   export interface State {
     wallets: Wallet[];
-    pageItems: TransactionViewModel[];
   }
 }
 
 export class TransactionTable extends React.Component<TransactionTable.Props, TransactionTable.State> {
-  saveTransaction(item: TransactionViewModel) {
-    for (const key in item.original) {
-      if (item.original.hasOwnProperty(key)) {
-        if (item.original[key] !== item[key]) {
-          item.original[key] = item[key];
-          item.changed = true;
-        }
-      }
-    }
-    this.setWalletName(item);
-    item.editMode = false;
-    if (this.props.changedItems) {
-      const changes = this.state.pageItems.filter(val => val.changed);
-      for (let index = 0; index < changes.length; index++) {
-        const cangedItem = changes[index];
-        if (this.props.changedItems.findIndex(e => e === cangedItem.original) === -1) {
-          this.props.changedItems.push(cangedItem.original);
-        }
-      }
-    }
+
+  constructor(props: TransactionTable.Props) {
+    super(props);
+    this.state = {
+      wallets: []
+    };
+    this.saveTransaction = this.saveTransaction.bind(this);
+    this.deleteTransaction = this.deleteTransaction.bind(this);
   }
-  editTransaction(item: TransactionViewModel) {
-    item.editMode = !item.editMode;
+  componentDidMount() {
+    walletService.getAll()
+      .then(wallets => {
+        this.setState({
+          wallets: wallets
+        });
+      });
   }
 
-  deleteTransaction(item: TransactionViewModel) {
+  saveTransaction(newItem: Transaction, original: Transaction) {
+    let items = ListHelpers.replace(this.props.items, newItem, original);
+    let changes = ListHelpers.replace(this.props.changedItems, newItem, original, true);
+    this.props.update(items, changes);
+  }
+
+  deleteTransaction(item: Transaction) {
     this.props.deleted(item);
-  }
-
-  private setWalletName(item: TransactionViewModel) {
-    item.walletName = ListHelpers.selectMap<Wallet, string>(this.state.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
   }
 
   render() {
     return (
-      <table className="table">
+      <table className="table transactions">
         <thead>
           <tr>
             <th className="created-at">createdAt</th>
@@ -68,11 +63,11 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
           </tr>
         </thead>
         <tbody>
-          {this.state.pageItems.map(item => 
-            <TransactionTableRow 
-              key={item.transactionId} 
-              item={item} 
-              wallets={this.state.wallets} 
+          {this.props.items.map(item =>
+            <TransactionTableRow
+              key={item.transactionId}
+              item={item}
+              wallets={this.state.wallets}
               deleteTransaction={this.deleteTransaction}
               rowModifier={this.props.rowModifier}
               saveTransaction={this.saveTransaction} />)}

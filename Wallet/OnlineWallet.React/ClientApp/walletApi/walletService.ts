@@ -1,10 +1,11 @@
+import { walletApiConfig } from "./walletApiConfig";
 import { Wallet } from "./model/models";
-
-var baseUrl = "http://localhost:56491";
+import { buildUrl } from "./linkHelpers";
 
 class WalletService {
     public getAll(): Promise<Wallet[]> {
-        return fetch(new URL("/api/v1/Wallet", baseUrl).toString())
+        var url = buildUrl("/api/v1/Wallet", walletApiConfig.baseUrl);
+        return fetch(url.toString())
             .then(response => {
                 return <Promise<Wallet[]>>response.json();
             });

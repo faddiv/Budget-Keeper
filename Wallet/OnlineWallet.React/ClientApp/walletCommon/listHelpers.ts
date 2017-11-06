@@ -6,6 +6,24 @@ export module ListHelpers {
         return (list || []).filter(e => e !== item);
     }
 
+    export function replace<TElement>(list: TElement[], newElement: TElement, oldElement: TElement, addIfElementIsNew: boolean = false): TElement[] {
+        const items: TElement[] = [];
+        let added = false;
+        for (var index = 0; index < list.length; index++) {
+            var element = list[index];
+            if(element === oldElement) {
+                items.push(newElement);
+                added = true;
+            } else {
+                items.push(element);
+            }
+        }
+        if(addIfElementIsNew && !added) {
+            items.push(newElement);
+        }
+        return items;
+    }
+
     export function clear(list: any[]) {
         list.length = 0;
     }

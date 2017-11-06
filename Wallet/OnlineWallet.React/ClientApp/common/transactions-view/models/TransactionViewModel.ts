@@ -21,7 +21,6 @@ export class TransactionViewModel implements Transaction {
     constructor(
         public original: Transaction) {
         Object.assign(this, original);
-        this.cancel = this.cancel.bind(this);
         this.direction = this.direction && parseInt(<any>original.direction);
     }
 
@@ -35,10 +34,5 @@ export class TransactionViewModel implements Transaction {
 
     set createdAtText(value: string) {
         this.createdAt = toUTCDate(value);
-    }
-
-    cancel() {
-        Object.assign(this, this.original);
-        this.editMode = false;
     }
 }
