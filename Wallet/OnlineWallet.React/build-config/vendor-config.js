@@ -24,7 +24,8 @@ module.exports = function vendorConfig(options) {
         },
         plugins: [
             vendorChunk,
-            aggressiveMerge
+            aggressiveMerge,
+            new Webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(hu)$/)
         ]
     }
 }

@@ -1,4 +1,5 @@
 import * as moment from "moment";
+import 'moment/locale/hu';
 
 export function toUTCDate(value: any): Date | undefined {
     if (value) {
