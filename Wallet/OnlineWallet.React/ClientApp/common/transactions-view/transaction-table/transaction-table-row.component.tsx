@@ -2,6 +2,7 @@ import * as React from "react";
 import { Transaction, Wallet, MoneyDirection } from "walletApi";
 import { ITransactionTableExtFunction, TransactionViewModel } from "common/transactions-view/models";
 import { ListHelpers } from "walletCommon";
+import { EditDelete, SaveCancel } from "common/misc";
 
 export namespace TransactionTableRow {
     export interface Props {
@@ -145,12 +146,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                 <td><input type="text" className="form-control" value={this.state.item.category} name="category" /></td>
                 <td><input type="comment" className="form-control" value={this.state.item.comment} name="comment" /></td>
                 <td>
-                    <button className="btn btn-danger btn-sm pull-right" type="button" onClick={this.cancelTransaction}>
-                        <span className="fa fa-ban"></span>
-                    </button>
-                    <button className="btn btn-success btn-sm pull-right" type="button" onClick={this.saveTransaction}>
-                        <span className="fa fa-check"></span>
-                    </button>
+                    <SaveCancel save={this.saveTransaction} cancel={this.cancelTransaction} />
                 </td>
             </tr>
         );
@@ -169,12 +165,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                 <td>{this.state.item.category}</td>
                 <td>{this.state.item.comment}</td>
                 <td>
-                    <button className="btn btn-danger btn-sm pull-right" type="button" onClick={this.deleteTransaction}>
-                        <span className="fa fa-trash"></span>
-                    </button>
-                    <button className="btn btn-primary btn-sm pull-right" type="button" onClick={this.editTransaction}>
-                        <span className="fa fa-pencil"></span>
-                    </button>
+                    <EditDelete edit={this.editTransaction} delete_={this.deleteTransaction} />
                 </td>
             </tr>
         );

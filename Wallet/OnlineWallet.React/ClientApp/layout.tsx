@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Navbar } from "./navbar/navbar.component"
+import { Navbar } from "./common/navbar/navbar.component"
 import { Route, Switch } from "react-router-dom";
-import { Home } from "./home/home.component";
-import { Transactions } from "./transactions/transactions.component";
+import { Home, Transactions, Wallets } from "pages";
 
 export class Layout extends React.Component {
 
@@ -14,6 +13,7 @@ export class Layout extends React.Component {
                     <Switch>
                         <Route path="/" exact component={Home} />
                         <Route path="/transactions" component={Transactions} />
+                        <Route path="/wallets" component={Wallets} />
                     </Switch>
                 </main>
             </div>

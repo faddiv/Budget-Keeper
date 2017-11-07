@@ -4,7 +4,9 @@ const merge = require('webpack-merge');
 var runMode = require("./build-config/run-mode");
 const scssConfig = require("./build-config/scss-config");
 const htmlConfig = require("./build-config/html-config");
-const vendorConfig = require("./build-config/vendor-config")();
+const vendorConfig = require("./build-config/vendor-config")({
+    exclude: ["bootstrap"]
+});
 const typescriptConfig = require("./build-config/typescript-config");
 
 module.exports = function (env) {
