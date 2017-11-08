@@ -29,6 +29,12 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
+    componentWillReceiveProps(nextProps: Readonly<WalletsRow.Props>, nextContext: any) {
+        this.setState({
+            wallet: nextProps.wallet
+        });
+    }
+
     deleteWallet() {
         this.props.delete_(this.props.wallet);
     }

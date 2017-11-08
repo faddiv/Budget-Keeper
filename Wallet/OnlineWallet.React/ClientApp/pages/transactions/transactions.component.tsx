@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TransactionTable, directionColoringFunction } from "common/transactions-view";
 import { Transaction, transactionService } from 'walletApi';
+import { bindFunctions } from 'walletCommon';
 
 export namespace Transactions {
     export interface Props {
@@ -13,6 +14,7 @@ export namespace Transactions {
     }
 }
 
+@bindFunctions
 export class Transactions extends React.Component<Transactions.Props, Transactions.State> {
 
     constructor(props) {
@@ -21,18 +23,13 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
             changedItems: [],
             items: []
         };
-        this.save = this.save.bind(this);
-        this.deleteItem = this.deleteItem.bind(this);
-        this.update = this.update.bind(this);
     }
 
-    componentDidMount() {
-        transactionService.fetch()
-            .then(transactions => {
-                this.setState({
-                    items: transactions
-                });
-            });
+    async componentDidMount() {
+        const transactions = await transactionService.fetch();
+        this.setState({
+            items: transactions
+        });
     }
 
     private save() {

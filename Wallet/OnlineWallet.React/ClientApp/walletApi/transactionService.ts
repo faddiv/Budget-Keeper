@@ -1,18 +1,14 @@
-import { walletApiConfig } from "./walletApiConfig";
+import { walletApiConfig, ThenJson } from "./walletApiConfig";
 import { Transaction, QueryParams } from "./model/models";
 import { buildUrl } from "./linkHelpers";
 
 class TransactionService {
-    public fetch(query?: QueryParams): Promise<Transaction[]> {
-        
+    async fetch(query?: QueryParams): Promise<Transaction[]> {
+
         var url = buildUrl("/api/v1/Transaction", walletApiConfig.baseUrl, query);
 
-        return fetch(url.toString(), {
-            method: "GET",
-            mode: "cors"
-        }).then(response => {
-            return <Promise<Transaction[]>>response.json();
-        });
+        const response = await fetch(url.toString());
+        return ThenJson<Transaction[]>(response);
     }
 }
 

@@ -1,29 +1,45 @@
-import { walletApiConfig } from "./walletApiConfig";
+import { walletApiConfig, ThenJsonGenerator, ThenJson } from "./walletApiConfig";
 import { Wallet } from "./model/models";
 import { buildUrl } from "./linkHelpers";
 
 class WalletService {
-    public getAll(): Promise<Wallet[]> {
-        var url = buildUrl("/api/v1/Wallet", walletApiConfig.baseUrl);
-        return fetch(url.toString())
-            .then(response => {
-                return <Promise<Wallet[]>>response.json();
-            });
+    methodUrl = "/api/v1/Wallet";
+    cache: Wallet[];
+
+    async getAll(): Promise<Wallet[]> {
+        if (this.cache) {
+            return Promise.resolve(this.cache);
+        }
+        var url = buildUrl(this.methodUrl, walletApiConfig.baseUrl);
+        const response = await fetch(url.toString());
+        const wallets = await ThenJson<Wallet[]>(response);
+        this.cache = wallets;
+        return wallets;
     }
 
-    public update(wallet: Wallet): Promise<Wallet> {
-        var url = buildUrl("/api/v1/Wallet/" + wallet.moneyWalletId, walletApiConfig.baseUrl);
-        return fetch(url.toString(), {
-            method: "PUT",
-            mode: "cors",
-            headers: {
-                "Content-Type":"text/json;charset=UTF-8"
-            },
-            body: JSON.stringify(wallet)
-        })
-            .then(response => {
-                return <Promise<Wallet>>response.json();
-            });
+    async update(wallet: Wallet): Promise<Wallet> {
+        this.cache = null;
+        var url = buildUrl(this.methodUrl + "/" + wallet.moneyWalletId, walletApiConfig.baseUrl);
+        const response = await fetch(url.toString(), walletApiConfig.requestConfig(wallet, "PUT"));
+        return ThenJson<Wallet>(response);
+    }
+
+    async insert(wallet: Wallet): Promise<Wallet> {
+        this.cache = null;
+        var url = buildUrl(this.methodUrl, walletApiConfig.baseUrl);
+        var response = await fetch(url.toString(), walletApiConfig.requestConfig(wallet, "POST"));
+        return ThenJson<Wallet>(response);
+    }
+
+    async delete(wallet: Wallet): Promise<Response> {
+        this.cache = null;
+        var url = buildUrl(this.methodUrl + "/" + wallet.moneyWalletId, walletApiConfig.baseUrl);
+        var response = await fetch(url.toString(), walletApiConfig.requestConfig(undefined, "DELETE"));
+        if (!response.ok) {
+            const body = await response.text();
+            throw Error(body);
+        }
+        return response;
     }
 
 }

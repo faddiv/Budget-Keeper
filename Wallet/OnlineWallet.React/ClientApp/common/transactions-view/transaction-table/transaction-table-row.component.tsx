@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Transaction, Wallet, MoneyDirection } from "walletApi";
 import { ITransactionTableExtFunction, TransactionViewModel } from "common/transactions-view/models";
-import { ListHelpers } from "walletCommon";
+import { ListHelpers, bindFunctions } from "walletCommon";
 import { EditDelete, SaveCancel } from "common/misc";
 
 export namespace TransactionTableRow {
@@ -19,6 +19,7 @@ export namespace TransactionTableRow {
     }
 }
 
+@bindFunctions
 export class TransactionTableRow extends React.Component<TransactionTableRow.Props, TransactionTableRow.State> {
 
     constructor(props: TransactionTableRow.Props) {
@@ -27,11 +28,6 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
             editMode: false,
             item: this.createTransactionViewModel(props.item)
         };
-        this.changeDirection = this.changeDirection.bind(this);
-        this.cancelTransaction = this.cancelTransaction.bind(this);
-        this.saveTransaction = this.saveTransaction.bind(this);
-        this.deleteTransaction = this.deleteTransaction.bind(this);
-        this.editTransaction = this.editTransaction.bind(this);
     }
 
     componentWillReceiveProps(nextProps: Readonly<TransactionTableRow.Props>) {
