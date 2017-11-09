@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { walletService, Wallet } from "walletApi";
-import { bindFunctions } from 'walletCommon';
 
 export namespace Home {
     export interface Props {
@@ -15,7 +14,6 @@ export namespace Home {
     }
 }
 
-@bindFunctions
 export class Home extends React.Component<Home.Props, Home.State> {//<Home.Props, Home.State>
 
     /**

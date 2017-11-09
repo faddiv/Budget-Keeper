@@ -1,7 +1,7 @@
 import { Wallet, walletService } from 'walletApi';
 import * as React from 'react';
 import { WalletsRow } from './walletsRow.component';
-import { ListHelpers, bindFunctions } from 'walletCommon';
+import { ListHelpers, bind } from 'walletCommon';
 
 export namespace Wallets {
     export interface Props {
@@ -12,7 +12,6 @@ export namespace Wallets {
     }
 }
 
-@bindFunctions
 export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
 
     constructor(props) {
@@ -34,6 +33,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         }
     }
 
+    @bind
     async deleteWallet(wallet: Wallet) {
         if (!confirm("Are you sure deleting this item?")) {
             return;
@@ -50,6 +50,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         }
     }
 
+    @bind
     async saveWallet(newWallet: Wallet, original: Wallet) {
         try {
             const result = await walletService.update(newWallet);
@@ -68,6 +69,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         }
     }
 
+    @bind
     async insertWallet(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!this.state.name) return;
@@ -82,6 +84,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         });
     }
 
+    @bind
     handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;

@@ -1,5 +1,5 @@
-import { TransactionViewModel } from "./TransactionViewModel";
+import { Transaction } from "walletApi";
 
 export interface ITransactionTableExtFunction {
-    (model: TransactionViewModel): void;
+    (item: Transaction): string;
 }

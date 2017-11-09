@@ -1,8 +1,16 @@
 import * as React from "react";
+import * as moment from "moment";
 import { Transaction, Wallet, MoneyDirection } from "walletApi";
-import { ITransactionTableExtFunction, TransactionViewModel } from "common/transactions-view/models";
-import { ListHelpers, bindFunctions } from "walletCommon";
+import { ITransactionTableExtFunction } from "common/transactions-view/models";
+import { ListHelpers, bind, updateState, toUTCDate } from "walletCommon";
 import { EditDelete, SaveCancel } from "common/misc";
+import { dateFormat } from "../../constants";
+
+interface IInternalTransaction extends Transaction {
+    createdAtText: string;
+    cssClass: string;
+    walletName: string;
+}
 
 export namespace TransactionTableRow {
     export interface Props {
@@ -15,39 +23,32 @@ export namespace TransactionTableRow {
 
     export interface State {
         editMode: boolean;
-        item: TransactionViewModel;
+        item: IInternalTransaction;
+        original: Transaction;
     }
 }
 
-@bindFunctions
 export class TransactionTableRow extends React.Component<TransactionTableRow.Props, TransactionTableRow.State> {
 
     constructor(props: TransactionTableRow.Props) {
         super(props);
         this.state = {
             editMode: false,
-            item: this.createTransactionViewModel(props.item)
+            item: toInternalTransaction(props.item, props),
+            original: props.item
         };
     }
 
     componentWillReceiveProps(nextProps: Readonly<TransactionTableRow.Props>) {
-        if (this.state.item.original !== nextProps.item) {
+        if (this.state.original !== nextProps.item) {
             this.setState({
-                item: this.createTransactionViewModel(nextProps.item)
+                item: toInternalTransaction(nextProps.item, nextProps),
+                original: nextProps.item
             });
         }
     }
 
-    private createTransactionViewModel(original: Transaction, modifications?: any) {
-        var model = new TransactionViewModel(original);
-        model.walletName = this.getWalletName(model);
-        this.props.rowModifier(model);
-        if (modifications) {
-            Object.assign(model, modifications);
-        }
-        return model;
-    }
-
+    @bind
     private directionCssClass() {
         switch (this.state.item.direction) {
             case -1:
@@ -59,65 +60,76 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         }
     }
 
-    private getWalletName(item: TransactionViewModel) {
+    private getWalletName(item: Transaction) {
         return ListHelpers.selectMap<Wallet, string>(this.props.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
     }
 
+    @bind
     private changeDirection() {
+        this.setItemState((prevState, props) => {
+            return {
+                direction: nextDirection(prevState.direction)
+            }
+        });
+    }
+
+    private setItemState(callback: Transaction | ((prevState: Transaction, props: TransactionTableRow.Props) => Partial<Transaction>)) {
         this.setState((prevState, props) => {
-            var model = this.createTransactionViewModel(prevState.item.original, {
-                direction: this.nextDirection(prevState.item.direction)
-            });
+            const nextState = typeof (callback) === "function"
+                ? callback(prevState.item, props)
+                : callback;
+            const model = Object.assign({}, prevState.item, nextState);
+            updateInternalTransaction(model, props);
             return {
                 item: model
             };
-        })
+        });
     }
 
-    private nextDirection(direction: MoneyDirection) {
-        switch (direction) {
-            case MoneyDirection.Expense:
-                return MoneyDirection.Income;
-            case MoneyDirection.Income:
-                return MoneyDirection.Plan;
-            case MoneyDirection.Plan:
-                return MoneyDirection.Expense;
-        }
-    }
-
+    @bind
     private saveTransaction() {
-        var newTransaction = this.newOriginal(this.state.item);
-        this.props.saveTransaction(newTransaction, this.state.item.original);
+        this.props.saveTransaction(this.state.item, this.props.item);
         this.setState({
             editMode: false
         });
     }
 
-    private newOriginal(item: TransactionViewModel): Transaction {
-        var original: any = {};
-        for (const key in item.original) {
-            if (item.original.hasOwnProperty(key)) {
-                original[key] = item[key];
-            }
-        }
-        return original;
-    }
-
+    @bind
     private deleteTransaction() {
-        this.props.deleteTransaction(this.state.item.original);
+        this.props.deleteTransaction(this.props.item);
     }
 
+    @bind
     private editTransaction() {
         this.setState((prevState, props) => ({
             editMode: true
         }));
     }
 
+    @bind
     private cancelTransaction() {
         this.setState((prevState, props) => ({
             editMode: false,
-            item: this.createTransactionViewModel(props.item)
+            item: toInternalTransaction(props.item, props)
         }));
+    }
+
+    @bind
+    handleInputChange(event: React.SyntheticEvent<HTMLTableRowElement>) {
+        var state = updateState(event);
+        if(state.walletId) {
+            state.walletId = parseInt(state.walletId, 10);
+        }
+        if(state.createdAtText) {
+            state.createdAt = toUTCDate(state.createdAtText);
+        }
+        this.setState((prevState, props) => {
+            let newItem = toInternalTransaction(prevState.item, props);
+            Object.assign(newItem, state);
+            return {
+                item: newItem
+            };
+        });
     }
 
     render() {
@@ -126,8 +138,8 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     private renderEditRow() {
         return (
-            <tr className={this.state.item.cssClass}>
-                <td><input type="date" className="form-control" value={this.state.item.createdAtText} name="createdAt" /></td>
+            <tr className={this.state.item.cssClass} onChangeCapture={this.handleInputChange}>
+                <td><input type="date" className="form-control" value={this.state.item.createdAtText} name="createdAtText" /></td>
                 <td><input type="text" className="form-control" value={this.state.item.name} name="name" /></td>
                 <td onClick={this.changeDirection}>
                     <span className={this.directionCssClass()}></span>
@@ -167,3 +179,31 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         );
     }
 }
+
+function nextDirection(direction: MoneyDirection) {
+    switch (direction) {
+        case MoneyDirection.Expense:
+            return MoneyDirection.Income;
+        case MoneyDirection.Income:
+            return MoneyDirection.Plan;
+        case MoneyDirection.Plan:
+            return MoneyDirection.Expense;
+    }
+}
+
+function toInternalTransaction(item: Transaction, props: TransactionTableRow.Props): IInternalTransaction {
+    return {
+        ...item,
+        createdAtText: moment(item.createdAt).format(dateFormat),
+        cssClass: props.rowModifier(item),
+        walletName: ListHelpers.selectMap<Wallet, string>(props.wallets, w => w.moneyWalletId === item.walletId, w => w.name)
+    };
+}
+
+function updateInternalTransaction(item: IInternalTransaction, props: TransactionTableRow.Props): IInternalTransaction {
+    item.createdAtText = moment(item.createdAt).format(dateFormat);
+    item.cssClass = props.rowModifier(item);
+    item.walletName = ListHelpers.selectMap<Wallet, string>(props.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
+    return item;
+}
+

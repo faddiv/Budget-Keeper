@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Wallet } from 'walletApi';
 import { EditDelete, SaveCancel } from 'common/misc';
+import { updateState } from 'walletCommon';
 
 export namespace WalletsRow {
     export interface Props {
@@ -63,12 +64,7 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
     }
 
     handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        var wallet = Object.assign({}, this.state.wallet, {
-            [name]: value
-        });
+        var wallet = updateState(event);
         this.setState({
             wallet: wallet
         });

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Wallet, Transaction, walletService } from "walletApi";
-import { TransactionViewModel, ITransactionTableExtFunction } from "../models";
-import { ListHelpers, bindFunctions } from "walletCommon";
+import { ITransactionTableExtFunction } from "../models";
+import { ListHelpers, bind } from "walletCommon";
 import { TransactionTableRow } from "./transaction-table-row.component";
 
 export namespace TransactionTable {
@@ -18,7 +18,6 @@ export namespace TransactionTable {
   }
 }
 
-@bindFunctions
 export class TransactionTable extends React.Component<TransactionTable.Props, TransactionTable.State> {
 
   constructor(props: TransactionTable.Props) {
@@ -36,12 +35,14 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
       });
   }
 
+  @bind
   saveTransaction(newItem: Transaction, original: Transaction) {
     let items = ListHelpers.replace(this.props.items, newItem, original);
     let changes = ListHelpers.replace(this.props.changedItems, newItem, original, true);
     this.props.update(items, changes);
   }
 
+  @bind
   deleteTransaction(item: Transaction) {
     this.props.deleted(item);
   }
