@@ -1,22 +1,17 @@
-import * as React from "react";
-import { Navbar } from "./common/navbar/navbar.component"
-import { Route, Switch } from "react-router-dom";
-import { Home, Transactions, Wallets } from "pages";
+import * as React from 'react';
+import { Navbar } from "common/navbar/navbar.component";
 
-export class Layout extends React.Component {
+interface LayoutProps { }
 
-    render() {
-        return (
-            <div>
-                <Navbar />
-                <main role="main" className="container">
-                    <Switch>
-                        <Route path="/" exact component={Home} />
-                        <Route path="/transactions" component={Transactions} />
-                        <Route path="/wallets" component={Wallets} />
-                    </Switch>
-                </main>
-            </div>
-        );
-    }
-}
+const Layout: React.SFC<LayoutProps> = ({ ...rest }) => {
+    return (
+        <div>
+            <Navbar />
+            <main role="main" className="container">
+                {rest.children}
+            </main>
+        </div>
+    );
+};
+
+export { Layout };

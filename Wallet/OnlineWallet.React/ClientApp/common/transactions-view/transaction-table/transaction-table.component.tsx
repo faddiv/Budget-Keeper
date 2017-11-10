@@ -7,9 +7,9 @@ import { TransactionTableRow } from "./transaction-table-row.component";
 export namespace TransactionTable {
   export interface Props {
     items: Transaction[];
-    changedItems: Transaction[];
-    rowModifier: ITransactionTableExtFunction;
-    update(items: Transaction[], changedItems: Transaction[]): void;
+    changedItems?: Transaction[];
+    rowModifier?: ITransactionTableExtFunction;
+    update(items: Transaction[], changedItems?: Transaction[]): void;
     deleted(items: Transaction): void;
   }
 
@@ -38,7 +38,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
   @bind
   saveTransaction(newItem: Transaction, original: Transaction) {
     let items = ListHelpers.replace(this.props.items, newItem, original);
-    let changes = ListHelpers.replace(this.props.changedItems, newItem, original, true);
+    let changes = this.props.changedItems ? ListHelpers.replace(this.props.changedItems, newItem, original, true) : undefined;
     this.props.update(items, changes);
   }
 

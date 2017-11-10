@@ -6,7 +6,7 @@ import { ListHelpers, bind, updateState, toUTCDate } from "walletCommon";
 import { EditDelete, SaveCancel } from "common/misc";
 import { dateFormat } from "../../constants";
 
-interface IInternalTransaction extends Transaction {
+export interface IInternalTransaction extends Transaction {
     createdAtText: string;
     cssClass: string;
     walletName: string;
@@ -16,7 +16,7 @@ export namespace TransactionTableRow {
     export interface Props {
         item: Transaction;
         wallets: Wallet[];
-        rowModifier: ITransactionTableExtFunction;
+        rowModifier?: ITransactionTableExtFunction;
         saveTransaction(newItem: Transaction, originalItem: Transaction): void;
         deleteTransaction(item: Transaction): void;
     }
@@ -195,14 +195,14 @@ function toInternalTransaction(item: Transaction, props: TransactionTableRow.Pro
     return {
         ...item,
         createdAtText: moment(item.createdAt).format(dateFormat),
-        cssClass: props.rowModifier(item),
+        cssClass: props.rowModifier && props.rowModifier(item),
         walletName: ListHelpers.selectMap<Wallet, string>(props.wallets, w => w.moneyWalletId === item.walletId, w => w.name)
     };
 }
 
 function updateInternalTransaction(item: IInternalTransaction, props: TransactionTableRow.Props): IInternalTransaction {
     item.createdAtText = moment(item.createdAt).format(dateFormat);
-    item.cssClass = props.rowModifier(item);
+    item.cssClass = props.rowModifier && props.rowModifier(item);
     item.walletName = ListHelpers.selectMap<Wallet, string>(props.wallets, w => w.moneyWalletId === item.walletId, w => w.name);
     return item;
 }

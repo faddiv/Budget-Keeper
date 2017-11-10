@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
 import { Transaction, transactionService } from 'walletApi';
 import { bind } from 'walletCommon';
+import { Layout } from 'layout';
 
 export namespace Transactions {
     export interface Props {
@@ -52,17 +53,14 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
 
     render() {
         return (
-            <div>
+            <Layout>
                 <form className="form-inline">
                     <button type="button" className="btn btn-success" onClick={this.save} name="saveBtn">Save</button>
-                    <div className="input-group pull-right">
-
-                    </div>
                 </form>
                 <TransactionTable changedItems={this.state.changedItems}
                     items={this.state.items} rowModifier={getDirectionColoring}
                     deleted={this.deleteItem} update={this.update} />
-            </div>
+            </Layout>
         );
     }
 }

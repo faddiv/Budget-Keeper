@@ -2,6 +2,7 @@ import { Wallet, walletService } from 'walletApi';
 import * as React from 'react';
 import { WalletsRow } from './walletsRow.component';
 import { ListHelpers, bind } from 'walletCommon';
+import { Layout } from 'layout';
 
 export namespace Wallets {
     export interface Props {
@@ -97,7 +98,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
 
     render() {
         return (
-            <div>
+            <Layout>
                 <form onSubmit={this.insertWallet}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
@@ -120,7 +121,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </Layout>
         );
     }
 }
