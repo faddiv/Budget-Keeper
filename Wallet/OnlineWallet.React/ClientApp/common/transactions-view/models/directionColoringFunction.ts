@@ -1,6 +1,7 @@
-import { MoneyDirection, Transaction } from "walletApi";
+import { MoneyDirection } from "walletApi";
+import { TransactionViewModel } from "common/models";
 
-export function getDirectionColoring(item: Transaction): string {
+export function getDirectionColoring(item: TransactionViewModel): string {
     switch (item.direction) {
         case MoneyDirection.Income:
             return "table-success";

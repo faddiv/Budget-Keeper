@@ -1,6 +1,6 @@
 export var walletApiConfig = {
     baseUrl: "http://localhost:56491",
-    requestConfig(data:any, method: "PUT" | "POST" | "DELETE"): RequestInit {
+    jsonRequestConfig(data:any, method: "PUT" | "POST" | "DELETE"): RequestInit {
         return {
             method: method,
             mode: "cors",

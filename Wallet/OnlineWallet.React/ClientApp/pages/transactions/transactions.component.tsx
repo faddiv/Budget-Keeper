@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
-import { Transaction, transactionService } from 'walletApi';
+import { Transaction, transactionService, walletService } from 'walletApi';
 import { bind } from 'walletCommon';
 import { Layout } from 'layout';
+import { TransactionViewModel, mapTransactionViewModel } from 'common/models';
 
 export namespace Transactions {
     export interface Props {
@@ -10,8 +11,8 @@ export namespace Transactions {
     }
 
     export interface State {
-        changedItems: Transaction[];
-        items: Transaction[];
+        changedItems: TransactionViewModel[];
+        items: TransactionViewModel[];
     }
 }
 
@@ -26,9 +27,10 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     async componentDidMount() {
-        const transactions = await transactionService.fetch();
+        
+        var [ transactions, wallets ] = await Promise.all([transactionService.fetch(), walletService.getAll()]);
         this.setState({
-            items: transactions
+            items: mapTransactionViewModel(transactions, wallets)
         });
     }
 
@@ -38,13 +40,13 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     @bind
-    private deleteItem(item: Transaction) {
+    private deleteItem(item: TransactionViewModel) {
         console.log("deleteItem", item, this);
         alert("deleteItem");
     }
     
     @bind
-    private update(items: Transaction[], changedItems: Transaction[]): void {
+    private update(items: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
         this.setState({
             items: items,
             changedItems: changedItems

@@ -3,14 +3,15 @@ import { Wallet, Transaction, walletService } from "walletApi";
 import { ITransactionTableExtFunction } from "../models";
 import { ListHelpers, bind } from "walletCommon";
 import { TransactionTableRow } from "./transaction-table-row.component";
+import { TransactionViewModel } from "common/models";
 
 export namespace TransactionTable {
   export interface Props {
-    items: Transaction[];
-    changedItems?: Transaction[];
+    items: TransactionViewModel[];
+    changedItems?: TransactionViewModel[];
     rowModifier?: ITransactionTableExtFunction;
-    update(items: Transaction[], changedItems?: Transaction[]): void;
-    deleted(items: Transaction): void;
+    update(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
+    deleted(items: TransactionViewModel): void;
   }
 
   export interface State {
@@ -26,6 +27,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
       wallets: []
     };
   }
+
   componentDidMount() {
     walletService.getAll()
       .then(wallets => {
@@ -36,14 +38,14 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
   }
 
   @bind
-  saveTransaction(newItem: Transaction, original: Transaction) {
+  saveTransaction(newItem: TransactionViewModel, original: TransactionViewModel) {
     let items = ListHelpers.replace(this.props.items, newItem, original);
     let changes = this.props.changedItems ? ListHelpers.replace(this.props.changedItems, newItem, original, true) : undefined;
     this.props.update(items, changes);
   }
 
   @bind
-  deleteTransaction(item: Transaction) {
+  deleteTransaction(item: TransactionViewModel) {
     this.props.deleted(item);
   }
 
@@ -65,11 +67,10 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
         <tbody>
           {this.props.items.map(item =>
             <TransactionTableRow
-              key={item.transactionId}
+              key={item.key}
               item={item}
               wallets={this.state.wallets}
               deleteTransaction={this.deleteTransaction}
-              rowModifier={this.props.rowModifier}
               saveTransaction={this.saveTransaction} />)}
         </tbody>
       </table>

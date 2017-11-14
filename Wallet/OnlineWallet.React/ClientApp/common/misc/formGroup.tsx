@@ -9,22 +9,24 @@ interface FormGroupProps {
     name: string,
     label: string,
     type?: InputType,
-    value: any
+    value?: any,
+    onChange?: () => void
 }
 
-const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, ...rest }) => {
+const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, ...rest }) => {
     id = id || name;
     return (
         <div className="form-group row">
             <label htmlFor={id} className="col-sm-2 col-form-label">{label}</label>
             <div className="col-sm-10">
-                <input type={type} className="form-control" id={id} placeholder={label} value={value} />
+                {rest.children ? rest.children : <input type={type} className="form-control" id={id} name={name} placeholder={label} value={value} onChange={onChange} />}
             </div>
         </div>
     );
 };
 
 FormGroup.defaultProps = {
-    type: "text"
+    type: "text",
+    onChange: () => { }
 };
 export { FormGroup };
