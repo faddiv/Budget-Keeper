@@ -21,8 +21,6 @@ export interface TransactionViewModel {
 
     walletName?: string;
 
-    cssClass?: string;
-
     key?: number;
 }
 
@@ -48,11 +46,11 @@ export function nextDirection(direction: MoneyDirection) {
 
 export function mapTransactionViewModel(transactions: Transaction[], wallets: Wallet[]): TransactionViewModel[] {
     return transactions.map(transaction => <TransactionViewModel>{
-        category: transaction.category,
-        comment: transaction.comment,
+        category: transaction.category || "",
+        comment: transaction.comment || "",
         createdAt: toDateString(transaction.createdAt),
         direction: transaction.direction,
-        name: transaction.name,
+        name: transaction.name || "",
         price: transaction.value ? transaction.value.toString() : "",
         transactionId: transaction.transactionId,
         walletId: transaction.walletId,

@@ -9,7 +9,7 @@ export namespace TransactionTable {
   export interface Props {
     items: TransactionViewModel[];
     changedItems?: TransactionViewModel[];
-    rowModifier?: ITransactionTableExtFunction;
+    rowColor?: ITransactionTableExtFunction;
     update(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
     deleted(items: TransactionViewModel): void;
   }
@@ -71,7 +71,8 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
               item={item}
               wallets={this.state.wallets}
               deleteTransaction={this.deleteTransaction}
-              saveTransaction={this.saveTransaction} />)}
+              saveTransaction={this.saveTransaction}
+              rowColor={this.props.rowColor} />)}
         </tbody>
       </table>
     );

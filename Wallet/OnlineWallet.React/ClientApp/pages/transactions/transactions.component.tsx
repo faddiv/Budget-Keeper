@@ -29,8 +29,9 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     async componentDidMount() {
         
         var [ transactions, wallets ] = await Promise.all([transactionService.fetch(), walletService.getAll()]);
+        var model = mapTransactionViewModel(transactions, wallets);
         this.setState({
-            items: mapTransactionViewModel(transactions, wallets)
+            items: model
         });
     }
 
@@ -60,7 +61,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                     <button type="button" className="btn btn-success" onClick={this.save} name="saveBtn">Save</button>
                 </form>
                 <TransactionTable changedItems={this.state.changedItems}
-                    items={this.state.items} rowModifier={getDirectionColoring}
+                    items={this.state.items}  rowColor={getDirectionColoring}
                     deleted={this.deleteItem} update={this.update} />
             </Layout>
         );

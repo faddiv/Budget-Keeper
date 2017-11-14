@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { Wallet } from 'walletApi';
 
-interface WalletSelectorProps { walletId: number, wallets: Wallet[], className?: string, name?: string, onChange?: () => void }
+interface WalletSelectorProps {
+    walletId: number,
+    wallets: Wallet[],
+    className?: string,
+    name?: string,
+    onChange?: React.ChangeEventHandler<HTMLSelectElement>
+}
 
 const WalletSelector: React.SFC<WalletSelectorProps> = ({ walletId, wallets, className, name, onChange, ...rest }) => {
     return (
