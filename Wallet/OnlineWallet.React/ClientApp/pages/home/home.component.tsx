@@ -7,7 +7,7 @@ import { walletService, Wallet, Transaction, MoneyDirection, transactionService 
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
 import { bind, updateState, ListHelpers } from 'walletCommon';
-import { FormGroup, WalletSelector } from 'common/misc';
+import { FormGroup, WalletSelector, NameInput } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
 
@@ -25,6 +25,7 @@ export namespace Home {
 }
 
 export class Home extends React.Component<Home.Props, Home.State> {
+    nameInput: NameInput;
 
     /**
      *
@@ -104,6 +105,9 @@ export class Home extends React.Component<Home.Props, Home.State> {
                 },
                 id: prevState.id + 1
             };
+        }, () => {
+            const nameInput = this.nameInput;
+            nameInput.focus();
         });
     }
 
@@ -141,17 +145,11 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     </FormGroup>
                     <FormGroup name="createdAt" label="Date" type="date" value={this.state.newItem.createdAt} />
                     <FormGroup name="name" label="Name">
-                        <input type="text" className="form-control" id="name" name="name" value={this.state.newItem.name} />
+                        <NameInput ref={(input) => this.nameInput = input} value={this.state.newItem.name} autoFocus={true} />
                     </FormGroup>
-                    <FormGroup name="price" label="Price">
-                        <input type="text" className="form-control" id="price" name="price" value={this.state.newItem.price} />
-                    </FormGroup>
-                    <FormGroup name="comment" label="Comment">
-                        <input type="text" className="form-control" id="comment" name="comment" value={this.state.newItem.comment} />
-                    </FormGroup>
-                    <FormGroup name="category" label="Category">
-                        <input type="text" className="form-control" id="category" name="category" value={this.state.newItem.category} />
-                    </FormGroup>
+                    <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} />
+                    <FormGroup name="comment" label="Comment" value={this.state.newItem.comment} />
+                    <FormGroup name="category" label="Category" value={this.state.newItem.category} />
                     <DirectionCheck value={this.state.newItem.direction} />
                     <button type="submit" className="btn btn-primary">Add</button>
                     <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>

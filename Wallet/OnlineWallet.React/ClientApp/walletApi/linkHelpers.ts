@@ -6,8 +6,10 @@ export function buildUrl(url: string, baseUrl: string, query?: any): URL {
         for (var key in query) {
             if (query.hasOwnProperty(key)) {
                 var element = query[key];
-                searchParams.append(key, element);
-                hasParam = true;
+                if (typeof (element) !== "undefined" && element !== "" && element !== null) {
+                    searchParams.append(key, element);
+                    hasParam = true;
+                }
             }
         }
         if (hasParam) {
