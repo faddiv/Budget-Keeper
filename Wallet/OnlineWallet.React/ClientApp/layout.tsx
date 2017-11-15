@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { Navbar } from "common/navbar/navbar.component";
+import { Prompt } from 'react-router-dom';
 
-interface LayoutProps { }
+interface LayoutProps { leaveConfirmation?: LeaveConfirmationParams }
 
-const Layout: React.SFC<LayoutProps> = ({ ...rest }) => {
+const Layout: React.SFC<LayoutProps> = ({ leaveConfirmation, ...rest }) => {
     return (
         <div>
+            {leaveConfirmation && <Prompt when={leaveConfirmation.when} message={leaveConfirmation.message} />}
+
             <Navbar />
             <main role="main" className="container">
                 {rest.children}
@@ -13,5 +16,10 @@ const Layout: React.SFC<LayoutProps> = ({ ...rest }) => {
         </div>
     );
 };
+
+interface LeaveConfirmationParams {
+    when: boolean;
+    message: string
+}
 
 export { Layout };

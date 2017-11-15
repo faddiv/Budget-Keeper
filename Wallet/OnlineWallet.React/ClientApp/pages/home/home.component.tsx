@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel } from "walletApi";
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
@@ -40,13 +39,24 @@ export class Home extends React.Component<Home.Props, Home.State> {
         };
     }
 
-    componentDidMount() {
-        walletService.getAll()
-            .then(wallets => {
-                this.setState({
-                    wallets: wallets
-                })
-            })
+    async componentDidMount() {
+        window.addEventListener("beforeunload", this.confirmLeave);
+        const wallets = await walletService.getAll();
+        this.setState({
+            wallets: wallets
+        });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("beforeunload", this.confirmLeave);
+    }
+
+    @bind
+    confirmLeave(event: BeforeUnloadEvent) {
+        if (this.needLeaveConfirmation()) {
+            event.returnValue = leaveConfirmation;
+            return leaveConfirmation;
+        }
     }
 
     @bind
@@ -145,6 +155,10 @@ export class Home extends React.Component<Home.Props, Home.State> {
             //this.alertsService.error(error.message);
         }
     }
+
+    needLeaveConfirmation() {
+        return this.state.items.length > 0;
+    }
     /* Something is wrong:
     <FormGroup name="createdAt" label="Date">
         <input type="text" className="form-control" id="createdAt" name="createdAt" value={this.state.newItem.createdAt} />
@@ -152,7 +166,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
     */
     render() {
         return (
-            <Layout>
+            <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
                 <form onChange={this.handleInputChange} onSubmit={this.addLine}>
                     <FormGroup name="walletId" label="Wallet">
                         <WalletSelector walletId={this.state.newItem.walletId} wallets={this.state.wallets} />
@@ -187,3 +201,5 @@ export class Home extends React.Component<Home.Props, Home.State> {
         };
     }
 }
+
+const leaveConfirmation = "There are added items. Are you sure leaving?";
