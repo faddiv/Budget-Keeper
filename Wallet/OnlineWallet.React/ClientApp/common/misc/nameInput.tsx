@@ -105,7 +105,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
                 items: []
             });
         }
-        if(this.props.onChange) {
+        if (this.props.onChange) {
             this.props.onChange(event);
         }
     }
@@ -133,12 +133,17 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
 
     @bind
     private onFocus(event: React.SyntheticEvent<HTMLInputElement>) {
-        const open = canOpen(this.state.value) && this.hasItems();
+        const open = canOpen(this.state.value) && this.hasSelectable();
         if (open) {
             this.open();
         } else {
             this.close();
         }
+    }
+
+    private onlyItemActive() {
+        return this.state.items.length === 1
+            && this.state.items[0] === this.state.active;
     }
 
     private navigate(direction: number) {
@@ -152,7 +157,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
             }
             ok = true;
         } else {
-            if (canOpen(this.state.value) && this.hasItems()) {
+            if (canOpen(this.state.value) && this.hasSelectable()) {
                 this.open();
                 ok = true;
             }
@@ -188,8 +193,9 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         }
     }
 
-    private hasItems() {
-        return this.state.items.length > 0;
+    private hasSelectable() {
+        return this.state.items.length > 0
+            && (this.state.items.length > 1 || this.getItemValue(this.state.items[0]) !== this.state.value);
     }
 
     private onClick(event: React.MouseEvent<HTMLLIElement>, item: ArticleModel) {
@@ -213,7 +219,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         return item.name;
     }
 
-    private  renderItem(item: ArticleModel, active: boolean) {
+    private renderItem(item: ArticleModel, active: boolean) {
         var itemcss = ["dropdown-item"];
         if (active) {
             itemcss.push("active");
