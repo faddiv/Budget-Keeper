@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { walletService, Wallet, Transaction, MoneyDirection, transactionService } from "walletApi";
+import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel } from "walletApi";
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
 import { bind, updateState, ListHelpers } from 'walletCommon';
@@ -86,6 +86,20 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 
     @bind
+    nameSelected(item: ArticleModel) {
+        this.setState((prevState, props) => {
+            return {
+                newItem: {
+                    ...prevState.newItem,
+                    name: item.name,
+                    category: item.category,
+                    price: item.lastPrice,
+                }
+            };
+        });
+    }
+
+    @bind
     addLine(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
         this.setState((prevState, props) => {
@@ -145,7 +159,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     </FormGroup>
                     <FormGroup name="createdAt" label="Date" type="date" value={this.state.newItem.createdAt} />
                     <FormGroup name="name" label="Name">
-                        <NameInput ref={(input) => this.nameInput = input} value={this.state.newItem.name} autoFocus={true} />
+                        <NameInput ref={(input) => this.nameInput = input} value={this.state.newItem.name} autoFocus={true} onSelect={this.nameSelected} />
                     </FormGroup>
                     <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} />
                     <FormGroup name="comment" label="Comment" value={this.state.newItem.comment} />

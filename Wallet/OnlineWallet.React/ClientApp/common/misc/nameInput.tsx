@@ -7,6 +7,7 @@ export namespace NameInput {
         value: string;
         onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
         autoFocus?: boolean;
+        onSelect?: (selected: ArticleModel) => void;
     }
     export interface State {
         items: ArticleModel[];
@@ -111,16 +112,20 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
     }
 
     private select(item: ArticleModel) {
-        this.setValue(this.getItemValue(item));
-        this.setState({
+        this.setValue(this.getItemValue(item), {
             items: [item]
-        })
+        }, () => {
+            if (this.props.onSelect) {
+                this.props.onSelect(item);
+            }
+        });
     }
 
-    private setValue(value: string) {
+    private setValue(value: string, state?: Partial<NameInput.State>, callback?: () => void) {
         this.setState({
-            value
-        });
+            value,
+            ...state as any
+        }, callback);
     }
 
     @bind
