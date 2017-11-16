@@ -5,16 +5,24 @@ import { Provider } from "react-redux";
 import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
 import { Home, Transactions, Wallets } from "pages";
+import { configureStore } from "store";
+import { loadWallets } from "actions/wallets";
 
 const history = createBrowserHistory();
+const store = configureStore();
+
+//Preloading global data.
+store.dispatch(loadWallets());
 
 ReactDOM.render(
-    <Router history={history}>
-        <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/transactions" component={Transactions} />
-            <Route path="/wallets" component={Wallets} />
-        </Switch>
-    </Router >,
+    <Provider store={store}>
+        <Router history={history}>
+            <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/transactions" component={Transactions} />
+                <Route path="/wallets" component={Wallets} />
+            </Switch>
+        </Router >
+    </Provider>,
     document.getElementById("body")
 );

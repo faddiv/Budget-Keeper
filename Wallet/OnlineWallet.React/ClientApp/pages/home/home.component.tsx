@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import * as AlertsActions from "actions/alerts"
 import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel } from "walletApi";
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
@@ -9,20 +11,22 @@ import { bind, updateState, ListHelpers } from 'walletCommon';
 import { FormGroup, WalletSelector, NameInput } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
+import { RootState } from 'reducers';
 
 export namespace Home {
     export interface Props {
-
+        wallets: Wallet[];
+        actions?: typeof AlertsActions,
     }
 
     export interface State {
-        wallets: Wallet[];
         items: TransactionViewModel[];
         newItem: TransactionViewModel;
         id: number;
     }
 }
 
+@connect(mapStateToProps, mapDispatchToProps)
 export class Home extends React.Component<Home.Props, Home.State> {
     nameInput: NameInput;
 
@@ -32,7 +36,6 @@ export class Home extends React.Component<Home.Props, Home.State> {
     constructor() {
         super();
         this.state = {
-            wallets: [],
             items: [],
             newItem: this.emptyItem(1),
             id: 1
@@ -41,14 +44,14 @@ export class Home extends React.Component<Home.Props, Home.State> {
 
     async componentDidMount() {
         window.addEventListener("beforeunload", this.confirmLeave);
-        const wallets = await walletService.getAll();
-        this.setState({
-            wallets: wallets
-        });
     }
 
     componentWillUnmount() {
         window.removeEventListener("beforeunload", this.confirmLeave);
+    }
+
+    get alertsService() {
+        return this.props.actions;
     }
 
     @bind
@@ -115,7 +118,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
         this.setState((prevState, props) => {
             var item: TransactionViewModel = {
                 ...prevState.newItem,
-                walletName: getWalletNameById(prevState.newItem.walletId, prevState.wallets)
+                walletName: getWalletNameById(prevState.newItem.walletId, props.wallets)
             };
             return {
                 items: [...prevState.items, prevState.newItem],
@@ -138,21 +141,21 @@ export class Home extends React.Component<Home.Props, Home.State> {
     @bind
     async saveAll() {
         try {
-            //this.alertsService.dismissAll();
+            this.alertsService.dismissAllAlert();
             if (!this.state.items.length) {
-                //this.alertsService.warning("Nothing to save");
+                this.alertsService.showAlert({ type: "warning", message: "Nothing to save" });
                 return;
             }
             var serverItems = mapTransaction(this.state.items);
             var result = await transactionService.batchUpdate(serverItems);
-            //this.alertsService.success("Transactions are saved successfully.");
+            this.alertsService.showAlert({ type: "success", message: "Transactions are saved successfully."});
             this.setState({
                 items: [],
                 newItem: this.emptyItem(1),
                 id: 1
             });
         } catch (e) {
-            //this.alertsService.error(error.message);
+            this.alertsService.showAlert({ type: "danger", message: e.message});
         }
     }
 
@@ -169,7 +172,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
             <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
                 <form onChange={this.handleInputChange} onSubmit={this.addLine}>
                     <FormGroup name="walletId" label="Wallet">
-                        <WalletSelector walletId={this.state.newItem.walletId} wallets={this.state.wallets} />
+                        <WalletSelector walletId={this.state.newItem.walletId} wallets={this.props.wallets} />
                     </FormGroup>
                     <FormGroup name="createdAt" label="Date" type="date" value={this.state.newItem.createdAt} />
                     <FormGroup name="name" label="Name">
@@ -200,6 +203,18 @@ export class Home extends React.Component<Home.Props, Home.State> {
             key: id
         };
     }
+}
+
+function mapStateToProps(state: RootState, ownProps: any) {
+    return {
+        wallets: state.wallets
+    };
+}
+
+function mapDispatchToProps(dispatch, ownProps: any) {
+    return {
+        actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
+    };
 }
 
 const leaveConfirmation = "There are added items. Are you sure leaving?";
