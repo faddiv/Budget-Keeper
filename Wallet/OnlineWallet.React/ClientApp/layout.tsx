@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Navbar } from "common/navbar/navbar.component";
 import { Prompt } from 'react-router-dom';
-import { AlertList } from 'common/misc/alertList';
+import { AlertList } from 'common/misc';
 
 interface LayoutProps { leaveConfirmation?: LeaveConfirmationParams }
 

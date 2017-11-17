@@ -42,7 +42,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
         };
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         window.addEventListener("beforeunload", this.confirmLeave);
     }
 
