@@ -15,10 +15,14 @@ andTerm
 	;
 
 orTerm
-	: searchTerm (OR searchTerm)*
+	: comparison (OR comparison)*
 	;
 	
+comparison
+	: atomic (COMPARISON atomic)?
+	;
 
-searchTerm
-	: WORD
+atomic
+	: STRING
+	| WORD
 	;

@@ -88,17 +88,30 @@ public partial class FilterParserBaseListener : IFilterParserListener {
 	public virtual void ExitOrTerm([NotNull] FilterParser.OrTermContext context) { }
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="FilterParser.searchTerm"/>.
+	/// Enter a parse tree produced by <see cref="FilterParser.comparison"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSearchTerm([NotNull] FilterParser.SearchTermContext context) { }
+	public virtual void EnterComparison([NotNull] FilterParser.ComparisonContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="FilterParser.searchTerm"/>.
+	/// Exit a parse tree produced by <see cref="FilterParser.comparison"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSearchTerm([NotNull] FilterParser.SearchTermContext context) { }
+	public virtual void ExitComparison([NotNull] FilterParser.ComparisonContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FilterParser.atomic"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAtomic([NotNull] FilterParser.AtomicContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FilterParser.atomic"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAtomic([NotNull] FilterParser.AtomicContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

@@ -61,10 +61,17 @@ public interface IFilterParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitOrTerm([NotNull] FilterParser.OrTermContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="FilterParser.searchTerm"/>.
+	/// Visit a parse tree produced by <see cref="FilterParser.comparison"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSearchTerm([NotNull] FilterParser.SearchTermContext context);
+	Result VisitComparison([NotNull] FilterParser.ComparisonContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="FilterParser.atomic"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAtomic([NotNull] FilterParser.AtomicContext context);
 }
 } // namespace OnlineWallet.Web.QueryLanguage.Parser

@@ -31,18 +31,18 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 [System.CLSCompliant(false)]
 public partial class FilterParser : Parser {
 	public const int
-		AND=1, OR=2, WORD=3, WHITESPACE=4;
+		AND=1, OR=2, COMPARISON=3, STRING=4, WORD=5, WHITESPACE=6;
 	public const int
 		RULE_filter = 0, RULE_primary = 1, RULE_andTerm = 2, RULE_orTerm = 3, 
-		RULE_searchTerm = 4;
+		RULE_comparison = 4, RULE_atomic = 5;
 	public static readonly string[] ruleNames = {
-		"filter", "primary", "andTerm", "orTerm", "searchTerm"
+		"filter", "primary", "andTerm", "orTerm", "comparison", "atomic"
 	};
 
 	private static readonly string[] _LiteralNames = {
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "AND", "OR", "WORD", "WHITESPACE"
+		null, "AND", "OR", "COMPARISON", "STRING", "WORD", "WHITESPACE"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -126,8 +126,8 @@ public partial class FilterParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 10; primary();
-			State = 11; Match(Eof);
+			State = 12; primary();
+			State = 13; Match(Eof);
 			}
 		}
 		catch (RecognitionException re) {
@@ -176,19 +176,19 @@ public partial class FilterParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 14;
+			State = 16;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
 			do {
 				{
 				{
-				State = 13; andTerm();
+				State = 15; andTerm();
 				}
 				}
-				State = 16;
+				State = 18;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
-			} while ( _la==WORD );
+			} while ( _la==STRING || _la==WORD );
 			}
 		}
 		catch (RecognitionException re) {
@@ -241,18 +241,18 @@ public partial class FilterParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 18; orTerm();
-			State = 23;
+			State = 20; orTerm();
+			State = 25;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
 			while (_la==AND) {
 				{
 				{
-				State = 19; Match(AND);
-				State = 20; orTerm();
+				State = 21; Match(AND);
+				State = 22; orTerm();
 				}
 				}
-				State = 25;
+				State = 27;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
 			}
@@ -270,11 +270,11 @@ public partial class FilterParser : Parser {
 	}
 
 	public partial class OrTermContext : ParserRuleContext {
-		public SearchTermContext[] searchTerm() {
-			return GetRuleContexts<SearchTermContext>();
+		public ComparisonContext[] comparison() {
+			return GetRuleContexts<ComparisonContext>();
 		}
-		public SearchTermContext searchTerm(int i) {
-			return GetRuleContext<SearchTermContext>(i);
+		public ComparisonContext comparison(int i) {
+			return GetRuleContext<ComparisonContext>(i);
 		}
 		public ITerminalNode[] OR() { return GetTokens(FilterParser.OR); }
 		public ITerminalNode OR(int i) {
@@ -308,18 +308,18 @@ public partial class FilterParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 26; searchTerm();
-			State = 31;
+			State = 28; comparison();
+			State = 33;
 			_errHandler.Sync(this);
 			_la = _input.La(1);
 			while (_la==OR) {
 				{
 				{
-				State = 27; Match(OR);
-				State = 28; searchTerm();
+				State = 29; Match(OR);
+				State = 30; comparison();
 				}
 				}
-				State = 33;
+				State = 35;
 				_errHandler.Sync(this);
 				_la = _input.La(1);
 			}
@@ -336,36 +336,109 @@ public partial class FilterParser : Parser {
 		return _localctx;
 	}
 
-	public partial class SearchTermContext : ParserRuleContext {
-		public ITerminalNode WORD() { return GetToken(FilterParser.WORD, 0); }
-		public SearchTermContext(ParserRuleContext parent, int invokingState)
+	public partial class ComparisonContext : ParserRuleContext {
+		public AtomicContext[] atomic() {
+			return GetRuleContexts<AtomicContext>();
+		}
+		public AtomicContext atomic(int i) {
+			return GetRuleContext<AtomicContext>(i);
+		}
+		public ITerminalNode COMPARISON() { return GetToken(FilterParser.COMPARISON, 0); }
+		public ComparisonContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_searchTerm; } }
+		public override int RuleIndex { get { return RULE_comparison; } }
 		public override void EnterRule(IParseTreeListener listener) {
 			IFilterParserListener typedListener = listener as IFilterParserListener;
-			if (typedListener != null) typedListener.EnterSearchTerm(this);
+			if (typedListener != null) typedListener.EnterComparison(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
 			IFilterParserListener typedListener = listener as IFilterParserListener;
-			if (typedListener != null) typedListener.ExitSearchTerm(this);
+			if (typedListener != null) typedListener.ExitComparison(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IFilterParserVisitor<TResult> typedVisitor = visitor as IFilterParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSearchTerm(this);
+			if (typedVisitor != null) return typedVisitor.VisitComparison(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public SearchTermContext searchTerm() {
-		SearchTermContext _localctx = new SearchTermContext(_ctx, State);
-		EnterRule(_localctx, 8, RULE_searchTerm);
+	public ComparisonContext comparison() {
+		ComparisonContext _localctx = new ComparisonContext(_ctx, State);
+		EnterRule(_localctx, 8, RULE_comparison);
+		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 34; Match(WORD);
+			State = 36; atomic();
+			State = 39;
+			_errHandler.Sync(this);
+			_la = _input.La(1);
+			if (_la==COMPARISON) {
+				{
+				State = 37; Match(COMPARISON);
+				State = 38; atomic();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.ReportError(this, re);
+			_errHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class AtomicContext : ParserRuleContext {
+		public ITerminalNode STRING() { return GetToken(FilterParser.STRING, 0); }
+		public ITerminalNode WORD() { return GetToken(FilterParser.WORD, 0); }
+		public AtomicContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_atomic; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IFilterParserListener typedListener = listener as IFilterParserListener;
+			if (typedListener != null) typedListener.EnterAtomic(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IFilterParserListener typedListener = listener as IFilterParserListener;
+			if (typedListener != null) typedListener.ExitAtomic(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IFilterParserVisitor<TResult> typedVisitor = visitor as IFilterParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAtomic(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public AtomicContext atomic() {
+		AtomicContext _localctx = new AtomicContext(_ctx, State);
+		EnterRule(_localctx, 10, RULE_atomic);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 41;
+			_la = _input.La(1);
+			if ( !(_la==STRING || _la==WORD) ) {
+			_errHandler.RecoverInline(this);
+			} else {
+				if (_input.La(1) == TokenConstants.Eof) {
+					matchedEOF = true;
+				}
+
+				_errHandler.ReportMatch(this);
+				Consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -380,20 +453,22 @@ public partial class FilterParser : Parser {
 	}
 
 	public static readonly string _serializedATN =
-		"\x3\xAF6F\x8320\x479D\xB75C\x4880\x1605\x191C\xAB37\x3\x6\'\x4\x2\t\x2"+
-		"\x4\x3\t\x3\x4\x4\t\x4\x4\x5\t\x5\x4\x6\t\x6\x3\x2\x3\x2\x3\x2\x3\x3\x6"+
-		"\x3\x11\n\x3\r\x3\xE\x3\x12\x3\x4\x3\x4\x3\x4\a\x4\x18\n\x4\f\x4\xE\x4"+
-		"\x1B\v\x4\x3\x5\x3\x5\x3\x5\a\x5 \n\x5\f\x5\xE\x5#\v\x5\x3\x6\x3\x6\x3"+
-		"\x6\x2\x2\x2\a\x2\x2\x4\x2\x6\x2\b\x2\n\x2\x2\x2$\x2\f\x3\x2\x2\x2\x4"+
-		"\x10\x3\x2\x2\x2\x6\x14\x3\x2\x2\x2\b\x1C\x3\x2\x2\x2\n$\x3\x2\x2\x2\f"+
-		"\r\x5\x4\x3\x2\r\xE\a\x2\x2\x3\xE\x3\x3\x2\x2\x2\xF\x11\x5\x6\x4\x2\x10"+
-		"\xF\x3\x2\x2\x2\x11\x12\x3\x2\x2\x2\x12\x10\x3\x2\x2\x2\x12\x13\x3\x2"+
-		"\x2\x2\x13\x5\x3\x2\x2\x2\x14\x19\x5\b\x5\x2\x15\x16\a\x3\x2\x2\x16\x18"+
-		"\x5\b\x5\x2\x17\x15\x3\x2\x2\x2\x18\x1B\x3\x2\x2\x2\x19\x17\x3\x2\x2\x2"+
-		"\x19\x1A\x3\x2\x2\x2\x1A\a\x3\x2\x2\x2\x1B\x19\x3\x2\x2\x2\x1C!\x5\n\x6"+
-		"\x2\x1D\x1E\a\x4\x2\x2\x1E \x5\n\x6\x2\x1F\x1D\x3\x2\x2\x2 #\x3\x2\x2"+
-		"\x2!\x1F\x3\x2\x2\x2!\"\x3\x2\x2\x2\"\t\x3\x2\x2\x2#!\x3\x2\x2\x2$%\a"+
-		"\x5\x2\x2%\v\x3\x2\x2\x2\x5\x12\x19!";
+		"\x3\xAF6F\x8320\x479D\xB75C\x4880\x1605\x191C\xAB37\x3\b.\x4\x2\t\x2\x4"+
+		"\x3\t\x3\x4\x4\t\x4\x4\x5\t\x5\x4\x6\t\x6\x4\a\t\a\x3\x2\x3\x2\x3\x2\x3"+
+		"\x3\x6\x3\x13\n\x3\r\x3\xE\x3\x14\x3\x4\x3\x4\x3\x4\a\x4\x1A\n\x4\f\x4"+
+		"\xE\x4\x1D\v\x4\x3\x5\x3\x5\x3\x5\a\x5\"\n\x5\f\x5\xE\x5%\v\x5\x3\x6\x3"+
+		"\x6\x3\x6\x5\x6*\n\x6\x3\a\x3\a\x3\a\x2\x2\x2\b\x2\x2\x4\x2\x6\x2\b\x2"+
+		"\n\x2\f\x2\x2\x3\x3\x2\x6\a+\x2\xE\x3\x2\x2\x2\x4\x12\x3\x2\x2\x2\x6\x16"+
+		"\x3\x2\x2\x2\b\x1E\x3\x2\x2\x2\n&\x3\x2\x2\x2\f+\x3\x2\x2\x2\xE\xF\x5"+
+		"\x4\x3\x2\xF\x10\a\x2\x2\x3\x10\x3\x3\x2\x2\x2\x11\x13\x5\x6\x4\x2\x12"+
+		"\x11\x3\x2\x2\x2\x13\x14\x3\x2\x2\x2\x14\x12\x3\x2\x2\x2\x14\x15\x3\x2"+
+		"\x2\x2\x15\x5\x3\x2\x2\x2\x16\x1B\x5\b\x5\x2\x17\x18\a\x3\x2\x2\x18\x1A"+
+		"\x5\b\x5\x2\x19\x17\x3\x2\x2\x2\x1A\x1D\x3\x2\x2\x2\x1B\x19\x3\x2\x2\x2"+
+		"\x1B\x1C\x3\x2\x2\x2\x1C\a\x3\x2\x2\x2\x1D\x1B\x3\x2\x2\x2\x1E#\x5\n\x6"+
+		"\x2\x1F \a\x4\x2\x2 \"\x5\n\x6\x2!\x1F\x3\x2\x2\x2\"%\x3\x2\x2\x2#!\x3"+
+		"\x2\x2\x2#$\x3\x2\x2\x2$\t\x3\x2\x2\x2%#\x3\x2\x2\x2&)\x5\f\a\x2\'(\a"+
+		"\x5\x2\x2(*\x5\f\a\x2)\'\x3\x2\x2\x2)*\x3\x2\x2\x2*\v\x3\x2\x2\x2+,\t"+
+		"\x2\x2\x2,\r\x3\x2\x2\x2\x6\x14\x1B#)";
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }

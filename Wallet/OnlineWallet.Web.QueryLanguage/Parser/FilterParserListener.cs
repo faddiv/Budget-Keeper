@@ -76,14 +76,25 @@ public interface IFilterParserListener : IParseTreeListener {
 	void ExitOrTerm([NotNull] FilterParser.OrTermContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="FilterParser.searchTerm"/>.
+	/// Enter a parse tree produced by <see cref="FilterParser.comparison"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterSearchTerm([NotNull] FilterParser.SearchTermContext context);
+	void EnterComparison([NotNull] FilterParser.ComparisonContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="FilterParser.searchTerm"/>.
+	/// Exit a parse tree produced by <see cref="FilterParser.comparison"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitSearchTerm([NotNull] FilterParser.SearchTermContext context);
+	void ExitComparison([NotNull] FilterParser.ComparisonContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="FilterParser.atomic"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAtomic([NotNull] FilterParser.AtomicContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="FilterParser.atomic"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAtomic([NotNull] FilterParser.AtomicContext context);
 }
 } // namespace OnlineWallet.Web.QueryLanguage.Parser

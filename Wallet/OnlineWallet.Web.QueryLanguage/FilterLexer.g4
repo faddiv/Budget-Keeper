@@ -14,6 +14,29 @@ OR
 	: O R
 	;
 
+COMPARISON
+	: ('<='|'>='|'=='|'!='|'<'|'>')
+	;
+
+fragment ESCAPED_CHARACTER 
+	: '\\\''
+	| '\\"'
+	| '\\n'
+	| '\\f'
+	| '\\r'
+	| '\\t'
+	| '\\v'
+	;
+
+fragment SPECIAL_CHARACTER
+	: ESCAPED_CHARACTER
+	/*| UNICODE_CHARACTER*/
+	;
+	
+STRING
+	: '"' (~["\\] | SPECIAL_CHARACTER)* '"' /*'*/
+	;
+
 WORD
 	: [a-zA-Z0-9]+
 	;
@@ -45,27 +68,14 @@ fragment X:('x'|'X');
 fragment Y:('y'|'Y');
 fragment Z:('z'|'Z');
 
-/*fragment ESCAPED_CHARACTER 
-	: '\\\''
-	| '\\"'
-	| '\\n'
-	| '\\f'
-	| '\\r'
-	| '\\t'
-	| '\\v'
+/*
+	
+fragment HEX_DIGIT
+	: ('a','b','c','d','e','f','A','B','C','D','E','F')
 	;
 
 fragment UNICODE_CHARACTER
 	: '\\u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
-	;
-
-fragment SPECIAL_CHARACTER
-	: ESCAPED_CHARACTER
-	| UNICODE_CHARACTER
-	;
-	
-fragment STRING
-	: '"' (~["\\] | SPECIAL_CHARACTER)* '"'
 	;
 
 fragment SINGLE_QUOTE_STRING

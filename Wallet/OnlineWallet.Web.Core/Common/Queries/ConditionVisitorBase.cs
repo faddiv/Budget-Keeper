@@ -22,6 +22,10 @@ namespace OnlineWallet.Web.Common.Queries
         {
             if (condition == null)
                 return null;
+            if (condition is ComparisonCondition comparisonCondition)
+            {
+                return VisitComparisonCondition(comparisonCondition, par);
+            }
             if (condition is SearchTermCondition searchTermCondition)
             {
                 return VisitSearchTermConditionCore(searchTermCondition, par);
@@ -31,6 +35,47 @@ namespace OnlineWallet.Web.Common.Queries
                 return VisitLogicalOperatorCondition(logicalOperatorCondition, par);
             }
             throw new Exception();
+        }
+
+        protected Expression VisitComparisonCondition(ComparisonCondition comparison, ParameterExpression par)
+        {
+            var field = comparison.Field as FieldCondition ?? comparison.Literal as FieldCondition;
+            if (field == null) throw new Exception($"No field in expression: {comparison}");
+            var property = par.Type.GetProperty(field.FieldName);
+            if(property == null) throw new Exception($"Unknown field: {field}");
+            var literal = comparison.Field as SearchTermCondition ?? comparison.Literal as SearchTermCondition;
+            if (literal == null) throw new Exception($"No literal in expression: {comparison}");
+            var propertyGetter = Expression.MakeMemberAccess(par, property);
+            object value = literal.SearchTerm;
+            if(propertyGetter.Type != typeof(string))
+            {
+                value = Convert.ChangeType(value, propertyGetter.Type);
+            }
+            var valueExpr = Expression.Constant(value);
+            switch (comparison.Operator)
+            {
+                case ComparisonOperator.Equal:
+                    return Expression.Equal(propertyGetter, valueExpr);
+                    break;
+                case ComparisonOperator.NotEqual:
+                    return Expression.NotEqual(propertyGetter, valueExpr);
+                    break;
+                case ComparisonOperator.GreaterThan:
+                    return Expression.GreaterThan(propertyGetter, valueExpr);
+                    break;
+                case ComparisonOperator.LessThan:
+                    return Expression.LessThan(propertyGetter, valueExpr);
+                    break;
+                case ComparisonOperator.GreaterOrEqual:
+                    return Expression.GreaterThanOrEqual(propertyGetter, valueExpr);
+                    break;
+                case ComparisonOperator.LessOrEqual:
+                    return Expression.LessThanOrEqual(propertyGetter, valueExpr);
+                    break;
+                default:
+                    throw new Exception($"Unknown comparison in expression: {comparison}");
+                    break;
+            }
         }
 
         protected virtual Expression VisitLogicalOperatorCondition(LogicalOperatorCondition condition,

@@ -8,6 +8,7 @@ import { TransactionViewModel } from "common/models";
 export namespace TransactionTable {
   export interface Props {
     items: TransactionViewModel[];
+    wallets: Wallet[];
     changedItems?: TransactionViewModel[];
     rowColor?: ITransactionTableExtFunction;
     update(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
@@ -15,7 +16,6 @@ export namespace TransactionTable {
   }
 
   export interface State {
-    wallets: Wallet[];
   }
 }
 
@@ -26,15 +26,6 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
     this.state = {
       wallets: []
     };
-  }
-
-  componentDidMount() {
-    walletService.getAll()
-      .then(wallets => {
-        this.setState({
-          wallets: wallets
-        });
-      });
   }
 
   @bind
@@ -69,7 +60,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
             <TransactionTableRow
               key={item.key}
               item={item}
-              wallets={this.state.wallets}
+              wallets={this.props.wallets}
               deleteTransaction={this.deleteTransaction}
               saveTransaction={this.saveTransaction}
               rowColor={this.props.rowColor} />)}

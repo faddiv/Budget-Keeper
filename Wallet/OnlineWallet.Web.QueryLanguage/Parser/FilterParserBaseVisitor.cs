@@ -79,7 +79,7 @@ public partial class FilterParserBaseVisitor<Result> : AbstractParseTreeVisitor<
 	public virtual Result VisitOrTerm([NotNull] FilterParser.OrTermContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="FilterParser.searchTerm"/>.
+	/// Visit a parse tree produced by <see cref="FilterParser.comparison"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -87,6 +87,17 @@ public partial class FilterParserBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSearchTerm([NotNull] FilterParser.SearchTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitComparison([NotNull] FilterParser.ComparisonContext context) { return VisitChildren(context); }
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="FilterParser.atomic"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitAtomic([NotNull] FilterParser.AtomicContext context) { return VisitChildren(context); }
 }
 } // namespace OnlineWallet.Web.QueryLanguage.Parser

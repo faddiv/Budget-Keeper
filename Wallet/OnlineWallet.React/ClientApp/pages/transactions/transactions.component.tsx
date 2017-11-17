@@ -1,16 +1,18 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
-import { Transaction, transactionService, walletService } from 'walletApi';
+import { Transaction, transactionService, walletService, Wallet } from 'walletApi';
 import { bind, ListHelpers } from 'walletCommon';
 import { Layout } from 'layout';
 import { TransactionViewModel, mapTransactionViewModel, mapTransaction } from 'common/models';
 import { YearSelector } from 'pages/transactions/yearSelector';
 import { MonthSelector } from 'pages/transactions/monthSelector';
+import { connect } from 'react-redux';
+import { RootState } from 'reducers';
 
 export namespace Transactions {
     export interface Props {
-
+        wallets: Wallet[];
     }
 
     export interface State {
@@ -23,6 +25,7 @@ export namespace Transactions {
     }
 }
 
+@connect(mapStateToProps)
 export class Transactions extends React.Component<Transactions.Props, Transactions.State> {
 
     constructor(props) {
@@ -38,13 +41,8 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         };
     }
 
-    async componentDidMount() {
-
-        var [transactions, wallets] = await Promise.all([transactionService.fetch(), walletService.getAll()]);
-        var model = mapTransactionViewModel(transactions, wallets);
-        this.setState({
-            items: model
-        });
+    componentDidMount() {
+        this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
     }
 
     @bind
@@ -91,7 +89,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         this.setState({
             selectedYear: year
         }, () => {
-            this.dateSelected(this.state.selectedYear,this.state.selectedMonth);
+            this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
         });
     }
 
@@ -100,7 +98,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         this.setState({
             selectedMonth: month
         }, () => {
-            this.dateSelected(this.state.selectedYear,this.state.selectedMonth);
+            this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
         });
     }
 
@@ -108,16 +106,16 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         const start = moment(year + "-" + month + "-01");
         const end = moment(start).endOf("month");
         const result = await transactionService.fetch({
-            search: `createdAt >= "${start.format("YYYY-MM-DD")}" And createdAt <= "${start.format("YYYY-MM-DD")}"`
+            search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`
         });
-        var wallets = await walletService.getAll();
         this.setState({
-            items: mapTransactionViewModel(result, wallets)
+            items: mapTransactionViewModel(result, this.props.wallets)
         });
     }
 
     render() {
         const { maxYear, selectedYear, selectedMonth, items, changedItems } = this.state;
+        const { wallets } = this.props;
         return (
             <Layout>
                 <form>
@@ -133,10 +131,16 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                         </div>
                     </div>
                 </form>
-                <TransactionTable changedItems={changedItems}
+                <TransactionTable changedItems={changedItems} wallets={wallets}
                     items={items} rowColor={getDirectionColoring}
                     deleted={this.deleteItem} update={this.update} />
             </Layout>
         );
     }
+}
+
+function mapStateToProps(state: RootState, ownProps: any) {
+    return {
+        wallets: state.wallets
+    };
 }

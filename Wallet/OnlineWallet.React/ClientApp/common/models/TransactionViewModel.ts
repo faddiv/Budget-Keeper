@@ -54,7 +54,7 @@ export function mapTransactionViewModel(transactions: Transaction[], wallets: Wa
         price: transaction.value ? transaction.value.toString() : "",
         transactionId: transaction.transactionId,
         walletId: transaction.walletId,
-        walletName: getWalletNameById(transaction.transactionId, wallets),
+        walletName: getWalletNameById(transaction.walletId, wallets),
         key: transaction.transactionId,
     });
 }

@@ -185,7 +185,9 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     <button type="submit" className="btn btn-primary">Add</button>
                     <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>
                 </form>
-                <TransactionTable items={this.state.items} deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
+                <TransactionTable 
+                    items={this.state.items} wallets={this.props.wallets}
+                    deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
             </Layout>
         );
     }

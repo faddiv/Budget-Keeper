@@ -76,8 +76,31 @@ namespace OnlineWallet.Web.QueryLanguage
             var condition = QueryLanguageParser.ParseFilter("Valami");
             condition.Should().NotBeNull();
             condition.Should().BeOfType<SearchTermCondition>();
-            var term = (SearchTermCondition) condition;
+            var term = (SearchTermCondition)condition;
             term.SearchTerm.Should().Be("Valami");
+        }
+
+        [Fact(DisplayName = "CanParse words starting with and or or")]
+        public void CanParse_words_starting_with_and_or_or()
+        {
+            var condition = QueryLanguageParser.ParseFilter("ornament Or android");
+            condition.Should().NotBeNull();
+            condition.Should().BeOfType<LogicalOperatorCondition>();
+            condition.ToString().Should().Be("ornament Or android");
+        }
+
+        [Theory(DisplayName = "Can parse comparison operators")]
+        [InlineData("exp1 > exp2", "exp1 > exp2")]
+        [InlineData("exp1 < exp2", "exp1 < exp2")]
+        [InlineData("exp1 >= exp2", "exp1 >= exp2")]
+        [InlineData("exp1 <= exp2", "exp1 <= exp2")]
+        [InlineData("exp1 == exp2", "exp1 == exp2")]
+        [InlineData("exp1 != exp2", "exp1 != exp2")]
+        public void Can_parse_comparison_operators(string searchTerm, string expected)
+        {
+            var condition = QueryLanguageParser.ParseFilter(searchTerm);
+            condition.Should().NotBeNull();
+            condition.ToString().Should().Be(expected);
         }
 
         #endregion
