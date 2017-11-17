@@ -1,5 +1,8 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import { bindActionCreators } from 'redux';
+
+import * as AlertsActions from "actions/alerts"
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
 import { Transaction, transactionService, walletService, Wallet } from 'walletApi';
 import { bind, ListHelpers } from 'walletCommon';
@@ -13,6 +16,7 @@ import { RootState } from 'reducers';
 export namespace Transactions {
     export interface Props {
         wallets: Wallet[];
+        actions?: typeof AlertsActions,
     }
 
     export interface State {
@@ -25,7 +29,7 @@ export namespace Transactions {
     }
 }
 
-@connect(mapStateToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 export class Transactions extends React.Component<Transactions.Props, Transactions.State> {
 
     constructor(props) {
@@ -41,16 +45,24 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         };
     }
 
+    get alertsService() {
+        return this.props.actions;
+    }
+
     componentDidMount() {
+        this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
+    }
+
+    componentWillReceiveProps() {
         this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
     }
 
     @bind
     async save() {
         try {
-            //this.alertsService.dismissAll();
+            this.alertsService.dismissAllAlert();
             if (this.state.changedItems.length === 0 && this.state.deletedItems.length === 0) {
-                //this.alertsService.warning("No data has changed.");
+                this.alertsService.showAlert({ type: "warning", message: "No data has changed." });
                 return;
             }
             var transactions = mapTransaction(this.state.changedItems);
@@ -59,9 +71,9 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                 changedItems: [],
                 deletedItems: []
             });
-            //this.alertsService.success("Changes saved successfully.");
+            this.alertsService.showAlert({ type: "success", message: "Changes saved successfully." });
         } catch (error) {
-            //this.alertsService.error(error);
+            this.alertsService.showAlert({ type: "danger", message: error });
         }
     }
 
@@ -142,5 +154,11 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
 function mapStateToProps(state: RootState, ownProps: any) {
     return {
         wallets: state.wallets
+    };
+}
+
+function mapDispatchToProps(dispatch, ownProps: any) {
+    return {
+        actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }
