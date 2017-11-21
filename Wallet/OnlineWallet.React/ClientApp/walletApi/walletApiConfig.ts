@@ -1,18 +1,18 @@
 export var walletApiConfig = {
     baseUrl: "http://localhost:56491",
-    jsonRequestConfig(data:any, method: "PUT" | "POST" | "DELETE"): RequestInit {
+    jsonRequestConfig(data: any, method: "PUT" | "POST" | "DELETE"): RequestInit {
         return {
             method: method,
             mode: "cors",
-            headers: {
+            headers: new Headers({
                 "Content-Type": "text/json;charset=UTF-8"
-            },
+            }),
             body: JSON.stringify(data)
         };
     }
 }
 
-export function ThenJsonGenerator<T>() : (response: Response) => Promise<T> {
+export function ThenJsonGenerator<T>(): (response: Response) => Promise<T> {
     return response => {
         if (response.ok) {
             return <Promise<T>>response.json();
