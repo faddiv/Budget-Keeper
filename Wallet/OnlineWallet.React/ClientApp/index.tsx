@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
-import { Home, Transactions, Wallets } from "pages";
+import { Home, Transactions, Wallets, ImportPage } from "pages";
 import { configureStore } from "store";
 import { loadWallets } from "actions/wallets";
 
@@ -20,6 +20,7 @@ ReactDOM.render(
             <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/transactions" component={Transactions} />
+                <Route path="/import" component={ImportPage} />
                 <Route path="/wallets" component={Wallets} />
             </Switch>
         </Router >

@@ -14,6 +14,7 @@ export class Navbar extends React.Component {
                     <ul className="navbar-nav mr-auto">
                         <MenuItem to="/" exact>Home <span className="sr-only">(current)</span></MenuItem>
                         <MenuItem to="/transactions">Transactions</MenuItem>
+                        <MenuItem to="/import">Import</MenuItem>
                         <MenuItem to="/wallets">Wallets</MenuItem>
                     </ul>
                 </div>

@@ -8,11 +8,9 @@ import { Transaction, transactionService, walletService, Wallet, BalanceInfo } f
 import { bind, ListHelpers } from 'walletCommon';
 import { Layout } from 'layout';
 import { TransactionViewModel, mapTransactionViewModel, mapTransaction } from 'common/models';
-import { YearSelector } from 'pages/transactions/yearSelector';
-import { MonthSelector } from 'pages/transactions/monthSelector';
+import { YearSelector, MonthSelector, Balance } from './subComponents';
 import { connect } from 'react-redux';
 import { RootState } from 'reducers';
-import { Balance } from './balance';
 
 export namespace Transactions {
     export interface Props {
