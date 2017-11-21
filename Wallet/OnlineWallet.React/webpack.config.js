@@ -29,7 +29,7 @@ module.exports = function (env) {
                  * default false, if true .scss and .html changes trigger reload and also triggers FULL reload.
                  */
                 watchContentBase: true,
-                port: 4200,
+                port: 4201,
                 historyApiFallback: true,
                 /**
                  * default true, opens the root url.

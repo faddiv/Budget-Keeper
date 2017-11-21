@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.4")]
-[System.CLSCompliant(false)]
 public partial class FilterParser : Parser {
 	public const int
 		AND=1, OR=2, COMPARISON=3, STRING=4, WORD=5, WHITESPACE=6;
