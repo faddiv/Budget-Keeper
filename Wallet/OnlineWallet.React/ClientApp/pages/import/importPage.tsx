@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { Layout } from 'layout';
 import { NavLink, TabPane } from 'common/tabpanel';
+import { StockTable, StockModel } from './subComponents';
 import { bind } from 'walletCommon';
+import { transactionService } from 'walletApi';
 
 export namespace ImportPage {
     export interface Props {
     }
     export interface State {
         activeTab: string;
+        stocks: StockModel[];
     }
 }
 
@@ -15,8 +18,35 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: "full"
+            activeTab: "full",
+            stocks: []
         };
+    }
+
+    async componentDidMount() {
+        var newItems = await transactionService.fetch();
+        var stocks = [];
+        const grouping: {
+            [name: string]: StockModel
+        } = {};
+        for (let index = 0; index < newItems.length; index++) {
+            const element = newItems[index];
+            if (grouping[element.name]) {
+                grouping[element.name].category = grouping[element.name].category || element.category;
+                grouping[element.name].count++;
+            } else {
+                grouping[element.name] = new StockModel(element.name, element.category, 1);
+            }
+        }
+        for (const key in grouping) {
+            if (grouping.hasOwnProperty(key)) {
+                stocks.push(grouping[key]);
+            }
+        }
+        stocks.sort((left, right) => right.count - left.count);
+        this.setState({
+            stocks: stocks
+        });
     }
 
     @bind
@@ -26,7 +56,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
         });
     }
     render() {
-        const { activeTab } = this.state;
+        const { activeTab, stocks } = this.state;
         return (
             <Layout>
                 <div className="row">
@@ -44,7 +74,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                 </ul>
                 <div className="tab-content">
                     <TabPane name="full" activeKey={activeTab}>app-paged-transaction-table</TabPane>
-                    <TabPane name="groupStock" activeKey={activeTab}>app-stock-table</TabPane>
+                    <TabPane name="groupStock" activeKey={activeTab}><StockTable stocks={stocks} /></TabPane>
                 </div>
             </Layout>
         );
