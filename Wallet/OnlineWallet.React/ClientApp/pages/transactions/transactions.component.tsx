@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import * as AlertsActions from "actions/alerts"
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
-import { Transaction, transactionService, walletService, Wallet } from 'walletApi';
+import { Transaction, transactionService, walletService, Wallet, BalanceInfo } from 'walletApi';
 import { bind, ListHelpers } from 'walletCommon';
 import { Layout } from 'layout';
 import { TransactionViewModel, mapTransactionViewModel, mapTransaction } from 'common/models';
@@ -12,6 +12,7 @@ import { YearSelector } from 'pages/transactions/yearSelector';
 import { MonthSelector } from 'pages/transactions/monthSelector';
 import { connect } from 'react-redux';
 import { RootState } from 'reducers';
+import { Balance } from './balance';
 
 export namespace Transactions {
     export interface Props {
@@ -26,6 +27,7 @@ export namespace Transactions {
         selectedYear: number;
         selectedMonth: number;
         maxYear: number;
+        balance?: BalanceInfo;
     }
 }
 
@@ -117,16 +119,19 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     private async dateSelected(year: number, month: number) {
         const start = moment(year + "-" + month + "-01");
         const end = moment(start).endOf("month");
-        const result = await transactionService.fetch({
+        var fetchTransactions = transactionService.fetch({
             search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`
         });
+        var fetchBalance = transactionService.balanceInfo(start.year(), start.month());
+        const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
         this.setState({
-            items: mapTransactionViewModel(result, this.props.wallets)
+            items: mapTransactionViewModel(transactions, this.props.wallets),
+            balance: balance
         });
     }
 
     render() {
-        const { maxYear, selectedYear, selectedMonth, items, changedItems } = this.state;
+        const { maxYear, selectedYear, selectedMonth, items, changedItems, balance } = this.state;
         const { wallets } = this.props;
         return (
             <Layout>
@@ -143,6 +148,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                         </div>
                     </div>
                 </form>
+                <Balance balance={balance} />
                 <TransactionTable changedItems={changedItems} wallets={wallets}
                     items={items} rowColor={getDirectionColoring}
                     deleted={this.deleteItem} update={this.update} />
