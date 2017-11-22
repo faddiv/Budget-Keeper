@@ -1,7 +1,7 @@
 export var walletApiConfig = {
-    baseUrl: "http://localhost:56491",
-    jsonRequestConfig(data: any, method: "PUT" | "POST" | "DELETE"): RequestInit {
-        return {
+    baseUrl: "http://localhost:56492",
+    jsonRequestConfig(data: any, method: "PUT" | "POST" | "DELETE", extra?: RequestInit): RequestInit {
+        let requestInit: RequestInit = {
             method: method,
             mode: "cors",
             headers: new Headers({
@@ -9,6 +9,10 @@ export var walletApiConfig = {
             }),
             body: JSON.stringify(data)
         };
+        if(extra) {
+            requestInit = Object.assign(requestInit, extra);
+        }
+        return requestInit;
     }
 }
 
