@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { renderRange } from './range';
+import { renderRange } from 'common/misc';
 
 interface MonthSelectorProps { year: number, month: number, onChange: (month: number) => void }
 

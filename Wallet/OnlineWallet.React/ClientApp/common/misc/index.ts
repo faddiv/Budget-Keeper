@@ -5,3 +5,5 @@ export * from "./formGroup";
 export * from "./nameInput";
 export * from "./saveCancel.component";
 export * from "./walletSelector";
+export * from "./range";
+export * from "./switchCase";
