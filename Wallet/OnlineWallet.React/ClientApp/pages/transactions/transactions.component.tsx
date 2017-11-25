@@ -118,7 +118,8 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         const start = moment(year + "-" + month + "-01");
         const end = moment(start).endOf("month");
         var fetchTransactions = transactionService.fetch({
-            search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`
+            search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`,
+            sorting: "CreatedAt asc"
         });
         var fetchBalance = transactionService.balanceInfo(start.year(), start.month());
         const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);

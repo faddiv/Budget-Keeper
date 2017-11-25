@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -7,7 +8,7 @@ import { Layout } from 'layout';
 import { NavLink, TabPane } from 'common/tabpanel';
 import { StockTable, StockModel } from './subComponents';
 import { bind, updateState, ListHelpers } from 'walletCommon';
-import { transactionService, importExportService, ExportImportRow, Wallet } from 'walletApi';
+import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from 'walletApi';
 import { TransactionTable } from 'common/transactions-view';
 import { TransactionViewModel, toDateString } from 'common/models';
 import { RootState } from 'reducers';
@@ -86,13 +87,12 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
         const { actions } = this.props;
         event.preventDefault();
         actions.dismissAllAlert();
-        if(!file || !file.length) 
-        {
-            actions.showAlert({type:"danger", message:"Please select a file"});
+        if (!file || !file.length) {
+            actions.showAlert({ type: "danger", message: "Please select a file" });
         }
         var transactions = await importExportService.uploadTransactions(file[0]);
         this.setState({
-            transactions : transactions.map((tr, index) => {
+            transactions: transactions.map((tr, index) => {
                 return {
                     category: tr.category,
                     comment: tr.comment,
@@ -103,20 +103,45 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                     price: tr.amount.toString(10),
                     transactionId: tr.matchingId,
                     walletId: tr.source === "Cash" ? 1 : 2,
-                    walletName : tr.source
+                    walletName: tr.source
                 } as TransactionViewModel;
             })
         });
         this.createStockGroups(transactions);
     }
-    
+
+    @bind
+    async save() {
+        const { transactions } = this.state;
+        const { actions } = this.props;
+        actions.dismissAllAlert();
+        var serverTransactions = transactions.map(tr => {
+            return {
+                category: tr.category,
+                comment: tr.comment,
+                createdAt: moment(tr.createdAt).toDate(),
+                direction: tr.direction,
+                name: tr.name,
+                transactionId: tr.transactionId,
+                value: parseInt(tr.price, 10),
+                walletId: tr.walletId
+            } as Transaction;
+        });
+        await transactionService.batchUpdate(serverTransactions);
+        this.setState({
+            transactions: [],
+            stocks: [],
+            activeTab: "full"
+        });
+    }
+
     @bind
     transactionUpdated(items: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
         this.setState({
             transactions: items
         });
     }
-    
+
     @bind
     transactionDeleted(item: TransactionViewModel) {
         this.setState((prevState, props) => {
@@ -128,10 +153,11 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
 
     @bind
     rowColoring(item: TransactionViewModel): string {
-        if(item.transactionId) {
+        if (item.transactionId) {
             return "table-info";
         }
     }
+
     render() {
         const { activeTab, stocks, transactions } = this.state;
         const { wallets } = this.props;
@@ -144,7 +170,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                             <input type="file" id="file" name="file" className="form-control" />
                         </div>
                         <button type="submit" className="btn btn-primary">Upload</button>
-                        <button type="button" className="btn btn-success">Save</button>
+                        <button type="button" className="btn btn-success" onClick={this.save}>Save</button>
                     </form>
                 </div>
                 <div className="row">
@@ -159,9 +185,9 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                 </ul>
                 <div className="tab-content">
                     <TabPane name="full" activeKey={activeTab}>
-                        <TransactionTable items={transactions} wallets={wallets} 
-                            update={this.transactionUpdated} deleted={this.transactionDeleted} 
-                            rowColor={this.rowColoring}/>
+                        <TransactionTable items={transactions} wallets={wallets}
+                            update={this.transactionUpdated} deleted={this.transactionDeleted}
+                            rowColor={this.rowColoring} />
                     </TabPane>
                     <TabPane name="groupStock" activeKey={activeTab}><StockTable stocks={stocks} /></TabPane>
                 </div>
