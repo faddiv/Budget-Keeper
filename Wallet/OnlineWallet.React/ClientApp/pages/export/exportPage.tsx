@@ -5,6 +5,7 @@ import { renderRange, switchCase } from 'common/misc';
 import { bind, updateState } from 'walletCommon';
 import { dateFormat } from 'common/models';
 import { Layout } from 'layout';
+import { importExportService } from 'walletApi';
 
 export namespace ExportPage {
     export interface Props {
@@ -41,10 +42,29 @@ export class ExportPage extends React.Component<ExportPage.Props, ExportPage.Sta
     }
 
     @bind
+    export(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const { file } = this.state;
+        const { rangeFrom, rangeTo } = this.getRangeSelection();
+        importExportService.exportRange(rangeFrom, rangeTo, file);
+    }
+
+    getRangeSelection() {
+        let { rangeFrom, rangeTo, rangeType, month, year } = this.state;
+        if (rangeType === "1") {
+            const from = moment([parseInt(year, 10), parseInt(month, 10) - 1, 1]);
+            rangeFrom = from.format(dateFormat);
+            rangeTo = from.endOf("month").format(dateFormat);
+        }
+        return { rangeFrom, rangeTo };
+    }
+
+    @bind
     handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
         var state = updateState(event);
         this.setState(state);
     }
+
     @bind
     renderYearMonthSelector() {
         const { month, year } = this.state;
@@ -88,7 +108,7 @@ export class ExportPage extends React.Component<ExportPage.Props, ExportPage.Sta
         const { rangeType, file } = this.state;
         return (
             <Layout>
-                <form onChange={this.handleInputChange}>
+                <form onChange={this.handleInputChange} onSubmit={this.export}>
                     <div className="form-group row">
                         <label htmlFor="file" className="col-sm-2 col-form-label">Export file</label>
                         <div className="col-sm-10">
