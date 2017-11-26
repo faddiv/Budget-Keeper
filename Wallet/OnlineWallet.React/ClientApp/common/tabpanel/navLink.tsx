@@ -6,7 +6,7 @@ interface NavLinkProps {
     onActivate: (key: string) => void
 }
 
-const NavLink: React.SFC<NavLinkProps> = ({ name, activeKey, onActivate, ...rest }) => {
+export const NavLink: React.SFC<NavLinkProps> = ({ name, activeKey, onActivate, ...rest }) => {
     var className = ["nav-link"];
     const isActive = name === activeKey;
     if (isActive) {
@@ -16,5 +16,3 @@ const NavLink: React.SFC<NavLinkProps> = ({ name, activeKey, onActivate, ...rest
         <li className="nav-item"><a className={className.join(' ')} onClick={() => { !isActive && onActivate(name) }}>{rest.children}</a></li>
     );
 };
-
-export { NavLink };

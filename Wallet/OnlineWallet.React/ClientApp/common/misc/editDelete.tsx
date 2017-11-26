@@ -5,7 +5,7 @@ interface EditDeleteProps {
     delete_: () => void
 }
 
-const EditDelete: React.SFC<EditDeleteProps> = ({ edit, delete_, ...rest }) => {
+export const EditDelete: React.SFC<EditDeleteProps> = ({ edit, delete_, ...rest }) => {
     return (
         <div className="cmd-btn-line">
             <button className="btn btn-primary btn-sm" type="button" onClick={edit}>
@@ -17,6 +17,3 @@ const EditDelete: React.SFC<EditDeleteProps> = ({ edit, delete_, ...rest }) => {
         </div>
     );
 };
-
-EditDelete.defaultProps = {};
-export { EditDelete };

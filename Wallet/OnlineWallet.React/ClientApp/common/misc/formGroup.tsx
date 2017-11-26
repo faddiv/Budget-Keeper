@@ -13,7 +13,7 @@ interface FormGroupProps {
     onChange?: () => void
 }
 
-const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, ...rest }) => {
+export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, ...rest }) => {
     id = id || name;
     return (
         <div className="form-group row">
@@ -29,4 +29,3 @@ FormGroup.defaultProps = {
     type: "text",
     onChange: () => { }
 };
-export { FormGroup };

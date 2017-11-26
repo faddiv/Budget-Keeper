@@ -14,7 +14,7 @@ interface MenuItemProps {
     ariaCurrent?: boolean
 }
 
-const MenuItem: React.SFC<MenuItemProps> = ({ to, strict, activeClassName, ariaCurrent,
+export const MenuItem: React.SFC<MenuItemProps> = ({ to, strict, activeClassName, ariaCurrent,
     exact, getIsActive, linkClassName, linkStyles, location, ...rest }) => {
     const path = typeof to === 'object' ? to.pathname : to
 
@@ -50,5 +50,3 @@ MenuItem.defaultProps = {
     activeClassName: "active",
     linkClassName: "nav-link"
 };
-
-export { MenuItem };

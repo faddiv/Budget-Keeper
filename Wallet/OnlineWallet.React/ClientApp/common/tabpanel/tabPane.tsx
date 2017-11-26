@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface TabPaneProps { name, activeKey }
 
-const TabPane: React.SFC<TabPaneProps> = ({ name, activeKey, ...rest }) => {
+export const TabPane: React.SFC<TabPaneProps> = ({ name, activeKey, ...rest }) => {
     var className = ["tab-pane", "fade"];
     const isActive = name === activeKey;
     if (isActive) {
@@ -13,5 +13,3 @@ const TabPane: React.SFC<TabPaneProps> = ({ name, activeKey, ...rest }) => {
         <div className={className.join(' ')} role="tabpanel" aria-labelledby="home-tab">{rest.children}</div>
     );
 };
-
-export { TabPane };

@@ -1,2 +1,2 @@
 export * from "./models";
-export * from "./transaction-table/transaction-table.component";
+export * from "./transaction-table/transaction-table";

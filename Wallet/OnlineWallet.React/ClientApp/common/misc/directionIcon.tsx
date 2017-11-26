@@ -3,7 +3,7 @@ import { MoneyDirection } from 'walletApi';
 
 interface DirectionIconProps { direction: MoneyDirection }
 
-const DirectionIcon: React.SFC<DirectionIconProps> = ({ direction, ...rest }) => {
+export const DirectionIcon: React.SFC<DirectionIconProps> = ({ direction, ...rest }) => {
     return (
         <span className={directionCssClass(direction)}></span>
     );
@@ -19,5 +19,3 @@ function directionCssClass(direction: MoneyDirection) {
             return "fa fa-bookmark";
     }
 }
-
-export { DirectionIcon };
