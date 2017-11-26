@@ -41,6 +41,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
   }
 
   render() {
+    const { items, wallets, rowColor } = this.props;
     return (
       <table className="table transactions">
         <thead>
@@ -56,14 +57,14 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
           </tr>
         </thead>
         <tbody>
-          {this.props.items.map(item =>
+          {items.map(item =>
             <TransactionTableRow
               key={item.key}
               item={item}
-              wallets={this.props.wallets}
+              wallets={wallets}
               deleteTransaction={this.deleteTransaction}
               saveTransaction={this.saveTransaction}
-              rowColor={this.props.rowColor} />)}
+              rowColor={rowColor} />)}
         </tbody>
       </table>
     );

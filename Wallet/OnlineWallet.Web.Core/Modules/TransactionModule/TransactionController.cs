@@ -62,8 +62,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             [FromBody, Required] TransactionOperationBatch model,
             CancellationToken token)
         {
-            if (!ModelState.IsValid)
+            if (model == null || !ModelState.IsValid)
             {
+                //Model can be null when there was a conversion exception in the incomming model.
+                //for example TransactionId is int but the incomming data is null.
                 return ValidationError();
             }
             model.Save = model.Save ?? new List<Transaction>();

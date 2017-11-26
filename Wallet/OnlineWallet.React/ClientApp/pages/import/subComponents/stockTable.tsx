@@ -15,8 +15,8 @@ const StockTable: React.SFC<StockTableProps> = ({ stocks, ...rest }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {stocks.map(item =>
-                        <tr>
+                    {stocks.map((item, index) =>
+                        <tr key={index}>
                             <td>{item.name}</td>
                             <td>{item.category}</td>
                             <td>{item.count}</td>

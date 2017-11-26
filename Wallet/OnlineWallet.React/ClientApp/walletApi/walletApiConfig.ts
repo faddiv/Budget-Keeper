@@ -5,7 +5,7 @@ export var walletApiConfig = {
             method: method,
             mode: "cors",
             headers: new Headers({
-                "Content-Type": "text/json;charset=UTF-8"
+                "Content-Type": "application/json;charset=UTF-8"
             }),
             body: JSON.stringify(data)
         };

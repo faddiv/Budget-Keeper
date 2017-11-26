@@ -16,6 +16,13 @@ class TransactionService {
 
     async batchUpdate(transactions: Transaction[], idToDelete?: number[]): Promise<Transaction[]> {
         
+        transactions = transactions || [];
+        idToDelete = idToDelete || [];
+        transactions.forEach(tr => {
+            if(!tr.transactionId)
+                delete tr.transactionId;
+        });
+
         var url = buildUrl(urlBase+"/BatchSave", walletApiConfig.baseUrl);
         
         const response = await fetch(url.toString(), walletApiConfig.jsonRequestConfig({

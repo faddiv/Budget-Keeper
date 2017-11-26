@@ -7,7 +7,7 @@ import * as AlertsActions from "actions/alerts"
 import { Layout } from 'layout';
 import { NavLink, TabPane } from 'common/tabpanel';
 import { StockTable, StockModel } from './subComponents';
-import { bind, updateState, ListHelpers } from 'walletCommon';
+import { bind, updateState, ListHelpers, toUTCDate } from 'walletCommon';
 import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from 'walletApi';
 import { TransactionTable } from 'common/transactions-view';
 import { TransactionViewModel, toDateString } from 'common/models';
@@ -36,11 +36,6 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
             file: undefined,
             transactions: []
         };
-    }
-
-    async componentDidMount() {
-        var transactions = await transactionService.fetch();
-        this.createStockGroups(transactions);
     }
 
     createStockGroups(transactions) {
@@ -89,6 +84,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
         actions.dismissAllAlert();
         if (!file || !file.length) {
             actions.showAlert({ type: "danger", message: "Please select a file" });
+            return;
         }
         var transactions = await importExportService.uploadTransactions(file[0]);
         this.setState({
@@ -119,7 +115,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
             return {
                 category: tr.category,
                 comment: tr.comment,
-                createdAt: moment(tr.createdAt).toDate(),
+                createdAt: new Date(tr.createdAt),
                 direction: tr.direction,
                 name: tr.name,
                 transactionId: tr.transactionId,
@@ -185,11 +181,11 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                 </ul>
                 <div className="tab-content">
                     <TabPane name="full" activeKey={activeTab}>
-                        <TransactionTable items={transactions} wallets={wallets}
+                        <TransactionTable items={transactions.slice(0,10)} wallets={wallets}
                             update={this.transactionUpdated} deleted={this.transactionDeleted}
                             rowColor={this.rowColoring} />
                     </TabPane>
-                    <TabPane name="groupStock" activeKey={activeTab}><StockTable stocks={stocks} /></TabPane>
+                    <TabPane name="groupStock" activeKey={activeTab}><StockTable stocks={stocks.slice(0,10)} /></TabPane>
                 </div>
             </Layout>
         );

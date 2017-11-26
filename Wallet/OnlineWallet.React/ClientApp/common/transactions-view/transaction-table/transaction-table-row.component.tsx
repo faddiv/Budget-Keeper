@@ -98,28 +98,30 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     private renderEditRow() {
+        const { item } = this.state;
+        const { wallets, rowColor } = this.props;
         return (
-            <tr className={this.props.rowColor && this.props.rowColor(this.state.item)} onChange={this.handleInputChange}>
+            <tr className={rowColor && rowColor(item)} onChange={this.handleInputChange}>
                 <td>
-                    <input type="date" className="form-control" value={this.state.item.createdAt} name="createdAt" />
+                    <input type="date" className="form-control" value={item.createdAt} name="createdAt" />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={this.state.item.name} name="name" />
+                    <input type="text" className="form-control" value={item.name} name="name" />
                 </td>
                 <td onClick={this.changeDirection}>
-                    <DirectionIcon direction={this.state.item.direction} />
+                    <DirectionIcon direction={item.direction} />
                 </td>
                 <td>
-                    <input type="number" className="form-control" value={this.state.item.price} name="price" />
+                    <input type="number" className="form-control" value={item.price} name="price" />
                 </td>
                 <td>
-                    <WalletSelector walletId={this.state.item.walletId} wallets={this.props.wallets} />
+                    <WalletSelector walletId={item.walletId} wallets={wallets} />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={this.state.item.category} name="category" />
+                    <input type="text" className="form-control" value={item.category} name="category" />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={this.state.item.comment} name="comment" />
+                    <input type="text" className="form-control" value={item.comment} name="comment" />
                 </td>
                 <td>
                     <SaveCancel save={this.saveTransaction} cancel={this.cancelTransaction} />
@@ -129,17 +131,19 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     private renderViewRow() {
+        const { rowColor } = this.props;
+        const { item } = this.state;
         return (
-            <tr className={this.props.rowColor && this.props.rowColor(this.state.item)}>
-                <td>{this.state.item.createdAt}</td>
-                <td>{this.state.item.name}</td>
+            <tr className={rowColor && rowColor(item)}>
+                <td>{item.createdAt}</td>
+                <td>{item.name}</td>
                 <td>
-                    <DirectionIcon direction={this.state.item.direction} />
+                    <DirectionIcon direction={item.direction} />
                 </td>
-                <td>{this.state.item.price}</td>
-                <td>{this.state.item.walletName}</td>
-                <td>{this.state.item.category}</td>
-                <td>{this.state.item.comment}</td>
+                <td>{item.price}</td>
+                <td>{item.walletName}</td>
+                <td>{item.category}</td>
+                <td>{item.comment}</td>
                 <td>
                     <EditDelete edit={this.editTransaction} delete_={this.deleteTransaction} />
                 </td>
