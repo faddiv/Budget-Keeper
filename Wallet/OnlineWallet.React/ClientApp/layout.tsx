@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Navbar } from "common/navbar/navbar.component";
+import { Navbar } from "common/navbar/navbar";
 import { Prompt } from 'react-router-dom';
 import { AlertList } from 'common/misc';
 
