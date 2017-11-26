@@ -46,14 +46,13 @@
 			"",
 			"interface  ${1:${TM_FILENAME_BASE}}Props { $2 }",
 			"",
-			"const  ${1}: React.SFC< ${1}Props> = ({ $2, ...rest }) => {",
+			"export const ${1}: React.SFC< ${1}Props> = ({ $2, ...rest }) => {",
 			"\treturn (",
 			"\t\t$0",
 			"\t);",
 			"};",
 			"",
-			"${1}.defaultProps = { };",
-			"export { ${1} };"
+			"${1}.defaultProps = { };"
 		]
 	},
 	"React setState Async": {
@@ -64,6 +63,13 @@
 			"\t\t$0",
 			"\t};",
 			"});"
+		]
+	},
+	"React deconstruct": {
+		"prefix": "react.deconstruct",
+		"body": [
+			"const { $1 } = this.props;",
+			"const { $0 } = this.state;",
 		]
 	}
 }
