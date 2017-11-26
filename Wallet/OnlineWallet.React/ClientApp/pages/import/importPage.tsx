@@ -12,6 +12,7 @@ import { transactionService, importExportService, ExportImportRow, Wallet, Trans
 import { TransactionTable } from 'common/transactions-view';
 import { TransactionViewModel, toDateString } from 'common/models';
 import { RootState } from 'reducers';
+import { Pager, dataFrom, dataTo } from 'common/misc';
 
 export namespace ImportPage {
     export interface Props {
@@ -23,6 +24,9 @@ export namespace ImportPage {
         transactions: TransactionViewModel[];
         stocks: StockModel[];
         file: FileList;
+        page: number;
+        pageStocks: number;
+        pageSize: number;
     }
 }
 
@@ -34,7 +38,10 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
             activeTab: "full",
             stocks: [],
             file: undefined,
-            transactions: []
+            transactions: [],
+            page: 1,
+            pageStocks: 1,
+            pageSize: 10
         };
     }
 
@@ -71,6 +78,20 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     }
 
     @bind
+    selectPage(page: number) {
+        this.setState({
+            page
+        });
+    }
+    
+    @bind
+    selectStocksPage(pageStocks: number) {
+        this.setState({
+            pageStocks
+        });
+    }
+
+    @bind
     handleInputChange(event: React.ChangeEvent<HTMLFormElement>) {
         var state = updateState(event);
         this.setState(state);
@@ -101,7 +122,9 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                     walletId: tr.source === "Cash" ? 1 : 2,
                     walletName: tr.source
                 } as TransactionViewModel;
-            })
+            }),
+            page: 1,
+            pageStocks: 1
         });
         this.createStockGroups(transactions);
     }
@@ -155,8 +178,10 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     }
 
     render() {
-        const { activeTab, stocks, transactions } = this.state;
+        const { activeTab, stocks, transactions, page, pageSize, pageStocks } = this.state;
         const { wallets } = this.props;
+        const countAll = transactions ? transactions.length : 0;
+        const countStocks = stocks ? stocks.length : 0;
         return (
             <Layout>
                 <div className="row">
@@ -181,11 +206,15 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                 </ul>
                 <div className="tab-content">
                     <TabPane name="full" activeKey={activeTab}>
-                        <TransactionTable items={transactions.slice(0,10)} wallets={wallets}
+                        <TransactionTable items={transactions.slice(dataFrom(page, pageSize, countAll),dataTo(page, pageSize, countAll))} wallets={wallets}
                             update={this.transactionUpdated} deleted={this.transactionDeleted}
                             rowColor={this.rowColoring} />
+                        <Pager page={page} pageSize={pageSize} countAll={countAll} onPageSelected={this.selectPage}/>
                     </TabPane>
-                    <TabPane name="groupStock" activeKey={activeTab}><StockTable stocks={stocks.slice(0,10)} /></TabPane>
+                    <TabPane name="groupStock" activeKey={activeTab}>
+                        <StockTable stocks={stocks.slice(dataFrom(pageStocks, pageSize, countStocks),dataTo(pageStocks, pageSize, countStocks))} />
+                        <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage}/>
+                    </TabPane>
                 </div>
             </Layout>
         );

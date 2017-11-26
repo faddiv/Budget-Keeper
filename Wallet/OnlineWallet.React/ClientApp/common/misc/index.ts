@@ -7,3 +7,4 @@ export * from "./saveCancel.component";
 export * from "./walletSelector";
 export * from "./range";
 export * from "./switchCase";
+export * from "./pager";
