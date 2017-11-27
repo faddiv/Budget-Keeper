@@ -69,7 +69,7 @@
 		"prefix": "react.deconstruct",
 		"body": [
 			"const { $1 } = this.props;",
-			"const { $0 } = this.state;",
+			"const { $0 } = this.state;"
 		]
 	}
 }
