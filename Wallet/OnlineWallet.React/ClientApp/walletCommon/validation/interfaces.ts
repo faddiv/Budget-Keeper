@@ -18,7 +18,8 @@ export interface ValidatorFunction<TValue> {
 
 export interface ValidationConfigElement<TValue> {
     message: string,
-    messageParams: any;
+    messageParams?: any;
+    async?: boolean;
     validator: ValidatorFunction<TValue>;
     valueGetter: (state: any, props: any) => TValue;
 }

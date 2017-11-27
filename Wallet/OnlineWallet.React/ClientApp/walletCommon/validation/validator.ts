@@ -26,7 +26,7 @@ export function validate(config: ValidationConfig, previosValidationState: Valid
                 }
                 if (isChanged) {
                     var isValidPromise: Promise<boolean>;
-                    if (elementConfig.validator.async) {
+                    if (elementConfig.validator.async || elementConfig.async) {
                         isValidPromise = elementConfig.validator(nextValue) as Promise<boolean>;
                     } else {
                         var isValid = elementConfig.validator(nextValue) as boolean;
