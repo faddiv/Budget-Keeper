@@ -1,68 +1,85 @@
 import { ValidationConfig, ValidationConfigElement, ValidationObject, ValidationState, ValidatorFunction } from "./interfaces";
 
-export function validate(config: ValidationConfig, previosValidationState: ValidationState, state: any, props: any): Promise<ValidationState> {
+export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationState, state: any, props: any): Promise<ValidationState> {
     return new Promise<ValidationState>((resolve, reject) => {
-        var nextValidationState: ValidationState = {};
+        var newValidationState: ValidationState = {};
         var validating: Promise<void>[] = [];
         var validationStateChanged = false;
         for (var key in config) {
             if (config.hasOwnProperty(key)) {
                 var elementConfig = config[key];
                 var nextValue = elementConfig.valueGetter(state, props);
-                var previousState: ValidationObject = previosValidationState[key];
+                var previousState: ValidationObject = previousValidationState[key];
                 if (typeof previousState === "undefined") {
-                    previousState = {
-                        isValid: false,
-                        message: createMessage(elementConfig),
-                        value: nextValue
-                    }
-                    validationStateChanged = true;
+                    throw new Error("Please init validation state with initValidationState");
                 }
                 let isChanged: boolean;
                 if (elementConfig.validator.compositeValue) {
-                    isChanged = typeof (previousState.value) == "undefined" || compareComposite(previousState.value, nextValue)
+                    isChanged = typeof (previousState.value) === "undefined" || compareComposite(previousState.value, nextValue)
                 } else {
-                    isChanged = typeof (previousState.value) == "undefined" || previousState.value !== nextValue;
+                    isChanged = typeof (previousState.value) === "undefined" || previousState.value !== nextValue;
                 }
                 if (isChanged) {
-                    var isValidPromise: Promise<boolean>;
-                    if (elementConfig.validator.async || elementConfig.async) {
-                        isValidPromise = elementConfig.validator(nextValue) as Promise<boolean>;
-                    } else {
-                        var isValid = elementConfig.validator(nextValue) as boolean;
-                        isValidPromise = Promise.resolve(isValid);
+                    var isValidPromise = elementConfig.validator(nextValue);
+                    if (typeof(isValidPromise) == "boolean" ) {
+                        isValidPromise = Promise.resolve(isValidPromise);
                     }
                     validating.push(
                         isValidPromise
                             .then(isValid => {
-                                if (previousState.isValid !== isValid) {
-                                    nextValidationState[key] = {
+                                var changed: boolean;
+                                if (!previousState.isDirty || previousState.isValid !== isValid) {
+                                    newValidationState[key] = {
+                                        isDirty: true,
                                         isValid: isValid,
+                                        showError: false,
                                         message: createMessage(elementConfig),
                                         value: nextValue
                                     };
+                                    var validationObject = newValidationState[key];
+                                    validationObject.showError = (elementConfig.getShowError || defaultGetShowError)(validationObject, state, props) && !validationObject.isValid;
                                     validationStateChanged = true;
                                 } else {
-                                    nextValidationState[key] = previousState;
+                                    newValidationState[key] = previousState;
                                 }
                             })
                     );
                 } else {
-                    nextValidationState[key] = previousState;
+                    newValidationState[key] = previousState;
                 }
             }
         }
         Promise.all(validating).then(results => {
             if (validationStateChanged) {
-                resolve(nextValidationState);
+                resolve(newValidationState);
             } else {
-                resolve(previosValidationState);
+                resolve(previousValidationState);
             }
         });
     });
 }
 
-function createMessage(elementConfig: ValidationConfigElement<any>) {
+export function initValidationState<TState, TProps>(config: ValidationConfig<TState, TProps>, validationState: ValidationState, state: any, props: any) {
+    for (let key in config) {
+        if (config.hasOwnProperty(key)) {
+            const elementConfig = config[key];
+            const nextValue = elementConfig.valueGetter(state, props);
+            validationState[key] = {
+                isDirty: false,
+                isValid: false,
+                showError: false,
+                message: createMessage(elementConfig),
+                value: nextValue
+            };
+        }
+    }
+}
+
+function defaultGetShowError(validationObject:ValidationObject) {
+    return validationObject.isDirty;
+}
+
+function createMessage(elementConfig: ValidationConfigElement<any, any, any>) {
     //TODO: Add parameters.
     return elementConfig.message;
 }

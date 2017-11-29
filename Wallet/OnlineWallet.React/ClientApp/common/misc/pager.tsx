@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { className } from 'walletCommon';
 
 interface PagerProps { pageSize: number, page: number, countAll: number, onPageSelected: (page: number) => void }
 
@@ -37,15 +38,8 @@ export const Pager: React.SFC<PagerProps> = ({ pageSize, page, countAll, onPageS
 };
 
 function item(page: number, text: string, callback: (number) => void, enabled: boolean, current: boolean) {
-  let classes = ["page-item"];
-  
-  if (current) {
-    classes.push("active");
-  } else if (!enabled) {
-    classes.push("disabled");
-  }
   return (
-    <li key={text} className={classes.join(" ")}>
+    <li key={text} className={className("page-item", current, "active", !current && !enabled, "disabled")}>
       {link(page, text, callback, enabled)}
     </li>
   );

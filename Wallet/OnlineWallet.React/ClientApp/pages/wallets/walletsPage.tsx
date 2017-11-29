@@ -1,9 +1,9 @@
 import { Wallet, walletService } from 'walletApi';
 import * as React from 'react';
 import { WalletsRow } from './walletsRow';
-import { ListHelpers, bind } from 'walletCommon';
+import { ListHelpers, bind, className } from 'walletCommon';
 import { Layout } from 'layout';
-import { validate, ValidationConfig, ValidationState } from 'walletCommon/validation';
+import { validate, initValidationState, ValidationConfig, ValidationState } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';
 
 export namespace Wallets {
@@ -12,7 +12,7 @@ export namespace Wallets {
     export interface State {
         wallets: Wallet[];
         name: string;
-        rules: ValidationConfig;
+        rules: ValidationConfig<State, Props>;
         validation: ValidationState;
     }
 }
@@ -26,19 +26,14 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
             name: "",
             rules: {
                 name: {
+                    valueGetter: (state) => state.name,
                     validator: validators.required,
                     message: "Name field required",
-                    valueGetter: (state: Wallets.State) => state.name
                 }
             },
-            validation: {
-                name: {
-                    isValid: false,
-                    message: "Name field required",
-                    value: undefined
-                }
-            }
+            validation: {}
         };
+        initValidationState(this.state.rules, this.state.validation, this.state, this.props);
     }
 
     async componentDidMount() {
@@ -126,18 +121,14 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     render() {
         const { } = this.props;
         const { validation } = this.state;
-        const nameClass = ["form-control"];
-        if (!validation.name.isValid) {
-            nameClass.push("is-invalid")
-        }
         return (
             <Layout>
                 <form onSubmit={this.insertWallet}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
                         <div className="col-sm-10">
-                            <input type="text" className={nameClass.join(" ")} id="name" name="name"
-                                value={this.state.name} onChange={this.handleInputChange} />
+                            <input type="text" className={className("form-control", validation.name.showError, "is-invalid")} 
+                                id="name" name="name" value={this.state.name} onChange={this.handleInputChange} />
                             <div className="invalid-feedback">
                                 {validation.name.message}
                             </div>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { className } from 'walletCommon';
 
 interface NavLinkProps {
     name: string,
@@ -7,12 +8,8 @@ interface NavLinkProps {
 }
 
 export const NavLink: React.SFC<NavLinkProps> = ({ name, activeKey, onActivate, ...rest }) => {
-    var className = ["nav-link"];
     const isActive = name === activeKey;
-    if (isActive) {
-        className.push("active");
-    }
     return (
-        <li className="nav-item"><a className={className.join(' ')} onClick={() => { !isActive && onActivate(name) }}>{rest.children}</a></li>
+        <li className="nav-item"><a className={className("nav-link", isActive, "active")} onClick={() => { !isActive && onActivate(name) }}>{rest.children}</a></li>
     );
 };

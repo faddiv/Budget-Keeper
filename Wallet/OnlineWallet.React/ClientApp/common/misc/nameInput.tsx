@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ArticleModel, articleService } from 'walletApi';
-import { bind } from 'walletCommon';
+import { bind, className } from 'walletCommon';
 
 export namespace NameInput {
     export interface Props {
@@ -213,11 +213,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
 
     @bind
     private dropdownClass(): string {
-        var css = ["dropdown-menu"];
-        if (this.state.open) {
-            css.push("show");
-        }
-        return css.join(" ");
+        return className("dropdown-menu", this.state.open, "show");
     }
 
     private getItemValue(item: ArticleModel) {
@@ -225,12 +221,8 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
     }
 
     private renderItem(item: ArticleModel, active: boolean) {
-        var itemcss = ["dropdown-item"];
-        if (active) {
-            itemcss.push("active");
-        }
         return <li key={this.getItemValue(item)}
-            className={itemcss.join(" ")}
+            className={className("dropdown-item", active, "active")}
             onClick={event => this.onClick(event, item)}
             dangerouslySetInnerHTML={{ __html: item.nameHighlighted }}></li>;
     }

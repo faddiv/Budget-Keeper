@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Location as HLocation } from 'history';
 import { Link, Route } from 'react-router-dom'
+import { className } from 'walletCommon';
 
 interface MenuItemProps {
     to: string | any,
@@ -27,13 +28,9 @@ export const MenuItem: React.SFC<MenuItemProps> = ({ to, strict, activeClassName
             strict={strict}
             location={location}
             children={({ location, match }) => {
-                const isActive = !!(getIsActive ? getIsActive(match, location) : match)
-                const liClass = ["nav-item"];
-                if (isActive) {
-                    liClass.push(activeClassName)
-                }
+                const isActive = !!(getIsActive ? getIsActive(match, location) : match);
                 return (
-                    <li className={liClass.join(" ")}>
+                    <li className={className("nav-item", isActive, activeClassName)}>
                         <Link
                             to={to}
                             className={linkClassName}
