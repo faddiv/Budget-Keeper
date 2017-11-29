@@ -7,7 +7,7 @@ import * as AlertsActions from "actions/alerts"
 import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel } from "walletApi";
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
-import { bind, updateState, ListHelpers } from 'walletCommon';
+import { bind, updateState, ListHelpers, className } from 'walletCommon';
 import { FormGroup, WalletSelector, NameInput } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
@@ -117,7 +117,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
             return {
                 newItem
             };
-        });
+        }, this.validate);
     }
 
     @bind
@@ -131,44 +131,49 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     price: item.lastPrice,
                 }
             };
-        });
+        }, this.validate);
     }
 
     @bind
+    async validate() {
+        const validationResult = await validate(this.state.rules, this.state.validation, this.state, this.props);
+        if (validationResult.changed) {
+            this.setState({
+                validation: validationResult.validationState
+            });
+        }
+    }
+    @bind
     async addLine(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
-        const validationState = await validate(this.state.rules, this.state.validation, this.state, this.props);
+        var state: Home.State = { ...this.state, showError: true };
+
+        const validationState = await validate(state.rules, state.validation, state, this.props);
+        state.validation = validationState.validationState;
         if (!validationState.isValid) {
-            this.setState({
-                showError: true
-            });
-            return;
-        }
-        this.setState((prevState, props) => {
+            this.setState(state);
+        } else {
             var item: TransactionViewModel = {
-                ...prevState.newItem,
-                walletName: getWalletNameById(prevState.newItem.walletId, props.wallets)
+                ...state.newItem,
+                walletName: getWalletNameById(state.newItem.walletId, this.props.wallets),
             };
-            var state = {
-                ...prevState,
-                items: [...prevState.items, prevState.newItem],
-                newItem: {
-                    ...prevState.newItem,
-                    name: "",
-                    category: "",
-                    comment: "",
-                    price: "",
-                    key: prevState.id + 1
-                },
-                id: prevState.id + 1,
-                showValidation: false
+            state.items = [...state.items, state.newItem];
+            state.newItem = {
+                ...state.newItem,
+                name: "",
+                category: "",
+                comment: "",
+                price: "",
+                key: state.id + 1
             };
-            initValidationState(state.rules, state.validation, state, props);
-            return state;
-        }, () => {
-            const nameInput = this.nameInput;
-            nameInput.focus();
-        });
+            state.id = state.id + 1;
+            state.showError = false;
+            initValidationState(state.rules, state.validation, state, this.props);
+            this.setState(state, () => {
+                const nameInput = this.nameInput;
+                nameInput.focus();
+            });
+        }
     }
 
     @bind
@@ -205,18 +210,18 @@ export class Home extends React.Component<Home.Props, Home.State> {
         return (
             <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
                 <form onChange={this.handleInputChange} onSubmit={this.addLine}>
-                    <ul>
-                        {showError || validation.name.showError ? <li>{validation.name.message}</li>: null}
-                        {showError || validation.price.showError ? <li>{validation.price.message}</li>: null}
-                    </ul>
                     <FormGroup name="walletId" label="Wallet">
                         <WalletSelector walletId={this.state.newItem.walletId} wallets={this.props.wallets} />
                     </FormGroup>
                     <FormGroup name="createdAt" label="Date" type="date" value={this.state.newItem.createdAt} />
                     <FormGroup name="name" label="Name">
-                        <NameInput ref={(input) => this.nameInput = input} value={this.state.newItem.name} autoFocus={true} onSelect={this.nameSelected} />
+                        <NameInput ref={(input) => this.nameInput = input} value={this.state.newItem.name} autoFocus={true} onSelect={this.nameSelected} className={className(validation.name.showError, "is-invalid")} >
+                            <div className="invalid-feedback">
+                                {validation.name.message}
+                            </div>
+                        </NameInput>
                     </FormGroup>
-                    <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} />
+                    <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} validation={validation.price} />
                     <FormGroup name="comment" label="Comment" value={this.state.newItem.comment} />
                     <FormGroup name="category" label="Category" value={this.state.newItem.category} />
                     <DirectionCheck value={this.state.newItem.direction} />

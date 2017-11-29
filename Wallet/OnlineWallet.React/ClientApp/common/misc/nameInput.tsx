@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ArticleModel, articleService } from 'walletApi';
-import { bind, className } from 'walletCommon';
+import { bind, className as cssName } from 'walletCommon';
 
 export namespace NameInput {
     export interface Props {
@@ -8,6 +8,7 @@ export namespace NameInput {
         onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
         autoFocus?: boolean;
         onSelect?: (selected: ArticleModel) => void;
+        className?: string;
     }
     export interface State {
         items: ArticleModel[];
@@ -213,7 +214,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
 
     @bind
     private dropdownClass(): string {
-        return className("dropdown-menu", this.state.open, "show");
+        return cssName("dropdown-menu", this.state.open, "show");
     }
 
     private getItemValue(item: ArticleModel) {
@@ -222,23 +223,26 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
 
     private renderItem(item: ArticleModel, active: boolean) {
         return <li key={this.getItemValue(item)}
-            className={className("dropdown-item", active, "active")}
+            className={cssName("dropdown-item", active, "active")}
             onClick={event => this.onClick(event, item)}
             dangerouslySetInnerHTML={{ __html: item.nameHighlighted }}></li>;
     }
 
     render() {
+        const { autoFocus, className } = this.props;
+        const { value, active, items } = this.state;
         return (
             <div style={{ position: "relative" }}>
-                <input ref={(input) => this.nameInput = input} type="text" className="form-control"
-                    id="name" name="name" value={this.state.value} autoFocus={this.props.autoFocus} autoComplete="off"
+                <input ref={(input) => this.nameInput = input} type="text" className={cssName("form-control", className)}
+                    id="name" name="name" value={value} autoFocus={autoFocus} autoComplete="off"
                     onChange={this.onChange}
                     onBlur={this.onBlur}
                     onFocus={this.onFocus}
                     onKeyDown={this.onKeyEvent} />
                 <ul className={this.dropdownClass()} style={{ right: 0 }}>
-                    {this.state.items.map(item => this.renderItem(item, this.state.active === item))}
+                    {items.map(item => this.renderItem(item, active === item))}
                 </ul>
+                {this.props.children}
             </div>
         );
     }

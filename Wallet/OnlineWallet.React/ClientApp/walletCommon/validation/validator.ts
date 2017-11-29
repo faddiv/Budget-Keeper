@@ -8,11 +8,11 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
             isValid: true
         };
         var validating: Promise<void>[] = [];
-        for (var key in config) {
+        for (const key in config) {
             if (config.hasOwnProperty(key)) {
-                var elementConfig = config[key];
-                var nextValue = elementConfig.valueGetter(state, props);
-                var previousState: ValidationState = previousValidationState[key];
+                const elementConfig = config[key];
+                const nextValue = elementConfig.valueGetter(state, props);
+                const previousState: ValidationState = previousValidationState[key];
                 if (typeof previousState === "undefined") {
                     throw new Error("Please init validation state with initValidationState");
                 }
@@ -22,16 +22,17 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
                 } else {
                     isChanged = typeof (previousState.value) === "undefined" || previousState.value !== nextValue;
                 }
+                const getShowError = (elementConfig.getShowError || defaultGetShowError);
+                const showError = getShowError(previousState, state, props);
                 if (isChanged) {
                     var isValidPromise = elementConfig.validator(nextValue);
-                    if (typeof(isValidPromise) == "boolean" ) {
+                    if (typeof (isValidPromise) == "boolean") {
                         isValidPromise = Promise.resolve(isValidPromise);
                     }
                     validating.push(
                         isValidPromise
                             .then(isValid => {
-                                var changed: boolean;
-                                if (!previousState.isDirty || previousState.isValid !== isValid) {
+                                if (!previousState.isDirty || previousState.isValid !== isValid || showError !== previousState.showError) {
                                     result.validationState[key] = {
                                         isDirty: true,
                                         isValid: isValid,
@@ -40,8 +41,8 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
                                         value: nextValue
                                     };
                                     result.changed = true;
-                                    var validationState = result.validationState[key];
-                                    validationState.showError = (elementConfig.getShowError || defaultGetShowError)(validationState, state, props) && !validationState.isValid;
+                                    const validationState = result.validationState[key];
+                                    validationState.showError = getShowError(validationState, state, props) && !validationState.isValid;
                                     result.isValid = result.isValid && isValid;
                                 } else {
                                     result.validationState[key] = previousState;
@@ -50,7 +51,15 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
                             })
                     );
                 } else {
-                    result.validationState[key] = previousState;
+                    if(previousState.showError !== showError) {
+                        result.validationState[key] = {
+                            ...previousState,
+                            showError: showError && !previousState.isValid
+                        };
+                        result.changed = true;
+                    } else {
+                        result.validationState[key] = previousState;
+                    }
                     result.isValid = result.isValid && previousState.isValid;
                 }
             }
@@ -77,7 +86,7 @@ export function initValidationState<TState, TProps>(config: ValidationConfig<TSt
     }
 }
 
-function defaultGetShowError(validationObject:ValidationState) {
+function defaultGetShowError(validationObject: ValidationState) {
     return validationObject.isDirty;
 }
 

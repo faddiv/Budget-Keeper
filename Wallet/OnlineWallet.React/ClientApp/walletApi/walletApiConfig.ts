@@ -1,5 +1,5 @@
 export var walletApiConfig = {
-    baseUrl: "http://localhost:56491",
+    baseUrl: "http://localhost:56492",
     jsonRequestConfig(data: any, method: "PUT" | "POST" | "DELETE", extra?: RequestInit): RequestInit {
         let requestInit: RequestInit = {
             method: method,
