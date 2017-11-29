@@ -1,7 +1,18 @@
-export interface ValidationState {
-    [propertyName: string]: ValidationObject;
+export interface ValidationStates {
+    [propertyName: string]: ValidationState;
 }
-export interface ValidationObject {
+export interface ValidationResult {
+    validationState: ValidationStates;
+    isValid: boolean;
+    changed: boolean;
+}
+interface PropertyValidationStates {
+    [propertyName: string]: ValidationState;
+}
+export interface ValidationRoot {
+    isValid: boolean;
+}
+export interface ValidationState {
     message: string;
     isValid: boolean;
     isDirty: boolean;
@@ -17,7 +28,7 @@ export interface ValidatorFunction<TValue> {
     compositeValue?: boolean;
 }
 
-export type GetShwoErrorFunc<TState, TProps> = (validationState: ValidationObject, state: TState, props: TProps) => boolean;
+export type GetShwoErrorFunc<TState, TProps> = (validationState: ValidationState, state: TState, props: TProps) => boolean;
 
 export interface ValidationConfigElement<TState, TProps, TValue> {
     message: string,

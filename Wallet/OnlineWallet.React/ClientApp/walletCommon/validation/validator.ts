@@ -1,15 +1,18 @@
-import { ValidationConfig, ValidationConfigElement, ValidationObject, ValidationState, ValidatorFunction } from "./interfaces";
+import { ValidationConfig, ValidationConfigElement, ValidationState, ValidationStates, ValidatorFunction, ValidationResult } from "./interfaces";
 
-export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationState, state: any, props: any): Promise<ValidationState> {
-    return new Promise<ValidationState>((resolve, reject) => {
-        var newValidationState: ValidationState = {};
+export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationStates, state: any, props: any): Promise<ValidationResult> {
+    return new Promise<ValidationResult>((resolve, reject) => {
+        var result: ValidationResult = {
+            validationState: {},
+            changed: false,
+            isValid: true
+        };
         var validating: Promise<void>[] = [];
-        var validationStateChanged = false;
         for (var key in config) {
             if (config.hasOwnProperty(key)) {
                 var elementConfig = config[key];
                 var nextValue = elementConfig.valueGetter(state, props);
-                var previousState: ValidationObject = previousValidationState[key];
+                var previousState: ValidationState = previousValidationState[key];
                 if (typeof previousState === "undefined") {
                     throw new Error("Please init validation state with initValidationState");
                 }
@@ -29,37 +32,36 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
                             .then(isValid => {
                                 var changed: boolean;
                                 if (!previousState.isDirty || previousState.isValid !== isValid) {
-                                    newValidationState[key] = {
+                                    result.validationState[key] = {
                                         isDirty: true,
                                         isValid: isValid,
                                         showError: false,
                                         message: createMessage(elementConfig),
                                         value: nextValue
                                     };
-                                    var validationObject = newValidationState[key];
-                                    validationObject.showError = (elementConfig.getShowError || defaultGetShowError)(validationObject, state, props) && !validationObject.isValid;
-                                    validationStateChanged = true;
+                                    result.changed = true;
+                                    var validationState = result.validationState[key];
+                                    validationState.showError = (elementConfig.getShowError || defaultGetShowError)(validationState, state, props) && !validationState.isValid;
+                                    result.isValid = result.isValid && isValid;
                                 } else {
-                                    newValidationState[key] = previousState;
+                                    result.validationState[key] = previousState;
+                                    result.isValid = result.isValid && previousState.isValid;
                                 }
                             })
                     );
                 } else {
-                    newValidationState[key] = previousState;
+                    result.validationState[key] = previousState;
+                    result.isValid = result.isValid && previousState.isValid;
                 }
             }
         }
         Promise.all(validating).then(results => {
-            if (validationStateChanged) {
-                resolve(newValidationState);
-            } else {
-                resolve(previousValidationState);
-            }
+            resolve(result);
         });
     });
 }
 
-export function initValidationState<TState, TProps>(config: ValidationConfig<TState, TProps>, validationState: ValidationState, state: any, props: any) {
+export function initValidationState<TState, TProps>(config: ValidationConfig<TState, TProps>, validationState: ValidationStates, state: any, props: any) {
     for (let key in config) {
         if (config.hasOwnProperty(key)) {
             const elementConfig = config[key];
@@ -75,7 +77,7 @@ export function initValidationState<TState, TProps>(config: ValidationConfig<TSt
     }
 }
 
-function defaultGetShowError(validationObject:ValidationObject) {
+function defaultGetShowError(validationObject:ValidationState) {
     return validationObject.isDirty;
 }
 

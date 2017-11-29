@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ValidationState } from 'walletCommon/validation';
 
 type InputType = "text" | "button" | "submit" | "reset" | "radio" | "checkbox" | "color" |
     "date" | "datetime-local" | "email" | "month" | "number" | "range" | "search" | "tel" |
@@ -10,10 +11,11 @@ interface FormGroupProps {
     label: string,
     type?: InputType,
     value?: any,
-    onChange?: () => void
+    onChange?: () => void,
+    validation?: ValidationState
 }
 
-export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, ...rest }) => {
+export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, validation, ...rest }) => {
     id = id || name;
     return (
         <div className="form-group row">

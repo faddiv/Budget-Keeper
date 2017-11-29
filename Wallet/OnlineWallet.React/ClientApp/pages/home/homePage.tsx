@@ -12,6 +12,8 @@ import { FormGroup, WalletSelector, NameInput } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
 import { RootState } from 'reducers';
+import { validate, initValidationState, ValidationConfig, ValidationStates } from 'walletCommon/validation';
+import * as validators from 'walletCommon/validation/commonValidators';
 
 export namespace Home {
     export interface Props {
@@ -23,6 +25,9 @@ export namespace Home {
         items: TransactionViewModel[];
         newItem: TransactionViewModel;
         id: number;
+        rules: ValidationConfig<State, Props>;
+        validation: ValidationStates;
+        showError: boolean;
     }
 }
 
@@ -38,8 +43,25 @@ export class Home extends React.Component<Home.Props, Home.State> {
         this.state = {
             items: [],
             newItem: this.emptyItem(1),
-            id: 1
+            id: 1,
+            rules: {
+                name: {
+                    validator: validators.required,
+                    valueGetter: state => state.newItem.name,
+                    message: "Name is reuired.",
+                    getShowError: (valstate, st) => valstate.isDirty || st.showError
+                },
+                price: {
+                    validator: validators.required,
+                    valueGetter: state => state.newItem.price,
+                    message: "Price is reuired.",
+                    getShowError: (valstate, st) => valstate.isDirty || st.showError
+                }
+            },
+            validation: {},
+            showError: false
         };
+        initValidationState(this.state.rules, this.state.validation, this.state, this.props);
     }
 
     componentDidMount() {
@@ -113,14 +135,22 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 
     @bind
-    addLine(event: React.ChangeEvent<HTMLFormElement>) {
+    async addLine(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
+        const validationState = await validate(this.state.rules, this.state.validation, this.state, this.props);
+        if (!validationState.isValid) {
+            this.setState({
+                showError: true
+            });
+            return;
+        }
         this.setState((prevState, props) => {
             var item: TransactionViewModel = {
                 ...prevState.newItem,
                 walletName: getWalletNameById(prevState.newItem.walletId, props.wallets)
             };
-            return {
+            var state = {
+                ...prevState,
                 items: [...prevState.items, prevState.newItem],
                 newItem: {
                     ...prevState.newItem,
@@ -130,8 +160,11 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     price: "",
                     key: prevState.id + 1
                 },
-                id: prevState.id + 1
+                id: prevState.id + 1,
+                showValidation: false
             };
+            initValidationState(state.rules, state.validation, state, props);
+            return state;
         }, () => {
             const nameInput = this.nameInput;
             nameInput.focus();
@@ -148,14 +181,14 @@ export class Home extends React.Component<Home.Props, Home.State> {
             }
             var serverItems = mapTransaction(this.state.items);
             var result = await transactionService.batchUpdate(serverItems);
-            this.alertsService.showAlert({ type: "success", message: "Transactions are saved successfully."});
+            this.alertsService.showAlert({ type: "success", message: "Transactions are saved successfully." });
             this.setState({
                 items: [],
                 newItem: this.emptyItem(1),
                 id: 1
             });
         } catch (e) {
-            this.alertsService.showAlert({ type: "danger", message: e.message});
+            this.alertsService.showAlert({ type: "danger", message: e.message });
         }
     }
 
@@ -168,9 +201,14 @@ export class Home extends React.Component<Home.Props, Home.State> {
     </FormGroup>
     */
     render() {
+        const { validation, showError } = this.state;
         return (
             <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
                 <form onChange={this.handleInputChange} onSubmit={this.addLine}>
+                    <ul>
+                        {showError || validation.name.showError ? <li>{validation.name.message}</li>: null}
+                        {showError || validation.price.showError ? <li>{validation.price.message}</li>: null}
+                    </ul>
                     <FormGroup name="walletId" label="Wallet">
                         <WalletSelector walletId={this.state.newItem.walletId} wallets={this.props.wallets} />
                     </FormGroup>
@@ -185,7 +223,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     <button type="submit" className="btn btn-primary">Add</button>
                     <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>
                 </form>
-                <TransactionTable 
+                <TransactionTable
                     items={this.state.items} wallets={this.props.wallets}
                     deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
             </Layout>

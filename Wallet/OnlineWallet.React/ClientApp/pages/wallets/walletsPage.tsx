@@ -3,7 +3,7 @@ import * as React from 'react';
 import { WalletsRow } from './walletsRow';
 import { ListHelpers, bind, className } from 'walletCommon';
 import { Layout } from 'layout';
-import { validate, initValidationState, ValidationConfig, ValidationState } from 'walletCommon/validation';
+import { validate, initValidationState, ValidationConfig, ValidationStates } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';
 
 export namespace Wallets {
@@ -13,7 +13,7 @@ export namespace Wallets {
         wallets: Wallet[];
         name: string;
         rules: ValidationConfig<State, Props>;
-        validation: ValidationState;
+        validation: ValidationStates;
     }
 }
 
@@ -39,10 +39,8 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     async componentDidMount() {
         try {
             const wallets = await walletService.getAll();
-            var validation = await validate(this.state.rules, this.state.validation, this.state, this.props);
             this.setState({
-                wallets,
-                validation
+                wallets
             });
         } catch (error) {
             alert(error);
@@ -109,10 +107,10 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
             [name]: value
         });
         this.setState(state, async () => {
-            var validation = await validate(this.state.rules, this.state.validation, this.state, this.props);
-            if (validation !== this.state.validation) {
+            var valResult = await validate(this.state.rules, this.state.validation, this.state, this.props);
+            if (valResult.changed) {
                 this.setState({
-                    validation
+                    validation: valResult.validationState
                 });
             }
         });
