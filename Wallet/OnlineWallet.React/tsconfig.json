@@ -3,6 +3,7 @@
     "baseUrl": "ClientApp",
     "outDir": "./wwwroot",
     "sourceMap": true,
+    "importHelpers": true,
     "target": "es5",
     "jsx": "react",
     "module": "commonjs",
