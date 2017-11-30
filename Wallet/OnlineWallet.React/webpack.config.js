@@ -7,10 +7,12 @@ const htmlConfig = require("./build-config/html-config");
 const vendorConfig = require("./build-config/vendor-config")({
     exclude: ["bootstrap"]
 });
+const variablesConfig = require("./build-config/variables-config");
 const typescriptConfig = require("./build-config/typescript-config");
 
 module.exports = function (env) {
-    return [merge(scssConfig, htmlConfig, vendorConfig, typescriptConfig,
+    console.log("env variable:", env);
+    return [merge(scssConfig, htmlConfig, vendorConfig, typescriptConfig, variablesConfig,
         {
             entry: {
                 "bundle": "./ClientApp/index.tsx"
