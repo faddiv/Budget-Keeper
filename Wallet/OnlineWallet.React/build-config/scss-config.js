@@ -1,14 +1,13 @@
-var runMode = require("./run-mode");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var scssExtractTextPlugin = new ExtractTextPlugin({
-    filename: runMode.cssOutput
-});
 
 /**
  * This file contains the style related webpack config. (css, and assets)
  */
-module.exports =
-    {
+module.exports = function(cssOutput) {
+    var scssExtractTextPlugin = new ExtractTextPlugin({
+        filename: cssOutput
+    });
+    return {
         module: {
             rules: [
                 {
@@ -35,3 +34,5 @@ module.exports =
             scssExtractTextPlugin
         ]
     };
+};
+    

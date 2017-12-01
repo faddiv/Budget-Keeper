@@ -2,12 +2,12 @@ const path = require("path");
 const merge = require('webpack-merge');
 
 var runMode = require("./build-config/run-mode");
-const scssConfig = require("./build-config/scss-config");
+const scssConfig = require("./build-config/scss-config")(runMode.cssOutput);
 const htmlConfig = require("./build-config/html-config");
 const vendorConfig = require("./build-config/vendor-config")({
     exclude: ["bootstrap"]
 });
-const variablesConfig = require("./build-config/variables-config");
+const variablesConfig = require("./build-config/variables-config")(runMode.production);
 const typescriptConfig = require("./build-config/typescript-config");
 
 module.exports = function (env) {
@@ -21,9 +21,6 @@ module.exports = function (env) {
                 path: path.resolve("wwwroot"),
                 publicPath: "/",
                 filename: runMode.jsOutput
-            },
-            resolve: {
-                extensions: [".ts", ".tsx", ".js"]
             },
             devServer: {
                 contentBase: "ClientApp",
