@@ -4,6 +4,7 @@
 dist/
 obj/
 bin/
+coverage/
 
 # dependencies
 node_modules/

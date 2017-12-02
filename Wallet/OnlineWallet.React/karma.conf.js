@@ -1,7 +1,5 @@
 //var webpack = require("karma-webpack");
 //var merge = require('webpack-merge');
-var Enzyme = require("enzyme");
-var Adapter = require("enzyme-adapter-react-16");
 
 /*const vendorConfig = require("./build-config/vendor-config")({
     exclude: ["bootstrap"]
@@ -9,8 +7,6 @@ var Adapter = require("enzyme-adapter-react-16");
 //const variablesConfig = require("./build-config/variables-config")(false);
 //const typescriptConfig = require("./build-config/typescript-config");
 //const webpackConfig = require("./webpack.config");
-
-Enzyme.configure(new Adapter());
 
 /*function createWebpackConfig(env) {
     const webpackConfig = merge(vendorConfig, typescriptConfig, variablesConfig);
@@ -24,6 +20,9 @@ module.exports = function (config) {
         files: [
             "ClientApp/**/*.ts",
             "ClientApp/**/*.tsx"
+        ],
+        exclude: [
+            "ClientApp/index.tsx"
         ],
         frameworks: ["jasmine", "karma-typescript"],
         plugins: [
@@ -39,13 +38,21 @@ module.exports = function (config) {
             "**/*.ts": ["karma-typescript"],
             "**/*.tsx": ["karma-typescript"]
         },
-        client:{
-          clearContext: false // leave Jasmine Spec Runner output visible in browser
+        client: {
+            clearContext: false // leave Jasmine Spec Runner output visible in browser
+        },
+        karmaTypescriptConfig: {
+            bundlerOptions: {
+                constants: {
+                    PRODUCTION: false
+                }
+            },
+            tsconfig: "./tsconfig.json"
         },
         reporters: ["kjhtml", "karma-typescript"],
         browsers: ["Chrome"],
         port: 4202,
         //webpack: createWebpackConfig(process.env),
-        logLevel: config.LOG_DEBUG
+        logLevel: config.LOG_WARN
     });
 }
