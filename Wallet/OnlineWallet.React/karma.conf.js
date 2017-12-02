@@ -45,7 +45,8 @@ module.exports = function (config) {
             bundlerOptions: {
                 constants: {
                     PRODUCTION: false
-                }
+                },
+                entrypoints: /\.spec\.tsx?$/
             },
             tsconfig: "./tsconfig.json"
         },
