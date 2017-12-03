@@ -121,7 +121,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
             search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`,
             sorting: "CreatedAt desc, Name asc, TransactionId desc"
         });
-        var fetchBalance = transactionService.balanceInfo(start.year(), start.month());
+        var fetchBalance = transactionService.balanceInfo(start.year(), start.month() + 1);
         const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
         this.setState({
             items: mapTransactionViewModel(transactions, this.props.wallets),
