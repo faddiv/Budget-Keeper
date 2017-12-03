@@ -1,0 +1,14 @@
+@import "bootstrap/bootstrap";
+@import "font-awesome/font-awesome";
+
+body{
+    margin-top: 65px;
+}
+
+.cmd-btn-line {
+    display: flex;
+
+    >:nth-child(1n+2) {
+        margin-left: 6px;
+    }
+}

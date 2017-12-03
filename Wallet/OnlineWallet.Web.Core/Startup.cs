@@ -88,7 +88,6 @@ namespace OnlineWallet.Web
                 {
                     builder.WithOrigins("http://localhost:4200");
 					builder.WithOrigins("http://localhost:4201");
-					builder.WithOrigins("http://localhost:4202");
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                 });
