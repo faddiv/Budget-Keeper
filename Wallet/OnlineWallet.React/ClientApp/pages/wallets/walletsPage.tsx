@@ -1,28 +1,34 @@
-import { Wallet, walletService } from 'walletApi';
 import * as React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as WalletsActions from "actions/wallets";
+import { Wallet, walletService } from 'walletApi';
 import { WalletsRow } from './walletsRow';
 import { ListHelpers, bind, className } from 'walletCommon';
 import { Layout } from 'layout';
 import { validate, initValidationState, ValidationConfig, ValidationStates } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';
+import { RootState } from 'reducers';
 
 export namespace Wallets {
     export interface Props {
+        wallets: Wallet[];
+        actions: typeof WalletsActions;
     }
     export interface State {
-        wallets: Wallet[];
         name: string;
         rules: ValidationConfig<State, Props>;
         validation: ValidationStates;
     }
 }
 
+@connect(mapStateToProps, mapDispatchToProps)
 export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
 
-    constructor(props) {
+    constructor(props: Wallets.Props) {
         super(props);
         this.state = {
-            wallets: [],
             name: "",
             rules: {
                 name: {
@@ -31,20 +37,9 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
                     message: "Name field required",
                 }
             },
-            validation: {}
+            validation: {},
         };
         initValidationState(this.state.rules, this.state.validation, this.state, this.props);
-    }
-
-    async componentDidMount() {
-        try {
-            const wallets = await walletService.getAll();
-            this.setState({
-                wallets
-            });
-        } catch (error) {
-            alert(error);
-        }
     }
 
     @bind
@@ -52,47 +47,23 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         if (!confirm("Are you sure deleting this item?")) {
             return;
         }
-        try {
-            await walletService.delete(wallet);
-            this.setState((prevState, props) => {
-                return {
-                    wallets: ListHelpers.remove(prevState.wallets, wallet)
-                }
-            });
-        } catch (e) {
-            alert(e);
-        }
+        await this.props.actions.deleteWallet(wallet);
     }
 
     @bind
     async saveWallet(newWallet: Wallet, original: Wallet) {
-        try {
-            const result = await walletService.update(newWallet);
-            this.setState((prevState, props) => {
-                return {
-                    wallets: ListHelpers.replace(prevState.wallets, result, original)
-                }
-            });
-        } catch (result) {
-            alert(result);
-            this.setState((prevState, props) => {
-                return {
-                    wallets: [...prevState.wallets]
-                }
-            });
-        }
+        await this.props.actions.updateWallet(newWallet);
     }
 
     @bind
     async insertWallet(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!this.state.name) return;
-        var wallet = await walletService.insert({
+        await this.props.actions.insertWallet({
             name: this.state.name
         });
         this.setState((prevState, props) => {
             return {
-                wallets: [...prevState.wallets, wallet],
                 name: ""
             };
         });
@@ -117,16 +88,16 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     }
 
     render() {
-        const { } = this.props;
-        const { validation } = this.state;
+        const { wallets } = this.props;
+        const { validation, name } = this.state;
         return (
             <Layout>
                 <form onSubmit={this.insertWallet}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
                         <div className="col-sm-10">
-                            <input type="text" className={className("form-control", validation.name.showError, "is-invalid")} 
-                                id="name" name="name" value={this.state.name} onChange={this.handleInputChange} />
+                            <input type="text" className={className("form-control", validation.name.showError, "is-invalid")}
+                                id="name" name="name" value={name} onChange={this.handleInputChange} />
                             <div className="invalid-feedback">
                                 {validation.name.message}
                             </div>
@@ -141,7 +112,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.wallets.map(wallet => (
+                        {wallets.map(wallet => (
                             <WalletsRow key={wallet.moneyWalletId} wallet={wallet} save={this.saveWallet} delete_={this.deleteWallet} />
                         ))}
                     </tbody>
@@ -149,4 +120,17 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
             </Layout>
         );
     }
+}
+
+
+function mapStateToProps(state: RootState, ownProps: any) {
+    return {
+        wallets: state.wallets
+    };
+}
+
+function mapDispatchToProps(dispatch, ownProps: any) {
+    return {
+        actions: bindActionCreators(WalletsActions as any, dispatch) as typeof WalletsActions
+    };
 }

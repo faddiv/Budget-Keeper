@@ -119,8 +119,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                     name: tr.name,
                     price: tr.amount.toString(10),
                     transactionId: tr.matchingId,
-                    walletId: tr.source === "Cash" ? 1 : 2,
-                    walletName: tr.source
+                    walletId: tr.source === "Cash" ? 1 : 2
                 } as TransactionViewModel;
             }),
             page: 1,

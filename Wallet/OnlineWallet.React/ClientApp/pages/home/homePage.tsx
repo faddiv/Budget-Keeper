@@ -154,8 +154,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
             this.setState(state);
         } else {
             var item: TransactionViewModel = {
-                ...state.newItem,
-                walletName: getWalletNameById(state.newItem.walletId, this.props.wallets),
+                ...state.newItem
             };
             state.items = [...state.items, state.newItem];
             state.newItem = {
@@ -242,7 +241,6 @@ export class Home extends React.Component<Home.Props, Home.State> {
             direction: MoneyDirection.Expense,
             name: "",
             price: "",
-            walletName: "",
             comment: "",
             category: "",
             key: id

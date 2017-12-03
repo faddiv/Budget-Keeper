@@ -5,7 +5,7 @@ interface DirectionCheckProps { value: MoneyDirection, onChange?: () => void }
 
 const DirectionCheck: React.SFC<DirectionCheckProps> = ({ value, onChange, ...rest }) => {
     return (
-        <div className="form-group row">
+        <div className="form-group">
             <div className="form-check form-check-inline">
                 <label className="form-check-label">
                     <input className="form-check-input" type="radio" name="direction" value="-1" checked={value == -1} onChange={onChange} /> Expense</label>

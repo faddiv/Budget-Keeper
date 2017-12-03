@@ -24,11 +24,6 @@ export interface TransactionViewModel {
     key?: number;
 }
 
-export function setWalletNameById(model: TransactionViewModel, wallets: Wallet[]): TransactionViewModel {
-    model.walletName = getWalletNameById(model.walletId, wallets);
-    return model;
-}
-
 export function getWalletNameById(walletId: number, wallets: Wallet[]): string {
     return ListHelpers.selectMap<Wallet, string>(wallets, w => w.moneyWalletId === walletId, w => w.name);
 }
@@ -54,7 +49,6 @@ export function mapTransactionViewModel(transactions: Transaction[], wallets: Wa
         price: transaction.value ? transaction.value.toString() : "",
         transactionId: transaction.transactionId,
         walletId: transaction.walletId,
-        walletName: getWalletNameById(transaction.walletId, wallets),
         key: transaction.transactionId,
     });
 }

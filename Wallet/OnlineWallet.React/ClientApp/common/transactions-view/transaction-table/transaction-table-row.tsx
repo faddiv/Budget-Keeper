@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
 import { Wallet } from "walletApi";
-import { TransactionViewModel, nextDirection } from "common/models";
+import { TransactionViewModel, nextDirection, getWalletNameById } from "common/models";
 import { bind, updateState } from "walletCommon";
 import { EditDelete, SaveCancel, WalletSelector } from "common/misc";
 import { DirectionIcon } from "common/misc";
@@ -131,7 +131,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     private renderViewRow() {
-        const { rowColor } = this.props;
+        const { rowColor, wallets } = this.props;
         const { item } = this.state;
         return (
             <tr className={rowColor && rowColor(item)}>
@@ -141,7 +141,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                     <DirectionIcon direction={item.direction} />
                 </td>
                 <td>{item.price}</td>
-                <td>{item.walletName}</td>
+                <td>{getWalletNameById(item.walletId, wallets)}</td>
                 <td>{item.category}</td>
                 <td>{item.comment}</td>
                 <td>

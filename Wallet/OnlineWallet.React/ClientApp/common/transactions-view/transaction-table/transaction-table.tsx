@@ -1,4 +1,5 @@
 import * as React from "react";
+import "./transaction-table.scss";
 import { Wallet, Transaction, walletService } from "walletApi";
 import { ITransactionTableExtFunction } from "../models";
 import { ListHelpers, bind } from "walletCommon";

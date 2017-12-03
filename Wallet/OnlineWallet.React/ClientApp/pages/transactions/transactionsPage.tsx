@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import * as AlertsActions from "actions/alerts"
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
@@ -9,7 +10,6 @@ import { bind, ListHelpers } from 'walletCommon';
 import { Layout } from 'layout';
 import { TransactionViewModel, mapTransactionViewModel, mapTransaction } from 'common/models';
 import { YearSelector, MonthSelector, Balance } from './subComponents';
-import { connect } from 'react-redux';
 import { RootState } from 'reducers';
 
 export namespace Transactions {
@@ -119,7 +119,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         const end = moment(start).endOf("month");
         var fetchTransactions = transactionService.fetch({
             search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`,
-            sorting: "CreatedAt asc"
+            sorting: "CreatedAt desc, Name asc, TransactionId desc"
         });
         var fetchBalance = transactionService.balanceInfo(start.year(), start.month());
         const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
