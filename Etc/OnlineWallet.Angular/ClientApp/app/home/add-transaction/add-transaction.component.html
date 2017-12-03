@@ -1,0 +1,57 @@
+<form [formGroup]="form" (ngSubmit)="onAdd()" class="form-horizontal">
+  <div class="form-group">
+    <label for="wallet" class="col-sm-2">Wallet</label>
+    <div class="col-sm-10">
+      <select id="wallet" name="wallet" class="form-control" formControlName="wallet">
+          <option *ngFor="let item of wallets" [value]="item.moneyWalletId">{{item.name}}</option>
+        </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="created" class="col-sm-2">Date</label>
+    <div class="col-sm-10">
+      <input type="date" id="created" name="created" class="form-control" formControlName="created" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name" class="col-sm-2">Name</label>
+    <div class="col-sm-10">
+      <input type="text" id="name" name="name" class="form-control" formControlName="name" focus-id="name" autofocus autocomplete="off"
+        ngui-auto-complete [source]="nameFilter.bind(this)" [list-formatter]="nameListFormatter" min-chars="2" value-property-name="name"
+        display-property-name="name" (valueChanged)="autofill($event)" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="price" class="col-sm-2">Price</label>
+    <div class="col-sm-10">
+      <input type="text" id="price" name="price" class="form-control" formControlName="price" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="comment" class="col-sm-2">Comment</label>
+    <div class="col-sm-10">
+      <input type="text" id="comment" name="comment" class="form-control" formControlName="comment" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="category" class="col-sm-2">Category</label>
+    <div class="col-sm-10">
+      <input type="text" id="category" name="category" class="form-control" formControlName="category" focus-id="category" />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10 radio">
+      <label class="radio-inline">
+      <input type="radio" name="direction" formControlName="direction" value="-1"> Expense
+    </label>
+      <label class="radio-inline">
+      <input type="radio" name="direction" formControlName="direction" value="0"> Plan
+    </label>
+      <label class="radio-inline">
+      <input type="radio" name="direction" formControlName="direction" value="1"> Salary
+    </label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Add</button>
+  <button type="button" class="btn btn-success" (click)="save.emit($event)">Save</button>
+</form>
