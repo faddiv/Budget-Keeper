@@ -7,7 +7,7 @@ import { Wallet, walletService } from 'walletApi';
 import { WalletsRow } from './walletsRow';
 import { ListHelpers, bind, className } from 'walletCommon';
 import { Layout } from 'layout';
-import { validate, initValidationState, ValidationConfig, ValidationStates } from 'walletCommon/validation';
+import { validate, ValidationConfig, ValidationState } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';
 import { RootState } from 'reducers';
 
@@ -19,7 +19,7 @@ export namespace Wallets {
     export interface State {
         name: string;
         rules: ValidationConfig<State, Props>;
-        validation: ValidationStates;
+        validation: ValidationState;
     }
 }
 
@@ -28,18 +28,22 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
 
     constructor(props: Wallets.Props) {
         super(props);
+        const rules: ValidationConfig<Wallets.State, Wallets.Props> = {
+            name: {
+                validators: [
+                    {
+                        validator: validators.required,
+                        message: "Name is reuired."
+                    }
+                ],
+            }
+        };
+
         this.state = {
             name: "",
-            rules: {
-                name: {
-                    valueGetter: (state) => state.name,
-                    validator: validators.required,
-                    message: "Name field required",
-                }
-            },
-            validation: {},
+            rules: rules,
+            validation: validate(rules, {}, undefined, props).validationState,
         };
-        initValidationState(this.state.rules, this.state.validation, this.state, this.props);
     }
 
     @bind
@@ -58,7 +62,13 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     @bind
     async insertWallet(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (!this.state.name) return;
+        const validationState = validate(this.state.rules, this.state.validation, this.state, this.props);
+        if (!validationState.isValid) {
+            this.setState({
+                validation: validationState.validationState
+            });
+            return;
+        }
         await this.props.actions.insertWallet({
             name: this.state.name
         });
@@ -77,8 +87,8 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         var state = Object.assign({}, this.state, {
             [name]: value
         });
-        this.setState(state, async () => {
-            var valResult = await validate(this.state.rules, this.state.validation, this.state, this.props);
+        this.setState(state, () => {
+            var valResult = validate(this.state.rules, this.state.validation, this.state, this.props);
             if (valResult.changed) {
                 this.setState({
                     validation: valResult.validationState

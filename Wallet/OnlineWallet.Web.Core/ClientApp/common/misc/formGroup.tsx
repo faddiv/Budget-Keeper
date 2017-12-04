@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ValidationState } from 'walletCommon/validation';
+import { ValidationStateElement } from 'walletCommon/validation';
 import { className } from 'walletCommon';
 
 type InputType = "text" | "button" | "submit" | "reset" | "radio" | "checkbox" | "color" |
@@ -14,7 +14,7 @@ interface FormGroupProps {
     value?: any,
     onChange?: () => void,
     autoComplete?: boolean
-    validation?: ValidationState
+    validation?: ValidationStateElement
 }
 
 export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, autoComplete, validation, ...rest }) => {
@@ -29,7 +29,7 @@ export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, va
     );
 };
 
-function defaultInput(type: string, id: string, name: string, label: string, value: any, onChange: () => void, autoComplete: boolean, validation: ValidationState): React.ReactElement<any>[] {
+function defaultInput(type: string, id: string, name: string, label: string, value: any, onChange: () => void, autoComplete: boolean, validation: ValidationStateElement): React.ReactElement<any>[] {
     let elements: React.ReactElement<any>[] = [
         <input key={1} type={type} className={className("form-control", validation && validation.showError, "is-invalid")}
             id={id} name={name} placeholder={label} value={value} onChange={onChange} autoComplete={autoComplete ? null : "off"} />

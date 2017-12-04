@@ -12,7 +12,7 @@ import { FormGroup, Autocomplete } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
 import { RootState } from 'reducers';
-import { validate, initValidationState, ValidationConfig, ValidationStates } from 'walletCommon/validation';
+import { validate, ValidationConfig, ValidationState } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';
 import { WalletSelector, NameInput, CategoryInput } from 'common/specialInputs';
 
@@ -27,7 +27,7 @@ export namespace Home {
         newItem: TransactionViewModel;
         id: number;
         rules: ValidationConfig<State, Props>;
-        validation: ValidationStates;
+        validation: ValidationState;
         showError: boolean;
     }
 }
@@ -41,28 +41,34 @@ export class Home extends React.Component<Home.Props, Home.State> {
      */
     constructor() {
         super();
+        var rules: ValidationConfig<Home.State, Home.Props> = {
+            name: {
+                validators: [
+                    {
+                        validator: validators.required,
+                        message: "Name is reuired."
+                    }
+                ],
+                valueGetter: state => state.newItem.name
+            },
+            price: {
+                validators: [
+                    {
+                        validator: validators.required,
+                        message: "Price is reuired."
+                    }
+                ],
+                valueGetter: state => state.newItem.price
+            }
+        };
         this.state = {
             items: [],
             newItem: this.emptyItem(1),
             id: 1,
-            rules: {
-                name: {
-                    validator: validators.required,
-                    valueGetter: state => state.newItem.name,
-                    message: "Name is reuired.",
-                    getShowError: (valstate, st) => valstate.isDirty || st.showError
-                },
-                price: {
-                    validator: validators.required,
-                    valueGetter: state => state.newItem.price,
-                    message: "Price is reuired.",
-                    getShowError: (valstate, st) => valstate.isDirty || st.showError
-                }
-            },
-            validation: {},
+            rules: rules,
+            validation: validate(rules, {}, undefined, this.props).validationState,
             showError: false
         };
-        initValidationState(this.state.rules, this.state.validation, this.state, this.props);
     }
 
     componentDidMount() {
@@ -139,9 +145,9 @@ export class Home extends React.Component<Home.Props, Home.State> {
     categorySelected(model: CategoryModel) {
         this.setState((prevState, props) => {
             return {
-                newItem: { 
-                    ...prevState.newItem, 
-                    category: model.name 
+                newItem: {
+                    ...prevState.newItem,
+                    category: model.name
                 }
             };
         });
@@ -153,8 +159,8 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 
     @bind
-    async validate() {
-        const validationResult = await validate(this.state.rules, this.state.validation, this.state, this.props);
+    validate() {
+        const validationResult = validate(this.state.rules, this.state.validation, this.state, this.props, this.state.showError);
         if (validationResult.changed) {
             this.setState({
                 validation: validationResult.validationState
@@ -163,11 +169,11 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 
     @bind
-    async addLine(event: React.ChangeEvent<HTMLFormElement>) {
+    addLine(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
         var state: Home.State = { ...this.state, showError: true };
 
-        const validationState = await validate(state.rules, state.validation, state, this.props);
+        const validationState = validate(state.rules, state.validation, state, this.props, true);
         state.validation = validationState.validationState;
         if (!validationState.isValid) {
             this.setState(state);
@@ -186,7 +192,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
             };
             state.id = state.id + 1;
             state.showError = false;
-            initValidationState(state.rules, state.validation, state, this.props);
+            state.validation = validate(state.rules, {}, state, this.props).validationState;
             this.setState(state, () => {
                 this.focusStart();
             });
@@ -217,7 +223,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
     needLeaveConfirmation() {
         return this.state.items.length > 0;
     }
-    
+
     render() {
         const { wallets } = this.props;
         const { validation, showError, newItem, items } = this.state;

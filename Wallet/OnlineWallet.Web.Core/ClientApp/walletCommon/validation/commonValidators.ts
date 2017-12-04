@@ -1,4 +1,5 @@
 import { ValidatorFunction } from "./interfaces";
+
 export const required: ValidatorFunction<string> = function (value: string) {
     return typeof value !== "undefined" && value !== null && value !== "";
 }
@@ -10,3 +11,7 @@ export function stringLength(maxLength: number): ValidatorFunction<string> {
         return !value || value.length <= maxLength;
     }
 }
+export const fieldEquals: ValidatorFunction<string> = function (value1: string, value2: string) {
+    return value1 === value2;
+}
+fieldEquals.paramCount = 2;

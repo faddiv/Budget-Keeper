@@ -1,109 +1,79 @@
-import { ValidationConfig, ValidationConfigElement, ValidationState, ValidationStates, ValidatorFunction, ValidationResult } from "./interfaces";
-
-export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationStates, state: any, props: any): Promise<ValidationResult> {
-    return new Promise<ValidationResult>((resolve, reject) => {
-        var result: ValidationResult = {
-            validationState: {},
-            changed: false,
-            isValid: true
-        };
-        var validating: Promise<void>[] = [];
-        for (const key in config) {
-            if (config.hasOwnProperty(key)) {
-                const elementConfig = config[key];
-                const nextValue = elementConfig.valueGetter(state, props);
-                const previousState: ValidationState = previousValidationState[key];
-                if (typeof previousState === "undefined") {
-                    throw new Error("Please init validation state with initValidationState");
+import { ValidationConfig, ValidationState, ValidationResult, ValidationStateElement } from "./interfaces";
+export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationState, state: TState, props: TProps, showErrors?: boolean): ValidationResult {
+    var result: ValidationResult = {
+        validationState: {},
+        changed: false,
+        isValid: true
+    };
+    for (const key in config) {
+        if (!config.hasOwnProperty(key)) continue;
+        const elementConfig = config[key];
+        const nextValue = state 
+            ? (elementConfig.valueGetter 
+                ? elementConfig.valueGetter(state, props) 
+                : defaultGetter(state, key))
+            : undefined;
+        const previousStateElement = previousValidationState[key];
+        const previousValue = previousStateElement && previousStateElement.value;
+        let nextStateElement: ValidationStateElement;
+        for (const validatorC of elementConfig.validators) {
+            var validatorF = validatorC.validator;
+            var isValid: boolean;
+            if (validatorF.paramCount > 1) {
+                if (!validatorC.extraParams || validatorC.extraParams.length + 1 !== validatorF.paramCount) {
+                    throw new Error(`the validator ${validatorF} requires additional ${validatorF.paramCount - 1}parameter.`);
                 }
-                let isChanged: boolean;
-                if (elementConfig.validator.compositeValue) {
-                    isChanged = typeof (previousState.value) === "undefined" || compareComposite(previousState.value, nextValue)
-                } else {
-                    isChanged = typeof (previousState.value) === "undefined" || previousState.value !== nextValue;
+                let values = [nextValue];
+                values.push.call(values, validatorC.extraParams.map(epg => state ? epg(state, props) : undefined));
+                isValid = validatorF.call(this, values);
+            } else {
+                isValid = validatorF(nextValue);
+            }
+            if (!isValid) {
+                const shouldShowError = (elementConfig.shouldShowError || defaultGetShowError);
+                nextStateElement = {
+                    isDirty: !!previousStateElement && nextValue !== previousValue,
+                    isValid: isValid,
+                    showError: showErrors,
+                    value: nextValue
+                };
+                nextStateElement.showError = !isValid && shouldShowError(nextStateElement, state, props);
+                if (nextStateElement.showError) {
+                    nextStateElement.message = validatorC.message;
                 }
-                const getShowError = (elementConfig.getShowError || defaultGetShowError);
-                const showError = getShowError(previousState, state, props);
-                if (isChanged) {
-                    var isValidPromise = elementConfig.validator(nextValue);
-                    if (typeof (isValidPromise) == "boolean") {
-                        isValidPromise = Promise.resolve(isValidPromise);
-                    }
-                    validating.push(
-                        isValidPromise
-                            .then(isValid => {
-                                if (!previousState.isDirty || previousState.isValid !== isValid || showError !== previousState.showError) {
-                                    result.validationState[key] = {
-                                        isDirty: true,
-                                        isValid: isValid,
-                                        showError: false,
-                                        message: createMessage(elementConfig),
-                                        value: nextValue
-                                    };
-                                    result.changed = true;
-                                    const validationState = result.validationState[key];
-                                    validationState.showError = getShowError(validationState, state, props) && !validationState.isValid;
-                                    result.isValid = result.isValid && isValid;
-                                } else {
-                                    result.validationState[key] = previousState;
-                                    result.isValid = result.isValid && previousState.isValid;
-                                }
-                            })
-                    );
-                } else {
-                    if(previousState.showError !== showError) {
-                        result.validationState[key] = {
-                            ...previousState,
-                            showError: showError && !previousState.isValid
-                        };
-                        result.changed = true;
-                    } else {
-                        result.validationState[key] = previousState;
-                    }
-                    result.isValid = result.isValid && previousState.isValid;
-                }
+                break;
             }
         }
-        Promise.all(validating).then(results => {
-            resolve(result);
-        });
-    });
-}
-
-export function initValidationState<TState, TProps>(config: ValidationConfig<TState, TProps>, validationState: ValidationStates, state: any, props: any) {
-    for (let key in config) {
-        if (config.hasOwnProperty(key)) {
-            const elementConfig = config[key];
-            const nextValue = elementConfig.valueGetter(state, props);
-            validationState[key] = {
-                isDirty: false,
-                isValid: false,
+        if (!nextStateElement) {
+            nextStateElement = {
+                isDirty: !!previousStateElement && nextValue !== previousValue,
+                isValid: true,
                 showError: false,
-                message: createMessage(elementConfig),
                 value: nextValue
             };
         }
-    }
-}
-
-function defaultGetShowError(validationObject: ValidationState) {
-    return validationObject.isDirty;
-}
-
-function createMessage(elementConfig: ValidationConfigElement<any, any, any>) {
-    //TODO: Add parameters.
-    return elementConfig.message;
-}
-
-function compareComposite(previousValue: any, nextValue: any): boolean {
-    for (var key in nextValue) {
-        if (nextValue.hasOwnProperty(key)) {
-            var nextValuePart = nextValue[key];
-            var prevValuePart = previousValue[key];
-            if (nextValuePart !== prevValuePart) {
-                return true;
-            }
+        const changed = !previousStateElement
+            || previousStateElement.isDirty !== nextStateElement.isDirty
+            || previousStateElement.isValid !== nextStateElement.isValid
+            || previousStateElement.showError !== nextStateElement.showError;
+        if (changed) {
+            result.changed = true;
+        } else {
+            nextStateElement = previousStateElement;
         }
+        result.isValid = result.isValid && nextStateElement.isValid;
+        result.validationState[key] = nextStateElement;
     }
-    return false;
+    if (!result.changed) {
+        result.validationState = previousValidationState;
+    }
+    return result;
+}
+
+function defaultGetter(state: any, key: string) {
+    return state[key];
+}
+
+function defaultGetShowError(validationObject: ValidationStateElement) {
+    return validationObject.showError || validationObject.isDirty;
 }

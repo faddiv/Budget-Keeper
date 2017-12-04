@@ -1,5 +1,5 @@
 import * as React from "react";
-import jasmineEnzyme from "jasmine-enzyme";
+import * as jasmineEnzyme from "jasmine-enzyme";
 import { shallow } from 'enzyme';
 import { Autocomplete } from "./autocomplete";
 import { articleService } from 'walletApi';
@@ -7,7 +7,7 @@ import { articleService } from 'walletApi';
 describe("Autocomplete", () => {
 
     beforeEach(() => {
-        jasmineEnzyme();
+        (jasmineEnzyme as any)();
     });
 
     it("should an input with the value.", () => {
@@ -28,6 +28,6 @@ describe("Autocomplete", () => {
             });
             expect(wrapper.find("input")).toHaveValue("Pizza Holiday ebéd");
             callback();
-        }, 100);
+        }, 500);
     });
 });

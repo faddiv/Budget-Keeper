@@ -1,32 +1,41 @@
-//var webpack = require("karma-webpack");
-//var merge = require('webpack-merge');
+var karmaWebpack = require("karma-webpack");
+var webpack = require("webpack");
+var merge = require('webpack-merge');
 
-/*const vendorConfig = require("./build-config/vendor-config")({
-    exclude: ["bootstrap"]
-});*/
-//const variablesConfig = require("./build-config/variables-config")(false);
-//const typescriptConfig = require("./build-config/typescript-config");
+//const vendorConfig = require("./build-config/vendor-config")({});
+const variablesConfig = require("./build-config/variables-config")(false);
+const typescriptConfig = require("./build-config/typescript-config");
 //const webpackConfig = require("./webpack.config");
 
-/*function createWebpackConfig(env) {
-    const webpackConfig = merge(vendorConfig, typescriptConfig, variablesConfig);
+function createWebpackConfig(env) {
+    const webpackConfig = merge(typescriptConfig, variablesConfig, {
+        devtool: "inline-source-map",
+        plugins: [
+            new webpack.SourceMapDevToolPlugin({
+                filename: null, // if no value is provided the sourcemap is inlined
+                test: /\.(ts|js)x?($|\?)/i // process .js and .ts files only
+            })
+        ]
+    });
     console.log("Use webpack config:", webpackConfig);
     return webpackConfig;
-}*/
+}
 
 module.exports = function (config) {
     config.set({
         basePath: "",
         files: [
-            "ClientApp/**/*.ts",
-            "ClientApp/**/*.tsx"
+            "ClientApp/root.spec.ts"
+            //"ClientApp/**/*.spec.ts"
+            //"ClientApp/**/*.spec.tsx"
         ],
         exclude: [
             "ClientApp/index.tsx"
         ],
-        frameworks: ["jasmine", "karma-typescript"],
+        frameworks: ["jasmine"],
         plugins: [
-            "karma-typescript",
+            "karma-webpack",
+            "karma-sourcemap-loader",
             "karma-jasmine",
             "karma-chrome-launcher",
             "karma-jasmine-html-reporter"
@@ -34,14 +43,17 @@ module.exports = function (config) {
         mime: {
             'text/x-typescript': ['ts', 'tsx']
         },
+        //preprocessors: {
+        //    "**/*.ts": ["karma-typescript"],
+        //    "**/*.tsx": ["karma-typescript"]
+        //},
         preprocessors: {
-            "**/*.ts": ["karma-typescript"],
-            "**/*.tsx": ["karma-typescript"]
+            "ClientApp/root.spec.ts": ["webpack", "sourcemap"]
         },
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-        karmaTypescriptConfig: {
+        /*karmaTypescriptConfig: {
             bundlerOptions: {
                 constants: {
                     PRODUCTION: false
@@ -49,11 +61,11 @@ module.exports = function (config) {
                 entrypoints: /\.spec\.tsx?$/
             },
             tsconfig: "./tsconfig.json"
-        },
-        reporters: ["kjhtml", "karma-typescript"],
+        },*/
+        reporters: ["kjhtml"],
         browsers: ["Chrome"],
         port: 4201,
-        //webpack: createWebpackConfig(process.env),
+        webpack: createWebpackConfig(process.env),
         logLevel: config.LOG_WARN
     });
 }
