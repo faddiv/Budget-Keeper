@@ -21,6 +21,7 @@ module.exports = function (env) {
                 publicPath: "/",
                 filename: runMode.jsOutput
             },
+            devtool: runMode.production ? undefined : 'source-map',
             devServer: {
                 contentBase: "ClientApp",
                 /**

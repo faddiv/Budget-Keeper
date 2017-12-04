@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as AlertsActions from "actions/alerts"
-import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel } from "walletApi";
+import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel, CategoryModel } from "walletApi";
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
 import { bind, updateState, ListHelpers, className } from 'walletCommon';
@@ -136,6 +136,18 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 
     @bind
+    categorySelected(model: CategoryModel) {
+        this.setState((prevState, props) => {
+            return {
+                newItem: { 
+                    ...prevState.newItem, 
+                    category: model.name 
+                }
+            };
+        });
+    }
+
+    @bind
     async validate() {
         const validationResult = await validate(this.state.rules, this.state.validation, this.state, this.props);
         if (validationResult.changed) {
@@ -225,7 +237,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} validation={validation.price} />
                     <FormGroup name="comment" label="Comment" value={this.state.newItem.comment} />
                     <FormGroup name="category" label="Category" value={this.state.newItem.category}>
-                        <CategoryInput value={this.state.newItem.category} className="form-control" />
+                        <CategoryInput value={this.state.newItem.category} className="form-control" onSelect={this.categorySelected} />
                     </FormGroup>
                     <DirectionCheck value={this.state.newItem.direction} />
                     <button type="submit" className="btn btn-primary">Add</button>

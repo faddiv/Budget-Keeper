@@ -22,7 +22,6 @@ module.exports =
                 }
             ]
         },
-        devtool: 'source-map',
         resolve: {
             plugins: [
                 typescriptConfigPathsPlugin

@@ -98,7 +98,10 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     nameSelected(model: ArticleModel) {
         this.setState((prevState, props) => {
             return {
-                item: { ...prevState.item, name: model.name }
+                item: { 
+                    ...prevState.item, 
+                    name: model.name 
+                }
             };
         });
     }
@@ -107,7 +110,10 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     categorySelected(model: CategoryModel) {
         this.setState((prevState, props) => {
             return {
-                item: { ...prevState.item, category: model.name }
+                item: { 
+                    ...prevState.item, 
+                    category: model.name 
+                }
             };
         });
     }
