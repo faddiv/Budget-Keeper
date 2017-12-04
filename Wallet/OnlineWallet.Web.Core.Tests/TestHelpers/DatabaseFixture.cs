@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.TestHelpers.Builders;
+using TestStack.Dossier.Lists;
 
 namespace OnlineWallet.Web.TestHelpers
 {
@@ -53,5 +55,15 @@ namespace OnlineWallet.Web.TestHelpers
         {
             return AutoMapper.Mapper.Map<TEntity>(original);
         }
+
+        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules)
+        {
+            var transactions = rules(TransactionBuilder.CreateListOfSize(100)
+                .All().WithName("Nothing").WithCategory(null))
+                .BuildList();
+            DbContext.Transactions.AddRange(transactions);
+            DbContext.SaveChanges();
+        }
+
     }
 }

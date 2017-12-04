@@ -1,5 +1,5 @@
-import { walletApiConfig, ThenJsonGenerator, ThenJson } from "./walletApiConfig";
-import { Wallet } from "./model/models";
+import { walletApiConfig, ThenJson } from "./walletApiConfig";
+import { Wallet } from "./model";
 import { buildUrl } from "./linkHelpers";
 
 class WalletService {

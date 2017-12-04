@@ -23,6 +23,7 @@ namespace OnlineWallet.Web.TestHelpers
                 }
             }
         }
+
         public static TJsonValue ValidateJsonResult<TJsonValue>(ActionResult actionResult)
         {
             actionResult.Should()

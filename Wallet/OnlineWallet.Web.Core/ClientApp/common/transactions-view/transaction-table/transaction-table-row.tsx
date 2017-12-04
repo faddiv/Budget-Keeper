@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as moment from "moment";
-import { Wallet } from "walletApi";
+import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { TransactionViewModel, nextDirection, getWalletNameById } from "common/models";
 import { bind, updateState } from "walletCommon";
-import { EditDelete, SaveCancel, WalletSelector } from "common/misc";
+import { EditDelete, SaveCancel } from "common/misc";
 import { DirectionIcon } from "common/misc";
 import { ITransactionTableExtFunction } from "../models";
+import { WalletSelector, NameInput, CategoryInput } from 'common/specialInputs';
 
 export namespace TransactionTableRow {
     export interface Props {
@@ -93,6 +94,24 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         });
     }
 
+    @bind
+    nameSelected(model: ArticleModel) {
+        this.setState((prevState, props) => {
+            return {
+                item: { ...prevState.item, name: model.name }
+            };
+        });
+    }
+    
+    @bind
+    categorySelected(model: CategoryModel) {
+        this.setState((prevState, props) => {
+            return {
+                item: { ...prevState.item, category: model.name }
+            };
+        });
+    }
+
     render() {
         return this.state.editMode ? this.renderEditRow() : this.renderViewRow();
     }
@@ -106,22 +125,22 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                     <input type="date" className="form-control" value={item.createdAt} name="createdAt" />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={item.name} name="name" />
+                    <NameInput value={item.name} className="form-control" onSelect={this.nameSelected} />
                 </td>
                 <td onClick={this.changeDirection}>
                     <DirectionIcon direction={item.direction} />
                 </td>
                 <td>
-                    <input type="number" className="form-control" value={item.price} name="price" />
+                    <input type="number" className="form-control" value={item.price} name="price" autoComplete="off" />
                 </td>
                 <td>
-                    <WalletSelector walletId={item.walletId} wallets={wallets} />
+                    <WalletSelector walletId={item.walletId} wallets={wallets} className="form-control" />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={item.category} name="category" />
+                    <CategoryInput value={item.category} onSelect={this.categorySelected} className="form-control" />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={item.comment} name="comment" />
+                    <input type="text" className="form-control" value={item.comment} name="comment" autoComplete="off" />
                 </td>
                 <td>
                     <SaveCancel save={this.saveTransaction} cancel={this.cancelTransaction} />

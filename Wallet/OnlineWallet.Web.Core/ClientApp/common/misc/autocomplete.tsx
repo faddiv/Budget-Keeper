@@ -1,25 +1,35 @@
 import * as React from 'react';
-import { ArticleModel, articleService } from 'walletApi';
 import { bind, className as cssName } from 'walletCommon';
 
-export namespace NameInput {
+export interface AutocompleteModel {
+    name?: string;
+
+    nameHighlighted?: string;
+
+}
+
+export namespace Autocomplete {
     export interface Props {
+        name: string;
+        id?: string;
         value: string;
+        onFilter: (searchTerm: string) => Promise<AutocompleteModel[]>;
         onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
         autoFocus?: boolean;
-        onSelect?: (selected: ArticleModel) => void;
+        onSelect?: (selected: AutocompleteModel) => void;
         className?: string;
+        focusAction?: (focus: () => void) => void;
     }
     export interface State {
-        items: ArticleModel[];
+        items: AutocompleteModel[];
         open: boolean;
         focused: boolean;
-        active?: ArticleModel;
+        active?: AutocompleteModel;
         value: string;
     }
 }
 
-export class NameInput extends React.Component<NameInput.Props, NameInput.State> {
+export class Autocomplete extends React.Component<Autocomplete.Props, Autocomplete.State> {
     nameInput: HTMLInputElement;
 
     constructor(props) {
@@ -42,7 +52,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         window.removeEventListener("focus", this.globalFocus, true);
     }
 
-    componentWillReceiveProps(nextProps: Readonly<NameInput.Props>, nextContext: any) {
+    componentWillReceiveProps(nextProps: Readonly<Autocomplete.Props>, nextContext: any) {
         this.setState({
             value: nextProps.value
         });
@@ -62,7 +72,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         }
     }
 
-    private close(state?: Partial<NameInput.State>) {
+    private close(state?: Partial<Autocomplete.State>) {
         this.setState({
             open: false,
             active: null,
@@ -70,7 +80,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         });
     }
 
-    private open(state?: Partial<NameInput.State>) {
+    private open(state?: Partial<Autocomplete.State>) {
         let active = this.state.active || this.state.items[0];
         if (state && state.items) {
             active = state.items[0];
@@ -88,11 +98,21 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
     }
 
     @bind
+    private getInput(input: HTMLInputElement) {
+        var focusAction = this.props.focusAction;
+        if (focusAction && input) {
+            focusAction(() => {
+                input.focus();
+            });
+        }
+    }
+
+    @bind
     private async onChange(event: React.SyntheticEvent<HTMLInputElement>) {
         var value = getInputValue(event);
         this.setValue(value);
         if (canOpen(value)) {
-            const items = await articleService.filterBy(value);
+            const items = await this.props.onFilter(value);
             if (items.length > 0) {
                 this.open({
                     items
@@ -112,7 +132,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         }
     }
 
-    private select(item: ArticleModel) {
+    private select(item: AutocompleteModel) {
         this.setValue(this.getItemValue(item), {
             items: [item]
         }, () => {
@@ -122,7 +142,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         });
     }
 
-    private setValue(value: string, state?: Partial<NameInput.State>, callback?: () => void) {
+    private setValue(value: string, state?: Partial<Autocomplete.State>, callback?: () => void) {
         this.setState({
             value,
             ...state as any
@@ -135,16 +155,6 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         this.setState({
             focused: false
         });
-    }
-
-    @bind
-    private onFocus(event: React.SyntheticEvent<HTMLInputElement>) {
-        const open = canOpen(this.state.value) && this.hasSelectable();
-        if (open) {
-            this.open();
-        } else {
-            this.close();
-        }
     }
 
     private onlyItemActive() {
@@ -204,7 +214,7 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
             && (this.state.items.length > 1 || this.getItemValue(this.state.items[0]) !== this.state.value);
     }
 
-    private onClick(event: React.MouseEvent<HTMLLIElement>, item: ArticleModel) {
+    private onClick(event: React.MouseEvent<HTMLLIElement>, item: AutocompleteModel) {
         this.select(item);
         this.focus();
         this.close({
@@ -217,11 +227,11 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
         return cssName("dropdown-menu", this.state.open, "show");
     }
 
-    private getItemValue(item: ArticleModel) {
+    private getItemValue(item: AutocompleteModel) {
         return item.name;
     }
 
-    private renderItem(item: ArticleModel, active: boolean) {
+    private renderItem(item: AutocompleteModel, active: boolean) {
         return <li key={this.getItemValue(item)}
             className={cssName("dropdown-item", active, "active")}
             onClick={event => this.onClick(event, item)}
@@ -229,15 +239,14 @@ export class NameInput extends React.Component<NameInput.Props, NameInput.State>
     }
 
     render() {
-        const { autoFocus, className } = this.props;
+        const { autoFocus, className, name, id } = this.props;
         const { value, active, items } = this.state;
         return (
             <div style={{ position: "relative" }}>
-                <input ref={(input) => this.nameInput = input} type="text" className={cssName("form-control", className)}
-                    id="name" name="name" value={value} autoFocus={autoFocus} autoComplete="off"
+                <input ref={this.getInput} type="text" className={className}
+                    id={id || name} name={name} value={value} autoFocus={autoFocus} autoComplete="off"
                     onChange={this.onChange}
                     onBlur={this.onBlur}
-                    onFocus={this.onFocus}
                     onKeyDown={this.onKeyEvent} />
                 <ul className={this.dropdownClass()} style={{ right: 0 }}>
                     {items.map(item => this.renderItem(item, active === item))}

@@ -13,24 +13,26 @@ interface FormGroupProps {
     type?: InputType,
     value?: any,
     onChange?: () => void,
+    autoComplete?: boolean
     validation?: ValidationState
 }
 
-export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, validation, ...rest }) => {
+export const FormGroup: React.SFC<FormGroupProps> = ({ id, name, label, type, value, onChange, autoComplete, validation, ...rest }) => {
     id = id || name;
     return (
         <div className="form-group row">
             <label htmlFor={id} className="col-sm-2 col-form-label">{label}</label>
             <div className="col-sm-10">
-                {rest.children ? rest.children : defaultInput(type, id, name, label, value, onChange, validation)}
+                {rest.children ? rest.children : defaultInput(type, id, name, label, value, onChange, autoComplete, validation)}
             </div>
         </div>
     );
 };
 
-function defaultInput(type: string, id: string, name: string, label: string, value: any, onChange: () => void, validation: ValidationState): React.ReactElement<any>[] {
+function defaultInput(type: string, id: string, name: string, label: string, value: any, onChange: () => void, autoComplete: boolean, validation: ValidationState): React.ReactElement<any>[] {
     let elements: React.ReactElement<any>[] = [
-        <input key={1} type={type} className={className("form-control", validation && validation.showError, "is-invalid")} id={id} name={name} placeholder={label} value={value} onChange={onChange} />
+        <input key={1} type={type} className={className("form-control", validation && validation.showError, "is-invalid")}
+            id={id} name={name} placeholder={label} value={value} onChange={onChange} autoComplete={autoComplete ? null : "off"} />
     ];
     if (validation) {
         elements.push(
@@ -44,5 +46,6 @@ function defaultInput(type: string, id: string, name: string, label: string, val
 
 FormGroup.defaultProps = {
     type: "text",
-    onChange: () => { }
+    onChange: () => { },
+    autoComplete: false
 };

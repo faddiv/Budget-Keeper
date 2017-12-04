@@ -31,6 +31,11 @@ namespace OnlineWallet.Web.TestHelpers.Builders
             return Set(e => e.Category, category);
         }
 
+        public virtual TransactionBuilder WithCategoryRandom()
+        {
+            return Set(e => e.Category, () => this.Any.StringOfLength(5));
+        }
+
         public virtual TransactionBuilder WithName(string name)
         {
             return Set(e => e.Name, name);

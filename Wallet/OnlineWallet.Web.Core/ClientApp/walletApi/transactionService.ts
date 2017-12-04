@@ -1,5 +1,5 @@
 import { walletApiConfig, ThenJson } from "./walletApiConfig";
-import { Transaction, QueryParams, BalanceInfo } from "./model/models";
+import { Transaction, QueryParams, BalanceInfo } from "./model";
 import { buildUrl } from "./linkHelpers";
 
 const urlBase = "/api/v1/Transaction";

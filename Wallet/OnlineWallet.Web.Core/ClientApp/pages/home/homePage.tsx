@@ -8,12 +8,13 @@ import { walletService, Wallet, Transaction, MoneyDirection, transactionService,
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
 import { bind, updateState, ListHelpers, className } from 'walletCommon';
-import { FormGroup, WalletSelector, NameInput } from 'common/misc';
+import { FormGroup, Autocomplete } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
 import { RootState } from 'reducers';
 import { validate, initValidationState, ValidationConfig, ValidationStates } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';
+import { WalletSelector, NameInput, CategoryInput } from 'common/specialInputs';
 
 export namespace Home {
     export interface Props {
@@ -33,7 +34,7 @@ export namespace Home {
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class Home extends React.Component<Home.Props, Home.State> {
-    nameInput: NameInput;
+    focusStart: () => void;
 
     /**
      *
@@ -169,8 +170,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
             state.showError = false;
             initValidationState(state.rules, state.validation, state, this.props);
             this.setState(state, () => {
-                const nameInput = this.nameInput;
-                nameInput.focus();
+                this.focusStart();
             });
         }
     }
@@ -214,7 +214,9 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     </FormGroup>
                     <FormGroup name="createdAt" label="Date" type="date" value={this.state.newItem.createdAt} />
                     <FormGroup name="name" label="Name">
-                        <NameInput ref={(input) => this.nameInput = input} value={this.state.newItem.name} autoFocus={true} onSelect={this.nameSelected} className={className(validation.name.showError, "is-invalid")} >
+                        <NameInput focusAction={(focus) => this.focusStart = focus}
+                            value={this.state.newItem.name} autoFocus={true} onSelect={this.nameSelected}
+                            className={className("form-control", validation.name.showError, "is-invalid")} >
                             <div className="invalid-feedback">
                                 {validation.name.message}
                             </div>
@@ -222,7 +224,9 @@ export class Home extends React.Component<Home.Props, Home.State> {
                     </FormGroup>
                     <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} validation={validation.price} />
                     <FormGroup name="comment" label="Comment" value={this.state.newItem.comment} />
-                    <FormGroup name="category" label="Category" value={this.state.newItem.category} />
+                    <FormGroup name="category" label="Category" value={this.state.newItem.category}>
+                        <CategoryInput value={this.state.newItem.category} className="form-control" />
+                    </FormGroup>
                     <DirectionCheck value={this.state.newItem.direction} />
                     <button type="submit" className="btn btn-primary">Add</button>
                     <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>

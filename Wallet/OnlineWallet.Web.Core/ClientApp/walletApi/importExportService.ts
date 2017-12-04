@@ -1,5 +1,5 @@
 import { walletApiConfig, ThenJson } from "./walletApiConfig";
-import { ExportImportRow } from "./model/models";
+import { ExportImportRow } from "./model";
 import { buildUrl } from "./linkHelpers";
 
 const importUrl = "/api/v1/Import/ProcessTransactions";
