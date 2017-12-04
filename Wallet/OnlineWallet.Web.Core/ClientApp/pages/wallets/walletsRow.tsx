@@ -75,10 +75,11 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
     }
 
     renderView() {
+        const { wallet } = this.state;
         return (
             <tr>
-                <td>{this.state.wallet.moneyWalletId}</td>
-                <td>{this.state.wallet.name}</td>
+                <td>{wallet.moneyWalletId}</td>
+                <td>{wallet.name}</td>
                 <td>
                     <EditDelete edit={this.editWallet} delete_={this.deleteWallet} />
                 </td>
@@ -86,10 +87,11 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
         );
     }
     renderEdit() {
+        const { wallet } = this.state;
         return (
             <tr>
-                <td>{this.state.wallet.moneyWalletId}</td>
-                <td><input type="text" name="name" value={this.state.wallet.name} onChange={this.handleInputChange} /></td>
+                <td>{wallet.moneyWalletId}</td>
+                <td><input type="text" name="name" value={wallet.name} onChange={this.handleInputChange} /></td>
                 <td>
                     <SaveCancel save={this.saveWallet} cancel={this.cancelWallet} />
                 </td>

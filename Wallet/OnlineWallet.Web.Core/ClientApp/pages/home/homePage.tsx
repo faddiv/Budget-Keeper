@@ -148,6 +148,11 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 
     @bind
+    focusStartBind(focusMethod: () => void) {
+        this.focusStart = focusMethod;
+    }
+
+    @bind
     async validate() {
         const validationResult = await validate(this.state.rules, this.state.validation, this.state, this.props);
         if (validationResult.changed) {
@@ -156,6 +161,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
             });
         }
     }
+
     @bind
     async addLine(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -211,40 +217,37 @@ export class Home extends React.Component<Home.Props, Home.State> {
     needLeaveConfirmation() {
         return this.state.items.length > 0;
     }
-    /* Something is wrong:
-    <FormGroup name="createdAt" label="Date">
-        <input type="text" className="form-control" id="createdAt" name="createdAt" value={this.state.newItem.createdAt} />
-    </FormGroup>
-    */
+    
     render() {
-        const { validation, showError } = this.state;
+        const { wallets } = this.props;
+        const { validation, showError, newItem, items } = this.state;
         return (
             <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
                 <form onChange={this.handleInputChange} onSubmit={this.addLine}>
                     <FormGroup name="walletId" label="Wallet">
-                        <WalletSelector walletId={this.state.newItem.walletId} wallets={this.props.wallets} />
+                        <WalletSelector walletId={newItem.walletId} wallets={wallets} />
                     </FormGroup>
-                    <FormGroup name="createdAt" label="Date" type="date" value={this.state.newItem.createdAt} />
+                    <FormGroup name="createdAt" label="Date" type="date" value={newItem.createdAt} />
                     <FormGroup name="name" label="Name">
-                        <NameInput focusAction={(focus) => this.focusStart = focus}
-                            value={this.state.newItem.name} autoFocus={true} onSelect={this.nameSelected}
+                        <NameInput focusAction={this.focusStartBind}
+                            value={newItem.name} autoFocus={true} onSelect={this.nameSelected}
                             className={className("form-control", validation.name.showError, "is-invalid")} >
                             <div className="invalid-feedback">
                                 {validation.name.message}
                             </div>
                         </NameInput>
                     </FormGroup>
-                    <FormGroup name="price" label="Price" type="number" value={this.state.newItem.price} validation={validation.price} />
-                    <FormGroup name="comment" label="Comment" value={this.state.newItem.comment} />
-                    <FormGroup name="category" label="Category" value={this.state.newItem.category}>
-                        <CategoryInput value={this.state.newItem.category} className="form-control" onSelect={this.categorySelected} />
+                    <FormGroup name="price" label="Price" type="number" value={newItem.price} validation={validation.price} />
+                    <FormGroup name="comment" label="Comment" value={newItem.comment} />
+                    <FormGroup name="category" label="Category" value={newItem.category}>
+                        <CategoryInput value={newItem.category} className="form-control" onSelect={this.categorySelected} />
                     </FormGroup>
-                    <DirectionCheck value={this.state.newItem.direction} />
+                    <DirectionCheck value={newItem.direction} />
                     <button type="submit" className="btn btn-primary">Add</button>
                     <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>
                 </form>
                 <TransactionTable
-                    items={this.state.items} wallets={this.props.wallets}
+                    items={items} wallets={wallets}
                     deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
             </Layout>
         );
