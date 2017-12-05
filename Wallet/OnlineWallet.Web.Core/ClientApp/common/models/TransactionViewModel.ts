@@ -1,5 +1,5 @@
 import { MoneyDirection, Wallet, Transaction } from "walletApi";
-import { ListHelpers, toUTCDate } from "walletCommon";
+import { _, toUTCDate } from "walletCommon";
 import { toDateString } from "./DateTimeFunctions";
 
 export interface TransactionViewModel {
@@ -25,7 +25,7 @@ export interface TransactionViewModel {
 }
 
 export function getWalletNameById(walletId: number, wallets: Wallet[]): string {
-    return ListHelpers.selectMap<Wallet, string>(wallets, w => w.moneyWalletId === walletId, w => w.name);
+    return _.selectMap<Wallet, string>(wallets, w => w.moneyWalletId === walletId, w => w.name);
 }
 
 export function nextDirection(direction: MoneyDirection) {

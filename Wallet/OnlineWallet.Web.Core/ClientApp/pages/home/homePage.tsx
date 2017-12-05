@@ -7,7 +7,7 @@ import * as AlertsActions from "actions/alerts"
 import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel, CategoryModel } from "walletApi";
 import { Layout } from 'layout';
 import { TransactionTable, getDirectionColoring } from 'common/transactions-view';
-import { bind, updateState, ListHelpers, className } from 'walletCommon';
+import { bind, updateState, _, className } from 'walletCommon';
 import { FormGroup, Autocomplete } from 'common/misc';
 import { toDateString, TransactionViewModel, mapTransaction, getWalletNameById } from 'common/models';
 import { DirectionCheck } from 'pages/home/directionCheck';
@@ -95,7 +95,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
     deleteRow(item: TransactionViewModel) {
         this.setState((prevState, props) => {
             return {
-                items: ListHelpers.remove(prevState.items, item),
+                items: _.remove(prevState.items, item),
             };
         });
     }

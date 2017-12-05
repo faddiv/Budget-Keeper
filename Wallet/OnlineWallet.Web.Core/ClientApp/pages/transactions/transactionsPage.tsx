@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as AlertsActions from "actions/alerts"
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
 import { Transaction, transactionService, walletService, Wallet, BalanceInfo } from 'walletApi';
-import { bind, ListHelpers } from 'walletCommon';
+import { bind, _ } from 'walletCommon';
 import { Layout } from 'layout';
 import { TransactionViewModel, mapTransactionViewModel, mapTransaction } from 'common/models';
 import { YearSelector, MonthSelector, Balance } from './subComponents';
@@ -81,8 +81,8 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     private deleteItem(item: TransactionViewModel) {
         this.setState((prevState, props) => {
             return {
-                items: ListHelpers.remove(prevState.items, item),
-                changedItems: ListHelpers.remove(prevState.changedItems, item),
+                items: _.remove(prevState.items, item),
+                changedItems: _.remove(prevState.changedItems, item),
                 deletedItems: [...prevState.deletedItems, item.transactionId]
             };
         });

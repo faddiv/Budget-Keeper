@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import * as WalletsActions from "actions/wallets";
 import { Wallet, walletService } from 'walletApi';
 import { WalletsRow } from './walletsRow';
-import { ListHelpers, bind, className } from 'walletCommon';
+import { bind, className } from 'walletCommon';
 import { Layout } from 'layout';
 import { validate, ValidationConfig, ValidationState } from 'walletCommon/validation';
 import * as validators from 'walletCommon/validation/commonValidators';

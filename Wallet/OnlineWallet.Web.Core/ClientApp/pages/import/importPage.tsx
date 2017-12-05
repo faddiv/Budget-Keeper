@@ -7,7 +7,7 @@ import * as AlertsActions from "actions/alerts"
 import { Layout } from 'layout';
 import { NavLink, TabPane } from 'common/tabpanel';
 import { StockTable, StockModel } from './subComponents';
-import { bind, updateState, ListHelpers, toUTCDate } from 'walletCommon';
+import { bind, updateState, _, toUTCDate } from 'walletCommon';
 import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from 'walletApi';
 import { TransactionTable } from 'common/transactions-view';
 import { TransactionViewModel, toDateString } from 'common/models';
@@ -164,7 +164,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     transactionDeleted(item: TransactionViewModel) {
         this.setState((prevState, props) => {
             return {
-                transactions: ListHelpers.remove(prevState.transactions, item)
+                transactions: _.remove(prevState.transactions, item)
             };
         });
     }

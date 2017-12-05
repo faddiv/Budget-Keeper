@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { ListHelpers } from "walletCommon";
+import { _ } from "walletCommon";
 import { handleActions } from "redux-actions";
 import { Actions } from "constants/actions";
 
@@ -20,7 +20,7 @@ export default handleActions<AlertsModel, AlertMessage>({
         return [...state, action.payload]
     },
     [Actions.dismissAlert](state, action) {
-        return ListHelpers.remove(state, action.payload);
+        return _.remove(state, action.payload);
     },
     [Actions.dismissAllAlert](state, action) {
         return [];

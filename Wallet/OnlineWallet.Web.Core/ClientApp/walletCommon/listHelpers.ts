@@ -1,7 +1,7 @@
 //import "reflect-metadata" 
 //This causes the following error in angular: Unexpected value imported by the module Please add a @NgModule annotation.
 
-export module ListHelpers {
+module ListHelpers {
     export function remove<TElement>(list: TElement[], item: TElement): TElement[] {
         return (list || []).filter(e => e !== item);
     }
@@ -40,3 +40,6 @@ export module ListHelpers {
         return list && list.filter(where).map(select)[0];
     }
 }
+
+
+export default ListHelpers;

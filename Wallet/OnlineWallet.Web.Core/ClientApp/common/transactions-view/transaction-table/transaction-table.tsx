@@ -2,7 +2,7 @@ import * as React from "react";
 import "./transaction-table.scss";
 import { Wallet, Transaction, walletService } from "walletApi";
 import { ITransactionTableExtFunction } from "../models";
-import { ListHelpers, bind } from "walletCommon";
+import { _, bind } from "walletCommon";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel } from "common/models";
 
@@ -31,8 +31,8 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
 
   @bind
   saveTransaction(newItem: TransactionViewModel, original: TransactionViewModel) {
-    let items = ListHelpers.replace(this.props.items, newItem, original);
-    let changes = this.props.changedItems ? ListHelpers.replace(this.props.changedItems, newItem, original, true) : undefined;
+    let items = _.replace(this.props.items, newItem, original);
+    let changes = this.props.changedItems ? _.replace(this.props.changedItems, newItem, original, true) : undefined;
     this.props.update(items, changes);
   }
 
