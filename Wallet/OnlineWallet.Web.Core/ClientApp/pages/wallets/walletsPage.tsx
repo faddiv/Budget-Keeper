@@ -62,7 +62,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     @bind
     async insertWallet(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
-        const validationState = validate(this.state.rules, this.state.validation, this.state, this.props);
+        const validationState = validate(this.state.rules, this.state.validation, this.state, this.props, true);
         if (!validationState.isValid) {
             this.setState({
                 validation: validationState.validationState

@@ -1,4 +1,5 @@
 import { ValidationConfig, ValidationState, ValidationResult, ValidationStateElement } from "./interfaces";
+
 export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationState, state: TState, props: TProps, showErrors?: boolean): ValidationResult {
     var result: ValidationResult = {
         validationState: {},
@@ -12,7 +13,7 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
             ? (elementConfig.valueGetter 
                 ? elementConfig.valueGetter(state, props) 
                 : defaultGetter(state, key))
-            : undefined;
+            : "";
         const previousStateElement = previousValidationState[key];
         const previousValue = previousStateElement && previousStateElement.value;
         let nextStateElement: ValidationStateElement;
@@ -24,7 +25,10 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
                     throw new Error(`the validator ${validatorF} requires additional ${validatorF.paramCount - 1}parameter.`);
                 }
                 let values = [nextValue];
-                values.push.call(values, validatorC.extraParams.map(epg => state ? epg(state, props) : undefined));
+                for (let index = 0; index < validatorC.extraParams.length; index++) {
+                    const element = validatorC.extraParams[index];
+                    values.push(state ? element(state, props) : undefined);
+                }
                 isValid = validatorF.call(this, values);
             } else {
                 isValid = validatorF(nextValue);

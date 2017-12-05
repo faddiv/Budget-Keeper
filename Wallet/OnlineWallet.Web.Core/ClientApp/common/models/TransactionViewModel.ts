@@ -1,6 +1,8 @@
 import { MoneyDirection, Wallet, Transaction } from "walletApi";
 import { _, toUTCDate } from "walletCommon";
 import { toDateString } from "./DateTimeFunctions";
+import { ValidationConfig } from 'walletCommon/validation';
+import * as validators from 'walletCommon/validation/commonValidators';
 
 export interface TransactionViewModel {
     comment?: string;
@@ -18,8 +20,6 @@ export interface TransactionViewModel {
     price?: string;
 
     walletId?: number;
-
-    walletName?: string;
 
     key?: number;
 }
@@ -66,3 +66,24 @@ export function mapTransaction(transactions: TransactionViewModel[]): Transactio
         walletId: parseInt(<any>transaction.walletId, 10)
     });
 }
+
+export const transactionRules: ValidationConfig<TransactionViewModel, any> = {
+    name: {
+        validators: [
+            {
+                validator: validators.required,
+                message: "Name is reuired."
+            }
+        ],
+        valueGetter: state => state.name
+    },
+    price: {
+        validators: [
+            {
+                validator: validators.required,
+                message: "Price is reuired."
+            }
+        ],
+        valueGetter: state => state.price
+    }
+};
