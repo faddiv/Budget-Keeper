@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { MenuItem } from "./menuItem";
+import { DropdownMenu } from 'common/navbar/dropdownMenu';
+import { Link, NavLink } from 'react-router-dom';
 
-interface  NavbarProps {  }
+interface NavbarProps { }
 
-export const Navbar: React.SFC< NavbarProps> = () => {
+export const Navbar: React.SFC<NavbarProps> = () => {
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
             <a className="navbar-brand" href="#">Navbar</a>
@@ -15,8 +17,10 @@ export const Navbar: React.SFC< NavbarProps> = () => {
                 <ul className="navbar-nav mr-auto">
                     <MenuItem to="/" exact>Home</MenuItem>
                     <MenuItem to="/transactions">Transactions</MenuItem>
-                    <MenuItem to="/import">Import</MenuItem>
-                    <MenuItem to="/export">Export</MenuItem>
+                    <DropdownMenu name="Export/Import">
+                        <NavLink to="/import" className="dropdown-item" activeClassName="active">Import</NavLink>
+                        <NavLink to="/export" className="dropdown-item" activeClassName="active">Export</NavLink>
+                    </DropdownMenu>
                     <MenuItem to="/wallets">Wallets</MenuItem>
                 </ul>
             </div>
