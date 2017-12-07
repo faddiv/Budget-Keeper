@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { className, bind } from 'walletCommon';
+import { findDOMNode } from "react-dom";
 import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from 'react-router-dom';
 
 export namespace DropdownMenu {
@@ -54,7 +55,7 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
 
     @bind
     private globalClick(event: MouseEvent) {
-        if (this.state.open && (event.target as HTMLElement).id !== this.state.id) {
+        if (this.state.open && !findDOMNode(this).contains(event.target as HTMLElement)) {
             this.setState({
                 open: false
             });
