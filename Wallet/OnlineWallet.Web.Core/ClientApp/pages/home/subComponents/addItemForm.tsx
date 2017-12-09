@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { FormGroup } from 'common/misc';
-import { bind, updateState, className } from 'walletCommon';
-import { getDirectionColoring } from 'common/transactions-view';
-import { validate, ValidationState } from 'walletCommon/validation';
-import { transactionRules, TransactionViewModel, toDateString } from 'common/models';
-import { WalletSelector, NameInput, CategoryInput } from 'common/specialInputs';
+import { updateState, className } from 'react-ext';
+import { validate, ValidationState, bind, toDateString } from 'helpers';
+import { getDirectionColoring, FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from 'walletCommon';
 import { Wallet, ArticleModel, CategoryModel } from 'walletApi';
 import { DirectionCheck } from './directionCheck';
 
@@ -29,7 +26,7 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
         super(props);
         this.state = this.createInitialState(1);
     }
-    
+
     @bind
     handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
         var state = updateState(event);
@@ -126,7 +123,7 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
     @bind
     async saveAll() {
         var result = await this.props.saveAll();
-        if(result === "success") {
+        if (result === "success") {
             this.setState((prevState, props) => {
                 return this.createInitialState(1);
             });
@@ -138,28 +135,28 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
         const { category, comment, createdAt, direction, name, price, walletId, validation } = this.state;
         return (
             <form onChange={this.handleInputChange} onSubmit={this.addLine}>
-            <FormGroup name="walletId" label="Wallet">
-                <WalletSelector walletId={walletId} wallets={wallets} />
-            </FormGroup>
-            <FormGroup name="createdAt" label="Date" type="date" value={createdAt} />
-            <FormGroup name="name" label="Name">
-                <NameInput focusAction={this.focusStartBind}
-                    value={name} autoFocus={true} onSelect={this.nameSelected}
-                    className={className("form-control", validation.name.showError, "is-invalid")} >
-                    <div className="invalid-feedback">
-                        {validation.name.message}
-                    </div>
-                </NameInput>
-            </FormGroup>
-            <FormGroup name="price" label="Price" type="number" value={price} validation={validation.price} />
-            <FormGroup name="comment" label="Comment" value={comment} />
-            <FormGroup name="category" label="Category" value={category}>
-                <CategoryInput value={category} className="form-control" onSelect={this.categorySelected} />
-            </FormGroup>
-            <DirectionCheck value={direction} />
-            <button type="submit" className="btn btn-primary">Add</button>
-            <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>
-        </form>
+                <FormGroup name="walletId" label="Wallet">
+                    <WalletSelector walletId={walletId} wallets={wallets} />
+                </FormGroup>
+                <FormGroup name="createdAt" label="Date" type="date" value={createdAt} />
+                <FormGroup name="name" label="Name">
+                    <NameInput focusAction={this.focusStartBind}
+                        value={name} autoFocus={true} onSelect={this.nameSelected}
+                        className={className("form-control", validation.name.showError, "is-invalid")} >
+                        <div className="invalid-feedback">
+                            {validation.name.message}
+                        </div>
+                    </NameInput>
+                </FormGroup>
+                <FormGroup name="price" label="Price" type="number" value={price} validation={validation.price} />
+                <FormGroup name="comment" label="Comment" value={comment} />
+                <FormGroup name="category" label="Category" value={category}>
+                    <CategoryInput value={category} className="form-control" onSelect={this.categorySelected} />
+                </FormGroup>
+                <DirectionCheck value={direction} />
+                <button type="submit" className="btn btn-primary">Add</button>
+                <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>
+            </form>
         );
     }
 }

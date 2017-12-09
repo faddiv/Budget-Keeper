@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Wallet } from 'walletApi';
-import { EditDelete, SaveCancel } from 'common/misc';
-import { updateState } from 'walletCommon';
+import { EditDelete, SaveCancel } from 'walletCommon';
+import { updateState } from 'react-ext';
 
 export namespace WalletsRow {
     export interface Props {

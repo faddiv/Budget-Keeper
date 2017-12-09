@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import * as WalletsActions from "actions/wallets";
 import { Wallet, walletService } from 'walletApi';
 import { WalletsRow } from './walletsRow';
-import { bind, className } from 'walletCommon';
+import { className } from 'react-ext';
 import { Layout } from 'layout';
-import { validate, ValidationConfig, ValidationState } from 'walletCommon/validation';
-import * as validators from 'walletCommon/validation/commonValidators';
+import { bind, validate, ValidationConfig, ValidationState } from 'helpers';
+import * as validators from 'helpers/validation/commonValidators';
 import { RootState } from 'reducers';
 
 export namespace Wallets {

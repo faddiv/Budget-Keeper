@@ -5,14 +5,12 @@ import { connect } from 'react-redux';
 
 import * as AlertsActions from "actions/alerts"
 import { Layout } from 'layout';
-import { NavLink, TabPane } from 'common/tabpanel';
+import { updateState, NavLink, TabPane } from 'react-ext';
 import { StockTable, StockModel } from './subComponents';
-import { bind, updateState, _, toUTCDate } from 'walletCommon';
+import { bind, _, toUTCDate, toDateString } from 'helpers';
 import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from 'walletApi';
-import { TransactionTable } from 'common/transactions-view';
-import { TransactionViewModel, toDateString } from 'common/models';
 import { RootState } from 'reducers';
-import { Pager, dataFrom, dataTo } from 'common/misc';
+import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "walletCommon";
 
 export namespace ImportPage {
     export interface Props {
@@ -83,7 +81,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
             page
         });
     }
-    
+
     @bind
     selectStocksPage(pageStocks: number) {
         this.setState({
@@ -205,14 +203,14 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                 </ul>
                 <div className="tab-content">
                     <TabPane name="full" activeKey={activeTab}>
-                        <TransactionTable items={transactions.slice(dataFrom(page, pageSize, countAll),dataTo(page, pageSize, countAll))} wallets={wallets}
+                        <TransactionTable items={transactions.slice(dataFrom(page, pageSize, countAll), dataTo(page, pageSize, countAll))} wallets={wallets}
                             update={this.transactionUpdated} deleted={this.transactionDeleted}
                             rowColor={this.rowColoring} />
-                        <Pager page={page} pageSize={pageSize} countAll={countAll} onPageSelected={this.selectPage}/>
+                        <Pager page={page} pageSize={pageSize} countAll={countAll} onPageSelected={this.selectPage} />
                     </TabPane>
                     <TabPane name="groupStock" activeKey={activeTab}>
-                        <StockTable stocks={stocks.slice(dataFrom(pageStocks, pageSize, countStocks),dataTo(pageStocks, pageSize, countStocks))} />
-                        <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage}/>
+                        <StockTable stocks={stocks.slice(dataFrom(pageStocks, pageSize, countStocks), dataTo(pageStocks, pageSize, countStocks))} />
+                        <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage} />
                     </TabPane>
                 </div>
             </Layout>

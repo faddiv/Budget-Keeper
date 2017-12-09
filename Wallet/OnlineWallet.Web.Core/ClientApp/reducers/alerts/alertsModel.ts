@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { _ } from "walletCommon";
+import { _ } from "helpers";
 import { handleActions } from "redux-actions";
 import { Actions } from "constants/actions";
 

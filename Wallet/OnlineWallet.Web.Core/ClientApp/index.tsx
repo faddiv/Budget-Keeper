@@ -1,4 +1,5 @@
 import "./scss/site.scss";
+import "moment/locale/hu";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";

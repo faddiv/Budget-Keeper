@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { renderRange } from 'common/misc';
+import { renderRange } from 'react-ext';
 
 interface YearSelectorProps { year: number, from: number, to: number, onChange: (year:number) => void }
 

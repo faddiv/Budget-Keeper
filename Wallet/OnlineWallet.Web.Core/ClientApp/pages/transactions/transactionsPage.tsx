@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 
 import * as AlertsActions from "actions/alerts"
-import { TransactionTable, getDirectionColoring } from "common/transactions-view";
 import { Transaction, transactionService, walletService, Wallet, BalanceInfo } from 'walletApi';
-import { bind, _ } from 'walletCommon';
+import { bind, _ } from 'helpers';
 import { Layout } from 'layout';
-import { TransactionViewModel, mapTransactionViewModel, mapTransaction } from 'common/models';
+import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "walletCommon";
 import { YearSelector, MonthSelector, Balance } from './subComponents';
 import { RootState } from 'reducers';
 

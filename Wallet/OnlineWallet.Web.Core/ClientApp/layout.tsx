@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Navbar } from "common/navbar/navbar";
+import { Navbar, AlertList } from "walletCommon";
 import { Prompt } from 'react-router-dom';
-import { AlertList } from 'common/misc';
 
 interface LayoutProps { leaveConfirmation?: LeaveConfirmationParams }
 
