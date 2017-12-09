@@ -1,7 +1,9 @@
-import * as React from 'react';
-import { MoneyDirection } from 'walletApi';
+import * as React from "react";
+import { MoneyDirection } from "walletApi";
 
-interface DirectionIconProps { direction: MoneyDirection }
+interface DirectionIconProps {
+    direction: MoneyDirection;
+}
 
 export const DirectionIcon: React.SFC<DirectionIconProps> = ({ direction, ...rest }) => {
     return (

@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { Wallet } from 'walletApi';
+import * as React from "react";
+import { Wallet } from "walletApi";
 
 interface WalletSelectorProps {
-    walletId: number,
-    wallets: Wallet[],
-    className?: string,
-    name?: string,
-    onChange?: React.ChangeEventHandler<HTMLSelectElement>
+    walletId: number;
+    wallets: Wallet[];
+    className?: string;
+    name?: string;
+    onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 }
 
 export const WalletSelector: React.SFC<WalletSelectorProps> = ({ walletId, wallets, className, name, onChange, ...rest }) => {

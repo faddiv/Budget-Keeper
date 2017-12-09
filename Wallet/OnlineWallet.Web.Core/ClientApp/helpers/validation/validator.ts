@@ -1,32 +1,31 @@
 import { ValidationConfig, ValidationState, ValidationResult, ValidationStateElement } from "./interfaces";
 
 export function validate<TState, TProps>(config: ValidationConfig<TState, TProps>, previousValidationState: ValidationState, state: TState, props: TProps, showErrors?: boolean): ValidationResult {
-    var result: ValidationResult = {
+    const result: ValidationResult = {
         validationState: {},
         changed: false,
         isValid: true
     };
     for (const key in config) {
-        if (!config.hasOwnProperty(key)) continue;
+        if (!config.hasOwnProperty(key)) { continue; }
         const elementConfig = config[key];
-        const nextValue = state 
-            ? (elementConfig.valueGetter 
-                ? elementConfig.valueGetter(state, props) 
+        const nextValue = state
+            ? (elementConfig.valueGetter
+                ? elementConfig.valueGetter(state, props)
                 : defaultGetter(state, key))
             : "";
         const previousStateElement = previousValidationState[key];
         const previousValue = previousStateElement && previousStateElement.value;
         let nextStateElement: ValidationStateElement;
         for (const validatorC of elementConfig.validators) {
-            var validatorF = validatorC.validator;
-            var isValid: boolean;
+            const validatorF = validatorC.validator;
+            let isValid: boolean;
             if (validatorF.paramCount > 1) {
                 if (!validatorC.extraParams || validatorC.extraParams.length + 1 !== validatorF.paramCount) {
                     throw new Error(`the validator ${validatorF} requires additional ${validatorF.paramCount - 1}parameter.`);
                 }
-                let values = [nextValue];
-                for (let index = 0; index < validatorC.extraParams.length; index++) {
-                    const element = validatorC.extraParams[index];
+                const values = [nextValue];
+                for (const element of validatorC.extraParams) {
                     values.push(state ? element(state, props) : undefined);
                 }
                 isValid = validatorF.call(this, values);
@@ -37,7 +36,7 @@ export function validate<TState, TProps>(config: ValidationConfig<TState, TProps
                 const shouldShowError = (elementConfig.shouldShowError || defaultGetShowError);
                 nextStateElement = {
                     isDirty: !!previousStateElement && nextValue !== previousValue,
-                    isValid: isValid,
+                    isValid,
                     showError: showErrors,
                     value: nextValue
                 };

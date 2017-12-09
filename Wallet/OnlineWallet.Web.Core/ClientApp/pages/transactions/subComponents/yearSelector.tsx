@@ -1,7 +1,12 @@
-import * as React from 'react';
-import { renderRange } from 'react-ext';
+import * as React from "react";
+import { renderRange } from "react-ext";
 
-interface YearSelectorProps { year: number, from: number, to: number, onChange: (year:number) => void }
+interface YearSelectorProps {
+    year: number;
+    from: number;
+    to: number;
+    onChange: (year: number) => void;
+}
 
 const YearSelector: React.SFC<YearSelectorProps> = ({ year, from, to, onChange, ...rest }) => {
     function yearSelected(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -13,7 +18,5 @@ const YearSelector: React.SFC<YearSelectorProps> = ({ year, from, to, onChange, 
         </select>
     );
 };
-
-
 
 export { YearSelector };

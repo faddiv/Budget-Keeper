@@ -1,17 +1,17 @@
 import * as React from "react";
 import * as moment from "moment";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
-import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from 'walletCommon';
-import { bind } from 'helpers';
-import { updateState } from 'react-ext';
+import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
+import { bind } from "helpers";
+import { updateState } from "react-ext";
 
 export namespace TransactionTableRow {
     export interface Props {
         item: TransactionViewModel;
         wallets: Wallet[];
+        rowColor?: ITransactionTableExtFunction;
         saveTransaction(newItem: TransactionViewModel, originalItem: TransactionViewModel): void;
         deleteTransaction(item: TransactionViewModel): void;
-        rowColor?: ITransactionTableExtFunction
     }
 
     export interface State {
@@ -42,16 +42,16 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     @bind
-    private changeDirection() {
+    changeDirection() {
         this.setState((prevState, props) => {
             return {
                 item: { ...prevState.item, direction: nextDirection(prevState.item.direction) }
-            }
+            };
         });
     }
 
     @bind
-    private saveTransaction() {
+    saveTransaction() {
         this.props.saveTransaction(this.state.item, this.props.item);
         this.setState({
             editMode: false
@@ -59,19 +59,19 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     @bind
-    private deleteTransaction() {
+    deleteTransaction() {
         this.props.deleteTransaction(this.props.item);
     }
 
     @bind
-    private editTransaction() {
+    editTransaction() {
         this.setState((prevState, props) => ({
             editMode: true
         }));
     }
 
     @bind
-    private cancelTransaction() {
+    cancelTransaction() {
         this.setState((prevState, props) => ({
             editMode: false,
             item: props.item
@@ -80,7 +80,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     @bind
     handleInputChange(event: React.SyntheticEvent<HTMLElement>) {
-        var state = updateState(event);
+        const state = updateState(event);
         if (state.walletId) {
             state.walletId = parseInt(state.walletId, 10);
         }
@@ -119,7 +119,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         return this.state.editMode ? this.renderEditRow() : this.renderViewRow();
     }
 
-    private renderEditRow() {
+    renderEditRow() {
         const { item } = this.state;
         const { wallets, rowColor } = this.props;
         return (
@@ -152,7 +152,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         );
     }
 
-    private renderViewRow() {
+    renderViewRow() {
         const { rowColor, wallets } = this.props;
         const { item } = this.state;
         return (

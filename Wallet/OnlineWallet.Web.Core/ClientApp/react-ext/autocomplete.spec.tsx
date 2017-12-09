@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as jasmineEnzyme from "jasmine-enzyme";
-import { shallow } from 'enzyme';
+import { shallow } from "enzyme";
 import { Autocomplete } from "./autocomplete";
-import { articleService } from 'walletApi';
+import { articleService } from "walletApi";
 
 describe("Autocomplete", () => {
 
@@ -19,10 +19,10 @@ describe("Autocomplete", () => {
     it("should write input.", (callback) => {
         const wrapper = shallow(<Autocomplete value="" onFilter={articleService.filterBy} name="name" />);
         const input = wrapper.find("input");
-        input.simulate('focus');
-        input.simulate('change', { target: { value: 'holiday' }, preventDefault() { } });
+        input.simulate("focus");
+        input.simulate("change", { target: { value: "holiday" }, preventDefault() { } });
         setTimeout(() => {
-            input.simulate('keyDown', {
+            input.simulate("keyDown", {
                 key: "Enter",
                 preventDefault() { }
             });

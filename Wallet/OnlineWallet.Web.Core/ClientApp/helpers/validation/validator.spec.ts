@@ -1,5 +1,5 @@
-import { validate } from './validator';
-import { required, fieldEquals } from "./commonValidators";
+import { validate } from "./validator";
+import { validators } from "./commonValidators";
 import { ValidationConfig, ValidationState } from "./interfaces";
 
 describe("validator", () => {
@@ -21,13 +21,13 @@ describe("validator", () => {
         config = {
             invalid: {
                 validators: [{
-                    validator: required,
+                    validator: validators.required,
                     message: "it is invalid"
                 }]
             },
             valid: {
                 validators: [{
-                    validator: required,
+                    validator: validators.required,
                     message: "it is invalid"
                 }]
             }
@@ -36,8 +36,8 @@ describe("validator", () => {
     });
 
     it("should create initial validation", () => {
-        var valStat: ValidationState = {}
-        var result = validate(config, valStat, state, props);
+        const valStat: ValidationState = {};
+        const result = validate(config, valStat, state, props);
 
         expect(result).toBeDefined();
         expect(result.changed).toBe(true, "because result is changed");
@@ -46,10 +46,10 @@ describe("validator", () => {
     });
 
     it("should set invalid field initial validation state", () => {
-        var valStat: ValidationState = {}
-        var result = validate(config, valStat, state, props);
+        const valStat: ValidationState = {};
+        const result = validate(config, valStat, state, props);
 
-        var invalidField = result.validationState.invalid;
+        const invalidField = result.validationState.invalid;
         expect(invalidField).toBeDefined();
         expect(invalidField.isValid).toBe(false, "because result is not valid");
         expect(invalidField.isDirty).toBe(false, "because result is not dirty");
@@ -58,7 +58,7 @@ describe("validator", () => {
     });
 
     it("should set invalid field state correctly", () => {
-        var valStat: ValidationState = {
+        const valStat: ValidationState = {
             invalid: {
                 isDirty: false,
                 isValid: true,
@@ -66,9 +66,9 @@ describe("validator", () => {
                 value: "asdf"
             }
         };
-        var result = validate(config, valStat, state, props);
+        const result = validate(config, valStat, state, props);
 
-        var invalidField = result.validationState.invalid;
+        const invalidField = result.validationState.invalid;
         expect(invalidField).toBeDefined();
         expect(invalidField).not.toBe(valStat.invalid, "because it should be uppdated");
         expect(invalidField.isValid).toBe(false, "because result is not valid");
@@ -78,10 +78,10 @@ describe("validator", () => {
     });
 
     it("should set valid field initial validation state", () => {
-        var valStat: ValidationState = {}
-        var result = validate(config, valStat, state, props);
+        const valStat: ValidationState = {};
+        const result = validate(config, valStat, state, props);
 
-        var validField = result.validationState.valid;
+        const validField = result.validationState.valid;
         expect(validField).toBeDefined();
         expect(validField.isValid).toBe(true, "because result is valid");
         expect(validField.isDirty).toBe(false, "because result is not dirty");
@@ -90,7 +90,7 @@ describe("validator", () => {
     });
 
     it("should set valid field state correctly", () => {
-        var valStat: ValidationState = {
+        const valStat: ValidationState = {
             valid: {
                 isDirty: false,
                 isValid: false,
@@ -98,9 +98,9 @@ describe("validator", () => {
                 value: ""
             }
         };
-        var result = validate(config, valStat, state, props);
+        const result = validate(config, valStat, state, props);
 
-        var validField = result.validationState.valid;
+        const validField = result.validationState.valid;
         expect(validField).toBeDefined();
         expect(validField.isValid).toBe(true, "because result is valid");
         expect(validField.isDirty).toBe(true, "because result changed");
@@ -109,10 +109,10 @@ describe("validator", () => {
     });
 
     it("showError parameter should set showError on on invalid", () => {
-        var valStat: ValidationState = {};
-        var result = validate(config, valStat, state, props, true);
+        const valStat: ValidationState = {};
+        const result = validate(config, valStat, state, props, true);
 
-        var invalidField = result.validationState.invalid;
+        const invalidField = result.validationState.invalid;
         expect(invalidField).toBeDefined();
         expect(invalidField.isValid).toBe(false, "because result is not valid");
         expect(invalidField.isDirty).toBe(false, "because result changed");
@@ -121,19 +121,19 @@ describe("validator", () => {
     });
 
     it("if nothing changes it returns the same object", () => {
-        var valStat: ValidationState = {};
-        var result1 = validate(config, valStat, state, props);
-        var result2 = validate(config, result1.validationState, state, props);
+        const valStat: ValidationState = {};
+        const result1 = validate(config, valStat, state, props);
+        const result2 = validate(config, result1.validationState, state, props);
 
         expect(result1.validationState).toBe(result2.validationState, "because nothing changed");
         expect(result2.changed).toBe(false, "because should report nothing changed");
     });
 
     it("if everything is valid then it reported", () => {
-        var valStat: ValidationState = {};
-        var result1 = validate(config, valStat, state, props);
+        const valStat: ValidationState = {};
+        const result1 = validate(config, valStat, state, props);
         state.invalid = "asdf";
-        var result2 = validate(config, result1.validationState, state, props);
+        const result2 = validate(config, result1.validationState, state, props);
 
         expect(result1.validationState).not.toBe(result2.validationState, "because changes");
         expect(result2.changed).toBe(true, "because should report changes");
@@ -141,18 +141,18 @@ describe("validator", () => {
     });
 
     it("if showError enabled then validationState should change", () => {
-        var valStat: ValidationState = {};
-        var result1 = validate(config, valStat, state, props);
-        var result2 = validate(config, result1.validationState, state, props, true);
+        const valStat: ValidationState = {};
+        const result1 = validate(config, valStat, state, props);
+        const result2 = validate(config, result1.validationState, state, props, true);
 
         expect(result1.validationState).not.toBe(result2.validationState, "because showError changes state");
         expect(result2.changed).toBe(true, "because should report changes");
     });
 
     it("in case state undefined then getter don't called and value is undefined", () => {
-        var valStat: ValidationState = {};
-        config.valid.valueGetter = state => state.valid.length < 5;
-        var result = validate(config, valStat, undefined, props);
+        const valStat: ValidationState = {};
+        config.valid.valueGetter = _state => _state.valid.length < 5;
+        const result = validate(config, valStat, undefined, props);
 
         expect(result.validationState).toBeDefined("because validation state initialized");
         expect(result.changed).toBe(true, "because validation state changed");
@@ -160,39 +160,38 @@ describe("validator", () => {
         expect(result.validationState.invalid.showError).toBe(false, "because dont show error in initial state");
     });
 
-
     it("in case state undefined then the additional getters don't called and value is undefined", () => {
-        var valStat: ValidationState = {};
-        var errMsg = "Fields not equal";
-        config.valid.valueGetter = state => state.valid.length < 5;
+        const valStat: ValidationState = {};
+        const errMsg = "Fields not equal";
+        config.valid.valueGetter = _state => _state.valid.length < 5;
         config.valid.validators = [
             {
                 extraParams: [
-                    (state) => state.invalid.length
+                    (_state) => _state.invalid.length
                 ],
-                validator: fieldEquals,
+                validator: validators.fieldEquals,
                 message: errMsg
             }
         ];
-        var result = validate(config, valStat, undefined, props);
+        const result = validate(config, valStat, undefined, props);
 
         expect(result.validationState).toBeDefined("because validation state initialized");
         expect(result.changed).toBe(true, "because validation state changed");
     });
 
     it("the additional getters called when necessary", () => {
-        var valStat: ValidationState = {};
-        var errMsg = "Fields not equal";
+        const valStat: ValidationState = {};
+        const errMsg = "Fields not equal";
         config.valid.validators = [
             {
                 extraParams: [
-                    (state) => state.invalid
+                    (_state) => _state.invalid
                 ],
-                validator: fieldEquals,
+                validator: validators.fieldEquals,
                 message: errMsg
             }
         ];
-        var result = validate(config, valStat, state, props, true);
+        const result = validate(config, valStat, state, props, true);
 
         expect(result.validationState).toBeDefined("because validation state initialized");
         expect(result.validationState.valid.isValid).toBe(false, "because two field different");

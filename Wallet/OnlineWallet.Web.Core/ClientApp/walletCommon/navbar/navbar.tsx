@@ -1,8 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 import { MenuItem } from "./menuItem";
-import { DropdownMenu } from './dropdownMenu';
-import { Link, NavLink } from 'react-router-dom';
-import { bind } from 'helpers';
+import { DropdownMenu } from "./dropdownMenu";
+import { Link, NavLink } from "react-router-dom";
+import { bind } from "helpers";
 import { className } from "react-ext";
 
 export namespace Navbar {
@@ -33,7 +33,7 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
     }
 
     render() {
-        const { open, } = this.state;
+        const { open } = this.state;
         const closed = !open;
         return (
             <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">

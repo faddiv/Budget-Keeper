@@ -1,12 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
 import { renderRange } from "react-ext";
 
-interface MonthSelectorProps { year: number, month: number, onChange: (month: number) => void }
+interface MonthSelectorProps {
+    year: number;
+    month: number;
+    onChange: (month: number) => void;
+}
 
 const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month, onChange, ...rest }) => {
-    let now = new Date();
-    let currentYear = now.getFullYear();
-    let currentMonth = now.getMonth() + 1;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
     return (
         <div className="input-group-btn">
             {renderRange(1, 12, i =>
@@ -21,15 +25,16 @@ const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month, onChange, .
 };
 
 function getMonthColoring(year: number, month: number, currentYear: number, currentMonth: number, renderedMonth: number) {
-    
     if (renderedMonth === month) {
         return "btn btn-primary";
     }
 
-    if (year > currentYear)
+    if (year > currentYear) {
         return "btn btn-secondary";
-    if (year < currentYear)
+    }
+    if (year < currentYear) {
         return "btn btn-light";
+    }
 
     if (renderedMonth <= currentMonth) {
         return "btn btn-light";
@@ -37,6 +42,6 @@ function getMonthColoring(year: number, month: number, currentYear: number, curr
         return "btn btn-secondary";
     }
 
-
 }
+
 export { MonthSelector };

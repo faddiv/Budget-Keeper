@@ -3,5 +3,5 @@ export enum Actions {
     dismissAlert = "DismissAlertType",
     dismissAllAlert = "DismissAllAlert",
 
-    loadWallets = "LoadWallets",
+    loadWallets = "LoadWallets"
 }

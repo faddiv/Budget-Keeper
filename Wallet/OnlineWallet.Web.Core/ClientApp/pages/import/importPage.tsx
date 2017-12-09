@@ -1,21 +1,21 @@
-import * as React from 'react';
-import * as moment from 'moment';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import * as React from "react";
+import * as moment from "moment";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as AlertsActions from "actions/alerts"
-import { Layout } from 'layout';
-import { updateState, NavLink, TabPane } from 'react-ext';
-import { StockTable, StockModel } from './subComponents';
-import { bind, _, toUTCDate, toDateString } from 'helpers';
-import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from 'walletApi';
-import { RootState } from 'reducers';
+import { AlertsActions } from "actions/alerts";
+import { Layout } from "layout";
+import { updateState, NavLink, TabPane } from "react-ext";
+import { StockTable, StockModel } from "./subComponents";
+import { bind, _, toUTCDate, toDateString } from "helpers";
+import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from "walletApi";
+import { RootState } from "reducers";
 import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "walletCommon";
 
 export namespace ImportPage {
     export interface Props {
         wallets: Wallet[];
-        actions?: typeof AlertsActions,
+        actions?: typeof AlertsActions;
     }
     export interface State {
         activeTab: string;
@@ -44,12 +44,11 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     }
 
     createStockGroups(transactions) {
-        var stocks = [];
+        const stocks = [];
         const grouping: {
             [name: string]: StockModel
         } = {};
-        for (let index = 0; index < transactions.length; index++) {
-            const element = transactions[index];
+        for (const element of transactions) {
             if (grouping[element.name]) {
                 grouping[element.name].category = grouping[element.name].category || element.category;
                 grouping[element.name].count++;
@@ -64,7 +63,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
         }
         stocks.sort((left, right) => right.count - left.count);
         this.setState({
-            stocks: stocks
+            stocks
         });
     }
 
@@ -91,7 +90,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
 
     @bind
     handleInputChange(event: React.ChangeEvent<HTMLFormElement>) {
-        var state = updateState(event);
+        const state = updateState(event);
         this.setState(state);
     }
 
@@ -105,7 +104,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
             actions.showAlert({ type: "danger", message: "Please select a file" });
             return;
         }
-        var transactions = await importExportService.uploadTransactions(file[0]);
+        const transactions = await importExportService.uploadTransactions(file[0]);
         this.setState({
             transactions: transactions.map((tr, index) => {
                 return {
@@ -118,7 +117,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                     price: tr.amount.toString(10),
                     transactionId: tr.matchingId,
                     walletId: tr.source === "Cash" ? 1 : 2
-                } as TransactionViewModel;
+                };
             }),
             page: 1,
             pageStocks: 1
@@ -131,7 +130,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
         const { transactions } = this.state;
         const { actions } = this.props;
         actions.dismissAllAlert();
-        var serverTransactions = transactions.map(tr => {
+        const serverTransactions = transactions.map(tr => {
             return {
                 category: tr.category,
                 comment: tr.comment,
@@ -141,7 +140,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                 transactionId: tr.transactionId,
                 value: parseInt(tr.price, 10),
                 walletId: tr.walletId
-            } as Transaction;
+            };
         });
         await transactionService.batchUpdate(serverTransactions);
         this.setState({

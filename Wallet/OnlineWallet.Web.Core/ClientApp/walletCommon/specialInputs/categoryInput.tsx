@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { CategoryModel, categoryService } from 'walletApi';
-import { Autocomplete } from 'react-ext';
+import * as React from "react";
+import { CategoryModel, categoryService } from "walletApi";
+import { Autocomplete } from "react-ext";
 
-interface  CategoryInputProps {
+interface CategoryInputProps {
     value: string;
     onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
     autoFocus?: boolean;
@@ -10,8 +10,7 @@ interface  CategoryInputProps {
     className?: string;
 }
 
-
-export const CategoryInput: React.SFC< CategoryInputProps> = ({ value, onChange, autoFocus, onSelect, className, ...rest }) => {
+export const CategoryInput: React.SFC<CategoryInputProps> = ({ value, onChange, autoFocus, onSelect, className, ...rest }) => {
     return (
         <Autocomplete name="category" value={value} onFilter={filter} autoFocus={autoFocus} onChange={onChange} onSelect={onSelect} className={className}>
             {rest.children}

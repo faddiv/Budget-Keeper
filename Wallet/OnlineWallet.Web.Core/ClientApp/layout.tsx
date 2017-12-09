@@ -1,8 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import { Navbar, AlertList } from "walletCommon";
-import { Prompt } from 'react-router-dom';
+import { Prompt } from "react-router-dom";
 
-interface LayoutProps { leaveConfirmation?: LeaveConfirmationParams }
+interface LayoutProps {
+    leaveConfirmation?: LeaveConfirmationParams;
+}
 
 const Layout: React.SFC<LayoutProps> = ({ leaveConfirmation, ...rest }) => {
     return (
@@ -19,7 +21,7 @@ const Layout: React.SFC<LayoutProps> = ({ leaveConfirmation, ...rest }) => {
 
 interface LeaveConfirmationParams {
     when: boolean;
-    message: string
+    message: string;
 }
 
 export { Layout };

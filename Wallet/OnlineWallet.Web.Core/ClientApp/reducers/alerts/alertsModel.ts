@@ -17,7 +17,7 @@ export type AlertsModel = AlertMessage[];
 
 export default handleActions<AlertsModel, AlertMessage>({
     [Actions.showAlertType](state, action) {
-        return [...state, action.payload]
+        return [...state, action.payload];
     },
     [Actions.dismissAlert](state, action) {
         return _.remove(state, action.payload);

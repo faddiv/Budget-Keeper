@@ -1,21 +1,21 @@
-import * as React from 'react';
-import * as moment from 'moment';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import * as React from "react";
+import * as moment from "moment";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as AlertsActions from "actions/alerts"
+import { AlertsActions } from "actions/alerts";
 import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel, CategoryModel } from "walletApi";
-import { Layout } from 'layout';
-import { Autocomplete, updateState, className } from 'react-ext';
-import { DirectionCheck, AddItemForm, SaveAllResult } from './subComponents';
-import { RootState } from 'reducers';
-import { _, bind, validate, ValidationConfig, ValidationState, toDateString } from 'helpers';
-import { TransactionTable, getDirectionColoring, FormGroup, WalletSelector, NameInput, CategoryInput, TransactionViewModel, mapTransaction, getWalletNameById } from 'walletCommon';
+import { Layout } from "layout";
+import { Autocomplete, updateState, className } from "react-ext";
+import { DirectionCheck, AddItemForm, SaveAllResult } from "./subComponents";
+import { RootState } from "reducers";
+import { _, bind, validate, ValidationConfig, ValidationState, toDateString } from "helpers";
+import { TransactionTable, getDirectionColoring, FormGroup, WalletSelector, NameInput, CategoryInput, TransactionViewModel, mapTransaction, getWalletNameById } from "walletCommon";
 
 export namespace Home {
     export interface Props {
         wallets: Wallet[];
-        actions?: typeof AlertsActions,
+        actions?: typeof AlertsActions;
     }
 
     export interface State {
@@ -60,7 +60,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
     deleteRow(item: TransactionViewModel) {
         this.setState((prevState, props) => {
             return {
-                items: _.remove(prevState.items, item),
+                items: _.remove(prevState.items, item)
             };
         });
     }
@@ -69,7 +69,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
     updateRow(items: TransactionViewModel[]) {
         this.setState((prevState, props) => {
             return {
-                items: items,
+                items
             };
         });
     }
@@ -91,8 +91,8 @@ export class Home extends React.Component<Home.Props, Home.State> {
                 this.alertsService.showAlert({ type: "warning", message: "Nothing to save" });
                 return;
             }
-            var serverItems = mapTransaction(this.state.items);
-            var result = await transactionService.batchUpdate(serverItems);
+            const serverItems = mapTransaction(this.state.items);
+            const result = await transactionService.batchUpdate(serverItems);
             this.alertsService.showAlert({ type: "success", message: "Transactions are saved successfully." });
             this.setState({
                 items: []

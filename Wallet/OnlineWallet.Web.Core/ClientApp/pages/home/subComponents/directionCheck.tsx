@@ -1,7 +1,10 @@
-import * as React from 'react';
-import { MoneyDirection } from 'walletApi';
+import * as React from "react";
+import { MoneyDirection } from "walletApi";
 
-interface DirectionCheckProps { value: MoneyDirection, onChange?: () => void }
+interface DirectionCheckProps {
+    value: MoneyDirection;
+    onChange?: () => void;
+}
 
 const DirectionCheck: React.SFC<DirectionCheckProps> = ({ value, onChange, ...rest }) => {
     return (
@@ -25,4 +28,5 @@ const DirectionCheck: React.SFC<DirectionCheckProps> = ({ value, onChange, ...re
 DirectionCheck.defaultProps = {
     onChange: () => {}
 };
+
 export { DirectionCheck };

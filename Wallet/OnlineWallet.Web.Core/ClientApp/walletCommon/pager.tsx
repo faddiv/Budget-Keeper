@@ -1,13 +1,18 @@
-import * as React from 'react';
-import { className } from 'react-ext';
+import * as React from "react";
+import { className } from "react-ext";
 
-interface PagerProps { pageSize: number, page: number, countAll: number, onPageSelected: (page: number) => void }
+interface PagerProps {
+  pageSize: number;
+  page: number;
+  countAll: number;
+  onPageSelected: (page: number) => void;
+}
 
 export const Pager: React.SFC<PagerProps> = ({ pageSize, page, countAll, onPageSelected, ...rest }) => {
   if (pageSize === 0 || !countAll) {
     return null;
   }
-  let pageCount = Math.ceil(countAll / pageSize);
+  const pageCount = Math.ceil(countAll / pageSize);
   const pages: number[] = [];
   const pagesFrom = Math.max(page - 5, 1);
   const pagesTo = Math.min(pagesFrom + 10, pageCount + 1);
@@ -47,9 +52,9 @@ function item(page: number, text: string, callback: (number) => void, enabled: b
 
 function link(page: number, text: string, callback: (number) => void, enabled: boolean) {
   if (enabled) {
-    return <a className="page-link" onClick={evt => { evt.preventDefault(); callback(page); }}>{text}</a >
+    return <a className="page-link" onClick={evt => { evt.preventDefault(); callback(page); }}>{text}</a>;
   } else {
-    return <span className="page-link">{text}</span>
+    return <span className="page-link">{text}</span>;
   }
 }
 

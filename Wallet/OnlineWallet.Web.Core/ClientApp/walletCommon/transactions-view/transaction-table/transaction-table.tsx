@@ -3,7 +3,7 @@ import "./transaction-table.scss";
 import { Wallet, Transaction, walletService } from "walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel, ITransactionTableExtFunction } from "walletCommon";
-import { bind, _ } from 'helpers';
+import { bind, _ } from "helpers";
 
 export namespace TransactionTable {
   export interface Props {
@@ -30,8 +30,8 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
 
   @bind
   saveTransaction(newItem: TransactionViewModel, original: TransactionViewModel) {
-    let items = _.replace(this.props.items, newItem, original);
-    let changes = this.props.changedItems ? _.replace(this.props.changedItems, newItem, original, true) : undefined;
+    const items = _.replace(this.props.items, newItem, original);
+    const changes = this.props.changedItems ? _.replace(this.props.changedItems, newItem, original, true) : undefined;
     this.props.update(items, changes);
   }
 

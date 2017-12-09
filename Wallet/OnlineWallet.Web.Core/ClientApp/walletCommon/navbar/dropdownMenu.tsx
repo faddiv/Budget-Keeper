@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { bind } from 'helpers';
-import { className } from 'react-ext';
+import * as React from "react";
+import { bind } from "helpers";
+import { className } from "react-ext";
 import { findDOMNode } from "react-dom";
-import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from 'react-router-dom';
+import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from "react-router-dom";
 
 export namespace DropdownMenu {
     export interface Props extends Partial<RouteComponentProps<Props>> {
@@ -17,18 +17,28 @@ export namespace DropdownMenu {
 
 @withRouter
 export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMenu.State> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            id: Math.round(Math.random() * 10000).toString(),
+            active: this.determineActive()
+        };
+    }
+
     determineActive(): boolean {
-        var props = this.props;
-        if (!props.children) return false;
-        var children = props.children as Array<React.ReactChild>;
+        const props = this.props;
+        if (!props.children) { return false; }
+        const children = props.children as React.ReactChild[];
         if (children.length > 0) {
-            for (let index = 0; index < children.length; index++) {
-                const element = children[index] as React.ReactElement<NavLinkProps>;
-                if(element.type as any === NavLink) {
-                    if(matchPath(props.location.pathname, {
-                        path: element.props.to as string,
-                        exact: element.props.exact,
-                        strict: element.props.strict
+            for (const element of children) {
+                const el = element as React.ReactElement<NavLinkProps>;
+                if (el.type as any === NavLink) {
+                    if (matchPath(props.location.pathname, {
+                        path: el.props.to as string,
+                        exact: el.props.exact,
+                        strict: el.props.strict
                     })) {
                         return true;
                     }
@@ -36,14 +46,6 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
             }
         }
         return false;
-    }
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false,
-            id: Math.round(Math.random()*10000).toString(),
-            active: this.determineActive()
-        };
     }
 
     componentDidMount() {
@@ -55,7 +57,7 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
     }
 
     @bind
-    private globalClick(event: MouseEvent) {
+    globalClick(event: MouseEvent) {
         if (this.state.open && !findDOMNode(this).contains(event.target as HTMLElement)) {
             this.setState({
                 open: false

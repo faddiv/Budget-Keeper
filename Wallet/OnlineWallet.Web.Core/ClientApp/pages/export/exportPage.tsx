@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import * as moment from "moment";
 
-import { renderRange, switchCase, updateState } from 'react-ext';
-import { bind, dateFormat } from 'helpers';
-import { Layout } from 'layout';
-import { importExportService } from 'walletApi';
+import { renderRange, switchCase, updateState } from "react-ext";
+import { bind, dateFormat } from "helpers";
+import { Layout } from "layout";
+import { importExportService } from "walletApi";
 
 export namespace ExportPage {
     export interface Props {
@@ -49,18 +49,20 @@ export class ExportPage extends React.Component<ExportPage.Props, ExportPage.Sta
     }
 
     getRangeSelection() {
-        let { rangeFrom, rangeTo, rangeType, month, year } = this.state;
+        const { rangeFrom, rangeTo, rangeType, month, year } = this.state;
         if (rangeType === "1") {
             const from = moment([parseInt(year, 10), parseInt(month, 10) - 1, 1]);
-            rangeFrom = from.format(dateFormat);
-            rangeTo = from.endOf("month").format(dateFormat);
+            return {
+                rangeFrom: from.format(dateFormat),
+                rangeTo: from.endOf("month").format(dateFormat)
+            };
         }
         return { rangeFrom, rangeTo };
     }
 
     @bind
     handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
-        var state = updateState(event);
+        const state = updateState(event);
         this.setState(state);
     }
 
@@ -125,8 +127,8 @@ export class ExportPage extends React.Component<ExportPage.Props, ExportPage.Sta
                     <div className="card">
                         {
                             switchCase(rangeType, {
-                                "1": this.renderYearMonthSelector,
-                                "2": this.renderRangeSelector
+                                1: this.renderYearMonthSelector,
+                                2: this.renderRangeSelector
                             })
                         }
                     </div>
@@ -138,4 +140,5 @@ export class ExportPage extends React.Component<ExportPage.Props, ExportPage.Sta
         );
     }
 }
+
 function noop() { }

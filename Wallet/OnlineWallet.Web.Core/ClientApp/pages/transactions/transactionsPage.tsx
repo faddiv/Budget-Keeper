@@ -1,16 +1,16 @@
-import * as React from 'react';
-import * as moment from 'moment';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import * as React from "react";
+import * as moment from "moment";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router";
 
-import * as AlertsActions from "actions/alerts"
-import { Transaction, transactionService, walletService, Wallet, BalanceInfo } from 'walletApi';
-import { bind, _ } from 'helpers';
-import { Layout } from 'layout';
+import { AlertsActions } from "actions/alerts";
+import { Transaction, transactionService, walletService, Wallet, BalanceInfo } from "walletApi";
+import { bind, _ } from "helpers";
+import { Layout } from "layout";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "walletCommon";
-import { YearSelector, MonthSelector, Balance } from './subComponents';
-import { RootState } from 'reducers';
+import { YearSelector, MonthSelector, Balance } from "./subComponents";
+import { RootState } from "reducers";
 
 export namespace Transactions {
     export interface Params {
@@ -19,7 +19,7 @@ export namespace Transactions {
     }
     export interface Props extends Partial<RouteComponentProps<Params>> {
         wallets: Wallet[];
-        actions?: typeof AlertsActions,
+        actions?: typeof AlertsActions;
     }
 
     export interface State {
@@ -65,10 +65,10 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         }
     }
 
-    private getYearMonth(params: Transactions.Params) {
+    getYearMonth(params: Transactions.Params) {
         const now = new Date();
-        const year = parseInt(params.year) || now.getFullYear();
-        const month = parseInt(params.month) || now.getMonth() + 1;
+        const year = parseInt(params.year, 10) || now.getFullYear();
+        const month = parseInt(params.month, 10) || now.getMonth() + 1;
         return { year, month };
     }
 
@@ -80,13 +80,13 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                 this.alertsService.showAlert({ type: "warning", message: "No data has changed." });
                 return;
             }
-            var transactions = mapTransaction(this.state.changedItems);
-            var resultTransactions = await transactionService.batchUpdate(transactions, this.state.deletedItems);
-            var balance = await transactionService.balanceInfo(this.state.year, this.state.month);
+            const transactions = mapTransaction(this.state.changedItems);
+            const resultTransactions = await transactionService.batchUpdate(transactions, this.state.deletedItems);
+            const balance = await transactionService.balanceInfo(this.state.year, this.state.month);
             this.setState({
                 changedItems: [],
                 deletedItems: [],
-                balance: balance
+                balance
             });
             this.alertsService.showAlert({ type: "success", message: "Changes saved successfully." });
         } catch (error) {
@@ -95,7 +95,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     @bind
-    private deleteItem(item: TransactionViewModel) {
+    deleteItem(item: TransactionViewModel) {
         this.setState((prevState, props) => {
             return {
                 items: _.remove(prevState.items, item),
@@ -106,37 +106,37 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     @bind
-    private update(items: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
+    update(items: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
         this.setState({
-            items: items,
-            changedItems: changedItems
+            items,
+            changedItems
         });
     }
 
     @bind
-    private yearSelected(year) {
+    yearSelected(year) {
         this.props.history.push(`/transactions/${year}/${this.state.month}`);
     }
 
     @bind
-    private monthSelected(month: number) {
+    monthSelected(month: number) {
         this.props.history.push(`/transactions/${this.state.year}/${month}`);
     }
 
     @bind
-    private async dateSelected() {
+    async dateSelected() {
         const { year, month } = this.state;
         const start = moment([year, month - 1, 1]);
         const end = moment(start).endOf("month");
-        var fetchTransactions = transactionService.fetch({
+        const fetchTransactions = transactionService.fetch({
             search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`,
             sorting: "CreatedAt desc, Name asc, TransactionId desc"
         });
-        var fetchBalance = transactionService.balanceInfo(start.year(), start.month() + 1);
+        const fetchBalance = transactionService.balanceInfo(start.year(), start.month() + 1);
         const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
         this.setState({
             items: mapTransactionViewModel(transactions, this.props.wallets),
-            balance: balance
+            balance
         });
     }
 

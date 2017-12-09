@@ -26,13 +26,13 @@ export interface ValidationConfig<TState, TProps> {
 }
 
 export interface ValidationConfigElement<TState, TProps, TValue> {
-    validators: Validator<TState, TProps, TValue>[];
-    valueGetter?(state: TState, props: TProps): TValue;
     shouldShowError?: GetShowErrorFunc<TState, TProps>;
+    validators: Array<Validator<TState, TProps, TValue>>;
+    valueGetter?(state: TState, props: TProps): TValue;
 }
 export interface Validator<TState, TProps, TValue> {
-    message: string,
+    message: string;
     messageParams?: any;
     validator: ValidatorFunction<TValue>;
-    extraParams?: ((state: TState, props: TProps) => TValue)[]
+    extraParams?: Array<(state: TState, props: TProps) => TValue>;
 }

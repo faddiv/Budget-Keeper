@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { Wallet } from 'walletApi';
-import { EditDelete, SaveCancel } from 'walletCommon';
-import { updateState } from 'react-ext';
+import * as React from "react";
+import { Wallet } from "walletApi";
+import { EditDelete, SaveCancel } from "walletCommon";
+import { updateState } from "react-ext";
 
 export namespace WalletsRow {
     export interface Props {
-        wallet: Wallet,
+        wallet: Wallet;
         save: (newWallet: Wallet, original: Wallet) => void;
         delete_: (wallet: Wallet) => void;
     }
     export interface State {
-        editMode: boolean,
-        wallet: Wallet
+        editMode: boolean;
+        wallet: Wallet;
     }
 }
 
@@ -49,8 +49,8 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
     saveWallet() {
         this.setState((prevState, props) => {
             return {
-                editMode: false,
-            }
+                editMode: false
+            };
         }, () => {
             this.props.save(this.state.wallet, this.props.wallet);
         });
@@ -64,9 +64,9 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
     }
 
     handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-        var wallet = updateState(event);
+        const wallet = updateState(event);
         this.setState({
-            wallet: wallet
+            wallet
         });
     }
 

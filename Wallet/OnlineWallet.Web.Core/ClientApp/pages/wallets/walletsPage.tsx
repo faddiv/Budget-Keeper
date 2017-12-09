@@ -1,15 +1,14 @@
-import * as React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import * as React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
 import * as WalletsActions from "actions/wallets";
-import { Wallet, walletService } from 'walletApi';
-import { WalletsRow } from './walletsRow';
-import { className } from 'react-ext';
-import { Layout } from 'layout';
-import { bind, validate, ValidationConfig, ValidationState } from 'helpers';
-import * as validators from 'helpers/validation/commonValidators';
-import { RootState } from 'reducers';
+import { Wallet, walletService } from "walletApi";
+import { WalletsRow } from "./walletsRow";
+import { className } from "react-ext";
+import { Layout } from "layout";
+import { bind, validate, ValidationConfig, ValidationState, validators } from "helpers";
+import { RootState } from "reducers";
 
 export namespace Wallets {
     export interface Props {
@@ -35,14 +34,14 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
                         validator: validators.required,
                         message: "Name is reuired."
                     }
-                ],
+                ]
             }
         };
 
         this.state = {
             name: "",
-            rules: rules,
-            validation: validate(rules, {}, undefined, props).validationState,
+            rules,
+            validation: validate(rules, {}, undefined, props).validationState
         };
     }
 
@@ -82,13 +81,14 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     @bind
     handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const value = target.type === "checkbox" ? target.checked : target.value;
         const name = target.name;
-        var state = Object.assign({}, this.state, {
+        const state = {
+            ...this.state,
             [name]: value
-        });
+        };
         this.setState(state, () => {
-            var valResult = validate(this.state.rules, this.state.validation, this.state, this.props);
+            const valResult = validate(this.state.rules, this.state.validation, this.state, this.props);
             if (valResult.changed) {
                 this.setState({
                     validation: valResult.validationState
@@ -131,7 +131,6 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         );
     }
 }
-
 
 function mapStateToProps(state: RootState, ownProps: any) {
     return {

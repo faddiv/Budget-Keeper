@@ -1,7 +1,10 @@
-import * as React from 'react';
-import { className } from 'react-ext';
+import * as React from "react";
+import { className } from "react-ext";
 
-interface TabPaneProps { name, activeKey }
+interface TabPaneProps {
+    name: string;
+    activeKey: string;
+}
 
 export const TabPane: React.SFC<TabPaneProps> = ({ name, activeKey, ...rest }) => {
     const isActive = name === activeKey;

@@ -1,8 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface EditDeleteProps {
-    edit: () => void,
-    delete_: () => void
+    edit: () => void;
+    delete_: () => void;
 }
 
 export const EditDelete: React.SFC<EditDeleteProps> = ({ edit, delete_, ...rest }) => {

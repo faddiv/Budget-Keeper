@@ -56,25 +56,18 @@ namespace OnlineWallet.Web.Common.Queries
             {
                 case ComparisonOperator.Equal:
                     return Expression.Equal(propertyGetter, valueExpr);
-                    break;
                 case ComparisonOperator.NotEqual:
                     return Expression.NotEqual(propertyGetter, valueExpr);
-                    break;
                 case ComparisonOperator.GreaterThan:
                     return Expression.GreaterThan(propertyGetter, valueExpr);
-                    break;
                 case ComparisonOperator.LessThan:
                     return Expression.LessThan(propertyGetter, valueExpr);
-                    break;
                 case ComparisonOperator.GreaterOrEqual:
                     return Expression.GreaterThanOrEqual(propertyGetter, valueExpr);
-                    break;
                 case ComparisonOperator.LessOrEqual:
                     return Expression.LessThanOrEqual(propertyGetter, valueExpr);
-                    break;
                 default:
                     throw new Exception($"Unknown comparison in expression: {comparison}");
-                    break;
             }
         }
 

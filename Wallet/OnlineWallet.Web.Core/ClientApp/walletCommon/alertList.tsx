@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { bindActionCreators } from 'redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { Action, Location } from 'history';
-import { connect } from 'react-redux';
+import * as React from "react";
+import { bindActionCreators } from "redux";
+import { RouteComponentProps, withRouter } from "react-router";
+import { Action, Location } from "history";
+import { connect } from "react-redux";
 
-import * as AlertsActions from "actions/alerts"
-import { AlertMessage } from 'reducers/alerts/alertsModel';
-import { RootState } from 'reducers';
-import { bind } from 'helpers';
+import { AlertsActions } from "actions/alerts";
+import { AlertMessage } from "reducers/alerts/alertsModel";
+import { RootState } from "reducers";
+import { bind } from "helpers";
 
 export namespace AlertList {
     export interface Props extends Partial<RouteComponentProps<void>> {
-        alerts?: AlertMessage[],
-        actions?: typeof AlertsActions
+        alerts?: AlertMessage[];
+        actions?: typeof AlertsActions;
     }
     export interface State {
     }
@@ -33,8 +33,8 @@ export class AlertList extends React.Component<AlertList.Props, AlertList.State>
 
     @bind
     private locationListener(location: Location, action: Action) {
-        var { alerts, actions } = this.props;
-        if(alerts.length > 0) {
+        const { alerts, actions } = this.props;
+        if (alerts.length > 0) {
             actions.dismissAllAlert();
         }
     }

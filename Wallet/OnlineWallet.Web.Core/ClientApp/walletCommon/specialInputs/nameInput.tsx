@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 import { Autocomplete } from "react-ext";
-import { ArticleModel, articleService } from 'walletApi';
+import { ArticleModel, articleService } from "walletApi";
 
 interface NameInputProps {
     value: string;
