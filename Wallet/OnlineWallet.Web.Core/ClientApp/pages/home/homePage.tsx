@@ -32,8 +32,8 @@ export class Home extends React.Component<Home.Props, Home.State> {
     /**
      *
      */
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             items: []
         };
