@@ -19,7 +19,7 @@ ReactDOM.render(
         <Router history={history}>
             <Switch>
                 <Route path="/" exact component={Home} />
-                <Route path="/transactions" component={Transactions} />
+                <Route path="/transactions/:year?/:month?" component={Transactions} />
                 <Route path="/import" component={ImportPage} />
                 <Route path="/export" component={ExportPage} />
                 <Route path="/wallets" component={Wallets} />

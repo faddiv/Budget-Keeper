@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 import * as AlertsActions from "actions/alerts"
 import { TransactionTable, getDirectionColoring } from "common/transactions-view";
@@ -13,7 +14,11 @@ import { YearSelector, MonthSelector, Balance } from './subComponents';
 import { RootState } from 'reducers';
 
 export namespace Transactions {
-    export interface Props {
+    export interface Params {
+        year?: string;
+        month?: string;
+    }
+    export interface Props extends Partial<RouteComponentProps<Params>> {
         wallets: Wallet[];
         actions?: typeof AlertsActions,
     }
@@ -22,26 +27,27 @@ export namespace Transactions {
         changedItems: TransactionViewModel[];
         deletedItems: number[];
         items: TransactionViewModel[];
-        selectedYear: number;
-        selectedMonth: number;
+        month: number;
+        year: number;
         maxYear: number;
         balance?: BalanceInfo;
     }
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
+@withRouter
 export class Transactions extends React.Component<Transactions.Props, Transactions.State> {
 
     constructor(props) {
         super(props);
-        const now = new Date();
+        const { year, month } = this.getYearMonth(props.match.params);
         this.state = {
             changedItems: [],
             deletedItems: [],
             items: [],
-            selectedYear: now.getFullYear(),
-            selectedMonth: now.getMonth() + 1,
-            maxYear: now.getFullYear()
+            year,
+            month,
+            maxYear: new Date().getFullYear()
         };
     }
 
@@ -50,11 +56,21 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     componentDidMount() {
-        this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
+        this.dateSelected();
     }
 
-    componentWillReceiveProps() {
-        this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
+    componentWillReceiveProps(nextProps: Transactions.Props) {
+        const { year, month } = this.getYearMonth(nextProps.match.params);
+        if (this.state.year !== year || this.state.month !== month) {
+            this.setState({ year, month }, this.dateSelected);
+        }
+    }
+
+    private getYearMonth(params: Transactions.Params) {
+        const now = new Date();
+        const year = parseInt(params.year) || now.getFullYear();
+        const month = parseInt(params.month) || now.getMonth() + 1;
+        return { year, month };
     }
 
     @bind
@@ -67,9 +83,11 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
             }
             var transactions = mapTransaction(this.state.changedItems);
             var resultTransactions = await transactionService.batchUpdate(transactions, this.state.deletedItems);
+            var balance = await transactionService.balanceInfo(this.state.year, this.state.month);
             this.setState({
                 changedItems: [],
-                deletedItems: []
+                deletedItems: [],
+                balance: balance
             });
             this.alertsService.showAlert({ type: "success", message: "Changes saved successfully." });
         } catch (error) {
@@ -98,24 +116,18 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
 
     @bind
     private yearSelected(year) {
-        this.setState({
-            selectedYear: year
-        }, () => {
-            this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
-        });
+        this.props.history.push(`/transactions/${year}/${this.state.month}`);
     }
 
     @bind
     private monthSelected(month: number) {
-        this.setState({
-            selectedMonth: month
-        }, () => {
-            this.dateSelected(this.state.selectedYear, this.state.selectedMonth);
-        });
+        this.props.history.push(`/transactions/${this.state.year}/${month}`);
     }
 
-    private async dateSelected(year: number, month: number) {
-        const start = moment(year + "-" + month + "-01");
+    @bind
+    private async dateSelected() {
+        const { year, month } = this.state;
+        const start = moment([year, month - 1, 1]);
         const end = moment(start).endOf("month");
         var fetchTransactions = transactionService.fetch({
             search: `CreatedAt >= "${start.format("YYYY-MM-DD")}" And CreatedAt <= "${end.format("YYYY-MM-DD")}"`,
@@ -130,7 +142,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     render() {
-        const { maxYear, selectedYear, selectedMonth, items, changedItems, balance } = this.state;
+        const { maxYear, items, changedItems, balance, year, month } = this.state;
         const { wallets } = this.props;
         return (
             <Layout>
@@ -141,8 +153,8 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                         </div>
                         <div className="col">
                             <div className="input-group">
-                                <YearSelector from={2009} to={maxYear} year={selectedYear} onChange={this.yearSelected} />
-                                <MonthSelector year={selectedYear} month={selectedMonth} onChange={this.monthSelected} />
+                                <YearSelector from={2009} to={maxYear} year={year} onChange={this.yearSelected} />
+                                <MonthSelector year={year} month={month} onChange={this.monthSelected} />
                             </div>
                         </div>
                     </div>
