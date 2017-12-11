@@ -77,7 +77,8 @@ namespace OnlineWallet.Web
         {
             services.AddDbContext<WalletDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("Wallet"));
+                //options.UseSqlServer(Configuration.GetConnectionString("Wallet"));
+                options.UseSqlite(Configuration.GetConnectionString("WalletSQLite"));
             });
             services.AddScoped<IWalletDbContext>(provider => provider.GetRequiredService<WalletDbContext>());
             // Add framework services.

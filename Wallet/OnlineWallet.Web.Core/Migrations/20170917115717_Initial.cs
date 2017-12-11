@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,10 @@ namespace OnlineWallet.Web.Migrations
                 name: "Wallets",
                 columns: table => new
                 {
-                    MoneyWalletId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    MoneyWalletId = table.Column<int>(nullable: false)
+                        //.Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        ,
+                    Name = table.Column<string>(maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,15 +27,16 @@ namespace OnlineWallet.Web.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    TransactionId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Category = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Comment = table.Column<string>(type: "nvarchar(max)", maxLength: 2147483647, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Direction = table.Column<short>(type: "smallint", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false),
-                    WalletId = table.Column<int>(type: "int", nullable: false)
+                    TransactionId = table.Column<long>(nullable: false)
+                        //.Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        ,
+                    Category = table.Column<string>(maxLength: 200, nullable: true),
+                    Comment = table.Column<string>(maxLength: 2147483647, nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    Direction = table.Column<short>(nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    Value = table.Column<int>(nullable: false),
+                    WalletId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
