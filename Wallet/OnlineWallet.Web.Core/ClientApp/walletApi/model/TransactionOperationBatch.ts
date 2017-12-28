@@ -10,11 +10,11 @@
  * Do not edit the class manually.
  */
 
-import { Transaction } from './Transaction';
+import { Transaction } from "./Transaction";
 
 export interface TransactionOperationBatch {
-    save?: Array<Transaction>;
+    save?: Transaction[];
 
-    delete?: Array<number>;
+    delete?: number[];
 
 }

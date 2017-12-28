@@ -6,7 +6,13 @@
     "tslint-eslint-rules"
   ],
   "rules": {
-    "quotemark": [true, "double", "jsx-double", "avoid-escape", "avoid-template"],
+    "quotemark": [
+      true,
+      "double",
+      "jsx-double",
+      "avoid-escape",
+      "avoid-template"
+    ],
     "no-console": false,
     "ban-types": false,
     "jsx-alignment": false,
@@ -92,6 +98,11 @@
       true,
       "allow-single-concat"
     ],
+    "indent": [
+      true,
+      "spaces",
+      4
+    ],
     "ter-indent": [
       true,
       4,
@@ -118,6 +129,12 @@
       "check-separator",
       "check-type",
       "check-preblock"
+    ],
+    "no-submodule-imports": [
+      true,
+      "actions",
+      "reducers",
+      "constants"
     ]
   }
 }

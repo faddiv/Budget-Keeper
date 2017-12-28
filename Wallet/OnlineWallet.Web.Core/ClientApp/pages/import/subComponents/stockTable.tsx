@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { StockModel } from './StockModel';
+import * as React from "react";
+import { StockModel } from "./StockModel";
 
-interface StockTableProps { stocks: StockModel[] }
+interface StockTableProps { stocks: StockModel[]; }
 
 const StockTable: React.SFC<StockTableProps> = ({ stocks, ...rest }) => {
     if (stocks && stocks.length > 0) {

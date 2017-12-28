@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export function updateState<T>(event: React.SyntheticEvent<T>): any {
-    const target = <HTMLInputElement>event.target;
+    const target = event.target as HTMLInputElement;
     let value;
     switch (target.type) {
         case "checkbox":
@@ -17,5 +17,5 @@ export function updateState<T>(event: React.SyntheticEvent<T>): any {
     const name = target.name;
     return {
         [name]: value
-    }
+    };
 }

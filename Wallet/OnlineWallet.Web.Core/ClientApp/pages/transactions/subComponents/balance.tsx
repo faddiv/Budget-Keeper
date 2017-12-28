@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { BalanceInfo } from 'walletApi';
+import * as React from "react";
+import { BalanceInfo } from "walletApi";
 
 export namespace Balance {
     export interface Props {
@@ -14,9 +14,10 @@ export class Balance extends React.Component<Balance.Props, Balance.State> {
         super(props);
     }
     render() {
-        var { balance } = this.props;
-        if (!balance)
+        const { balance } = this.props;
+        if (!balance) {
             return null;
+        }
         return (
             <article className="row">
                 <div className="col-sm"><span>Income:</span><strong>{balance.income}</strong></div>

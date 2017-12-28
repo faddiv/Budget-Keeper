@@ -1,4 +1,5 @@
 import "./scss/site.scss";
+// tslint:disable-next-line:no-submodule-imports
 import "moment/locale/hu";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -12,7 +13,7 @@ import { loadWallets } from "actions/wallets";
 const history = createBrowserHistory();
 const store = configureStore();
 
-//Preloading global data.
+// Preloading global data.
 store.dispatch(loadWallets());
 
 ReactDOM.render(

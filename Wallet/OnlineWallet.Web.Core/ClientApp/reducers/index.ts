@@ -7,7 +7,7 @@ export interface RootState {
     wallets: WalletsModel;
 }
 
-export var rootReducer = combineReducers<RootState>({
+export const rootReducer = combineReducers<RootState>({
     alerts,
     wallets
 });

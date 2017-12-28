@@ -1,7 +1,7 @@
-export function className(...values: (string | boolean)[]): string {
+export function className(...values: Array<string | boolean>): string {
     let show = true;
-    let cssList: string[] = [];
-    for (var value of values) {
+    const cssList: string[] = [];
+    for (const value of values) {
         if (typeof (value) !== "string") {
             show = !!value;
             continue;
