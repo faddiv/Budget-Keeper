@@ -1,29 +1,44 @@
 import * as React from "react";
-import "./transaction-table.scss";
 import { Wallet, Transaction, walletService } from "walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel, ITransactionTableExtFunction } from "walletCommon";
 import { bind, _ } from "helpers";
+import { isClickableClicked } from "react-ext";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { TransactionSummaryActions } from "actions/transactionsSummary";
+import { RootState } from "reducers";
+
+enum SelectMode {
+    deselect,
+    none,
+    select
+}
 
 export namespace TransactionTable {
     export interface Props {
+        actions?: typeof TransactionSummaryActions;
         items: TransactionViewModel[];
         wallets: Wallet[];
         changedItems?: TransactionViewModel[];
         rowColor?: ITransactionTableExtFunction;
+        transactionSummary?: TransactionViewModel[];
         update(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
         deleted(items: TransactionViewModel): void;
     }
 
     export interface State {
+        selectMode: SelectMode;
     }
 }
 
+@connect(mapStateToProps, mapDispatchToProps)
 export class TransactionTable extends React.Component<TransactionTable.Props, TransactionTable.State> {
 
     constructor(props: TransactionTable.Props) {
         super(props);
         this.state = {
+            selectMode: SelectMode.none
         };
     }
 
@@ -39,10 +54,54 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
         this.props.deleted(item);
     }
 
+    @bind
+    startSelection(item: TransactionViewModel) {
+        this.setState((prevState: TransactionTable.State, props: TransactionTable.Props) => {
+            const selectMode = _.contains(props.transactionSummary, item)
+                ? SelectMode.deselect
+                : SelectMode.select;
+            const selected = selectMode === SelectMode.select
+                ? [...props.transactionSummary, item]
+                : _.remove(props.transactionSummary, item);
+            props.actions.transactionsSelected(selected);
+            return {
+                selectMode,
+                selected
+            };
+        });
+    }
+
+    @bind
+    selectingRow(item: TransactionViewModel) {
+        if (this.state.selectMode === SelectMode.none) { return; }
+        let selected: TransactionViewModel[];
+        if (this.state.selectMode === SelectMode.select) {
+            if (!_.contains(this.props.transactionSummary, item)) {
+                selected = [...this.props.transactionSummary, item];
+            }
+        } else {
+            if (_.contains(this.props.transactionSummary, item)) {
+                selected = _.remove(this.props.transactionSummary, item);
+            }
+        }
+        if (selected) {
+            this.props.actions.transactionsSelected(selected);
+        }
+    }
+
+    @bind
+    endSelection() {
+        this.setState((prevState, props) => {
+            return {
+                selectMode: SelectMode.none
+            };
+        });
+    }
+
     render() {
-        const { items, wallets, rowColor } = this.props;
+        const { items, wallets, rowColor, transactionSummary } = this.props;
         return (
-            <table className="table transactions">
+            <table className="table transactions" onMouseLeave={this.endSelection}>
                 <thead>
                     <tr>
                         <th className="created-at">createdAt</th>
@@ -60,12 +119,28 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
                         <TransactionTableRow
                             key={item.key}
                             item={item}
+                            selected={_.contains(transactionSummary, item)}
                             wallets={wallets}
                             deleteTransaction={this.deleteTransaction}
                             saveTransaction={this.saveTransaction}
-                            rowColor={rowColor} />)}
+                            rowColor={rowColor}
+                            rowMouseDown={this.startSelection}
+                            rowMouseEnter={this.selectingRow}
+                            rowMouseUp={this.endSelection} />)}
                 </tbody>
             </table>
         );
     }
+}
+
+function mapStateToProps(state: RootState, ownProps: any) {
+    return {
+        transactionSummary: state.transactionSummary
+    };
+}
+
+function mapDispatchToProps(dispatch, ownProps: any) {
+    return {
+        actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions
+    };
 }

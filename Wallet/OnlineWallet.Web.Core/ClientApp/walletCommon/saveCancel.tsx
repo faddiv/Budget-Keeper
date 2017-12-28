@@ -1,8 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface SaveCancelProps {
-    save,
-    cancel
+    save: React.MouseEventHandler<HTMLButtonElement>;
+    cancel: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const SaveCancel: React.SFC<SaveCancelProps> = ({ save, cancel, ...rest }) => {

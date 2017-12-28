@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Navbar, AlertList } from "walletCommon";
+import { Navbar, AlertList, TransactionSummary } from "walletCommon";
 import { Prompt } from "react-router-dom";
 
 interface LayoutProps {
@@ -12,6 +12,7 @@ const Layout: React.SFC<LayoutProps> = ({ leaveConfirmation, ...rest }) => {
             {leaveConfirmation && <Prompt when={leaveConfirmation.when} message={leaveConfirmation.message} />}
             <AlertList />
             <Navbar />
+            <TransactionSummary />
             <main role="main" className="container">
                 {rest.children}
             </main>

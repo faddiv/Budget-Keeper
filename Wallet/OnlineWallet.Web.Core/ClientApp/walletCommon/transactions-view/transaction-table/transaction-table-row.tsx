@@ -3,15 +3,19 @@ import * as moment from "moment";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
 import { bind } from "helpers";
-import { updateState } from "react-ext";
+import { updateState, isClickableClicked, className } from "react-ext";
 
 export namespace TransactionTableRow {
     export interface Props {
         item: TransactionViewModel;
+        selected: boolean;
         wallets: Wallet[];
         rowColor?: ITransactionTableExtFunction;
         saveTransaction(newItem: TransactionViewModel, originalItem: TransactionViewModel): void;
         deleteTransaction(item: TransactionViewModel): void;
+        rowMouseDown(item: TransactionViewModel): void;
+        rowMouseUp(): void;
+        rowMouseEnter(item: TransactionViewModel): void;
     }
 
     export interface State {
@@ -42,7 +46,8 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     @bind
-    changeDirection() {
+    changeDirection(event: React.MouseEvent<HTMLTableDataCellElement>) {
+        event.preventDefault();
         this.setState((prevState, props) => {
             return {
                 item: { ...prevState.item, direction: nextDirection(prevState.item.direction) }
@@ -115,15 +120,44 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         });
     }
 
+    @bind
+    startSelection(event: React.MouseEvent<HTMLTableRowElement>) {
+        if (event.isDefaultPrevented() ||
+            isClickableClicked(event)) {
+            return;
+        }
+        this.props.rowMouseDown(this.props.item);
+        event.preventDefault();
+    }
+
+    @bind
+    continueSelection(event: React.MouseEvent<HTMLTableRowElement>) {
+        if (event.isDefaultPrevented() ||
+            isClickableClicked(event)) {
+            return;
+        }
+        this.props.rowMouseEnter(this.props.item);
+    }
+
+    @bind
+    endSelection(event: React.MouseEvent<HTMLTableRowElement>) {
+        if (event.isDefaultPrevented() ||
+            isClickableClicked(event)) {
+            return;
+        }
+        this.props.rowMouseUp();
+    }
+
     render() {
         return this.state.editMode ? this.renderEditRow() : this.renderViewRow();
     }
 
     renderEditRow() {
         const { item } = this.state;
-        const { wallets, rowColor } = this.props;
+        const { wallets, rowColor, rowMouseDown, rowMouseEnter, rowMouseUp, selected } = this.props;
         return (
-            <tr className={rowColor && rowColor(item)} onChange={this.handleInputChange}>
+            <tr className={className(!!rowColor, rowColor(item), selected, "selected")} onChange={this.handleInputChange}
+                onMouseDown={this.startSelection} onMouseEnter={this.continueSelection} onMouseUp={this.endSelection}>
                 <td>
                     <input type="date" className="form-control" value={item.createdAt} name="createdAt" />
                 </td>
@@ -153,10 +187,11 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     renderViewRow() {
-        const { rowColor, wallets } = this.props;
+        const { rowColor, wallets, rowMouseDown, rowMouseEnter, rowMouseUp, selected } = this.props;
         const { item } = this.state;
         return (
-            <tr className={rowColor && rowColor(item)}>
+            <tr className={className(!!rowColor, rowColor(item), selected, "selected")}
+                onMouseDown={this.startSelection} onMouseEnter={this.continueSelection} onMouseUp={this.endSelection}>
                 <td>{item.createdAt}</td>
                 <td>{item.name}</td>
                 <td>

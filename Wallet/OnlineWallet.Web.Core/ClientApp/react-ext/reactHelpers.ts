@@ -19,3 +19,15 @@ export function updateState<T>(event: React.SyntheticEvent<T>): any {
         [name]: value
     };
 }
+
+export function isClickableClicked(event: React.MouseEvent<HTMLElement>): boolean {
+    let target: HTMLElement = event.target as HTMLElement;
+    while (target && target !== event.currentTarget) {
+        const targetTag = target.tagName;
+        if (targetTag === "INPUT" || targetTag === "SELECT" || targetTag === "BUTTON") {
+            return true;
+        }
+        target = target.parentElement;
+    }
+    return false;
+}
