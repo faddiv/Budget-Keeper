@@ -48,7 +48,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             {
                 Income = income,
                 Spent = transactions.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Value),
-                ToSaving = (int) Math.Round(income * 0.25, MidpointRounding.AwayFromZero),
                 Planned = transactions.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Value)
             };
             return balanceInfo;

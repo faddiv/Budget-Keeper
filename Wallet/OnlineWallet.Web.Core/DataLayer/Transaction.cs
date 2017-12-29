@@ -39,5 +39,10 @@ namespace OnlineWallet.Web.DataLayer
         public int WalletId { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            return $"{Value} {Direction} [{Category}:{Name}]";
+        }
     }
 }

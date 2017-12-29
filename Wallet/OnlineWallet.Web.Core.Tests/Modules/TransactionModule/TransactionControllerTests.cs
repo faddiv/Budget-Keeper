@@ -24,6 +24,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 Wallet = Fixture.WalletBankAccount
             };
             Fixture.DbContext.Add(TestTransaction);
+            Fixture.DbContext.SaveChanges();
         }
     }
 }

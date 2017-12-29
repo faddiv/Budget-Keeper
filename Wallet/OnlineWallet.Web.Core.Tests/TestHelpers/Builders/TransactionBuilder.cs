@@ -5,6 +5,7 @@ using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using TestStack.Dossier;
 using TestStack.Dossier.EquivalenceClasses;
+using Ploeh.AutoFixture;
 
 namespace OnlineWallet.Web.TestHelpers.Builders
 {
@@ -15,10 +16,20 @@ namespace OnlineWallet.Web.TestHelpers.Builders
             Set(e => e.TransactionId, 0);
             Set(e => e.WalletId, () => Any.PositiveInteger() % 2 + 1);
         }
+
         public virtual TransactionBuilder WithCreatedAt(string date)
         {
             var realDate = DateTime.Parse(date);
             return Set(e => e.CreatedAt, realDate);
+        }
+
+        public virtual TransactionBuilder WithCreatedAt(string from, string to)
+        {
+            var fromDate = DateTime.Parse(from);
+            var toDate = DateTime.Parse(to);
+            Random r = new Random();
+            var days = (int)Math.Floor((toDate - fromDate).TotalDays) + 1;
+            return Set(e => e.CreatedAt, () => fromDate.AddDays(r.Next(days)));
         }
 
         public virtual TransactionBuilder WithDirection(MoneyDirection direction)
@@ -33,7 +44,7 @@ namespace OnlineWallet.Web.TestHelpers.Builders
 
         public virtual TransactionBuilder WithCategoryRandom()
         {
-            return Set(e => e.Category, () => this.Any.StringOfLength(5));
+            return Set(e => e.Category, () => Any.StringOfLength(5));
         }
 
         public virtual TransactionBuilder WithName(string name)
