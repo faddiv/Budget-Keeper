@@ -6,9 +6,11 @@ import { bindActionCreators } from "redux";
 import { TransactionSummaryActions, TransactionSummaryViewModel } from "actions/transactionsSummary";
 import { MoneyDirection } from "walletApi";
 import { bind } from "helpers";
+import { withRouter, RouteComponentProps } from "react-router";
+import { Action, Location } from "history";
 
 export namespace TransactionSummary {
-    export interface Props {
+    export interface Props extends Partial<RouteComponentProps<void>> {
         transactionSummary?: TransactionViewModel[];
         actions?: typeof TransactionSummaryActions;
     }
@@ -17,10 +19,32 @@ export namespace TransactionSummary {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
+@withRouter
 export class TransactionSummary extends React.Component<TransactionSummary.Props, TransactionSummary.State> {
+
+    private navListener: () => void;
+
     constructor(props) {
         super(props);
     }
+
+    @bind
+    private locationListener(location: Location, action: Action) {
+        const { actions, transactionSummary } = this.props;
+        if (transactionSummary.length > 0) {
+            actions.transactionsSelected([]);
+        }
+    }
+
+    componentDidMount() {
+        this.navListener = this.props.history.listen(this.locationListener);
+    }
+
+    componentWillUnmount() {
+        this.navListener();
+        this.navListener = null;
+    }
+
     @bind
     close() {
         this.props.actions.transactionsSelected([]);
