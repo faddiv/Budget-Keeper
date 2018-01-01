@@ -1,23 +1,29 @@
 import * as React from "react";
 import * as jasmineEnzyme from "jasmine-enzyme";
 import { shallow } from "enzyme";
-import { Autocomplete } from "./autocomplete";
-import { articleService } from "walletApi";
+import { Autocomplete, AutocompleteModel } from "./autocomplete";
 
 describe("Autocomplete", () => {
-
+    let filterResult: AutocompleteModel[];
+    const filter = () => Promise.resolve(filterResult);
     beforeEach(() => {
         (jasmineEnzyme as any)();
     });
 
     it("should an input with the value.", () => {
-        const wrapper = shallow(<Autocomplete value="alma" onFilter={articleService.filterBy} name="name" />);
+        const wrapper = shallow(<Autocomplete value="alma" onFilter={filter} name="name" />);
         const input = wrapper.find("input");
         expect(input).toHaveValue("alma");
     });
 
     it("should write input.", (callback) => {
-        const wrapper = shallow(<Autocomplete value="" onFilter={articleService.filterBy} name="name" />);
+        filterResult = [
+            {
+                name: "Pizza Holiday ebéd",
+                nameHighlighted: "Pizza <strong>Holiday</strong> ebéd"
+            }
+        ];
+        const wrapper = shallow(<Autocomplete value="" onFilter={filter} name="name" />);
         const input = wrapper.find("input");
         input.simulate("focus");
         input.simulate("change", { target: { value: "holiday" }, preventDefault() { } });
@@ -28,6 +34,6 @@ describe("Autocomplete", () => {
             });
             expect(wrapper.find("input")).toHaveValue("Pizza Holiday ebéd");
             callback();
-        }, 500);
+        }, 0);
     });
 });
