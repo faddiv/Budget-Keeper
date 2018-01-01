@@ -104,14 +104,79 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                             .TheNext(25).WithDirection(rest1)
                             .TheNext(10).WithDirection(rest2)
                             );
-            if (tested == MoneyDirection.Expense)
-            {
-                output.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(_fixture.DbContext.Transactions.ToList()));
-            }
             var controller = new StatisticsController(_fixture.DbContext);
 
             var statistics = controller.Yearly(2017);
             return statistics;
+        }
+
+        [Fact(DisplayName = nameof(ReturnsMonthlySummaries))]
+        public void ReturnsMonthlySummaries()
+        {
+            _fixture.PrepareDataWith(r =>
+            {
+                r = r.TheFirst(0);
+                for (int i = 1; i <= 12; i++)
+                {
+                    r = r.TheNext(100)
+                        .WithValue(1)
+                        .WithDirection(MoneyDirection.Income)
+                        .WithCreatedAt(2017, i);
+
+                    r = r.TheNext(10)
+                        .WithValue(1)
+                        .WithDirection(MoneyDirection.Expense)
+                        .WithCreatedAt(2017, i);
+
+                    r = r.TheNext(10)
+                        .WithValue(1)
+                        .WithDirection(MoneyDirection.Plan)
+                        .WithCreatedAt(2017, i);
+                }
+                return r;
+            }, (100 + 10 + 10) *12);
+
+            var controller = new StatisticsController(_fixture.DbContext);
+
+            var statistics = controller.Yearly(2017);
+            statistics.Should().NotBeNull();
+            statistics.Income.Should().Be(1200);
+            statistics.Spent.Should().Be(120);
+            statistics.Planned.Should().Be(120);
+            statistics.ToSaving.Should().Be(300);
+            statistics.Unused.Should().Be(660);
+
+            statistics.Monthly.Should().NotBeNull();
+            statistics.Monthly.Should().HaveCount(12);
+            foreach (var item in statistics.Monthly)
+            {
+                item.Should().NotBeNull();
+                item.Income.Should().Be(100);
+                item.Spent.Should().Be(10);
+                item.Planned.Should().Be(10);
+                item.ToSaving.Should().Be(25);
+                item.Unused.Should().Be(55);
+            }
+        }
+
+        [Fact(DisplayName = nameof(ReturnsZeroMotnhlyDataForEmptyYear))]
+        public void ReturnsZeroMotnhlyDataForEmptyYear()
+        {
+            var controller = new StatisticsController(_fixture.DbContext);
+
+            var statistics = controller.Yearly(2017);
+            statistics.Should().NotBeNull();
+            statistics.Monthly.Should().NotBeNull();
+            statistics.Monthly.Should().HaveCount(12);
+            foreach (var item in statistics.Monthly)
+            {
+                statistics.Should().NotBeNull();
+                statistics.Income.Should().Be(0);
+                statistics.Spent.Should().Be(0);
+                statistics.Planned.Should().Be(0);
+                statistics.ToSaving.Should().Be(0);
+                statistics.Unused.Should().Be(0);
+            }
         }
 
     }

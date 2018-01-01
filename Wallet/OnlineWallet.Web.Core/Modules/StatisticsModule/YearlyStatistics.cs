@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.TransactionModule;
@@ -12,5 +13,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
 
         public int ToSaving => TransactionCalculations.CalculateSavings(Income);
         public int Unused => TransactionCalculations.CalculateUnused(Income, Spent, Planned);
+
+        public List<BalanceInfo> Monthly { get; set; }
     }
 }

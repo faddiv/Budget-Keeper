@@ -56,9 +56,9 @@ namespace OnlineWallet.Web.TestHelpers
             return AutoMapper.Mapper.Map<TEntity>(original);
         }
 
-        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules)
+        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
         {
-            var transactions = rules(TransactionBuilder.CreateListOfSize(100)
+            var transactions = rules(TransactionBuilder.CreateListOfSize(size)
                 .All().WithName("Nothing").WithCategory(null))
                 .BuildList();
             DbContext.Transactions.AddRange(transactions);

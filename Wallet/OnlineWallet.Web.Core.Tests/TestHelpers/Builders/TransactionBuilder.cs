@@ -23,6 +23,15 @@ namespace OnlineWallet.Web.TestHelpers.Builders
             return Set(e => e.CreatedAt, realDate);
         }
 
+        public virtual TransactionBuilder WithCreatedAt(int year, int month)
+        {
+            var fromDate = new DateTime(year, month, 1);
+            var toDate = fromDate.AddMonths(1).AddDays(-1);
+            Random r = new Random();
+            var days = (int)Math.Floor((toDate - fromDate).TotalDays) + 1;
+            return Set(e => e.CreatedAt, () => fromDate.AddDays(r.Next(days)));
+        }
+
         public virtual TransactionBuilder WithCreatedAt(string from, string to)
         {
             var fromDate = DateTime.Parse(from);
