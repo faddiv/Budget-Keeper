@@ -11,3 +11,7 @@ export function delay(milliseconds: number): Promise<any> {
     });
     return promise;
 }
+
+export function formatInt(num: number) {
+    return num.toLocaleString("hu");
+}

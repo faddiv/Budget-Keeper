@@ -34,5 +34,12 @@
             "});"
         ],
         "description": "Karma Test"
+    },
+    "export all": {
+        "prefix": "export",
+        "body": [
+            "export * from \"./$0\";"
+        ],
+        "description": "Export into index.ts file"
     }
 }

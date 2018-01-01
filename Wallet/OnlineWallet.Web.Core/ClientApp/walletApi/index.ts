@@ -4,3 +4,4 @@ export * from "./model";
 export * from "./articleService";
 export * from "./importExportService";
 export * from "./categoryService";
+export * from "./StatisticsService";

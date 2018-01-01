@@ -1,7 +1,7 @@
 /**
  * Contains the url and base request generator for server request.
  */
-export var walletApiConfig = {
+export const walletApiConfig = {
     /**
      * url of the server.
      */
@@ -15,21 +15,21 @@ export var walletApiConfig = {
      */
     jsonRequestConfig(data: any, method: "PUT" | "POST" | "DELETE", extra?: RequestInit): RequestInit {
         let requestInit: RequestInit = {
-            method: method,
+            method,
             headers: new Headers({
                 "Content-Type": "application/json;charset=UTF-8"
             }),
             body: JSON.stringify(data)
         };
-        if(extra) {
-            requestInit = Object.assign(requestInit, extra);
+        if (extra) {
+            requestInit = {...requestInit, ...extra};
         }
         if (!PRODUCTION) {
             requestInit.mode = "cors";
         }
         return requestInit;
     }
-}
+};
 
 /**
  * This method contains the json convert and also the error handling.
@@ -37,7 +37,7 @@ export var walletApiConfig = {
  */
 export function ThenJson<T>(response: Response) {
     if (response.ok) {
-        return <Promise<T>>response.json();
+        return response.json() as Promise<T>;
     } else {
         throw Error(response.statusText);
     }

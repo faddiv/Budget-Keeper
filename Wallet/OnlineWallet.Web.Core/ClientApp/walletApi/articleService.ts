@@ -7,7 +7,7 @@ const urlBase = "/api/v1/Article";
 class ArticleService {
 
     async filterBy(search: string, limit?: number): Promise<ArticleModel[]> {
-        var url = buildUrl(urlBase, walletApiConfig.baseUrl, {
+        const url = buildUrl(urlBase, walletApiConfig.baseUrl, {
             search,
             limit
         });
@@ -17,4 +17,4 @@ class ArticleService {
     }
 }
 
-export var articleService = new ArticleService();
+export const articleService = new ArticleService();

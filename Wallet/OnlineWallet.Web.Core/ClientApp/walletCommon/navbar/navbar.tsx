@@ -47,6 +47,9 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
                     <ul className="navbar-nav mr-auto">
                         <MenuItem to="/" exact>Home</MenuItem>
                         <MenuItem to="/transactions">Transactions</MenuItem>
+                        <DropdownMenu name="Statistics">
+                            <NavLink to="/statistics/yearly" className="dropdown-item" activeClassName="active">Yearly statistics</NavLink>
+                        </DropdownMenu>
                         <DropdownMenu name="Export/Import">
                             <NavLink to="/import" className="dropdown-item" activeClassName="active">Import</NavLink>
                             <NavLink to="/export" className="dropdown-item" activeClassName="active">Export</NavLink>

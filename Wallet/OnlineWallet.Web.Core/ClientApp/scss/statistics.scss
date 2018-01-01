@@ -1,0 +1,5 @@
+.yearly-statistics {
+    tbody tr td:nth-child(1n+2), thead tr th:nth-child(1n+2){
+        text-align: right;
+    }
+}

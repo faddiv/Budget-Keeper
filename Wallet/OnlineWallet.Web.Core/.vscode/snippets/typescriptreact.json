@@ -71,5 +71,24 @@
 			"const { $1 } = this.props;",
 			"const { $0 } = this.state;"
 		]
+	},
+	"React bootstrap table": {
+		"prefix": "table.react",
+		"body": [
+			"<table className=\"table\">",
+			"\t<thead>",
+			"\t\t<tr>",
+			"\t\t\t<td></td>$0",
+			"\t\t</tr>",
+			"\t</thead>",
+			"\t<tbody>",
+			"\t\t{$1.map(item => (",
+			"\t\t\t<tr>",
+			"\t\t\t\t<td></td>",
+			"\t\t\t</tr>",
+			"\t\t))}",
+			"\t</tbody>",
+			"</table>"
+		]
 	}
 }

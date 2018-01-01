@@ -1,11 +1,11 @@
 export function buildUrl(url: string, baseUrl: string, query?: any): URL {
-    var pathUrl = url;
-    var hasParam = false;
+    let pathUrl = url;
+    let hasParam = false;
     if (query) {
-        let searchParams = new URLSearchParams();
-        for (var key in query) {
+        const searchParams = new URLSearchParams();
+        for (const key in query) {
             if (query.hasOwnProperty(key)) {
-                var element = query[key];
+                const element = query[key];
                 if (typeof (element) !== "undefined" && element !== "" && element !== null) {
                     searchParams.append(key, element);
                     hasParam = true;
@@ -13,9 +13,9 @@ export function buildUrl(url: string, baseUrl: string, query?: any): URL {
             }
         }
         if (hasParam) {
-            pathUrl = pathUrl + "?" + searchParams.toString();
+            pathUrl = `${pathUrl}?${searchParams.toString()}`;
         }
     }
-    var result = new URL(pathUrl, baseUrl);
+    const result = new URL(pathUrl, baseUrl);
     return result;
 }

@@ -7,7 +7,7 @@ const urlBase = "/api/v1/Category";
 class CategoryService {
 
     async filterBy(search: string, limit?: number): Promise<CategoryModel[]> {
-        var url = buildUrl(urlBase, walletApiConfig.baseUrl, {
+        const url = buildUrl(urlBase, walletApiConfig.baseUrl, {
             search,
             limit
         });
@@ -17,4 +17,4 @@ class CategoryService {
     }
 }
 
-export var categoryService = new CategoryService();
+export const categoryService = new CategoryService();

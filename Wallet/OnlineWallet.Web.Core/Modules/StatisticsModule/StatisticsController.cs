@@ -19,7 +19,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
             _db = db;
         }
 
-        [HttpGet("Yearly/{year}")]
+        [HttpGet("Yearly")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(YearlyStatistics))]
         public YearlyStatistics Yearly(int year)
         {

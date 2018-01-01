@@ -7,3 +7,4 @@ export * from "./queryParams";
 export * from "./Transaction";
 export * from "./TransactionOperationBatch";
 export * from "./Wallet";
+export * from "./YearlyStatistics";
