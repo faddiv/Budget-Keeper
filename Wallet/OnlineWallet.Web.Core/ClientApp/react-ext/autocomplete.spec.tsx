@@ -5,6 +5,7 @@ import { Autocomplete, AutocompleteModel } from "./autocomplete";
 
 describe("Autocomplete", () => {
     let filterResult: AutocompleteModel[];
+
     const filter = () => Promise.resolve(filterResult);
     beforeEach(() => {
         (jasmineEnzyme as any)();

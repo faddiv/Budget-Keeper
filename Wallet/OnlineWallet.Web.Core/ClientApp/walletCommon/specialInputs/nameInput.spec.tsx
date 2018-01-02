@@ -4,6 +4,7 @@ import { shallow, render, mount } from "enzyme";
 import * as fetchMock from "fetch-mock";
 import { NameInput } from "./nameInput";
 import { ArticleModel } from "walletApi";
+import { delay } from 'helpers';
 
 describe("NameInput", () => {
 
@@ -15,7 +16,7 @@ describe("NameInput", () => {
         fetchMock.restore();
     });
 
-    it("should return result from articleApi.", (callback) => {
+    it("should return result from articleApi.", async (callback) => {
         const filterResult: ArticleModel[] = [
             {
                 name: "Pizza Holiday ebéd",
@@ -30,13 +31,12 @@ describe("NameInput", () => {
         const input = wrapper.find("input");
         input.simulate("focus");
         input.simulate("change", { target: { value: "holiday" }, preventDefault() { } });
-        setTimeout(() => {
-            input.simulate("keyDown", {
-                key: "Enter",
-                preventDefault() { }
-            });
-            expect(wrapper.find("input")).toHaveValue("Pizza Holiday ebéd");
-            callback();
-        }, 0);
+        await delay(0);
+        input.simulate("keyDown", {
+            key: "Enter",
+            preventDefault() { }
+        });
+        expect(wrapper.find("input")).toHaveValue("Pizza Holiday ebéd");
+        callback();
     });
 });

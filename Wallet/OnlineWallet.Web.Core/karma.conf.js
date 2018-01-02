@@ -2,10 +2,9 @@ var karmaWebpack = require("karma-webpack");
 var webpack = require("webpack");
 var merge = require('webpack-merge');
 
-//const vendorConfig = require("./build-config/vendor-config")({});
 const variablesConfig = require("./build-config/variables-config")(false);
 const typescriptConfig = require("./build-config/typescript-config");
-//const webpackConfig = require("./webpack.config");
+// fix: Never make cross dependency reference. It makes reference undefined. TODO: find a solution to detect this type of error.
 
 function createWebpackConfig(env) {
     const webpackConfig = merge(typescriptConfig, variablesConfig, {
@@ -25,9 +24,7 @@ module.exports = function (config) {
     config.set({
         basePath: "",
         files: [
-            "ClientApp/root.spec.ts"
-            //"ClientApp/**/*.spec.ts"
-            //"ClientApp/**/*.spec.tsx"
+            "ClientApp/webpack_test_entrypoint.js"
         ],
         exclude: [
             "ClientApp/index.tsx"
@@ -41,27 +38,14 @@ module.exports = function (config) {
             "karma-jasmine-html-reporter"
         ],
         mime: {
-            'text/x-typescript': ['ts', 'tsx']
+            "text/x-typescript": ["ts", "tsx"]
         },
-        //preprocessors: {
-        //    "**/*.ts": ["karma-typescript"],
-        //    "**/*.tsx": ["karma-typescript"]
-        //},
         preprocessors: {
-            "ClientApp/root.spec.ts": ["webpack", "sourcemap"]
+            "ClientApp/webpack_test_entrypoint.js": ["webpack", "sourcemap"]
         },
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-        /*karmaTypescriptConfig: {
-            bundlerOptions: {
-                constants: {
-                    PRODUCTION: false
-                },
-                entrypoints: /\.spec\.tsx?$/
-            },
-            tsconfig: "./tsconfig.json"
-        },*/
         reporters: ["kjhtml"],
         browsers: ["Chrome"],
         port: 4201,

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { className as cssName } from "react-ext";
+import { className as cssName } from "./cssHelpers";
 import { bind } from "helpers";
 
 export interface AutocompleteModel {
