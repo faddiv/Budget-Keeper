@@ -7,7 +7,8 @@
     "test": "./node_modules/.bin/karma start",
     "start": "./node_modules/.bin/webpack-dev-server --debug --hot --inline --progress --colors --open",
     "build": "./node_modules/.bin/webpack --progress --colors",
-    "release": "./node_modules/.bin/webpack -p --progress --colors"
+    "release": "./node_modules/.bin/webpack -p --progress --colors",
+    "lint": "tslint ClientApp/**/*.ts ClientApp/**/*.tsx -t verbose"
   },
   "author": "",
   "license": "ISC",

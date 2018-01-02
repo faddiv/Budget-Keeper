@@ -4,7 +4,7 @@ import { shallow, render, mount } from "enzyme";
 import * as fetchMock from "fetch-mock";
 import { NameInput } from "./nameInput";
 import { ArticleModel } from "walletApi";
-import { delay } from 'helpers';
+import { delay } from "helpers";
 
 describe("NameInput", () => {
 

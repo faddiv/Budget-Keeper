@@ -11,15 +11,15 @@ const DirectionCheck: React.SFC<DirectionCheckProps> = ({ value, onChange, ...re
         <div className="form-group">
             <div className="form-check form-check-inline">
                 <label className="form-check-label">
-                    <input className="form-check-input" type="radio" name="direction" value="-1" checked={value == -1} onChange={onChange} /> Expense</label>
+                    <input className="form-check-input" type="radio" name="direction" value="-1" checked={value === -1} onChange={onChange} /> Expense</label>
             </div>
             <div className="form-check form-check-inline">
                 <label className="form-check-label">
-                    <input className="form-check-input" type="radio" name="direction" value="0" checked={value == 0} onChange={onChange} /> Plan</label>
+                    <input className="form-check-input" type="radio" name="direction" value="0" checked={value === 0} onChange={onChange} /> Plan</label>
             </div>
             <div className="form-check form-check-inline">
                 <label className="form-check-label">
-                    <input className="form-check-input" type="radio" name="direction" value="1" checked={value == 1} onChange={onChange} /> Salary</label>
+                    <input className="form-check-input" type="radio" name="direction" value="1" checked={value === 1} onChange={onChange} /> Salary</label>
             </div>
         </div>
     );
