@@ -1,5 +1,5 @@
 import * as React from "react";
-import { className as cssName } from "./cssHelpers";
+import * as classNames from "classnames";
 import { bind } from "helpers";
 
 export interface AutocompleteModel {
@@ -225,7 +225,8 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
 
     @bind
     dropdownClass(): string {
-        return cssName("dropdown-menu", this.state.open, "show");
+        const show = this.state.open;
+        return classNames("dropdown-menu", { show });
     }
 
     getItemValue(item: AutocompleteModel) {
@@ -234,7 +235,7 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
 
     renderItem(item: AutocompleteModel, active: boolean) {
         return <li key={this.getItemValue(item)}
-            className={cssName("dropdown-item", active, "active")}
+            className={classNames("dropdown-item", { active })}
             onClick={event => this.onClick(event, item)}
             dangerouslySetInnerHTML={{ __html: item.nameHighlighted }}></li>;
     }

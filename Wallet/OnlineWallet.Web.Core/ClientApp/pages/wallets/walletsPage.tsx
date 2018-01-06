@@ -1,11 +1,10 @@
 import * as React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-
+import * as classNames from "classnames";
 import * as WalletsActions from "actions/wallets";
 import { Wallet, walletService } from "walletApi";
 import { WalletsRow } from "./walletsRow";
-import { className } from "react-ext";
 import { Layout } from "layout";
 import { bind, validate, ValidationConfig, ValidationState, validators } from "helpers";
 import { RootState } from "reducers";
@@ -106,7 +105,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
                         <div className="col-sm-10">
-                            <input type="text" className={className("form-control", validation.name.showError, "is-invalid")}
+                            <input type="text" className={classNames("form-control", { "is-invalid": validation.name.showError })}
                                 id="name" name="name" value={name} onChange={this.handleInputChange} />
                             <div className="invalid-feedback">
                                 {validation.name.message}

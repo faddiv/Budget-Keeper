@@ -1,5 +1,5 @@
 import * as React from "react";
-import { className } from "react-ext";
+import * as classNames from "classnames";
 
 interface TabPaneProps {
     name: string;
@@ -7,8 +7,8 @@ interface TabPaneProps {
 }
 
 export const TabPane: React.SFC<TabPaneProps> = ({ name, activeKey, ...rest }) => {
-    const isActive = name === activeKey;
+    const active = name === activeKey;
     return (
-        <div className={className("tab-pane", "fade", isActive, "show", "active")} role="tabpanel" aria-labelledby="home-tab">{rest.children}</div>
+        <div className={classNames("tab-pane", "fade", { show: active, active })} role="tabpanel" aria-labelledby="home-tab">{rest.children}</div>
     );
 };

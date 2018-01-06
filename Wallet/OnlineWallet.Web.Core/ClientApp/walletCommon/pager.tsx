@@ -1,5 +1,5 @@
 import * as React from "react";
-import { className } from "react-ext";
+import * as classNames from "classnames";
 
 interface PagerProps {
     pageSize: number;
@@ -44,7 +44,7 @@ export const Pager: React.SFC<PagerProps> = ({ pageSize, page, countAll, onPageS
 
 function item(page: number, text: string, callback: (number) => void, enabled: boolean, current: boolean) {
     return (
-        <li key={text} className={className("page-item", current, "active", !current && !enabled, "disabled")}>
+        <li key={text} className={classNames("page-item", { active: current, disabled: !current && !enabled })}>
             {link(page, text, callback, enabled)}
         </li>
     );

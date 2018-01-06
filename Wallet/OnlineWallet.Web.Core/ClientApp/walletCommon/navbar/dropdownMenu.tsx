@@ -1,6 +1,6 @@
 import * as React from "react";
 import { bind } from "helpers";
-import { className } from "react-ext";
+import * as classNames from "classnames";
 import { findDOMNode } from "react-dom";
 import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from "react-router-dom";
 
@@ -9,7 +9,7 @@ export namespace DropdownMenu {
         name: string;
     }
     export interface State {
-        open: boolean;
+        show: boolean;
         id: string;
         active: boolean;
     }
@@ -21,7 +21,7 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
     constructor(props) {
         super(props);
         this.state = {
-            open: false,
+            show: false,
             id: Math.round(Math.random() * 10000).toString(),
             active: this.determineActive()
         };
@@ -58,9 +58,9 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
 
     @bind
     globalClick(event: MouseEvent) {
-        if (this.state.open && !findDOMNode(this).contains(event.target as HTMLElement)) {
+        if (this.state.show && !findDOMNode(this).contains(event.target as HTMLElement)) {
             this.setState({
-                open: false
+                show: false
             });
         }
     }
@@ -70,20 +70,20 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
         event.preventDefault();
         this.setState((prevState, props) => {
             return {
-                open: !prevState.open
+                show: !prevState.show
             };
         });
     }
 
     render() {
         const { children, name } = this.props;
-        const { open, id, active } = this.state;
+        const { show, id, active } = this.state;
         return (
-            <li className={className("nav-item", "dropdown", open, "show", active, "active")}>
-                <a className="nav-link dropdown-toggle" href="#" id={id} role="button" aria-haspopup="true" aria-expanded={open} onClick={this.openDropdown}>
+            <li className={classNames("nav-item", "dropdown", { show, active })}>
+                <a className="nav-link dropdown-toggle" href="#" id={id} role="button" aria-haspopup="true" aria-expanded={show} onClick={this.openDropdown}>
                     {name}
                 </a>
-                <div className={className("dropdown-menu", open, "show")} aria-labelledby={id}>
+                <div className={classNames("dropdown-menu", { show })} aria-labelledby={id}>
                     {children}
                 </div>
             </li>

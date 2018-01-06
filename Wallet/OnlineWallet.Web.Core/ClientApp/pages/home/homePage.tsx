@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { AlertsActions } from "actions/alerts";
 import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel, CategoryModel } from "walletApi";
 import { Layout } from "layout";
-import { Autocomplete, updateState, className } from "react-ext";
+import { Autocomplete, updateState } from "react-ext";
 import { AddItemForm, SaveAllResult } from "./subComponents";
 import { RootState } from "reducers";
 import { _, bind, validate, ValidationConfig, ValidationState, toDateString } from "helpers";

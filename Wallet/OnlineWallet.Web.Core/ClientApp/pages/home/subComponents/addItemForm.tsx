@@ -1,5 +1,6 @@
 import * as React from "react";
-import { updateState, className } from "react-ext";
+import * as classNames from "classnames";
+import { updateState } from "react-ext";
 import { validate, ValidationState, bind, toDateString } from "helpers";
 import { getDirectionColoring, FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from "walletCommon";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
@@ -142,7 +143,7 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
                 <FormGroup name="name" label="Name">
                     <NameInput focusAction={this.focusStartBind}
                         value={name} autoFocus={true} onSelect={this.nameSelected}
-                        className={className("form-control", validation.name.showError, "is-invalid")} >
+                        className={classNames("form-control", { "is-invalid": validation.name.showError })} >
                         <div className="invalid-feedback">
                             {validation.name.message}
                         </div>

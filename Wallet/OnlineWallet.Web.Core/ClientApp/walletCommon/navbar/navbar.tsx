@@ -1,9 +1,11 @@
 import * as React from "react";
+import { Link, NavLink } from "react-router-dom";
+import { Transition } from "react-transition-group";
+import * as classNames from "classnames";
 import { MenuItem } from "./menuItem";
 import { DropdownMenu } from "./dropdownMenu";
-import { Link, NavLink } from "react-router-dom";
 import { bind } from "helpers";
-import { className } from "react-ext";
+import { Collapse } from "react-ext";
 
 export namespace Navbar {
     export interface Props {
@@ -12,6 +14,13 @@ export namespace Navbar {
         open: boolean;
     }
 }
+
+const statusStyle = {
+    entering: { height: 200 },
+    entered: { height: 200 },
+    exiting: { height: 0 },
+    exited: { height: 0 }
+};
 
 export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
 
@@ -26,24 +35,22 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
     toggleNavbar() {
         this.setState((prevState, props) => {
             return {
-                open: !prevState.open,
-                animating: true
+                open: !prevState.open
             };
         });
     }
 
     render() {
         const { open } = this.state;
-        const closed = !open;
+        const collapsed = !open;
         return (
             <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
                 <a className="navbar-brand" href="#">Navbar</a>
-                <button className={className("navbar-toggler", closed, "collapsed")} type="button"
+                <button className={classNames("navbar-toggler", { collapsed })} type="button"
                     aria-controls="walletNavbar" aria-expanded={open} aria-label="Open main menu" onClick={this.toggleNavbar}>
                     <span className="navbar-toggler-icon"></span>
                 </button>
-
-                <div className={className("navbar-collapse", "collapse", open, "show")} id="walletNavbar">
+                <Collapse open={open} className="navbar-collapse" id="walletNavbar">
                     <ul className="navbar-nav mr-auto">
                         <MenuItem to="/" exact>Home</MenuItem>
                         <MenuItem to="/transactions">Transactions</MenuItem>
@@ -56,7 +63,7 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
                         </DropdownMenu>
                         <MenuItem to="/wallets">Wallets</MenuItem>
                     </ul>
-                </div>
+                </Collapse>
             </nav>
         );
     }

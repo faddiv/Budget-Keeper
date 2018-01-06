@@ -1,9 +1,10 @@
 import * as React from "react";
 import * as moment from "moment";
+import * as classNames from "classnames";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
 import { bind } from "helpers";
-import { updateState, isClickableClicked, className } from "react-ext";
+import { updateState, isClickableClicked } from "react-ext";
 
 export namespace TransactionTableRow {
     export interface Props {
@@ -155,8 +156,9 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     renderEditRow() {
         const { item } = this.state;
         const { wallets, rowColor, rowMouseDown, rowMouseEnter, rowMouseUp, selected } = this.props;
+        const hasRowColor = !!rowColor;
         return (
-            <tr className={className(!!rowColor, rowColor(item), selected, "selected")} onChange={this.handleInputChange}
+            <tr className={classNames({ [rowColor(item)]: hasRowColor }, { selected })} onChange={this.handleInputChange}
                 onMouseDown={this.startSelection} onMouseEnter={this.continueSelection} onMouseUp={this.endSelection}>
                 <td>
                     <input type="date" className="form-control" value={item.createdAt} name="createdAt" />
@@ -189,8 +191,9 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     renderViewRow() {
         const { rowColor, wallets, rowMouseDown, rowMouseEnter, rowMouseUp, selected } = this.props;
         const { item } = this.state;
+        const hasRowColor = !!rowColor;
         return (
-            <tr className={className(!!rowColor, rowColor(item), selected, "selected")}
+            <tr className={classNames({ [rowColor(item)]: hasRowColor }, { selected })}
                 onMouseDown={this.startSelection} onMouseEnter={this.continueSelection} onMouseUp={this.endSelection}>
                 <td>{item.createdAt}</td>
                 <td>{item.name}</td>

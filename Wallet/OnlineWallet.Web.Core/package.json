@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.1.5",
     "@types/fetch-mock": "^5.12.2",
     "@types/history": "^4.6.1",
@@ -25,6 +26,7 @@
     "@types/react-redux": "^5.0.11",
     "@types/react-router": "^4.0.16",
     "@types/react-router-dom": "^4.2.0",
+    "@types/react-transition-group": "^2.0.6",
     "@types/redux-actions": "^2.2.2",
     "@types/webpack": "^3.0.13",
     "@types/webpack-env": "^1.13.2",
@@ -62,11 +64,13 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "moment": "^2.19.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "react-transition-group": "^2.2.1",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
     "redux-thunk": "^2.2.0",

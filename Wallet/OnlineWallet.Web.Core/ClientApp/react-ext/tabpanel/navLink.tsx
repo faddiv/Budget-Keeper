@@ -1,5 +1,5 @@
 import * as React from "react";
-import { className } from "react-ext";
+import * as classNames from "classnames";
 
 interface NavLinkProps {
     name: string;
@@ -8,8 +8,12 @@ interface NavLinkProps {
 }
 
 export const NavLink: React.SFC<NavLinkProps> = ({ name, activeKey, onActivate, ...rest }) => {
-    const isActive = name === activeKey;
+    const active = name === activeKey;
     return (
-        <li className="nav-item"><a className={className("nav-link", isActive, "active")} onClick={() => { !isActive && onActivate(name); }}>{rest.children}</a></li>
+        <li className="nav-item">
+            <a className={classNames("nav-link", { active })} onClick={() => { !active && onActivate(name); }}>
+                {rest.children}
+            </a>
+        </li>
     );
 };

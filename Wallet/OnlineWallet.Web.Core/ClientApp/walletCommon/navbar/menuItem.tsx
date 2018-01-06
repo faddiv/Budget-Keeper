@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Location as HLocation } from "history";
 import { Link, Route } from "react-router-dom";
-import { className } from "react-ext";
+import * as classNames from "classnames";
 
 interface MenuItemProps {
     to: string | any;
@@ -31,7 +31,7 @@ export const MenuItem: React.SFC<MenuItemProps> = ({ to, strict, activeClassName
             children={({ location, match }) => {
                 const isActive = !!(getIsActive ? getIsActive(match, location) : match);
                 return (
-                    <li className={className("nav-item", isActive, activeClassName)}>
+                    <li className={classNames("nav-item", { [activeClassName]: isActive })}>
                         <Link
                             to={to}
                             className={linkClassName}
