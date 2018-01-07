@@ -8,3 +8,5 @@ export * from "./Transaction";
 export * from "./TransactionOperationBatch";
 export * from "./Wallet";
 export * from "./YearlyStatistics";
+export * from "./CategoryStatistics";
+export * from "./CategoryStatisticsSummary";

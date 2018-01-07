@@ -11,7 +11,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.Yearly))]
     [Collection("Database collection")]
-    public class StatisticsControllerTests : IDisposable
+    public class StatisticsControllerYearlyTests : IDisposable
     {
         #region Fields
 
@@ -22,7 +22,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
 
         #region  Constructors
 
-        public StatisticsControllerTests(DatabaseFixture fixture, ITestOutputHelper output)
+        public StatisticsControllerYearlyTests(DatabaseFixture fixture, ITestOutputHelper output)
         {
             _fixture = fixture;
             this.output = output;
@@ -134,7 +134,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                         .WithCreatedAt(2017, i);
                 }
                 return r;
-            }, (100 + 10 + 10) *12);
+            }, (100 + 10 + 10) * 12);
 
             var controller = new StatisticsController(_fixture.DbContext);
 

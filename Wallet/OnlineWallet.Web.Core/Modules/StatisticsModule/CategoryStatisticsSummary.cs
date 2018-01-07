@@ -5,8 +5,9 @@ using OnlineWallet.Web.Modules.TransactionModule;
 
 namespace OnlineWallet.Web.Modules.StatisticsModule
 {
-    public class YearlyStatistics : BalanceInfo
+    public class CategoryStatisticsSummary
     {
-        public List<BalanceInfo> Monthly { get; set; }
+        public List<CategoryStatistics> Yearly { get; set; }
+        public List<List<CategoryStatistics>> Monthly { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -50,6 +51,61 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                 Spent = monthly.Sum(e => e.Spent),
                 Planned = monthly.Sum(e => e.Planned),
                 Monthly = monthly
+            };
+        }
+        [HttpGet("Categories")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(CategoryStatisticsSummary))]
+        public CategoryStatisticsSummary Categories(int year)
+        {
+            var monthlyStats = _db.Transactions
+                .Where(e => e.CreatedAt.Year == year && e.Direction == MoneyDirection.Expense)
+                .GroupBy(e => new { e.CreatedAt.Month, Category = e.Category ?? string.Empty })
+                .Select(e => new
+                {
+                    e.Key.Month,
+                    e.Key.Category,
+                    Spent = e.Sum(t => t.Value),
+                    Count = e.Count()
+                }).ToLookup(e => e.Month);
+            var monthly = new List<List<CategoryStatistics>>();
+            for (int i = 0; i < 12; i++)
+            {
+                var monthlyData = monthlyStats[i + 1].OrderByDescending(e => e.Spent).ToList();
+                var categories = new List<CategoryStatistics>();
+                foreach (var categoryData in monthlyData)
+                {
+                    var stats = new CategoryStatistics
+                    {
+                        Name = categoryData.Category,
+                        Count = categoryData.Count,
+                        Spent = categoryData.Spent
+                    };
+                    categories.Add(stats);
+                }
+                var sumSpent = categories.Sum(e => e.Spent);
+                foreach (var item in categories)
+                {
+                    item.SpentPercent = Math.Round((double)item.Spent / sumSpent, 4, MidpointRounding.AwayFromZero);
+                }
+                monthly.Add(categories);
+            }
+            var sumAllSpent = monthly.SelectMany(e => e).Sum(e => e.Spent);
+            var yearly = monthly
+                .SelectMany(e => e)
+                .GroupBy(e => e.Name)
+                .Select(e => new CategoryStatistics
+                {
+                    Name = e.Key,
+                    Count = e.Sum(f => f.Count),
+                    Spent = e.Sum(f => f.Spent),
+                    SpentPercent = Math.Round((double)e.Sum(f => f.Spent) / sumAllSpent, 4, MidpointRounding.AwayFromZero)
+                })
+                .OrderByDescending(e => e.Spent)
+                .ToList();
+            return new CategoryStatisticsSummary
+            {
+                Monthly = monthly,
+                Yearly = yearly
             };
         }
     }

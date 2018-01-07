@@ -8,6 +8,7 @@ import { YearlyStatistics, statisticsService } from "walletApi";
 import { bind, formatInt } from "helpers";
 import { Layout } from "layout";
 import { AlertsActions } from "actions/alerts";
+import { YearSelector } from "./subComponents/yearSelector";
 
 export namespace YearlyStatisticsPage {
     export interface Params {
@@ -60,19 +61,7 @@ export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPage.P
         const monthly = yearly.monthly || [];
         return (
             <Layout>
-                <nav>
-                    <ul className="pagination pagination-lg justify-content-center">
-                        <li className="page-item">
-                            <Link className="page-link" to={`/statistics/yearly/${year - 1}`} >{year - 1}</Link>
-                        </li>
-                        <li className="page-item">
-                            <span className="page-link">Statistics for {year}</span>
-                        </li>
-                        <li className="page-item">
-                            <Link className="page-link" to={`/statistics/yearly/${year + 1}`} >{year + 1}</Link>
-                        </li>
-                    </ul>
-                </nav>
+                <YearSelector year={year} link="/statistics/yearly" />
                 <table className="table table-condensed yearly-statistics">
                     <thead>
                         <tr>
