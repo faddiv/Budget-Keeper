@@ -42,7 +42,8 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                     e.Name,
                     e.Category,
                     e.Value,
-                    e.CreatedAt
+                    e.CreatedAt,
+                    e.WalletId
                 }))
                 .ToList();
             var result = requiredTransactions
@@ -55,6 +56,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                         .GroupBy(c => c.Category)
                         .OrderByDescending(c => c.Count())
                         .Select(c => c.Key).FirstOrDefault(),
+                    LastWallet = g.OrderByDescending(e => e.CreatedAt).Select(e => e.WalletId).FirstOrDefault(),
                     LastPrice = g.OrderByDescending(e => e.CreatedAt).Select(e => e.Value).FirstOrDefault(),
                     NameHighlighted = StringExtensions.Highlight(g.Key, "<strong>", "</strong>", search)
                 })

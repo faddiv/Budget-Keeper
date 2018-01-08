@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using OnlineWallet.ExportImport;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;
@@ -54,6 +55,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
             _fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
+                            .WithDirection(MoneyDirection.Expense)
                             .WithCreatedAt("2017.01.01", "2017.12.31")
                             .WithCategory("food")
                           .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
@@ -77,6 +79,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
             _fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
+                            .WithDirection(MoneyDirection.Expense)
                             .WithCreatedAt("2017.01.01", "2017.11.30")
                             .WithCategory("food")
                           .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
@@ -100,6 +103,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
             _fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
+                            .WithDirection(MoneyDirection.Expense)
                             .WithCreatedAt("2017.01.01", "2017.12.31")
                             .WithCategory(null)
                           .TheFirst(30).WithCategory("food")

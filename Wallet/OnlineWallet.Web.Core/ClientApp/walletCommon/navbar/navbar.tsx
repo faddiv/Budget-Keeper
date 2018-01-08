@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Transition } from "react-transition-group";
 import * as classNames from "classnames";
 import { MenuItem } from "./menuItem";
 import { DropdownMenu } from "./dropdownMenu";

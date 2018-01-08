@@ -9,4 +9,5 @@ export interface ArticleModel {
 
     lastPrice?: number;
 
+    lastWallet?: number;
 }

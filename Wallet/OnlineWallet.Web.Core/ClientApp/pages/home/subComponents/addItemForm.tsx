@@ -110,7 +110,8 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
         this.setState({
             name: item.name,
             category: item.category,
-            price: item.lastPrice.toString(10)
+            price: item.lastPrice.toString(10),
+            walletId: item.lastWallet
         }, this.validate);
     }
 

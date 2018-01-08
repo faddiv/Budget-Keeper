@@ -9,6 +9,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         public string Name { get; set; }
         public string NameHighlighted { get; set; }
         public int Occurence { get; set; }
+        public int LastWallet { get; internal set; }
 
         #endregion
     }

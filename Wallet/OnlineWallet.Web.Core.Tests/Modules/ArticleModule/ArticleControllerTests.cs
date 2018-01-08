@@ -8,7 +8,7 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.ArticleModule
 {
-    [Trait(nameof(ArticleController), "GetBy")]
+    [Trait(nameof(ArticleController), nameof(ArticleController.GetBy))]
     [Collection("Database collection")]
     public class ArticleControllerTests : IDisposable
     {
@@ -26,7 +26,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             _fixture.Cleanup();
         }
 
-        [Fact(DisplayName = "Groups_transactions_by_name_case_sensitive")]
+        [Fact(DisplayName = nameof(Groups_transactions_by_name_case_sensitive))]
         public void Groups_transactions_by_name_case_sensitive()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -42,7 +42,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             result.Select(e => e.Name).Should().OnlyHaveUniqueItems();
         }
 
-        [Fact(DisplayName = "Search_is_case_insesitive")]
+        [Fact(DisplayName = nameof(Search_is_case_insesitive))]
         public void Search_is_case_insesitive()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -57,7 +57,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa"));
         }
 
-        [Fact(DisplayName = "Search_is_contains_search")]
+        [Fact(DisplayName = nameof(Search_is_contains_search))]
         public void Search_is_contains_search()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -72,7 +72,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa"));
         }
 
-        [Fact(DisplayName = "In_search_text_space_does_not_considered")]
+        [Fact(DisplayName = nameof(In_search_text_space_does_not_considered))]
         public void In_search_text_space_does_not_considered()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -90,7 +90,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Name.ToLower().Contains("beta"));
         }
 
-        [Fact(DisplayName = "Search_is_sparse_search")]
+        [Fact(DisplayName = nameof(Search_is_sparse_search))]
         public void Search_is_sparse_search()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -105,7 +105,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Name.ToLower().Contains("xaxlxfxax"));
         }
         
-        [Fact(DisplayName = "Returns_with_the_most_common_Category_value")]
+        [Fact(DisplayName = nameof(Returns_with_the_most_common_Category_value))]
         public void Returns_with_the_most_common_Category_value()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -121,7 +121,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Category == "most common");
         }
 
-        [Fact(DisplayName = "Most_common_category_cant_be_null_if_there_is_one")]
+        [Fact(DisplayName = nameof(Most_common_category_cant_be_null_if_there_is_one))]
         public void Most_common_category_cant_be_null_if_there_is_one()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -137,7 +137,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .OnlyContain(e => e.Category == "most common");
         }
 
-        [Fact(DisplayName = "Returns_with_the_count_of_occurence_descending_order")]
+        [Fact(DisplayName = nameof(Returns_with_the_count_of_occurence_descending_order))]
         public void Returns_with_the_count_of_occurence_descending_order()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -155,7 +155,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             result[2].Occurence.Should().Be(5);
         }
 
-        [Fact(DisplayName = "Limits_the_result")]
+        [Fact(DisplayName = nameof(Limits_the_result))]
         public void Limits_the_result()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -173,9 +173,8 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .HaveCount(5);
             result.Should().NotContain(e => e.Name == "alfa6");
         }
-
-
-        [Fact(DisplayName = "Returns_with_the_most_recent_price")]
+        
+        [Fact(DisplayName = nameof(Returns_with_the_most_recent_price))]
         public void Returns_with_the_most_recent_price()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -195,8 +194,29 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .HaveCount(2).And
                 .OnlyContain(e => e.LastPrice == 1);
         }
-        
-        [Fact(DisplayName = "Highlights_the_match_in_name")]
+
+        [Fact(DisplayName = nameof(Returns_with_the_most_recent_wallet))]
+        public void Returns_with_the_most_recent_wallet()
+        {
+            _fixture.PrepareDataWith(tr => tr
+                .TheFirst(3).WithName("alfa1")
+                .TheNext(3).WithName("alfa2")
+                .TheFirst(1).WithCreatedAt("2017-10-15").WithWallet(_fixture.WalletCash)
+                .TheNext(1).WithCreatedAt("2017-10-16").WithWallet(_fixture.WalletBankAccount)
+                .TheNext(1).WithCreatedAt("2017-10-14").WithWallet(_fixture.WalletCash)
+                .TheNext(1).WithCreatedAt("2017-10-14").WithWallet(_fixture.WalletCash)
+                .TheNext(1).WithCreatedAt("2017-10-15").WithWallet(_fixture.WalletBankAccount)
+                .TheNext(1).WithCreatedAt("2017-10-13").WithWallet(_fixture.WalletCash)
+            );
+
+            var result = _controller.GetBy("alfa");
+
+            result.Should()
+                .HaveCount(2).And
+                .OnlyContain(e => e.LastWallet == _fixture.WalletBankAccount.MoneyWalletId);
+        }
+
+        [Fact(DisplayName = nameof(Highlights_the_match_in_name))]
         public void Highlights_the_match_in_name()
         {
             _fixture.PrepareDataWith(tr => tr
