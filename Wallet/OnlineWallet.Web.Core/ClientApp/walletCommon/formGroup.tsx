@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ValidationStateElement } from "helpers";
+import { ValidationStateElement, noop } from "helpers";
 import * as classNames from "classnames";
 
 type InputType = "text" | "button" | "submit" | "reset" | "radio" | "checkbox" | "color" |
@@ -46,6 +46,6 @@ function defaultInput(type: string, id: string, name: string, label: string, val
 
 FormGroup.defaultProps = {
     type: "text",
-    onChange: () => { },
+    onChange: noop,
     autoComplete: false
 };

@@ -3,7 +3,7 @@ import * as moment from "moment";
 import * as classNames from "classnames";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
-import { bind } from "helpers";
+import { bind, noop } from "helpers";
 import { updateState, isClickableClicked } from "react-ext";
 
 export namespace TransactionTableRow {
@@ -161,7 +161,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
             <tr className={classNames({ [rowColor(item)]: hasRowColor }, { selected })} onChange={this.handleInputChange}
                 onMouseDown={this.startSelection} onMouseEnter={this.continueSelection} onMouseUp={this.endSelection}>
                 <td>
-                    <input type="date" className="form-control" value={item.createdAt} name="createdAt" />
+                    <input type="date" className="form-control" value={item.createdAt} name="createdAt" onChange={noop} />
                 </td>
                 <td>
                     <NameInput value={item.name} className="form-control" onSelect={this.nameSelected} />
@@ -170,7 +170,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                     <DirectionIcon direction={item.direction} />
                 </td>
                 <td>
-                    <input type="number" className="form-control" value={item.price} name="price" autoComplete="off" />
+                    <input type="number" className="form-control" value={item.price} name="price" autoComplete="off" onChange={noop} />
                 </td>
                 <td>
                     <WalletSelector walletId={item.walletId} wallets={wallets} className="form-control" />
@@ -179,7 +179,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                     <CategoryInput value={item.category} onSelect={this.categorySelected} className="form-control" />
                 </td>
                 <td>
-                    <input type="text" className="form-control" value={item.comment} name="comment" autoComplete="off" />
+                    <input type="text" className="form-control" value={item.comment} name="comment" autoComplete="off" onChange={noop} />
                 </td>
                 <td>
                     <SaveCancel save={this.saveTransaction} cancel={this.cancelTransaction} />

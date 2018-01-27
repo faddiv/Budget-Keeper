@@ -11,6 +11,7 @@ import { Layout } from "layout";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "walletCommon";
 import { YearSelector, MonthSelector, Balance } from "./subComponents";
 import { RootState } from "reducers";
+import { Link } from "react-router-dom";
 
 export namespace Transactions {
     export interface Params {
@@ -82,12 +83,11 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
             }
             const transactions = mapTransaction(this.state.changedItems);
             const resultTransactions = await transactionService.batchUpdate(transactions, this.state.deletedItems);
-            const balance = await transactionService.balanceInfo(this.state.year, this.state.month);
             this.setState({
                 changedItems: [],
-                deletedItems: [],
-                balance
+                deletedItems: []
             });
+            await this.dateSelected();
             this.alertsService.showAlert({ type: "success", message: "Changes saved successfully." });
         } catch (error) {
             this.alertsService.showAlert({ type: "danger", message: error });
@@ -111,16 +111,6 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
             items,
             changedItems
         });
-    }
-
-    @bind
-    yearSelected(year) {
-        this.props.history.push(`/transactions/${year}/${this.state.month}`);
-    }
-
-    @bind
-    monthSelected(month: number) {
-        this.props.history.push(`/transactions/${this.state.year}/${month}`);
     }
 
     @bind
@@ -151,10 +141,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                             <button type="button" className="btn btn-success" onClick={this.save} name="saveBtn">Save</button>
                         </div>
                         <div className="col">
-                            <div className="input-group">
-                                <YearSelector from={2009} to={maxYear} year={year} onChange={this.yearSelected} />
-                                <MonthSelector year={year} month={month} onChange={this.monthSelected} />
-                            </div>
+                            <MonthSelector year={year} month={month} />
                         </div>
                     </div>
                 </form>

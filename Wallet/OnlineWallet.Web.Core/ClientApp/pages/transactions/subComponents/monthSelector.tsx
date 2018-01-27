@@ -1,25 +1,25 @@
 import * as React from "react";
 import { renderRange } from "react-ext";
+import { Link } from "react-router-dom";
 
 interface MonthSelectorProps {
     year: number;
     month: number;
-    onChange: (month: number) => void;
 }
 
-const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month, onChange, ...rest }) => {
+const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month, ...rest }) => {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
     return (
-        <div className="input-group-btn">
-            {renderRange(1, 12, i =>
-                <button key={i}
-                    className={getMonthColoring(year, month, currentYear, currentMonth, i)}
-                    type="button"
-                    onClick={() => onChange(i)}
-                    name="selectedMonth">{i}</button>)}
 
+        <div className="btn-group">
+            <Link className="btn btn-light" to={`/transactions/${year - 1}/${12}`} >{year - 1}</Link>
+            <button className="btn btn-primary" disabled>{year}</button>
+            {renderRange(1, 12, i =>
+                <Link key={i} className={getMonthColoring(year, month, currentYear, currentMonth, i)} to={`/transactions/${year}/${i}`} >{i}</Link>
+            )}
+            <Link className="btn btn-light" to={`/transactions/${year + 1}/${1}`} >{year + 1}</Link>
         </div>
     );
 };

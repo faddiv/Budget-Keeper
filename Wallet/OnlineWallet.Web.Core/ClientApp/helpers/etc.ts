@@ -15,3 +15,8 @@ export function delay(milliseconds: number): Promise<any> {
 export function formatInt(num: number) {
     return num.toLocaleString("hu");
 }
+
+/**
+ * A function that does nothing... For a reason.
+ */
+export function noop() { }

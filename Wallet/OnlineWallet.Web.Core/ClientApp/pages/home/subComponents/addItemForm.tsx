@@ -140,7 +140,6 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
                 <FormGroup name="walletId" label="Wallet">
                     <WalletSelector walletId={walletId} wallets={wallets} />
                 </FormGroup>
-                <FormGroup name="createdAt" label="Date" type="date" value={createdAt} />
                 <FormGroup name="name" label="Name">
                     <NameInput focusAction={this.focusStartBind}
                         value={name} autoFocus={true} onSelect={this.nameSelected}
@@ -151,10 +150,11 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
                     </NameInput>
                 </FormGroup>
                 <FormGroup name="price" label="Price" type="number" value={price} validation={validation.price} />
-                <FormGroup name="comment" label="Comment" value={comment} />
                 <FormGroup name="category" label="Category" value={category}>
                     <CategoryInput value={category} className="form-control" onSelect={this.categorySelected} />
                 </FormGroup>
+                <FormGroup name="createdAt" label="Date" type="date" value={createdAt} />
+                <FormGroup name="comment" label="Comment" value={comment} />
                 <DirectionCheck value={direction} />
                 <button type="submit" className="btn btn-primary">Add</button>
                 <button type="button" className="btn btn-success" onClick={this.saveAll}>Save</button>
