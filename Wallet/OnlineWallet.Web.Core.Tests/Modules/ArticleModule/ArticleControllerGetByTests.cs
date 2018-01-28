@@ -2,7 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using OnlineWallet.Web.TestHelpers;
-using OnlineWallet.Web.TestHelpers.Builders;
 using TestStack.Dossier.Lists;
 using Xunit;
 
@@ -10,12 +9,12 @@ namespace OnlineWallet.Web.Modules.ArticleModule
 {
     [Trait(nameof(ArticleController), nameof(ArticleController.GetBy))]
     [Collection("Database collection")]
-    public class ArticleControllerTests : IDisposable
+    public class ArticleControllerGetByTests : IDisposable
     {
         private readonly DatabaseFixture _fixture;
         private readonly ArticleController _controller;
 
-        public ArticleControllerTests(DatabaseFixture fixture)
+        public ArticleControllerGetByTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
             _controller = new ArticleController(_fixture.DbContext);

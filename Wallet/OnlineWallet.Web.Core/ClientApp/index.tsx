@@ -6,7 +6,7 @@ import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
-import { Home, Transactions, Wallets, ImportPage, ExportPage, YearlyStatisticsPage, CategoryStatisticsPage } from "pages";
+import { Home, Transactions, Wallets, ImportPage, ExportPage, YearlyStatisticsPage, CategoryStatisticsPage, ArticlesPage } from "pages";
 import { configureStore } from "store";
 import { loadWallets } from "actions/wallets";
 
@@ -24,6 +24,7 @@ ReactDOM.render(
                 <Route path="/transactions/:year?/:month?" component={Transactions} />
                 <Route path="/statistics/yearly/:year?" component={YearlyStatisticsPage} />
                 <Route path="/statistics/category/:year?" component={CategoryStatisticsPage} />
+                <Route path="/statistics/articles/:article?" component={ArticlesPage} />
                 <Route path="/import" component={ImportPage} />
                 <Route path="/export" component={ExportPage} />
                 <Route path="/wallets" component={Wallets} />
