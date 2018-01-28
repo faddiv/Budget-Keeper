@@ -1,10 +1,10 @@
 import * as React from "react";
-import { StockModel } from "./StockModel";
+import { ArticleModel } from "walletApi";
 
-interface StockTableProps { stocks: StockModel[]; }
+interface StockTableProps { articles: ArticleModel[]; }
 
-const StockTable: React.SFC<StockTableProps> = ({ stocks, ...rest }) => {
-    if (stocks && stocks.length > 0) {
+const StockTable: React.SFC<StockTableProps> = ({ articles, ...rest }) => {
+    if (articles && articles.length > 0) {
         return (
             <table className="table">
                 <thead>
@@ -15,11 +15,11 @@ const StockTable: React.SFC<StockTableProps> = ({ stocks, ...rest }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {stocks.map((item, index) =>
+                    {articles.map((item, index) =>
                         <tr key={index}>
                             <td>{item.name}</td>
                             <td>{item.category}</td>
-                            <td>{item.count}</td>
+                            <td>{item.occurence}</td>
                         </tr>)}
                 </tbody>
             </table>

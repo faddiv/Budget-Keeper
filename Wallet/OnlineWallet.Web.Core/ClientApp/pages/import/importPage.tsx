@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 import { AlertsActions } from "actions/alerts";
 import { Layout } from "layout";
 import { updateState, NavLink, TabPane } from "react-ext";
-import { StockTable, StockModel } from "./subComponents";
+import { StockTable } from "./subComponents";
 import { bind, _, toUTCDate, toDateString } from "helpers";
-import { transactionService, importExportService, ExportImportRow, Wallet, Transaction } from "walletApi";
+import { transactionService, importExportService, ExportImportRow, Wallet, Transaction, ArticleModel } from "walletApi";
 import { RootState } from "reducers";
 import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "walletCommon";
 
@@ -20,7 +20,7 @@ export namespace ImportPage {
     export interface State {
         activeTab: string;
         transactions: TransactionViewModel[];
-        stocks: StockModel[];
+        stocks: ArticleModel[];
         file: FileList;
         page: number;
         pageStocks: number;
@@ -46,14 +46,18 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     createStockGroups(transactions) {
         const stocks = [];
         const grouping: {
-            [name: string]: StockModel
+            [name: string]: ArticleModel
         } = {};
         for (const element of transactions) {
             if (grouping[element.name]) {
                 grouping[element.name].category = grouping[element.name].category || element.category;
-                grouping[element.name].count++;
+                grouping[element.name].occurence++;
             } else {
-                grouping[element.name] = new StockModel(element.name, element.category, 1);
+                grouping[element.name] = {
+                    name: element.name,
+                    category: element.category,
+                    occurence: 1
+                };
             }
         }
         for (const key in grouping) {
@@ -208,7 +212,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
                         <Pager page={page} pageSize={pageSize} countAll={countAll} onPageSelected={this.selectPage} />
                     </TabPane>
                     <TabPane name="groupStock" activeKey={activeTab}>
-                        <StockTable stocks={stocks.slice(dataFrom(pageStocks, pageSize, countStocks), dataTo(pageStocks, pageSize, countStocks))} />
+                        <StockTable articles={stocks.slice(dataFrom(pageStocks, pageSize, countStocks), dataTo(pageStocks, pageSize, countStocks))} />
                         <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage} />
                     </TabPane>
                 </div>
