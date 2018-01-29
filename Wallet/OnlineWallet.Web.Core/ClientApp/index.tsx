@@ -24,7 +24,7 @@ ReactDOM.render(
                 <Route path="/transactions/:year?/:month?" component={Transactions} />
                 <Route path="/statistics/yearly/:year?" component={YearlyStatisticsPage} />
                 <Route path="/statistics/category/:year?" component={CategoryStatisticsPage} />
-                <Route path="/statistics/articles/:article?" component={ArticlesPage} />
+                <Route path="/statistics/articles" component={ArticlesPage} />
                 <Route path="/import" component={ImportPage} />
                 <Route path="/export" component={ExportPage} />
                 <Route path="/wallets" component={Wallets} />

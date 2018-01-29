@@ -44,7 +44,7 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
         const collapsed = !open;
         return (
             <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-                <a className="navbar-brand" href="#">Navbar</a>
+                <NavLink to="/" className="navbar-brand" exact>Wallet</NavLink>
                 <button className={classNames("navbar-toggler", { collapsed })} type="button"
                     aria-controls="walletNavbar" aria-expanded={open} aria-label="Open main menu" onClick={this.toggleNavbar}>
                     <span className="navbar-toggler-icon"></span>
