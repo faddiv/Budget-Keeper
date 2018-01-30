@@ -38,7 +38,7 @@ export function nextDirection(direction: MoneyDirection) {
     }
 }
 
-export function mapTransactionViewModel(transactions: Transaction[], wallets: Wallet[]): TransactionViewModel[] {
+export function mapTransactionViewModel(transactions: Transaction[]): TransactionViewModel[] {
     return transactions.map(transaction => {
         return {
             category: transaction.category || "",

@@ -35,9 +35,22 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         #endregion
 
         #region  Public Methods
+        [HttpGet("FetchArticle")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
+        public async Task<List<Transaction>> FetchArticle(string article, int limit = 20,
+            CancellationToken token = default(CancellationToken))
+        {
+            return await Db.Transactions
+                   .Where(e => e.Name == article)
+                   .OrderByDescending(e => e.CreatedAt)
+                   .ThenBy(e => e.Name)
+                   .ThenByDescending(e => e.TransactionId)
+                   .Take(limit)
+                   .ToListAsync(token);
+        }
 
         [HttpGet("BalanceInfo")]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(BalanceInfo))]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(BalanceInfo))]
         public async Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token)
         {
             var transactions = await Db.Transactions
@@ -54,9 +67,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         }
 
         [HttpPost("BatchSave")]
-        [SwaggerResponse((int) HttpStatusCode.Created, typeof(List<Transaction>))]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
-        [SwaggerResponse((int) HttpStatusCode.BadRequest, typeof(object))]
+        [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<Transaction>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, typeof(object))]
         public async Task<ActionResult> BatchSave(
             [FromBody, Required] TransactionOperationBatch model,
             CancellationToken token)
@@ -102,7 +115,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             await Db.SaveChangesAsync(token);
             return new JsonResult(model.Save)
             {
-                StatusCode = (int) HttpStatusCode.OK
+                StatusCode = (int)HttpStatusCode.OK
             };
         }
 

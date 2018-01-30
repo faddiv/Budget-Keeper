@@ -22,12 +22,12 @@ class TransactionService {
         });
     }
 
-    fetchArticle(name: string, limit: number = 20) {
-        return this.fetch({
-            search: `Name = "${name}"`,
-            sorting: "CreatedAt desc, Name asc, TransactionId desc",
-            take: limit
-        });
+    async fetchArticle(article: string, limit: number = 10) {
+        const url = buildUrl(urlBase + "/FetchArticle", walletApiConfig.baseUrl, { article });
+
+        const response = await fetch(url.toString());
+        const result = await ThenJson<Transaction[]>(response);
+        return result;
     }
 
     async batchUpdate(transactions: Transaction[], idToDelete?: number[]): Promise<Transaction[]> {

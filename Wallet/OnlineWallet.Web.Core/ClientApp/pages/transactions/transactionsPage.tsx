@@ -122,7 +122,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         const fetchBalance = transactionService.balanceInfo(start.year(), start.month() + 1);
         const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
         this.setState({
-            items: mapTransactionViewModel(transactions, this.props.wallets),
+            items: mapTransactionViewModel(transactions),
             balance
         });
     }
