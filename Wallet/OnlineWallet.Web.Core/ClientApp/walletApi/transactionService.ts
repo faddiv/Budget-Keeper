@@ -42,14 +42,6 @@ class TransactionService {
         return result;
     }
 
-    async balanceInfo(year: number, month: number): Promise<BalanceInfo> {
-        const url = buildUrl(urlBase + "/BalanceInfo", walletApiConfig.baseUrl, { year, month });
-
-        const response = await fetch(url.toString());
-        const result = await ThenJson<BalanceInfo>(response);
-        return result;
-    }
-
 }
 
 export const transactionService = new TransactionService();

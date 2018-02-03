@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.TransactionModule;
@@ -22,9 +25,9 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
 
         [HttpGet("Yearly")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(YearlyStatistics))]
-        public YearlyStatistics Yearly(int year)
+        public async Task<YearlyStatistics> Yearly(int year)
         {
-            var monthlyStats = _db.Transactions
+            var monthlyStats = await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year)
                 .GroupBy(e => new { e.CreatedAt.Month, e.Direction })
                 .Select(e => new
@@ -32,7 +35,9 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                     e.Key.Month,
                     e.Key.Direction,
                     Sum = e.Sum(t => t.Value)
-                }).ToLookup(e => e.Month);
+                })
+                .ToAsyncEnumerable()
+                .ToLookup(e => e.Month);
             var monthly = new List<BalanceInfo>();
             for (int i = 0; i < 12; i++)
             {
@@ -55,9 +60,9 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
         [HttpGet("Categories")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(CategoryStatisticsSummary))]
-        public CategoryStatisticsSummary Categories(int year)
+        public async Task<CategoryStatisticsSummary> Categories(int year)
         {
-            var monthlyStats = _db.Transactions
+            var monthlyStats = await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year && e.Direction == MoneyDirection.Expense)
                 .GroupBy(e => new { e.CreatedAt.Month, Category = e.Category ?? string.Empty })
                 .Select(e => new
@@ -66,7 +71,9 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                     e.Key.Category,
                     Spent = e.Sum(t => t.Value),
                     Count = e.Count()
-                }).ToLookup(e => e.Month);
+                })
+                .ToAsyncEnumerable()
+                .ToLookup(e => e.Month);
             var monthly = new List<List<CategoryStatistics>>();
             for (int i = 0; i < 12; i++)
             {
@@ -108,5 +115,23 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                 Yearly = yearly
             };
         }
+
+        [HttpGet("BalanceInfo")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(BalanceInfo))]
+        public async Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token)
+        {
+            var transactions = await _db.Transactions
+                .Where(e => e.CreatedAt.Year == year && e.CreatedAt.Month == month)
+                .ToListAsync(token);
+            int income = transactions.Where(e => e.Direction == MoneyDirection.Income).Sum(e => e.Value);
+            var balanceInfo = new BalanceInfo
+            {
+                Income = income,
+                Spent = transactions.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Value),
+                Planned = transactions.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Value)
+            };
+            return balanceInfo;
+        }
+
     }
 }

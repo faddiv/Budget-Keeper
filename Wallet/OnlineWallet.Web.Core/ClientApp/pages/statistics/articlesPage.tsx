@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout } from "layout";
 import { ArticleModel, articleService, Wallet, transactionService } from "walletApi";
 import { bind, _ } from "helpers";
-import { updateState, Collapse } from "react-ext";
+import { updateState, Collapse, noAction } from "react-ext";
 import { getWalletNameById, TransactionViewModel, mapTransactionViewModel, getDirectionColoring, TransactionTable } from "walletCommon";
 import { connect } from "react-redux";
 import { RootState } from "reducers";
@@ -135,7 +135,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
         const { name, articles, openItem } = this.state;
         return (
             <Layout>
-                <form>
+                <form onSubmit={noAction}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Article</label>
                         <div className="col-sm-10">

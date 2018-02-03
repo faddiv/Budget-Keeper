@@ -5,13 +5,12 @@ import { connect } from "react-redux";
 import { withRouter, RouteComponentProps } from "react-router";
 
 import { AlertsActions } from "actions/alerts";
-import { Transaction, transactionService, walletService, Wallet, BalanceInfo } from "walletApi";
+import { transactionService, Wallet, BalanceInfo, statisticsService } from "walletApi";
 import { bind, _ } from "helpers";
 import { Layout } from "layout";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "walletCommon";
-import { YearSelector, MonthSelector, Balance } from "./subComponents";
+import { MonthSelector, Balance } from "./subComponents";
 import { RootState } from "reducers";
-import { Link } from "react-router-dom";
 
 export namespace Transactions {
     export interface Params {
@@ -119,7 +118,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         const start = moment([year, month - 1, 1]);
         const end = moment(start).endOf("month");
         const fetchTransactions = transactionService.fetchDateRange(start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD"));
-        const fetchBalance = transactionService.balanceInfo(start.year(), start.month() + 1);
+        const fetchBalance = statisticsService.balanceInfo(start.year(), start.month() + 1);
         const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
         this.setState({
             items: mapTransactionViewModel(transactions),

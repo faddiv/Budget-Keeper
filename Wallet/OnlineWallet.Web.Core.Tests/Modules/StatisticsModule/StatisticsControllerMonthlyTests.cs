@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.TestHelpers;
@@ -36,11 +37,11 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
 
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics_for_empty_year))]
-        public void Should_load_yearly_category_statistics_for_empty_year()
+        public async Task Should_load_yearly_category_statistics_for_empty_year()
         {
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Categories(2017);
+            var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
             statistics.Yearly.Should().NotBeNull();
             statistics.Yearly.Should().HaveCount(0);
@@ -50,7 +51,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
 
         }
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics))]
-        public void Should_load_yearly_category_statistics()
+        public async Task Should_load_yearly_category_statistics()
         {
             _fixture.PrepareDataWith(r => r
                           .All()
@@ -63,7 +64,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                             );
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Categories(2017);
+            var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
             statistics.Yearly.Should().NotBeNull();
             statistics.Yearly.Should().HaveCount(1);
@@ -74,7 +75,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
 
         [Fact(DisplayName = nameof(Should_load_monthly_category_statistics))]
-        public void Should_load_monthly_category_statistics()
+        public async Task Should_load_monthly_category_statistics()
         {
             _fixture.PrepareDataWith(r => r
                           .All()
@@ -87,7 +88,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                             );
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Categories(2017);
+            var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
             statistics.Monthly.Should().NotBeNull();
             statistics.Monthly.Should().HaveCount(12);
@@ -98,7 +99,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
 
         [Fact(DisplayName = nameof(Should_group_by_category))]
-        public void Should_group_by_category()
+        public async Task Should_group_by_category()
         {
             _fixture.PrepareDataWith(r => r
                           .All()
@@ -112,7 +113,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                             );
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Categories(2017);
+            var statistics = await controller.Categories(2017);
             statistics.Yearly.Should().HaveCount(4);
             var names = statistics.Yearly.Select(e => e.Name);
             names.Should().OnlyHaveUniqueItems();
@@ -130,13 +131,6 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
             categoryStatistics.Count.Should().Be(count);
             categoryStatistics.Spent.Should().Be(count);
             categoryStatistics.SpentPercent.Should().Be(count / 100.0);
-        }
-    }
-    static class CategoryStatExtensions
-    {
-        public static CategoryStatistics YearlyByName(this CategoryStatisticsSummary summ, string name)
-        {
-            return summ.Yearly.Find(e => e.Name == name);
         }
     }
 }

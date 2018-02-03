@@ -63,23 +63,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                    .ToListAsync(token);
         }
 
-        [HttpGet("BalanceInfo")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(BalanceInfo))]
-        public async Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token)
-        {
-            var transactions = await Db.Transactions
-                .Where(e => e.CreatedAt.Year == year && e.CreatedAt.Month == month)
-                .ToListAsync(token);
-            int income = transactions.Where(e => e.Direction == MoneyDirection.Income).Sum(e => e.Value);
-            var balanceInfo = new BalanceInfo
-            {
-                Income = income,
-                Spent = transactions.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Value),
-                Planned = transactions.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Value)
-            };
-            return balanceInfo;
-        }
-
         [HttpPost("BatchSave")]
         [SwaggerResponse((int)HttpStatusCode.Created, typeof(List<Transaction>))]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]

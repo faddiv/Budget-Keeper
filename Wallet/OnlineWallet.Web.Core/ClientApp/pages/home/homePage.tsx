@@ -4,13 +4,12 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import { AlertsActions } from "actions/alerts";
-import { walletService, Wallet, Transaction, MoneyDirection, transactionService, ArticleModel, CategoryModel } from "walletApi";
+import { Wallet, transactionService } from "walletApi";
 import { Layout } from "layout";
-import { Autocomplete, updateState } from "react-ext";
 import { AddItemForm, SaveAllResult } from "./subComponents";
 import { RootState } from "reducers";
-import { _, bind, validate, ValidationConfig, ValidationState, toDateString } from "helpers";
-import { TransactionTable, getDirectionColoring, FormGroup, WalletSelector, NameInput, CategoryInput, TransactionViewModel, mapTransaction, getWalletNameById } from "walletCommon";
+import { _, bind } from "helpers";
+import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransaction } from "walletCommon";
 
 export namespace Home {
     export interface Props {

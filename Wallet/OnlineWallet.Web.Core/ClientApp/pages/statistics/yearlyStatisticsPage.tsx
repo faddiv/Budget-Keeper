@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as moment from "moment";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { RootState } from "reducers";

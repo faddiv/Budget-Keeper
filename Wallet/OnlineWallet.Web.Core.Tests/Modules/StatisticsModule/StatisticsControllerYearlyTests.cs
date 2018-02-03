@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.TestHelpers;
@@ -36,56 +37,56 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
 
         [Fact(DisplayName = nameof(ReturnsYearlyIncome))]
-        public void ReturnsYearlyIncome()
+        public async Task ReturnsYearlyIncome()
         {
-            var statistics = PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
+            var statistics = await PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
 
             statistics.Should().NotBeNull();
             statistics.Income.Should().Be(70, "it sums all the income in the given year");
         }
 
         [Fact(DisplayName = nameof(ReturnsYearlyExpense))]
-        public void ReturnsYearlyExpense()
+        public async Task ReturnsYearlyExpense()
         {
-            var statistics = PrepareDataAndRunTest(MoneyDirection.Expense, MoneyDirection.Income, MoneyDirection.Plan);
+            var statistics = await PrepareDataAndRunTest(MoneyDirection.Expense, MoneyDirection.Income, MoneyDirection.Plan);
 
             statistics.Should().NotBeNull();
             statistics.Spent.Should().Be(70, "it sums all the expense in the given year");
         }
 
         [Fact(DisplayName = nameof(ReturnsYearlyPlan))]
-        public void ReturnsYearlyPlan()
+        public async Task ReturnsYearlyPlan()
         {
-            var statistics = PrepareDataAndRunTest(MoneyDirection.Plan, MoneyDirection.Income, MoneyDirection.Expense);
+            var statistics = await PrepareDataAndRunTest(MoneyDirection.Plan, MoneyDirection.Income, MoneyDirection.Expense);
 
             statistics.Should().NotBeNull();
             statistics.Planned.Should().Be(70, "it sums all the expense in the given year");
         }
 
         [Fact(DisplayName = nameof(ReturnsYearlySavings))]
-        public void ReturnsYearlySavings()
+        public async Task ReturnsYearlySavings()
         {
-            var statistics = PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
+            var statistics = await PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
 
             statistics.Should().NotBeNull();
             statistics.ToSaving.Should().Be(18, "it calculates savings in the given year");
         }
 
         [Fact(DisplayName = nameof(ReturnsYearlyUnused))]
-        public void ReturnsYearlyUnused()
+        public async Task ReturnsYearlyUnused()
         {
-            var statistics = PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
+            var statistics = await PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
 
             statistics.Should().NotBeNull();
             statistics.Unused.Should().Be(17, "it calculates savings in the given year");
         }
 
         [Fact(DisplayName = nameof(ReturnsZerosForEmptyYear))]
-        public void ReturnsZerosForEmptyYear()
+        public async Task ReturnsZerosForEmptyYear()
         {
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Yearly(2017);
+            var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
             statistics.Income.Should().Be(0);
             statistics.Spent.Should().Be(0);
@@ -94,7 +95,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
             statistics.Unused.Should().Be(0);
         }
 
-        private YearlyStatistics PrepareDataAndRunTest(MoneyDirection tested, MoneyDirection rest1, MoneyDirection rest2)
+        private Task<YearlyStatistics> PrepareDataAndRunTest(MoneyDirection tested, MoneyDirection rest1, MoneyDirection rest2)
         {
             _fixture.PrepareDataWith(r => r
                             .All().WithValue(1).WithCreatedAt("2017.01.01", "2017.12.31")
@@ -111,7 +112,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
 
         [Fact(DisplayName = nameof(ReturnsMonthlySummaries))]
-        public void ReturnsMonthlySummaries()
+        public async Task ReturnsMonthlySummaries()
         {
             _fixture.PrepareDataWith(r =>
             {
@@ -138,7 +139,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
 
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Yearly(2017);
+            var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
             statistics.Income.Should().Be(1200);
             statistics.Spent.Should().Be(120);
@@ -160,11 +161,11 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         }
 
         [Fact(DisplayName = nameof(ReturnsZeroMotnhlyDataForEmptyYear))]
-        public void ReturnsZeroMotnhlyDataForEmptyYear()
+        public async Task ReturnsZeroMotnhlyDataForEmptyYear()
         {
             var controller = new StatisticsController(_fixture.DbContext);
 
-            var statistics = controller.Yearly(2017);
+            var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
             statistics.Monthly.Should().NotBeNull();
             statistics.Monthly.Should().HaveCount(12);

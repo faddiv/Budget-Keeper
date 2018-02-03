@@ -1,5 +1,5 @@
 import { walletApiConfig, ThenJson } from "./walletApiConfig";
-import { YearlyStatistics, CategoryStatisticsSummary } from "./model";
+import { YearlyStatistics, CategoryStatisticsSummary, BalanceInfo } from "./model";
 import { buildUrl } from "./linkHelpers";
 
 const urlBase = "/api/v1/Statistics";
@@ -23,6 +23,15 @@ class StatisticsService {
         const result = await ThenJson<CategoryStatisticsSummary>(response);
         return result;
     }
+
+    async balanceInfo(year: number, month: number): Promise<BalanceInfo> {
+        const url = buildUrl(urlBase + "/BalanceInfo", walletApiConfig.baseUrl, { year, month });
+
+        const response = await fetch(url.toString());
+        const result = await ThenJson<BalanceInfo>(response);
+        return result;
+    }
+
 }
 
 export const statisticsService = new StatisticsService();
