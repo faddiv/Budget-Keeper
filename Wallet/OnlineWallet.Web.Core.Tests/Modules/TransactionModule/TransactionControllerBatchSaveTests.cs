@@ -13,12 +13,12 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    [Trait("TransactionController", "BatchSave")]
+    [Trait(nameof(TransactionController), nameof(TransactionController.BatchSave))]
     [Collection("Database collection")]
     public class TransactionControllerBatchSaveTests : TransactionControllerTests
     {
         #region Fields
-        
+
         private readonly Transaction _transaction1;
         private readonly Transaction _transaction2;
 
@@ -59,8 +59,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = "BatchSave saves new Transactions")]
         public async Task BatchSave_saves_new_Transactions()
         {
-            //precondition
-            DbSet.Count().Should().Be(3);
             //arrange
             var controller = new TransactionController(Fixture.DbContext);
             var transactions = new TransactionOperationBatch
@@ -93,7 +91,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
-            DbSet.Count().Should().Be(5);
+            DbSet.Count().Should().Be(4);
             DbSet.Should().Contain(e => e.Name == "third");
             DbSet.Should().Contain(e => e.Name == "fourth");
 
@@ -102,13 +100,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().OnlyContain(e => e.TransactionId > 0, "all element got an id");
         }
 
-        
+
 
         [Fact(DisplayName = "BatchSave updates existing Transactions")]
         public async Task BatchSave_updates_existing_Transactions()
         {
-            //precondition
-            DbSet.Count().Should().Be(3);
             //arrange
             var controller = new TransactionController(Fixture.DbContext);
             var transactions = new TransactionOperationBatch
@@ -143,7 +139,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
-            DbSet.Count().Should().Be(3);
+            DbSet.Count().Should().Be(2);
             DbSet.Should().Contain(e => e.Name == "third");
             DbSet.Should().Contain(e => e.Name == "fourth");
         }
@@ -151,8 +147,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = "BatchSave only saves date not time")]
         public async Task BatchSave_only_saves_date_not_time()
         {
-            //precondition
-            DbSet.Count().Should().Be(3);
             //arrange
             var controller = new TransactionController(Fixture.DbContext);
             var transactions = new TransactionOperationBatch
@@ -185,8 +179,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = "BatchSave can delete transactions by id")]
         public async Task BatchSave_can_delete_transactions_by_id()
         {
-            //precondition
-            DbSet.Count().Should().Be(3);
             //arrange
             var controller = new TransactionController(Fixture.DbContext);
             var transactions = new TransactionOperationBatch
@@ -219,7 +211,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             ControllerTestHelpers.ResultShouldBeBadRequest(actionResult);
 
         }
-        
+
         #endregion
     }
 }

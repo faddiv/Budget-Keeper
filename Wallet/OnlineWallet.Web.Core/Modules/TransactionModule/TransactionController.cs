@@ -9,35 +9,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.Common;
-using OnlineWallet.Web.Common.Queries;
 using OnlineWallet.Web.DataLayer;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    public class TransactionController : CrudController<Transaction, long>
+    [Route("api/v1/[controller]")]
+    public class TransactionController : Controller
     {
         #region  Constructors
 
-        public TransactionController(IWalletDbContext db) : base(db)
+        public TransactionController(IWalletDbContext db)
         {
-            ConditionBuilder = new TransactionConditionBuilder();
+            Db = db;
         }
 
         #endregion
 
         #region Properties
 
-        protected override ConditionVisitorBase<Transaction> ConditionBuilder { get; }
+        public IWalletDbContext Db { get; }
 
-        protected override DbSet<Transaction> DbSet => Db.Transactions;
+        protected DbSet<Transaction> DbSet => Db.Transactions;
 
         #endregion
 
         #region  Public Methods
-        [HttpGet("FetchArticle")]
+        [HttpGet(nameof(FetchByArticle))]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
-        public async Task<List<Transaction>> FetchArticle(string article, int limit = 20,
+        public async Task<List<Transaction>> FetchByArticle(string article, int limit = 20,
             CancellationToken token = default(CancellationToken))
         {
             return await Db.Transactions
@@ -46,6 +46,20 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                    .ThenBy(e => e.Name)
                    .ThenByDescending(e => e.TransactionId)
                    .Take(limit)
+                   .ToListAsync(token);
+        }
+
+
+        [HttpGet(nameof(FetchByDateRange))]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
+        public async Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
+            CancellationToken token = default(CancellationToken))
+        {
+            return await Db.Transactions
+                   .Where(e => start <= e.CreatedAt && e.CreatedAt <= end)
+                   .OrderByDescending(e => e.CreatedAt)
+                   .ThenBy(e => e.Name)
+                   .ThenByDescending(e => e.TransactionId)
                    .ToListAsync(token);
         }
 
@@ -78,7 +92,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             {
                 //Model can be null when there was a conversion exception in the incomming model.
                 //for example TransactionId is int but the incomming data is null.
-                return ValidationError();
+                return this.ValidationError();
             }
             model.Save = model.Save ?? new List<Transaction>();
             model.Delete = model.Delete ?? new List<long>();
@@ -120,5 +134,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         }
 
         #endregion
+
     }
 }

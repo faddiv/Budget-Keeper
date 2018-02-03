@@ -6,24 +6,16 @@ const urlBase = "/api/v1/Transaction";
 
 class TransactionService {
 
-    private async fetch(query?: QueryParams): Promise<Transaction[]> {
-
-        const url = buildUrl(urlBase, walletApiConfig.baseUrl, query);
+    async fetchDateRange(start: string, end: string) {
+        const url = buildUrl(urlBase + "/FetchByDateRange", walletApiConfig.baseUrl, { start, end });
 
         const response = await fetch(url.toString());
         const result = await ThenJson<Transaction[]>(response);
         return result;
     }
 
-    fetchDateRange(start: string, end: string) {
-        return this.fetch({
-            search: `CreatedAt >= "${start}" And CreatedAt <= "${end}"`,
-            sorting: "CreatedAt desc, Name asc, TransactionId desc"
-        });
-    }
-
     async fetchArticle(article: string, limit: number = 10) {
-        const url = buildUrl(urlBase + "/FetchArticle", walletApiConfig.baseUrl, { article });
+        const url = buildUrl(urlBase + "/FetchByArticle", walletApiConfig.baseUrl, { article });
 
         const response = await fetch(url.toString());
         const result = await ThenJson<Transaction[]>(response);

@@ -1,15 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.Core", "OnlineWallet.Web.Core\OnlineWallet.Web.Core.csproj", "{4879CD94-E1C1-42C7-B0F3-2F671CEA2876}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.QueryLanguage", "OnlineWallet.Web.QueryLanguage\OnlineWallet.Web.QueryLanguage.csproj", "{7003A24F-02DF-4EB2-A54B-41F6871CC6CA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.Core.Tests", "OnlineWallet.Web.Core.Tests\OnlineWallet.Web.Core.Tests.csproj", "{F5FAEE81-78EF-48B2-9AAB-D77FED909443}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.Web.QueryLanguage.Tests", "OnlineWallet.Web.QueryLanguage.Tests\OnlineWallet.Web.QueryLanguage.Tests.csproj", "{F600C559-D33C-4CE2-ABAC-D6E942E6706A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineWallet.ExportImport", "OnlineWallet.ExportImport\OnlineWallet.ExportImport.csproj", "{835981C1-58F2-43D1-B272-7C1FA899EC82}"
 EndProject
@@ -23,18 +19,10 @@ Global
 		{4879CD94-E1C1-42C7-B0F3-2F671CEA2876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4879CD94-E1C1-42C7-B0F3-2F671CEA2876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4879CD94-E1C1-42C7-B0F3-2F671CEA2876}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7003A24F-02DF-4EB2-A54B-41F6871CC6CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7003A24F-02DF-4EB2-A54B-41F6871CC6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7003A24F-02DF-4EB2-A54B-41F6871CC6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7003A24F-02DF-4EB2-A54B-41F6871CC6CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5FAEE81-78EF-48B2-9AAB-D77FED909443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5FAEE81-78EF-48B2-9AAB-D77FED909443}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5FAEE81-78EF-48B2-9AAB-D77FED909443}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5FAEE81-78EF-48B2-9AAB-D77FED909443}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F600C559-D33C-4CE2-ABAC-D6E942E6706A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{835981C1-58F2-43D1-B272-7C1FA899EC82}.Release|Any CPU.ActiveCfg = Release|Any CPU

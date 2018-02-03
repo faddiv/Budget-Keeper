@@ -65,8 +65,10 @@ export class WalletsRow extends React.Component<WalletsRow.Props, WalletsRow.Sta
 
     handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
         const wallet = updateState(event);
-        this.setState({
-            wallet
+        this.setState((prevState, props) => {
+            return {
+                wallet: { ...prevState.wallet, ...wallet }
+            };
         });
     }
 

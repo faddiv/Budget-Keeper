@@ -13,18 +13,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public TransactionControllerTests(DatabaseFixture fixture) : base(fixture)
         {
             Controller = new TransactionController(Fixture.DbContext);
-            TestTransaction = new Transaction
-            {
-                Category = "Test Category",
-                Comment = "Test Comment",
-                CreatedAt = DateTime.Parse("2017-10-15"),
-                Direction = ExportImport.MoneyDirection.Expense,
-                Name = "Test Name",
-                Value = 123,
-                Wallet = Fixture.WalletBankAccount
-            };
-            Fixture.DbContext.Add(TestTransaction);
-            Fixture.DbContext.SaveChanges();
         }
     }
 }

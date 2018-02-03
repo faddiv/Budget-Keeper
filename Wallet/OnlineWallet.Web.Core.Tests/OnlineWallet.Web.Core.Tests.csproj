@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineWallet.Web.Core\OnlineWallet.Web.Core.csproj" />
-    <ProjectReference Include="..\OnlineWallet.Web.QueryLanguage\OnlineWallet.Web.QueryLanguage.csproj" />
   </ItemGroup>
 
   <ItemGroup>

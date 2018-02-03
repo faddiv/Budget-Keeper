@@ -1,1 +1,0 @@
-java -cp ..\antlr4\antlr4-csharp-4.6.4-complete.jar org.antlr.v4.CSharpTool -Dlanguage=CSharp -listener -visitor -package OnlineWallet.Web.QueryLanguage.Parser -o Parser FilterLexer.g4 FilterParser.g4
