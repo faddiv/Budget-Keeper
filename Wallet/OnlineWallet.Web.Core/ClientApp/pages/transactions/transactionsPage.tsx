@@ -81,7 +81,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
                 return;
             }
             const transactions = mapTransaction(this.state.changedItems);
-            const resultTransactions = await transactionService.batchUpdate(transactions, this.state.deletedItems);
+            await transactionService.batchUpdate(transactions, this.state.deletedItems);
             this.setState({
                 changedItems: [],
                 deletedItems: []

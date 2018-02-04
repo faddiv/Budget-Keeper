@@ -50,7 +50,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         [Fact(DisplayName = nameof(Queries_BalanceInfo_for_the_given_month))]
         public async Task Queries_BalanceInfo_for_the_given_month()
         {
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var result = await controller.BalanceInfo(2017, 9, CancellationToken.None);
 

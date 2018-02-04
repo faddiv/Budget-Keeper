@@ -59,7 +59,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 };
                 dbContext.Transactions.Add(transaction);
                 dbContext.SaveChanges();
-                var controller = new ImportController(new CsvExportImport(), dbContext);
+                var controller = _fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
@@ -92,7 +92,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 };
                 dbContext.Transactions.Add(transaction);
                 dbContext.SaveChanges();
-                var controller = new ImportController(new CsvExportImport(), dbContext);
+                var controller = _fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
@@ -114,7 +114,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
             {
                 //Arrange
                 var dbContext = _fixture.DbContext;
-                var controller = new ImportController(new CsvExportImport(), dbContext);
+                var controller = _fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);

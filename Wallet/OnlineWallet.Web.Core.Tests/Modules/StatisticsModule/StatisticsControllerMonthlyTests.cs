@@ -39,7 +39,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics_for_empty_year))]
         public async Task Should_load_yearly_category_statistics_for_empty_year()
         {
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
@@ -62,7 +62,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                           .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
                           .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
                             );
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
@@ -86,7 +86,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                           .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
                           .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
                             );
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
@@ -111,7 +111,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                           .TheNext(30).WithCategory("rest")
                           .TheNext(30).WithCategory("boo")
                             );
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Yearly.Should().HaveCount(4);

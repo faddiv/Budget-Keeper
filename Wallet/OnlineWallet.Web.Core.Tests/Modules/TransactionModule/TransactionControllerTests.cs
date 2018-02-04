@@ -12,7 +12,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         public TransactionControllerTests(DatabaseFixture fixture) : base(fixture)
         {
-            Controller = new TransactionController(Fixture.DbContext);
+            Controller = Fixture.GetService<TransactionController>();
         }
     }
 }

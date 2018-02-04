@@ -17,7 +17,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         public ArticleControllerGetByTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
-            _controller = new ArticleController(_fixture.DbContext);
+            _controller = _fixture.GetService<ArticleController>();
         }
 
         public void Dispose()

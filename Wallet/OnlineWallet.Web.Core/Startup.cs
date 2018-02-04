@@ -9,6 +9,7 @@ using OnlineWallet.ExportImport;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.TransactionModule;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web
@@ -80,6 +81,7 @@ namespace OnlineWallet.Web
                 options.UseSqlServer(Configuration.GetConnectionString("Wallet"));
             });
             services.AddScoped<IWalletDbContext>(provider => provider.GetRequiredService<WalletDbContext>());
+            AddWalletServices(services);
             // Add framework services.
             services.AddMvc();
             services.AddCors(options =>
@@ -87,7 +89,7 @@ namespace OnlineWallet.Web
                 options.AddPolicy("ApiCors", builder =>
                 {
                     builder.WithOrigins("http://localhost:4200");
-					builder.WithOrigins("http://localhost:4201");
+                    builder.WithOrigins("http://localhost:4201");
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                 });
@@ -111,7 +113,12 @@ namespace OnlineWallet.Web
                 c.SchemaFilter<ApplyNewtonsoftJsonSchemaFilters>();
 
             });
+        }
 
+        public static void AddWalletServices(IServiceCollection services)
+        {
+            services.AddScoped<ITransactionQueries, TransactionQueries>();
+            services.AddScoped<IBatchSaveCommand, BatchSaveCommand>();
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 

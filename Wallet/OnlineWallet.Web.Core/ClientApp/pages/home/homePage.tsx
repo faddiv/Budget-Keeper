@@ -91,7 +91,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
                 return;
             }
             const serverItems = mapTransaction(this.state.items);
-            const result = await transactionService.batchUpdate(serverItems);
+            await transactionService.batchUpdate(serverItems);
             this.alertsService.showAlert({ type: "success", message: "Transactions are saved successfully." });
             this.setState({
                 items: []

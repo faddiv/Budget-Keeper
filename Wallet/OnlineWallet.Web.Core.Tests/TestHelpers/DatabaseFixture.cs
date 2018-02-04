@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using OnlineWallet.ExportImport;
@@ -15,6 +17,14 @@ namespace OnlineWallet.Web.TestHelpers
         public WalletDbContext DbContext { get; set; }
         public Wallet WalletCash { get; set; }
         public Wallet WalletBankAccount { get; set; }
+        public IServiceScope Services { get; set; }
+        public ServiceProvider RootServices { get; set; }
+
+        internal T GetService<T>()
+        {
+            return (T)Services.ServiceProvider.GetRequiredService(typeof(T));
+        }
+
         public DatabaseFixture()
         {
             var optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
@@ -39,16 +49,28 @@ namespace OnlineWallet.Web.TestHelpers
                 config.CreateMap(typeof(Transaction), typeof(Transaction));
                 config.CreateMap(typeof(Wallet), typeof(Wallet));
             });
+            var services = new ServiceCollection();
+            services.AddSingleton<IWalletDbContext>(DbContext);
+            Startup.AddWalletServices(services);
+            foreach (var controller in typeof(Startup).Assembly.GetTypes().Where(e => typeof(ControllerBase).IsAssignableFrom(e)))
+            {
+                services.AddScoped(controller);
+            }
+            RootServices = services.BuildServiceProvider();
+            Services = RootServices.CreateScope();
         }
         public void Cleanup()
         {
             DbContext.RemoveRange(DbContext.Transactions);
             DbContext.RemoveRange(DbContext.Wallets.Skip(2));
             DbContext.SaveChanges();
+            Services.Dispose();
+            Services = RootServices.CreateScope();
         }
         public void Dispose()
         {
             DbContext.Dispose();
+            RootServices.Dispose();
         }
 
         public TEntity Clone<TEntity>(TEntity original)

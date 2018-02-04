@@ -17,50 +17,38 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     [Route("api/v1/[controller]")]
     public class TransactionController : Controller
     {
+        private readonly ITransactionQueries queries;
+        private readonly IBatchSaveCommand batchSave;
         #region  Constructors
 
-        public TransactionController(IWalletDbContext db)
+        public TransactionController(ITransactionQueries queries, IBatchSaveCommand batchSave)
         {
-            Db = db;
+            this.queries = queries;
+            this.batchSave = batchSave;
         }
 
         #endregion
 
         #region Properties
-
-        public IWalletDbContext Db { get; }
-
-        protected DbSet<Transaction> DbSet => Db.Transactions;
-
+        
         #endregion
 
         #region  Public Methods
         [HttpGet(nameof(FetchByArticle))]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
-        public async Task<List<Transaction>> FetchByArticle(string article, int limit = 20,
+        public Task<List<Transaction>> FetchByArticle(string article, int limit = 20,
             CancellationToken token = default(CancellationToken))
         {
-            return await Db.Transactions
-                   .Where(e => e.Name == article)
-                   .OrderByDescending(e => e.CreatedAt)
-                   .ThenBy(e => e.Name)
-                   .ThenByDescending(e => e.TransactionId)
-                   .Take(limit)
-                   .ToListAsync(token);
+            return queries.FetchByArticleAsync(article, limit, token);
         }
 
 
         [HttpGet(nameof(FetchByDateRange))]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
-        public async Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
+        public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
             CancellationToken token = default(CancellationToken))
         {
-            return await Db.Transactions
-                   .Where(e => start <= e.CreatedAt && e.CreatedAt <= end)
-                   .OrderByDescending(e => e.CreatedAt)
-                   .ThenBy(e => e.Name)
-                   .ThenByDescending(e => e.TransactionId)
-                   .ToListAsync(token);
+            return queries.FetchByDateRange(start, end, token);
         }
 
         [HttpPost("BatchSave")]
@@ -79,37 +67,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             }
             model.Save = model.Save ?? new List<Transaction>();
             model.Delete = model.Delete ?? new List<long>();
-            var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
-            existingIds.AddRange(model.Delete);
-            var existingEntities = DbSet.Where(e => existingIds.Contains(e.TransactionId)).ToList();
-            foreach (var operation in model.Save)
-            {
-                operation.CreatedAt = operation.CreatedAt.Date;
-                if (operation.TransactionId != 0)
-                {
-                    var existingEntity = existingEntities.Find(e => e.TransactionId == operation.TransactionId);
-                    if (existingEntity == null)
-                    {
-                        throw new Exception("Money operation doesn't exists");
-                    }
-                    //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
-                    Db.UpdateEntityValues(existingEntity, operation);
-                }
-                else
-                {
-                    await DbSet.AddAsync(operation, token);
-                    token.ThrowIfCancellationRequested();
-                }
-            }
-            foreach (var id in model.Delete)
-            {
-                var existingEntity = existingEntities.Find(e => e.TransactionId == id);
-                if (existingEntity != null)
-                {
-                    Db.Transactions.Remove(existingEntity);
-                }
-            }
-            await Db.SaveChangesAsync(token);
+            await batchSave.Execute(model, token);
             return new JsonResult(model.Save)
             {
                 StatusCode = (int)HttpStatusCode.OK

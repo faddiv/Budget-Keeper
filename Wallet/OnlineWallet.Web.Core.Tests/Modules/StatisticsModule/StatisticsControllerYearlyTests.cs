@@ -84,7 +84,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         [Fact(DisplayName = nameof(ReturnsZerosForEmptyYear))]
         public async Task ReturnsZerosForEmptyYear()
         {
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
@@ -105,7 +105,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                             .TheNext(25).WithDirection(rest1)
                             .TheNext(10).WithDirection(rest2)
                             );
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = controller.Yearly(2017);
             return statistics;
@@ -137,7 +137,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                 return r;
             }, (100 + 10 + 10) * 12);
 
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
@@ -163,7 +163,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         [Fact(DisplayName = nameof(ReturnsZeroMotnhlyDataForEmptyYear))]
         public async Task ReturnsZeroMotnhlyDataForEmptyYear()
         {
-            var controller = new StatisticsController(_fixture.DbContext);
+            var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();

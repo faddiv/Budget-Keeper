@@ -12,7 +12,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
         public WalletControllerTests(DatabaseFixture fixture)
             : base(fixture)
         {
-            Controller = new WalletController(Fixture.DbContext);
+            Controller = Fixture.GetService<WalletController>();
             TestWallet = new Wallet
             {
                 Name = "Test"

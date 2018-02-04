@@ -22,7 +22,7 @@ class TransactionService {
         return result;
     }
 
-    async batchUpdate(transactions: Transaction[], idToDelete?: number[]): Promise<Transaction[]> {
+    async batchUpdate(transactions: Transaction[], idToDelete?: number[]): Promise<boolean> {
 
         transactions = transactions || [];
         idToDelete = idToDelete || [];
@@ -38,8 +38,7 @@ class TransactionService {
             save: transactions,
             delete: idToDelete
         }, "POST"));
-        const result = await ThenJson<Transaction[]>(response);
-        return result;
+        return response.ok;
     }
 
 }

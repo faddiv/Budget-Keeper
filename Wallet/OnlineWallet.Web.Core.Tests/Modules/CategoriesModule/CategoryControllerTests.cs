@@ -23,7 +23,7 @@ namespace OnlineWallet.Web.Modules.CategoryModule
         public CategoryControllerTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
-            _controller = new CategoryController(_fixture.DbContext);
+            _controller = _fixture.GetService<CategoryController>();
         }
 
         #endregion

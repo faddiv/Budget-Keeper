@@ -60,7 +60,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public async Task BatchSave_saves_new_Transactions()
         {
             //arrange
-            var controller = new TransactionController(Fixture.DbContext);
+            var controller = Fixture.GetService<TransactionController>();
             var transactions = new TransactionOperationBatch
             {
                 Save = new List<Transaction>
@@ -106,7 +106,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public async Task BatchSave_updates_existing_Transactions()
         {
             //arrange
-            var controller = new TransactionController(Fixture.DbContext);
+            var controller = Fixture.GetService<TransactionController>();
             var transactions = new TransactionOperationBatch
             {
                 Save = new List<Transaction>
@@ -148,7 +148,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public async Task BatchSave_only_saves_date_not_time()
         {
             //arrange
-            var controller = new TransactionController(Fixture.DbContext);
+            var controller = Fixture.GetService<TransactionController>();
             var transactions = new TransactionOperationBatch
             {
                 Save = new List<Transaction>
@@ -180,7 +180,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public async Task BatchSave_can_delete_transactions_by_id()
         {
             //arrange
-            var controller = new TransactionController(Fixture.DbContext);
+            var controller = Fixture.GetService<TransactionController>();
             var transactions = new TransactionOperationBatch
             {
                 Delete = new List<long> { _transaction1.TransactionId }
@@ -198,7 +198,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public async Task BatchSave_returns_BadRequest_if_input_invalid()
         {
             //arrange
-            var controller = new TransactionController(Fixture.DbContext);
+            var controller = Fixture.GetService<TransactionController>();
             var transactions = new TransactionOperationBatch
             {
                 Save = TransactionBuilder.CreateListOfSize(1).BuildList().ToList()

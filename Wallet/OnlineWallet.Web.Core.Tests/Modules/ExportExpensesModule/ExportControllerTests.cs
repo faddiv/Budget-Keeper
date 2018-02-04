@@ -71,7 +71,7 @@ namespace OnlineWallet.Web.Modules.ExportExpensesModule
 
             #endregion
             dbContext.SaveChanges();
-            _controller = new ExportController(new CsvExportImport(), dbContext);
+            _controller = _fixture.GetService<ExportController>();
         }
         
         public void Dispose()
