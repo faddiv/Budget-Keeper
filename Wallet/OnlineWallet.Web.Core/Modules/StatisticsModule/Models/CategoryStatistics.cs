@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.TransactionModule;
-
-namespace OnlineWallet.Web.Modules.StatisticsModule
+namespace OnlineWallet.Web.Modules.StatisticsModule.Models
 {
     public class CategoryStatistics
     {
-        public string Name { get; set; }
+        #region Properties
+
         public int Count { get; set; }
+        public string Name { get; set; }
         public int Spent { get; set; }
         public double SpentPercent { get; set; }
+
+        #endregion
     }
 }

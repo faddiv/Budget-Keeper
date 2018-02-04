@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using OnlineWallet.Web.DataLayer;
 
-namespace OnlineWallet.Web.Modules.TransactionModule
+namespace OnlineWallet.Web.Modules.TransactionModule.Models
 {
     public class TransactionOperationBatch
     {
-        public List<Transaction> Save { get; set; }
+        #region Properties
+
         public List<long> Delete { get; set; }
+        public List<Transaction> Save { get; set; }
+
+        #endregion
     }
 }

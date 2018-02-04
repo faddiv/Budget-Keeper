@@ -6,6 +6,8 @@ namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyFileUploadOperationFilter : IOperationFilter
     {
+        #region  Public Methods
+
         public void Apply(Operation operation, OperationFilterContext context)
         {
             if (context.ApiDescription.ActionDescriptor.Parameters.Count != 1) return;
@@ -15,13 +17,15 @@ namespace OnlineWallet.Web.Common.Swagger
             operation.Consumes.Add("multipart/form-data");
             operation.Parameters.Clear();
             operation.Parameters.Add(new NonBodyParameter
-            {
-                Name = param.Name,
-                Required = true,
-                In = "formData",
-                Type = "file"
-            }
+                {
+                    Name = param.Name,
+                    Required = true,
+                    In = "formData",
+                    Type = "file"
+                }
             );
         }
+
+        #endregion
     }
 }

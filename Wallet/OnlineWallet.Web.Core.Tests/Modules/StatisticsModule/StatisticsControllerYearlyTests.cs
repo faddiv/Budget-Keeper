@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.ExportImport;
+using OnlineWallet.Web.Modules.StatisticsModule.Models;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;

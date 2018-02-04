@@ -7,6 +7,8 @@ namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyNewtonsoftJsonSchemaFilters : ISchemaFilter
     {
+        #region  Public Methods
+
         public void Apply(Schema schema, SchemaFilterContext context)
         {
             foreach (var propertyInfo in context.JsonContract.UnderlyingType.GetProperties())
@@ -16,7 +18,8 @@ namespace OnlineWallet.Web.Common.Swagger
                     schema.Properties.Remove(propertyInfo.Name);
                     continue;
                 }
-                var jpa = (JsonPropertyAttribute)Attribute.GetCustomAttribute(propertyInfo, typeof(JsonPropertyAttribute));
+                var jpa = (JsonPropertyAttribute) Attribute.GetCustomAttribute(propertyInfo,
+                    typeof(JsonPropertyAttribute));
                 if (jpa != null && jpa.PropertyName != propertyInfo.Name)
                 {
                     var propertyData = schema.Properties[propertyInfo.Name];
@@ -25,5 +28,7 @@ namespace OnlineWallet.Web.Common.Swagger
                 }
             }
         }
+
+        #endregion
     }
 }

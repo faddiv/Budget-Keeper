@@ -9,6 +9,9 @@ namespace OnlineWallet.Web.DataLayer
     {
         #region Properties
 
+        [StringLength(200)]
+        public string Category { get; set; }
+
         [StringLength(Int32.MaxValue)]
         public string Comment { get; set; }
 
@@ -19,15 +22,12 @@ namespace OnlineWallet.Web.DataLayer
         [EnumDataType(typeof(MoneyDirection))]
         public MoneyDirection Direction { get; set; }
 
-        [Key]
-        public long TransactionId { get; set; }
-
         [Required]
         [StringLength(200)]
         public string Name { get; set; }
 
-        [StringLength(200)]
-        public string Category { get; set; }
+        [Key]
+        public long TransactionId { get; set; }
 
         [Required]
         public int Value { get; set; }
@@ -40,9 +40,13 @@ namespace OnlineWallet.Web.DataLayer
 
         #endregion
 
+        #region  Public Methods
+
         public override string ToString()
         {
             return $"{Value} {Direction} [{Category}:{Name}]";
         }
+
+        #endregion
     }
 }

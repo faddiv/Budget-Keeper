@@ -16,9 +16,15 @@ namespace OnlineWallet.Web.Common
 {
     public class ServeIndexHtmlMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger _logger;
+        #region Fields
+
         private readonly IFileProvider _fileProvider;
+        private readonly ILogger _logger;
+        private readonly RequestDelegate _next;
+
+        #endregion
+
+        #region  Constructors
 
         public ServeIndexHtmlMiddleware(RequestDelegate next,
             IHostingEnvironment hostingEnv, ILoggerFactory loggerFactory)
@@ -37,32 +43,10 @@ namespace OnlineWallet.Web.Common
             _fileProvider = hostingEnv.WebRootFileProvider;
             _logger = loggerFactory.CreateLogger<ServeIndexHtmlMiddleware>();
         }
-        class FileToServe
-        {
-            public FileToServe(IFileInfo file)
-            {
-                File = file;
-                var last = File.LastModified;
-                LastModified = new DateTimeOffset(last.Year, last.Month, last.Day, last.Hour, last.Minute, last.Second, last.Offset).ToUniversalTime();
-                long etagHash = LastModified.ToFileTime() ^ Length;
-                ETag = new EntityTagHeaderValue('\"' + Convert.ToString(etagHash, 16) + '\"');
-            }
 
-            public IFileInfo File { get; }
-            public long Length => File.Length;
-            public string PhysicalPath => File.PhysicalPath;
-            public DateTimeOffset LastModified { get; }
-            public EntityTagHeaderValue ETag { get; }
-        }
-        private FileToServe GetFileToServe()
-        {
-            var fileInfo = _fileProvider.GetFileInfo("index.html");
-            if (fileInfo.Exists)
-            {
-                return new FileToServe(fileInfo);
-            }
-            return null;
-        }
+        #endregion
+
+        #region  Public Methods
 
         /// <summary>
         /// Processes a request to determine if it matches a known file, and if so, serves it.
@@ -84,25 +68,50 @@ namespace OnlineWallet.Web.Common
                         var sendFile = context.Features.Get<IHttpSendFileFeature>();
                         if (sendFile != null)
                         {
-                            return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length, CancellationToken.None);
+                            return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length,
+                                CancellationToken.None);
                         }
-                        else
+                        using (var readStream = fileToServe.File.CreateReadStream())
                         {
-                            using (var readStream = fileToServe.File.CreateReadStream())
-                            {
-                                readStream.Seek(0, SeekOrigin.Begin);
-                                return StreamCopyOperation.CopyToAsync(readStream, context.Response.Body, fileToServe.Length, context.RequestAborted);
-                            }
+                            readStream.Seek(0, SeekOrigin.Begin);
+                            return StreamCopyOperation.CopyToAsync(readStream, context.Response.Body,
+                                fileToServe.Length, context.RequestAborted);
                         }
                     }
-                    else
-                    {
-                        ApplyResponseHeaders(context.Response, 304, fileToServe);
-                        return Task.FromResult(0);//TODO: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/Constants.cs CompletedTask 
-                    }
+                    ApplyResponseHeaders(context.Response, 304, fileToServe);
+                    return
+                        Task.FromResult(
+                            0); //TODO: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/Constants.cs CompletedTask 
                 }
             }
             return _next(context);
+        }
+
+        #endregion
+
+        #region  Nonpublic Methods
+
+        private void ApplyResponseHeaders(HttpResponse response, int statusCode, FileToServe file)
+        {
+            response.StatusCode = statusCode;
+            if (statusCode < 400)
+            {
+                // these headers are returned for 200, 206, and 304
+                // they are not returned for 412 and 416
+
+                response.ContentType = "text/html";
+                var responseHeaders = response.GetTypedHeaders();
+                responseHeaders.LastModified = file.LastModified;
+                responseHeaders.ETag = file.ETag;
+                responseHeaders.Headers[HeaderNames.AcceptRanges] = "bytes";
+            }
+            if (statusCode == 200)
+            {
+                // this header is only returned here for 200
+                // it already set to the returned range for 206
+                // it is not returned for 304, 412, and 416
+                response.ContentLength = file.Length;
+            }
         }
 
 
@@ -128,28 +137,45 @@ namespace OnlineWallet.Web.Common
             return true;
         }
 
-        private void ApplyResponseHeaders(HttpResponse response, int statusCode, FileToServe file)
+        private FileToServe GetFileToServe()
         {
-            response.StatusCode = statusCode;
-            if (statusCode < 400)
+            var fileInfo = _fileProvider.GetFileInfo("index.html");
+            if (fileInfo.Exists)
             {
-                // these headers are returned for 200, 206, and 304
-                // they are not returned for 412 and 416
-
-                response.ContentType = "text/html";
-                var responseHeaders = response.GetTypedHeaders();
-                responseHeaders.LastModified = file.LastModified;
-                responseHeaders.ETag = file.ETag;
-                responseHeaders.Headers[HeaderNames.AcceptRanges] = "bytes";
+                return new FileToServe(fileInfo);
             }
-            if (statusCode == 200)
-            {
-                // this header is only returned here for 200
-                // it already set to the returned range for 206
-                // it is not returned for 304, 412, and 416
-                response.ContentLength = file.Length;
-            }
+            return null;
         }
 
+        #endregion
+
+        class FileToServe
+        {
+            #region  Constructors
+
+            public FileToServe(IFileInfo file)
+            {
+                File = file;
+                var last = File.LastModified;
+                LastModified =
+                    new DateTimeOffset(last.Year, last.Month, last.Day, last.Hour, last.Minute, last.Second,
+                        last.Offset).ToUniversalTime();
+                long etagHash = LastModified.ToFileTime() ^ Length;
+                ETag = new EntityTagHeaderValue('\"' + Convert.ToString(etagHash, 16) + '\"');
+            }
+
+            #endregion
+
+            #region Properties
+
+            public EntityTagHeaderValue ETag { get; }
+
+            public IFileInfo File { get; }
+            public DateTimeOffset LastModified { get; }
+            public long Length => File.Length;
+            public string PhysicalPath => File.PhysicalPath;
+
+            #endregion
+        }
     }
 }

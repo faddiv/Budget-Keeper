@@ -6,6 +6,8 @@ namespace OnlineWallet.Web.Common.Swagger
 {
     public class ApplyCompositeInputModelOperationFilter : IOperationFilter
     {
+        #region  Public Methods
+
         public void Apply(Operation operation, OperationFilterContext context)
         {
             var controllerActionDescriptor = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
@@ -13,5 +15,7 @@ namespace OnlineWallet.Web.Common.Swagger
 
             operation.OperationId = controllerActionDescriptor.ActionName;
         }
+
+        #endregion
     }
 }

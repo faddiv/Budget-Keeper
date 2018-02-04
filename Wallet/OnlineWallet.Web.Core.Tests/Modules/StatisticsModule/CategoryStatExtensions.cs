@@ -1,4 +1,6 @@
-﻿namespace OnlineWallet.Web.Modules.StatisticsModule
+﻿using OnlineWallet.Web.Modules.StatisticsModule.Models;
+
+namespace OnlineWallet.Web.Modules.StatisticsModule
 {
     static class CategoryStatExtensions
     {

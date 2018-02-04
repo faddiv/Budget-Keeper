@@ -23,6 +23,13 @@ namespace OnlineWallet.Web.DataLayer
 
         #region  Public Methods
 
+        public void SetReadonly(bool isReadonly)
+        {
+            ChangeTracker.QueryTrackingBehavior = isReadonly
+                ? QueryTrackingBehavior.NoTracking
+                : QueryTrackingBehavior.TrackAll;
+        }
+
         public void UpdateEntityValues(object dbEntity, object newEntity)
         {
             var properties = Entry(dbEntity).Properties;
@@ -38,12 +45,6 @@ namespace OnlineWallet.Web.DataLayer
             }
         }
 
-        public void SetReadonly(bool isReadonly)
-        {
-            ChangeTracker.QueryTrackingBehavior = isReadonly
-                ? QueryTrackingBehavior.NoTracking
-                : QueryTrackingBehavior.TrackAll;
-        }
         #endregion
     }
 }

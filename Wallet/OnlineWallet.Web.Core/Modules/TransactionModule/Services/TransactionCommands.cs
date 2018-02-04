@@ -1,20 +1,31 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.TransactionModule.Models;
 
-namespace OnlineWallet.Web.Modules.TransactionModule
+namespace OnlineWallet.Web.Modules.TransactionModule.Services
 {
     public class BatchSaveCommand : IBatchSaveCommand
     {
+        #region Fields
+
         private readonly IWalletDbContext db;
+
+        #endregion
+
+        #region  Constructors
 
         public BatchSaveCommand(IWalletDbContext db)
         {
             this.db = db;
         }
+
+        #endregion
+
+        #region  Public Methods
+
         public async Task Execute(TransactionOperationBatch model, CancellationToken token)
         {
             var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
@@ -49,11 +60,17 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             }
             await db.SaveChangesAsync(token);
         }
+
+        #endregion
     }
 
 
     public interface IBatchSaveCommand
     {
+        #region  Public Methods
+
         Task Execute(TransactionOperationBatch model, CancellationToken token);
+
+        #endregion
     }
 }

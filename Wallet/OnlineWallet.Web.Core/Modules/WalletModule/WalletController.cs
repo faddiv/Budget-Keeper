@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,26 +23,21 @@ namespace OnlineWallet.Web.Modules.WalletModule
         #endregion
 
         #region Properties
-        
-        protected DbSet<Wallet> DbSet => Db.Wallets;
 
         public IWalletDbContext Db { get; }
 
+        protected DbSet<Wallet> DbSet => Db.Wallets;
+
         #endregion
 
-        [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Wallet>))]
-        public virtual Task<List<Wallet>> GetAll(CancellationToken token)
-        {
-            return DbSet.ToListAsync(token);
-        }
+        #region  Public Methods
 
         [HttpDelete("{id}")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
+        [SwaggerResponse((int) HttpStatusCode.OK)]
+        [SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
         public async Task<ActionResult> Delete(int id, CancellationToken token)
         {
-            var entity = await DbSet.FindAsync(new object[] { id }, token);
+            var entity = await DbSet.FindAsync(new object[] {id}, token);
             if (entity == null)
             {
                 return new NotFoundResult();
@@ -58,15 +52,22 @@ namespace OnlineWallet.Web.Modules.WalletModule
             }
             DbSet.Remove(entity);
             await Db.SaveChangesAsync(token);
-            return new JsonResult(new { success = true })
+            return new JsonResult(new {success = true})
             {
-                StatusCode = (int)HttpStatusCode.OK
+                StatusCode = (int) HttpStatusCode.OK
             };
         }
 
+        [HttpGet]
+        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Wallet>))]
+        public virtual Task<List<Wallet>> GetAll(CancellationToken token)
+        {
+            return DbSet.ToListAsync(token);
+        }
+
         [HttpPost]
-        [SwaggerResponse((int)HttpStatusCode.Created)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "There is a validation error")]
+        [SwaggerResponse((int) HttpStatusCode.Created)]
+        [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
         public async Task<ActionResult> Post([FromBody] Wallet value, CancellationToken token)
         {
             if (!ModelState.IsValid)
@@ -77,21 +78,21 @@ namespace OnlineWallet.Web.Modules.WalletModule
             await Db.SaveChangesAsync(token);
             return new JsonResult(value)
             {
-                StatusCode = (int)HttpStatusCode.Created
+                StatusCode = (int) HttpStatusCode.Created
             };
         }
 
         [HttpPut("{id}")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, description: "There is a validation error")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
+        [SwaggerResponse((int) HttpStatusCode.OK)]
+        [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
+        [SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
         public async Task<ActionResult> Put(int id, [FromBody] Wallet value, CancellationToken token)
         {
             if (!ModelState.IsValid)
             {
                 return this.ValidationError();
             }
-            var entity = await DbSet.FindAsync(new object[] { id }, token);
+            var entity = await DbSet.FindAsync(new object[] {id}, token);
             if (entity == null)
             {
                 return new NotFoundResult();
@@ -100,11 +101,10 @@ namespace OnlineWallet.Web.Modules.WalletModule
             await Db.SaveChangesAsync(token);
             return new JsonResult(value)
             {
-                StatusCode = (int)HttpStatusCode.OK
+                StatusCode = (int) HttpStatusCode.OK
             };
         }
-        #region  Nonpublic Methods
-        
+
         #endregion
     }
 }

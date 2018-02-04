@@ -1,4 +1,3 @@
-using System;
 using System.Linq.Expressions;
 
 namespace OnlineWallet.Web.Common
@@ -26,7 +25,7 @@ namespace OnlineWallet.Web.Common
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            if (Object.Equals(_source, node))
+            if (Equals(_source, node))
             {
                 return _target;
             }

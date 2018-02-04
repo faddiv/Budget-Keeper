@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
 using FluentAssertions;
+using OnlineWallet.Web.Modules.CategoryModule;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.CategoryModule
+namespace OnlineWallet.Web.Modules.CategoriesModule
 {
     [Trait(nameof(CategoryController), "GetBy")]
     [Collection("Database collection")]

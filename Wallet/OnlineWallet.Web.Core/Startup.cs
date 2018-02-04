@@ -9,7 +9,7 @@ using OnlineWallet.ExportImport;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.TransactionModule;
+using OnlineWallet.Web.Modules.TransactionModule.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web
@@ -38,6 +38,13 @@ namespace OnlineWallet.Web
 
         #region  Public Methods
 
+        public static void AddWalletServices(IServiceCollection services)
+        {
+            services.AddScoped<ITransactionQueries, TransactionQueries>();
+            services.AddScoped<IBatchSaveCommand, BatchSaveCommand>();
+            services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -61,10 +68,7 @@ namespace OnlineWallet.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
                 c.ShowJsonEditor();
             });
-            app.UseMvc(route =>
-            {
-                route.MapRoute("Default", "{controller}/{action}/{id?}");
-            });
+            app.UseMvc(route => { route.MapRoute("Default", "{controller}/{action}/{id?}"); });
             app.UseMiddleware<ServeIndexHtmlMiddleware>();
         }
 
@@ -111,15 +115,7 @@ namespace OnlineWallet.Web
                 c.OperationFilter<ApplyFileUploadOperationFilter>();
                 c.OperationFilter<ApplyCompositeInputModelOperationFilter>();
                 c.SchemaFilter<ApplyNewtonsoftJsonSchemaFilters>();
-
             });
-        }
-
-        public static void AddWalletServices(IServiceCollection services)
-        {
-            services.AddScoped<ITransactionQueries, TransactionQueries>();
-            services.AddScoped<IBatchSaveCommand, BatchSaveCommand>();
-            services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 
         #endregion

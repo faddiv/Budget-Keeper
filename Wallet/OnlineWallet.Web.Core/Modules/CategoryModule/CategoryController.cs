@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Common.Helpers;
@@ -27,13 +25,14 @@ namespace OnlineWallet.Web.Modules.CategoryModule
 
         #endregion
 
+        #region  Public Methods
 
         [HttpGet]
         public List<CategoryModel> GetBy(string search = "", int limit = 10)
         {
             var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
             var query = _db.Transactions.Where(e => !string.IsNullOrEmpty(e.Category)
-             && EF.Functions.Like(e.Category.ToLower(), querySearch));
+                                                    && EF.Functions.Like(e.Category.ToLower(), querySearch));
             var data = query
                 .GroupBy(e => e.Category)
                 .Take(limit)
@@ -51,5 +50,7 @@ namespace OnlineWallet.Web.Modules.CategoryModule
                 }).ToList();
             return data;
         }
+
+        #endregion
     }
 }

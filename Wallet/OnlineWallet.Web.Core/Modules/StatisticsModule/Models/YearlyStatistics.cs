@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.TransactionModule;
 
-namespace OnlineWallet.Web.Modules.StatisticsModule
+namespace OnlineWallet.Web.Modules.StatisticsModule.Models
 {
     public class YearlyStatistics : BalanceInfo
     {
+        #region Properties
+
         public List<BalanceInfo> Monthly { get; set; }
+
+        #endregion
     }
 }
