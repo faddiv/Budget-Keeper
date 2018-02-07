@@ -14,8 +14,8 @@ class TransactionService {
         return result;
     }
 
-    async fetchArticle(article: string, limit: number = 10) {
-        const url = buildUrl(urlBase + "/FetchByArticle", walletApiConfig.baseUrl, { article });
+    async fetchArticle(article: string, limit: number = 10, skip: number = 0) {
+        const url = buildUrl(urlBase + "/FetchByArticle", walletApiConfig.baseUrl, { article, limit, skip });
 
         const response = await fetch(url.toString());
         const result = await ThenJson<Transaction[]>(response);

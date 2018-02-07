@@ -12,6 +12,7 @@ export namespace TransactionTableRow {
         selected: boolean;
         wallets: Wallet[];
         rowColor?: ITransactionTableExtFunction;
+        editable: boolean;
         saveTransaction(newItem: TransactionViewModel, originalItem: TransactionViewModel): void;
         deleteTransaction(item: TransactionViewModel): void;
         rowMouseDown(item: TransactionViewModel): void;
@@ -189,7 +190,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     renderViewRow() {
-        const { rowColor, wallets, rowMouseDown, rowMouseEnter, rowMouseUp, selected } = this.props;
+        const { rowColor, wallets, rowMouseDown, rowMouseEnter, rowMouseUp, selected, editable } = this.props;
         const { item } = this.state;
         const hasRowColor = !!rowColor;
         return (
@@ -204,9 +205,10 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                 <td>{getWalletNameById(item.walletId, wallets)}</td>
                 <td>{item.category}</td>
                 <td>{item.comment}</td>
+                {editable &&
                 <td>
                     <EditDelete edit={this.editTransaction} delete_={this.deleteTransaction} />
-                </td>
+                </td>}
             </tr>
         );
     }

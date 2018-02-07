@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { RootState } from "reducers";
 
 interface OpenedArticles {
-    [name: string]: TransactionViewModel[];
+    [name: string]: TransactionViewModel[][];
 }
 
 export namespace ArticlesPage {
@@ -21,6 +21,7 @@ export namespace ArticlesPage {
         openItem: ArticleModel;
         openedArticleTransactions: TransactionViewModel[];
         transactionsCache: OpenedArticles;
+        pageNumber: number;
     }
 }
 
@@ -33,7 +34,8 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
             name: "",
             openItem: null,
             openedArticleTransactions: [],
-            transactionsCache: {}
+            transactionsCache: {},
+            pageNumber: 0
         };
     }
 
@@ -72,27 +74,71 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
     async openRow(item: ArticleModel) {
         const state = this.state;
         const openItem = state.openItem === item ? null : item;
-        this.setState({
-            openItem
-        });
         if (openItem) {
-            let transactions = state.transactionsCache[openItem.name];
-            if (!transactions || !transactions.length) {
-                transactions = await transactionService
+            let transactionsPages = state.transactionsCache[openItem.name];
+            if (!transactionsPages || !transactionsPages.length) {
+                const transactions = await transactionService
                     .fetchArticle(openItem.name)
                     .then(mapTransactionViewModel);
+                transactionsPages = [transactions];
                 this.setState((prevState, props) => {
                     return {
-                        transactionsCache: { ...prevState.transactionsCache, [openItem.name]: transactions }
+                        transactionsCache: { ...prevState.transactionsCache, [openItem.name]: transactionsPages }
                     };
                 });
             }
             this.setState({
-                openedArticleTransactions: transactions
+                openedArticleTransactions: transactionsPages[0],
+                openItem,
+                pageNumber: 0
             });
         } else {
             this.setState({
-                openedArticleTransactions: []
+                openedArticleTransactions: [],
+                openItem,
+                pageNumber: 0
+            });
+        }
+    }
+
+    @bind
+    firstPage() {
+        this.setPage(0);
+    }
+
+    @bind
+    prevPage() {
+        if (this.state.pageNumber > 0) {
+            this.setPage(this.state.pageNumber - 1);
+        }
+    }
+
+    @bind
+    nextPage() {
+        this.setPage(this.state.pageNumber + 1);
+    }
+
+    async setPage(pageNumber: number) {
+        const openItem = this.state.openItem;
+        const transactionsPages = this.state.transactionsCache[openItem.name];
+        let openedArticleTransactions = transactionsPages[pageNumber];
+        if (openedArticleTransactions) {
+            this.setState({
+                pageNumber,
+                openedArticleTransactions
+            });
+        } else {
+            openedArticleTransactions = await transactionService
+                .fetchArticle(openItem.name, 10, pageNumber * 10)
+                .then(mapTransactionViewModel);
+            this.setState((prevState, props) => {
+                const newPages = [...prevState.transactionsCache[openItem.name]];
+                newPages[pageNumber] = openedArticleTransactions;
+                return {
+                    pageNumber,
+                    openedArticleTransactions,
+                    transactionsCache: { ...prevState.transactionsCache, [openItem.name]: newPages }
+                };
             });
         }
     }
@@ -107,9 +153,21 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
                         <div className="card" style={{ margin: "5px" }}>
                             <div className="card-body">
                                 <TransactionTable wallets={wallets}
-                                    items={openedArticleTransactions} rowColor={getDirectionColoring}
-                                    deleted={this.deleteItem} update={this.update} />
+                                    items={openedArticleTransactions} rowColor={getDirectionColoring} />
                             </div>
+                        </div>
+                        <div className="card-footer">
+                            <ul className="pagination justify-content-center">
+                                <li className="page-item">
+                                    <button className="page-link" type="button" onClick={this.firstPage}>First</button>
+                                </li>
+                                <li className="page-item">
+                                    <button className="page-link" type="button" onClick={this.prevPage}>Previous</button>
+                                </li>
+                                <li className="page-item">
+                                    <button className="page-link" type="button" onClick={this.nextPage}>Next</button>
+                                </li>
+                            </ul>
                         </div>
                     </Collapse>
                 </td>
@@ -146,11 +204,11 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
                 <table className="table">
                     <thead>
                         <tr>
-                            <td>Name</td>
-                            <td>Category</td>
-                            <td>Last price</td>
-                            <td>Last wallet</td>
-                            <td>Occurence</td>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Last price</th>
+                            <th>Last wallet</th>
+                            <th>Occurence</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -13,7 +13,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
     {
         #region  Public Methods
 
-        Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20,
+        Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20, int skip = 0,
             CancellationToken token = default(CancellationToken));
 
         Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
@@ -41,10 +41,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
 
         #region  Public Methods
 
-        public Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20,
+        public Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20, int skip = 0,
             CancellationToken token = default(CancellationToken))
         {
-            return FetchBy(e => e.Name == article, token, take);
+            return FetchBy(e => e.Name == article, token, take, skip);
         }
 
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
@@ -65,7 +65,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                 .OrderByDescending(e => e.CreatedAt)
                 .ThenBy(e => e.Name)
                 .ThenByDescending(e => e.TransactionId);
-            if (skip.HasValue)
+            if (skip.HasValue && skip > 0)
             {
                 query = query.Skip(skip.Value);
             }

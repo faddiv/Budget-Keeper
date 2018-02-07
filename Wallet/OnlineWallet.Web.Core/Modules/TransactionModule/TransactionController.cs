@@ -60,10 +60,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         [HttpGet(nameof(FetchByArticle))]
         [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
-        public Task<List<Transaction>> FetchByArticle(string article, int limit = 20,
+        public Task<List<Transaction>> FetchByArticle(string article, int limit = 20, int skip = 0,
             CancellationToken token = default(CancellationToken))
         {
-            return queries.FetchByArticleAsync(article, limit, token);
+            return queries.FetchByArticleAsync(article, limit, skip, token);
         }
 
 

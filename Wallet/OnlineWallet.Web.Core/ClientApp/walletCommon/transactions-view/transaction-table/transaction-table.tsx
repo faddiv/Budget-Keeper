@@ -23,8 +23,8 @@ export namespace TransactionTable {
         changedItems?: TransactionViewModel[];
         rowColor?: ITransactionTableExtFunction;
         transactionSummary?: TransactionViewModel[];
-        update(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
-        deleted(items: TransactionViewModel): void;
+        update?(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
+        deleted?(items: TransactionViewModel): void;
     }
 
     export interface State {
@@ -99,7 +99,8 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
     }
 
     render() {
-        const { items, wallets, rowColor, transactionSummary } = this.props;
+        const { items, wallets, rowColor, transactionSummary, update } = this.props;
+        const editable = !!update;
         return (
             <table className="table transactions" onMouseLeave={this.endSelection}>
                 <thead>
@@ -111,7 +112,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
                         <th className="wallet-name">walletName</th>
                         <th className="category">category</th>
                         <th>comment</th>
-                        <th className="commands"></th>
+                        {editable && <th className="commands"></th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -123,6 +124,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
                             wallets={wallets}
                             deleteTransaction={this.deleteTransaction}
                             saveTransaction={this.saveTransaction}
+                            editable={editable}
                             rowColor={rowColor}
                             rowMouseDown={this.startSelection}
                             rowMouseEnter={this.selectingRow}
