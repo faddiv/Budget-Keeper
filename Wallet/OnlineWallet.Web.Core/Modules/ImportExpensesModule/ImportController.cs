@@ -51,8 +51,10 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 {
                     predicate = predicate.Or(e => e.Direction == direction);
                 }
+
                 query = query.Where(predicate);
             }
+
             if (sources.Count > 0)
             {
                 var predicate = PredicateBuilder.New<Transaction>();
@@ -62,8 +64,10 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     if (wallet == null) continue;
                     predicate = predicate.Or(e => e.Wallet == wallet);
                 }
+
                 query = query.Where(predicate);
             }
+
             if (categories.Count > 0 && categories.Count < 100)
             {
                 var predicate = PredicateBuilder.New<Transaction>();
@@ -78,8 +82,10 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                         predicate = predicate.Or(e => e.Category.ToLower() == category);
                     }
                 }
+
                 query = query.Where(predicate);
             }
+
             var savedItems = query.OrderBy(e => e.TransactionId).ToList();
             foreach (var item in list)
             {
@@ -99,6 +105,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                     item.MatchingId = savedItem.TransactionId;
                 }
             }
+
             return list;
         }
 

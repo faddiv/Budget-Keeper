@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
@@ -45,5 +46,17 @@ namespace OnlineWallet.Web.Modules.WalletModule
             ResultShouldBeOk(result, HttpStatusCode.OK);
             DbSet.Should().Contain(e => e.MoneyWalletId == TestWallet.MoneyWalletId && e.Name == "Changed Wallet");
         }
+
+        [Fact(DisplayName = nameof(Put_returns_NotFound_if_object_doesnt_exists))]
+        public async Task Put_returns_NotFound_if_object_doesnt_exists()
+        {
+            //Act
+            var result = await Controller.Put(TestWallet.MoneyWalletId + 100, new Wallet { Name = "st" }, CancellationToken.None);
+
+            //Assert
+            ResultShouldBeNotFound(result);
+
+        }
+
     }
 }

@@ -49,6 +49,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 //for example TransactionId is int but the incomming data is null.
                 return this.ValidationError();
             }
+
             model.Save = model.Save ?? new List<Transaction>();
             model.Delete = model.Delete ?? new List<long>();
             await batchSave.Execute(model, token);

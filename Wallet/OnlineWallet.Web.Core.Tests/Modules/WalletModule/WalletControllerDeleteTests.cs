@@ -17,7 +17,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
 
         }
 
-        [Fact(DisplayName = "Delete_deletes_line_if_possible")]
+        [Fact(DisplayName = nameof(Delete_deletes_line_if_possible))]
         public async Task Delete_deletes_line_if_possible()
         {
             //Act
@@ -29,7 +29,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
 
         }
 
-        [Fact(DisplayName = "Delete_returns_NotFound_if_object_doesnt_exists")]
+        [Fact(DisplayName = nameof(Delete_returns_NotFound_if_object_doesnt_exists))]
         public async Task Delete_returns_NotFound_if_object_doesnt_exists()
         {
             //Act
@@ -40,7 +40,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
 
         }
 
-        [Fact(DisplayName = "Delete_returns_BadRequest_if_already_used")]
+        [Fact(DisplayName = nameof(Delete_returns_BadRequest_if_already_used))]
         public async Task Delete_returns_BadRequest_if_already_used()
         {
             //Arrange

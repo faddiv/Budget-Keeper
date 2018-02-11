@@ -69,10 +69,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
             {
                 query = query.Skip(skip.Value);
             }
+
             if (take.HasValue)
             {
                 query = query.Take(take.Value);
             }
+
             return query
                 .ToListAsync(token);
         }

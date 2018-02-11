@@ -81,13 +81,16 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                     };
                     categories.Add(stats);
                 }
+
                 var sumSpent = categories.Sum(e => e.Spent);
                 foreach (var item in categories)
                 {
                     item.SpentPercent = Math.Round((double) item.Spent / sumSpent, 4, MidpointRounding.AwayFromZero);
                 }
+
                 monthly.Add(categories);
             }
+
             var sumAllSpent = monthly.SelectMany(e => e).Sum(e => e.Spent);
             var yearly = monthly
                 .SelectMany(e => e)
@@ -136,6 +139,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
                 };
                 monthly.Add(balanceInfo);
             }
+
             return new YearlyStatistics
             {
                 Income = monthly.Sum(e => e.Income),

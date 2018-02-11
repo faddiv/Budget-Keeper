@@ -41,6 +41,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                     {
                         throw new Exception("Money operation doesn't exists");
                     }
+
                     //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
                     db.UpdateEntityValues(existingEntity, operation);
                 }
@@ -50,6 +51,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                     token.ThrowIfCancellationRequested();
                 }
             }
+
             foreach (var id in model.Delete)
             {
                 var existingEntity = existingEntities.Find(e => e.TransactionId == id);
@@ -58,6 +60,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                     db.Transactions.Remove(existingEntity);
                 }
             }
+
             await db.SaveChangesAsync(token);
         }
 
