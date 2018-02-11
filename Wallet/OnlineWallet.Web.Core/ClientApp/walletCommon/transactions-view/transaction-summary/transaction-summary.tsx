@@ -6,21 +6,19 @@ import { bindActionCreators } from "redux";
 import { TransactionSummaryActions, TransactionSummaryViewModel } from "actions/transactionsSummary";
 import { MoneyDirection } from "walletApi";
 import { bind } from "helpers";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Action, Location } from "history";
+import { RouteComponentProps, withRouter } from "react-router";
 
-export namespace TransactionSummary {
-    export interface Props extends Partial<RouteComponentProps<void>> {
-        transactionSummary?: TransactionViewModel[];
-        actions?: typeof TransactionSummaryActions;
-    }
-    export interface State {
-    }
+export interface TransactionSummaryProps extends Partial<RouteComponentProps<void>> {
+    transactionSummary?: TransactionViewModel[];
+    actions?: typeof TransactionSummaryActions;
+}
+
+export interface TransactionSummaryState {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
-export class TransactionSummary extends React.Component<TransactionSummary.Props, TransactionSummary.State> {
+export class TransactionSummary extends React.Component<TransactionSummaryProps, TransactionSummaryState> {
 
     private navListener: () => void;
 
@@ -29,7 +27,7 @@ export class TransactionSummary extends React.Component<TransactionSummary.Props
     }
 
     @bind
-    private locationListener(location: Location, action: Action) {
+    private locationListener() {
         const { actions, transactionSummary } = this.props;
         if (transactionSummary.length > 0) {
             actions.transactionsSelected([]);
@@ -83,13 +81,13 @@ function sumPrice(items: TransactionSummaryViewModel, dir: MoneyDirection): numb
     return sum;
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         transactionSummary: state.transactionSummary
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions
     };

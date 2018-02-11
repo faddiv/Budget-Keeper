@@ -4,7 +4,7 @@
  * @param milliseconds how much delay the next statement
  */
 export function delay(milliseconds: number): Promise<any> {
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve) => {
         setTimeout(() => {
             resolve();
         }, milliseconds);

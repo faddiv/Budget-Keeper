@@ -87,6 +87,7 @@
       true,
       "ignore-comments"
     ],
+    "no-unused-variable": true,
     "no-unused-expression": [
       true,
       "allow-fast-null-checks"

@@ -6,20 +6,19 @@ import { bind, dateFormat } from "helpers";
 import { Layout } from "layout";
 import { importExportService } from "walletApi";
 
-export namespace ExportPage {
-    export interface Props {
-    }
-    export interface State {
-        rangeType: string;
-        rangeFrom: string;
-        rangeTo: string;
-        file: string;
-        year: string;
-        month: string;
-    }
+export interface ExportPageProps {
 }
 
-export class ExportPage extends React.Component<ExportPage.Props, ExportPage.State> {
+export interface ExportPageState {
+    rangeType: string;
+    rangeFrom: string;
+    rangeTo: string;
+    file: string;
+    year: string;
+    month: string;
+}
+
+export class ExportPage extends React.Component<ExportPageProps, ExportPageState> {
     rangeTypes = [{
         value: "1",
         name: "Year/Month"

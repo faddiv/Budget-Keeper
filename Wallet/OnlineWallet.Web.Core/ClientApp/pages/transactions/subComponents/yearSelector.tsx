@@ -8,7 +8,7 @@ interface YearSelectorProps {
     onChange: (year: number) => void;
 }
 
-const YearSelector: React.SFC<YearSelectorProps> = ({ year, from, to, onChange, ...rest }) => {
+const YearSelector: React.SFC<YearSelectorProps> = ({ year, from, to, onChange }) => {
     function yearSelected(e: React.ChangeEvent<HTMLSelectElement>) {
         onChange(parseInt(e.target.value, 10));
     }

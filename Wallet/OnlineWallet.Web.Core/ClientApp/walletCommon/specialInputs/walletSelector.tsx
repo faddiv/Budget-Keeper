@@ -9,7 +9,7 @@ interface WalletSelectorProps {
     onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 }
 
-export const WalletSelector: React.SFC<WalletSelectorProps> = ({ walletId, wallets, className, name, onChange, ...rest }) => {
+export const WalletSelector: React.SFC<WalletSelectorProps> = ({ walletId, wallets, className, name, onChange }) => {
     return (
         <select className={className} value={walletId} name={name} onChange={onChange}>
             {wallets.map(wallet =>

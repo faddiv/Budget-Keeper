@@ -5,7 +5,7 @@ interface DirectionIconProps {
     direction: MoneyDirection;
 }
 
-export const DirectionIcon: React.SFC<DirectionIconProps> = ({ direction, ...rest }) => {
+export const DirectionIcon: React.SFC<DirectionIconProps> = ({ direction }) => {
     return (
         <span className={directionCssClass(direction)}></span>
     );

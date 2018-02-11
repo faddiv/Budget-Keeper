@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as jasmineEnzyme from "jasmine-enzyme";
-import { shallow, render, mount } from "enzyme";
+import { shallow } from "enzyme";
 import { AlertList } from "./alertList";
-import { delay } from "helpers";
 import { AlertMessage } from "reducers/alerts/alertsModel";
 
 describe("AlertList", () => {

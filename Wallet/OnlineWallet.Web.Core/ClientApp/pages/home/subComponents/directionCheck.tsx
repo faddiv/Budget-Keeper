@@ -6,7 +6,7 @@ interface DirectionCheckProps {
     onChange?: () => void;
 }
 
-const DirectionCheck: React.SFC<DirectionCheckProps> = ({ value, onChange, ...rest }) => {
+const DirectionCheck: React.SFC<DirectionCheckProps> = ({ value, onChange }) => {
     return (
         <div className="form-group">
             <div className="form-check form-check-inline">

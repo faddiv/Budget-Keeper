@@ -3,28 +3,27 @@ import * as moment from "moment";
 import { RouteComponentProps } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { RootState } from "reducers";
 import { YearlyStatistics, statisticsService } from "walletApi";
 import { bind, formatInt } from "helpers";
 import { Layout } from "layout";
 import { AlertsActions } from "actions/alerts";
 import { YearSelector } from "./subComponents/yearSelector";
 
-export namespace YearlyStatisticsPage {
-    export interface Params {
-        year?: string;
-    }
-    export interface Props extends Partial<RouteComponentProps<Params>> {
-        actions: typeof AlertsActions;
-    }
-    export interface State {
-        yearly: YearlyStatistics;
-        year: number;
-    }
+export interface YearlyStatisticsPageParams {
+    year?: string;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPage.Props, YearlyStatisticsPage.State> {
+export interface YearlyStatisticsPageProps extends Partial<RouteComponentProps<YearlyStatisticsPageParams>> {
+    actions: typeof AlertsActions;
+}
+
+export interface YearlyStatisticsPageState {
+    yearly: YearlyStatistics;
+    year: number;
+}
+
+@connect(null, mapDispatchToProps)
+export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPageProps, YearlyStatisticsPageState> {
     constructor(props) {
         super(props);
         const year = parseInt(this.props.match.params.year, 10) || new Date().getFullYear();
@@ -49,7 +48,7 @@ export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPage.P
         }
     }
 
-    componentWillReceiveProps(nextProps: YearlyStatisticsPage.Props) {
+    componentWillReceiveProps(nextProps: YearlyStatisticsPageProps) {
         const year = parseInt(nextProps.match.params.year, 10) || new Date().getFullYear();
         this.setState({
             year
@@ -99,12 +98,7 @@ export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPage.P
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
-    return {
-    };
-}
-
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };

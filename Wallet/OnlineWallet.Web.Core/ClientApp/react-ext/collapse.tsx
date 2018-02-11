@@ -3,15 +3,14 @@ import { Transition } from "react-transition-group";
 import * as classNames from "classnames";
 import { bind } from "helpers";
 
-export namespace Collapse {
-    export interface Props {
-        open: boolean;
-        id?: string;
-        className?: string;
-    }
-    export interface State {
-        height: number;
-    }
+export interface CollapseProps {
+    open: boolean;
+    id?: string;
+    className?: string;
+}
+
+export interface CollapseState {
+    height: number;
 }
 
 const collapsing = "collapsing";
@@ -23,7 +22,7 @@ const statusCss = {
     exited: collapse
 };
 
-export class Collapse extends React.Component<Collapse.Props, Collapse.State> {
+export class Collapse extends React.Component<CollapseProps, CollapseState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +37,7 @@ export class Collapse extends React.Component<Collapse.Props, Collapse.State> {
     }
 
     @bind
-    onEntered(node: HTMLElement) {
+    onEntered() {
         this.setState({
             height: null
         });
@@ -60,7 +59,7 @@ export class Collapse extends React.Component<Collapse.Props, Collapse.State> {
     }
 
     @bind
-    onExited(node: HTMLElement) {
+    onExited() {
         this.setState({
             height: null
         });

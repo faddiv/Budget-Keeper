@@ -3,7 +3,7 @@ import { ArticleModel } from "walletApi";
 
 interface StockTableProps { articles: ArticleModel[]; }
 
-const StockTable: React.SFC<StockTableProps> = ({ articles, ...rest }) => {
+const StockTable: React.SFC<StockTableProps> = ({ articles }) => {
     if (articles && articles.length > 0) {
         return (
             <table className="table">

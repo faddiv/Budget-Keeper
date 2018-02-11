@@ -1,27 +1,19 @@
 import * as React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import * as classNames from "classnames";
 import { MenuItem } from "./menuItem";
 import { DropdownMenu } from "./dropdownMenu";
 import { bind } from "helpers";
 import { Collapse } from "react-ext";
 
-export namespace Navbar {
-    export interface Props {
-    }
-    export interface State {
-        open: boolean;
-    }
+export interface NavbarProps {
 }
 
-const statusStyle = {
-    entering: { height: 200 },
-    entered: { height: 200 },
-    exiting: { height: 0 },
-    exited: { height: 0 }
-};
+export interface NavbarState {
+    open: boolean;
+}
 
-export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
+export class Navbar extends React.Component<NavbarProps, NavbarState> {
 
     constructor(props) {
         super(props);
@@ -32,7 +24,7 @@ export class Navbar extends React.Component<Navbar.Props, Navbar.State> {
 
     @bind
     toggleNavbar() {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 open: !prevState.open
             };

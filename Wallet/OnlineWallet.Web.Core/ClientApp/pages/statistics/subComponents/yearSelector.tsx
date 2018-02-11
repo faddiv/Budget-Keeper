@@ -6,7 +6,7 @@ interface YearSelectorProps {
     link: string;
 }
 
-export const YearSelector: React.SFC<YearSelectorProps> = ({ year, link, ...rest }) => {
+export const YearSelector: React.SFC<YearSelectorProps> = ({ year, link }) => {
     return (
         <nav>
             <ul className="pagination pagination-lg justify-content-center">

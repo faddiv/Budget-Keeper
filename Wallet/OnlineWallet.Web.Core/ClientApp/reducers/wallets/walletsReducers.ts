@@ -6,7 +6,7 @@ import { Wallet } from "walletApi";
 export type WalletsModel = Wallet[];
 
 export default handleActions<WalletsModel, WalletsModel>({
-    [Actions.loadWallets](state, action) {
+    [Actions.loadWallets](_state, action) {
         return action.payload;
     }
 }, []);

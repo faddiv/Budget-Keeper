@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as jasmineEnzyme from "jasmine-enzyme";
-import { shallow, render, mount } from "enzyme";
+import { mount } from "enzyme";
 import * as fetchMock from "fetch-mock";
 import { NameInput } from "./nameInput";
 import { ArticleModel } from "walletApi";

@@ -2,24 +2,23 @@ import * as React from "react";
 import * as classNames from "classnames";
 import { updateState } from "react-ext";
 import { validate, ValidationState, bind, toDateString } from "helpers";
-import { getDirectionColoring, FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from "walletCommon";
+import { FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from "walletCommon";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionCheck } from "./directionCheck";
 
-export namespace AddItemForm {
-    export interface Props {
-        addLine: (model: TransactionViewModel) => void;
-        saveAll: () => Promise<SaveAllResult>;
-        wallets: Wallet[];
-    }
-    export interface State extends TransactionViewModel {
-        id: number;
-        validation: ValidationState;
-        showError: boolean;
-    }
+export interface AddItemFormProps {
+    addLine: (model: TransactionViewModel) => void;
+    saveAll: () => Promise<SaveAllResult>;
+    wallets: Wallet[];
 }
 
-export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.State> {
+export interface AddItemFormState extends TransactionViewModel {
+    id: number;
+    validation: ValidationState;
+    showError: boolean;
+}
+
+export class AddItemForm extends React.Component<AddItemFormProps, AddItemFormState> {
 
     focusStart: () => void;
 
@@ -51,7 +50,7 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
 
         const validationState = validate(transactionRules, this.state.validation, this.state, this.props, true);
         if (!validationState.isValid) {
-            const state: AddItemForm.State = { ...this.state, showError: true };
+            const state: AddItemFormState = { ...this.state, showError: true };
             state.validation = validationState.validationState;
             this.setState(state);
         } else {
@@ -66,7 +65,7 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
                 key: this.state.key
             };
             this.props.addLine(item);
-            const state: AddItemForm.State = {
+            const state: AddItemFormState = {
                 ...this.createInitialState(this.state.id + 1),
                 direction: item.direction,
                 walletId: item.walletId,
@@ -79,7 +78,7 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
     }
 
     createInitialState(id: number) {
-        const state: AddItemForm.State = {
+        const state: AddItemFormState = {
             walletId: 2,
             name: "",
             category: "",
@@ -126,14 +125,12 @@ export class AddItemForm extends React.Component<AddItemForm.Props, AddItemForm.
     async saveAll() {
         const result = await this.props.saveAll();
         if (result === "success") {
-            this.setState((prevState, props) => {
-                return this.createInitialState(1);
-            });
+            this.setState(this.createInitialState(1));
         }
     }
 
     render() {
-        const { wallets, saveAll } = this.props;
+        const { wallets } = this.props;
         const { category, comment, createdAt, direction, name, price, walletId, validation } = this.state;
         return (
             <form onChange={this.handleInputChange} onSubmit={this.addLine}>

@@ -9,28 +9,27 @@ export interface AutocompleteModel {
 
 }
 
-export namespace Autocomplete {
-    export interface Props {
-        name: string;
-        id?: string;
-        value: string;
-        onFilter: (searchTerm: string) => Promise<AutocompleteModel[]>;
-        onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
-        autoFocus?: boolean;
-        onSelect?: (selected: AutocompleteModel) => void;
-        className?: string;
-        focusAction?: (focus: () => void) => void;
-    }
-    export interface State {
-        items: AutocompleteModel[];
-        open: boolean;
-        focused: boolean;
-        active?: AutocompleteModel;
-        value: string;
-    }
+export interface AutocompleteProps {
+    name: string;
+    id?: string;
+    value: string;
+    onFilter: (searchTerm: string) => Promise<AutocompleteModel[]>;
+    onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
+    autoFocus?: boolean;
+    onSelect?: (selected: AutocompleteModel) => void;
+    className?: string;
+    focusAction?: (focus: () => void) => void;
 }
 
-export class Autocomplete extends React.Component<Autocomplete.Props, Autocomplete.State> {
+export interface AutocompleteState {
+    items: AutocompleteModel[];
+    open: boolean;
+    focused: boolean;
+    active?: AutocompleteModel;
+    value: string;
+}
+
+export class Autocomplete extends React.Component<AutocompleteProps, AutocompleteState> {
     nameInput: HTMLInputElement;
 
     constructor(props) {
@@ -53,27 +52,27 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
         window.removeEventListener("focus", this.globalFocus, true);
     }
 
-    componentWillReceiveProps(nextProps: Readonly<Autocomplete.Props>, nextContext: any) {
+    componentWillReceiveProps(nextProps: Readonly<AutocompleteProps>) {
         this.setState({
             value: nextProps.value
         });
     }
 
     @bind
-    globalClick(event: MouseEvent) {
+    globalClick() {
         if (!this.state.focused) {
             this.close();
         }
     }
 
     @bind
-    globalFocus(event: FocusEvent) {
+    globalFocus() {
         if (!this.state.focused && this.state.open) {
             this.close();
         }
     }
 
-    close(state?: Partial<Autocomplete.State>) {
+    close(state?: Partial<AutocompleteState>) {
         this.setState({
             open: false,
             active: null,
@@ -81,7 +80,7 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
         });
     }
 
-    open(state?: Partial<Autocomplete.State>) {
+    open(state?: Partial<AutocompleteState>) {
         let active = this.state.active || this.state.items[0];
         if (state && state.items) {
             active = state.items[0];
@@ -143,7 +142,7 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
         });
     }
 
-    setValue(value: string, state?: Partial<Autocomplete.State>, callback?: () => void) {
+    setValue(value: string, state?: Partial<AutocompleteState>, callback?: () => void) {
         this.setState({
             value,
             ...state as any
@@ -151,8 +150,7 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
     }
 
     @bind
-    onBlur(event: React.SyntheticEvent<HTMLInputElement>) {
-        const value = getInputValue(event);
+    onBlur() {
         this.setState({
             focused: false
         });
@@ -215,7 +213,7 @@ export class Autocomplete extends React.Component<Autocomplete.Props, Autocomple
             && (this.state.items.length > 1 || this.getItemValue(this.state.items[0]) !== this.state.value);
     }
 
-    onClick(event: React.MouseEvent<HTMLLIElement>, item: AutocompleteModel) {
+    onClick(_event: React.MouseEvent<HTMLLIElement>, item: AutocompleteModel) {
         this.select(item);
         this.focus();
         this.close({

@@ -1,35 +1,32 @@
 import * as React from "react";
-import * as moment from "moment";
 import * as classNames from "classnames";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
 import { bind, noop } from "helpers";
 import { updateState, isClickableClicked } from "react-ext";
 
-export namespace TransactionTableRow {
-    export interface Props {
-        item: TransactionViewModel;
-        selected: boolean;
-        wallets: Wallet[];
-        rowColor?: ITransactionTableExtFunction;
-        editable: boolean;
-        saveTransaction(newItem: TransactionViewModel, originalItem: TransactionViewModel): void;
-        deleteTransaction(item: TransactionViewModel): void;
-        rowMouseDown(item: TransactionViewModel): void;
-        rowMouseUp(): void;
-        rowMouseEnter(item: TransactionViewModel): void;
-    }
-
-    export interface State {
-        editMode: boolean;
-        item: TransactionViewModel;
-        original: TransactionViewModel;
-    }
+export interface TransactionTableRowProps {
+    item: TransactionViewModel;
+    selected: boolean;
+    wallets: Wallet[];
+    rowColor?: ITransactionTableExtFunction;
+    editable: boolean;
+    saveTransaction(newItem: TransactionViewModel, originalItem: TransactionViewModel): void;
+    deleteTransaction(item: TransactionViewModel): void;
+    rowMouseDown(item: TransactionViewModel): void;
+    rowMouseUp(): void;
+    rowMouseEnter(item: TransactionViewModel): void;
 }
 
-export class TransactionTableRow extends React.Component<TransactionTableRow.Props, TransactionTableRow.State> {
+export interface TransactionTableRowState {
+    editMode: boolean;
+    item: TransactionViewModel;
+    original: TransactionViewModel;
+}
 
-    constructor(props: TransactionTableRow.Props) {
+export class TransactionTableRow extends React.Component<TransactionTableRowProps, TransactionTableRowState> {
+
+    constructor(props: TransactionTableRowProps) {
         super(props);
         this.state = {
             editMode: false,
@@ -38,7 +35,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         };
     }
 
-    componentWillReceiveProps(nextProps: Readonly<TransactionTableRow.Props>) {
+    componentWillReceiveProps(nextProps: Readonly<TransactionTableRowProps>) {
         if (this.state.original !== nextProps.item) {
             this.setState({
                 item: nextProps.item,
@@ -50,7 +47,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     @bind
     changeDirection(event: React.MouseEvent<HTMLTableDataCellElement>) {
         event.preventDefault();
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 item: { ...prevState.item, direction: nextDirection(prevState.item.direction) }
             };
@@ -72,14 +69,14 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     @bind
     editTransaction() {
-        this.setState((prevState, props) => ({
+        this.setState({
             editMode: true
-        }));
+        });
     }
 
     @bind
     cancelTransaction() {
-        this.setState((prevState, props) => ({
+        this.setState((_prevState, props) => ({
             editMode: false,
             item: props.item
         }));
@@ -91,7 +88,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
         if (state.walletId) {
             state.walletId = parseInt(state.walletId, 10);
         }
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 item: { ...prevState.item, ...state }
             };
@@ -100,7 +97,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     @bind
     nameSelected(model: ArticleModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 item: {
                     ...prevState.item,
@@ -112,7 +109,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     @bind
     categorySelected(model: CategoryModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 item: {
                     ...prevState.item,
@@ -156,7 +153,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
 
     renderEditRow() {
         const { item } = this.state;
-        const { wallets, rowColor, rowMouseDown, rowMouseEnter, rowMouseUp, selected } = this.props;
+        const { wallets, rowColor, selected } = this.props;
         const hasRowColor = !!rowColor;
         return (
             <tr className={classNames({ [rowColor(item)]: hasRowColor }, { selected })} onChange={this.handleInputChange}
@@ -190,7 +187,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
     }
 
     renderViewRow() {
-        const { rowColor, wallets, rowMouseDown, rowMouseEnter, rowMouseUp, selected, editable } = this.props;
+        const { rowColor, wallets, selected, editable } = this.props;
         const { item } = this.state;
         const hasRowColor = !!rowColor;
         return (
@@ -206,9 +203,9 @@ export class TransactionTableRow extends React.Component<TransactionTableRow.Pro
                 <td>{item.category}</td>
                 <td>{item.comment}</td>
                 {editable &&
-                <td>
-                    <EditDelete edit={this.editTransaction} delete_={this.deleteTransaction} />
-                </td>}
+                    <td>
+                        <EditDelete edit={this.editTransaction} delete_={this.deleteTransaction} />
+                    </td>}
             </tr>
         );
     }

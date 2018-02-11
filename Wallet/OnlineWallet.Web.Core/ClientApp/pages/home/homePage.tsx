@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as moment from "moment";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -11,19 +10,17 @@ import { RootState } from "reducers";
 import { _, bind } from "helpers";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransaction } from "walletCommon";
 
-export namespace Home {
-    export interface Props {
-        wallets: Wallet[];
-        actions?: typeof AlertsActions;
-    }
+export interface HomeProps {
+    wallets: Wallet[];
+    actions?: typeof AlertsActions;
+}
 
-    export interface State {
-        items: TransactionViewModel[];
-    }
+export interface HomeState {
+    items: TransactionViewModel[];
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export class Home extends React.Component<Home.Props, Home.State> {
+export class Home extends React.Component<HomeProps, HomeState> {
 
     /**
      *
@@ -57,7 +54,7 @@ export class Home extends React.Component<Home.Props, Home.State> {
 
     @bind
     deleteRow(item: TransactionViewModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 items: _.remove(prevState.items, item)
             };
@@ -66,16 +63,14 @@ export class Home extends React.Component<Home.Props, Home.State> {
 
     @bind
     updateRow(items: TransactionViewModel[]) {
-        this.setState((prevState, props) => {
-            return {
-                items
-            };
+        this.setState({
+            items
         });
     }
 
     @bind
     addLine(newItem: TransactionViewModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 items: [...prevState.items, newItem]
             };
@@ -121,13 +116,13 @@ export class Home extends React.Component<Home.Props, Home.State> {
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         wallets: state.wallets
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };

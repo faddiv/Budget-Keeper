@@ -5,7 +5,7 @@ interface SaveCancelProps {
     cancel: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export const SaveCancel: React.SFC<SaveCancelProps> = ({ save, cancel, ...rest }) => {
+export const SaveCancel: React.SFC<SaveCancelProps> = ({ save, cancel }) => {
     return (
         <div className="cmd-btn-line">
             <button className="btn btn-success btn-sm" type="button" onClick={save}>

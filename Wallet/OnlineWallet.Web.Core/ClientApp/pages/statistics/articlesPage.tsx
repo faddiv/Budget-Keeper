@@ -11,22 +11,21 @@ interface OpenedArticles {
     [name: string]: TransactionViewModel[][];
 }
 
-export namespace ArticlesPage {
-    export interface Props {
-        wallets: Wallet[];
-    }
-    export interface State {
-        articles: ArticleModel[];
-        name: string;
-        openItem: ArticleModel;
-        openedArticleTransactions: TransactionViewModel[];
-        transactionsCache: OpenedArticles;
-        pageNumber: number;
-    }
+export interface ArticlesPageProps {
+    wallets: Wallet[];
+}
+
+export interface ArticlesPageState {
+    articles: ArticleModel[];
+    name: string;
+    openItem: ArticleModel;
+    openedArticleTransactions: TransactionViewModel[];
+    transactionsCache: OpenedArticles;
+    pageNumber: number;
 }
 
 @connect(mapStateToProps, undefined)
-export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPage.State> {
+export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPageState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -41,7 +40,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
 
     @bind
     deleteItem(item: TransactionViewModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 openedArticleTransactions: _.remove(prevState.openedArticleTransactions, item)
             };
@@ -49,7 +48,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
     }
 
     @bind
-    update(openedArticleTransactions: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
+    update(openedArticleTransactions: TransactionViewModel[]): void {
         this.setState({
             openedArticleTransactions
         });
@@ -81,7 +80,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
                     .fetchArticle(openItem.name)
                     .then(mapTransactionViewModel);
                 transactionsPages = [transactions];
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     return {
                         transactionsCache: { ...prevState.transactionsCache, [openItem.name]: transactionsPages }
                     };
@@ -131,7 +130,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
             openedArticleTransactions = await transactionService
                 .fetchArticle(openItem.name, 10, pageNumber * 10)
                 .then(mapTransactionViewModel);
-            this.setState((prevState, props) => {
+            this.setState((prevState) => {
                 const newPages = [...prevState.transactionsCache[openItem.name]];
                 newPages[pageNumber] = openedArticleTransactions;
                 return {
@@ -189,8 +188,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
     }
 
     render() {
-        const { wallets } = this.props;
-        const { name, articles, openItem } = this.state;
+        const { name, articles } = this.state;
         return (
             <Layout>
                 <form onSubmit={noAction}>
@@ -220,7 +218,7 @@ export class ArticlesPage extends React.Component<ArticlesPage.Props, ArticlesPa
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         wallets: state.wallets
     };

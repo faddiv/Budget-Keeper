@@ -5,7 +5,7 @@ interface EditDeleteProps {
     delete_: () => void;
 }
 
-export const EditDelete: React.SFC<EditDeleteProps> = ({ edit, delete_, ...rest }) => {
+export const EditDelete: React.SFC<EditDeleteProps> = ({ edit, delete_ }) => {
     return (
         <div className="cmd-btn-line">
             <button className="btn btn-primary btn-sm" type="button" onClick={edit}>

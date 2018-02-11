@@ -7,7 +7,7 @@ interface MonthSelectorProps {
     month: number;
 }
 
-const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month, ...rest }) => {
+const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month }) => {
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;

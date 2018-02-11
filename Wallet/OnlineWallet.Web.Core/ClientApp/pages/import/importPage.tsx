@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as moment from "moment";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -7,29 +6,28 @@ import { AlertsActions } from "actions/alerts";
 import { Layout } from "layout";
 import { updateState, NavLink, TabPane } from "react-ext";
 import { StockTable } from "./subComponents";
-import { bind, _, toUTCDate, toDateString } from "helpers";
-import { transactionService, importExportService, ExportImportRow, Wallet, Transaction, ArticleModel } from "walletApi";
+import { bind, _, toDateString } from "helpers";
+import { transactionService, importExportService, Wallet, ArticleModel } from "walletApi";
 import { RootState } from "reducers";
 import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "walletCommon";
 
-export namespace ImportPage {
-    export interface Props {
-        wallets: Wallet[];
-        actions?: typeof AlertsActions;
-    }
-    export interface State {
-        activeTab: string;
-        transactions: TransactionViewModel[];
-        stocks: ArticleModel[];
-        file: FileList;
-        page: number;
-        pageStocks: number;
-        pageSize: number;
-    }
+export interface ImportPageProps {
+    wallets: Wallet[];
+    actions?: typeof AlertsActions;
+}
+
+export interface ImportPageState {
+    activeTab: string;
+    transactions: TransactionViewModel[];
+    stocks: ArticleModel[];
+    file: FileList;
+    page: number;
+    pageStocks: number;
+    pageSize: number;
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export class ImportPage extends React.Component<ImportPage.Props, ImportPage.State> {
+export class ImportPage extends React.Component<ImportPageProps, ImportPageState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -155,7 +153,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     }
 
     @bind
-    transactionUpdated(items: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
+    transactionUpdated(items: TransactionViewModel[]): void {
         this.setState({
             transactions: items
         });
@@ -163,7 +161,7 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
 
     @bind
     transactionDeleted(item: TransactionViewModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 transactions: _.remove(prevState.transactions, item)
             };
@@ -221,13 +219,13 @@ export class ImportPage extends React.Component<ImportPage.Props, ImportPage.Sta
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         wallets: state.wallets
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };

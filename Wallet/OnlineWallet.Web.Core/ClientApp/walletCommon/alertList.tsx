@@ -1,7 +1,6 @@
 import * as React from "react";
 import { bindActionCreators } from "redux";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Action, Location } from "history";
 import { connect } from "react-redux";
 
 import { AlertsActions } from "actions/alerts";
@@ -9,18 +8,17 @@ import { AlertMessage } from "reducers/alerts/alertsModel";
 import { RootState } from "reducers";
 import { bind } from "helpers";
 
-export namespace AlertList {
-    export interface Props extends Partial<RouteComponentProps<void>> {
-        alerts?: AlertMessage[];
-        actions?: typeof AlertsActions;
-    }
-    export interface State {
-    }
+export interface AlertListProps extends Partial<RouteComponentProps<void>> {
+    alerts?: AlertMessage[];
+    actions?: typeof AlertsActions;
+}
+
+export interface AlertListState {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
-export class AlertList extends React.Component<AlertList.Props, AlertList.State> {
+export class AlertList extends React.Component<AlertListProps, AlertListState> {
 
     private navListener: () => void;
 
@@ -32,7 +30,7 @@ export class AlertList extends React.Component<AlertList.Props, AlertList.State>
     }
 
     @bind
-    private locationListener(location: Location, action: Action) {
+    private locationListener() {
         const { alerts, actions } = this.props;
         if (alerts.length > 0) {
             actions.dismissAllAlert();
@@ -74,13 +72,13 @@ export class AlertList extends React.Component<AlertList.Props, AlertList.State>
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         alerts: state.alerts
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as moment from "moment";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router";
+import { RouteComponentProps } from "react-router";
 
 import { AlertsActions } from "actions/alerts";
 import { transactionService, Wallet, BalanceInfo, statisticsService } from "walletApi";
@@ -12,30 +12,27 @@ import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransa
 import { MonthSelector, Balance } from "./subComponents";
 import { RootState } from "reducers";
 
-export namespace Transactions {
-    export interface Params {
-        year?: string;
-        month?: string;
-    }
-    export interface Props extends Partial<RouteComponentProps<Params>> {
-        wallets: Wallet[];
-        actions?: typeof AlertsActions;
-    }
+export interface TransactionsParams {
+    year?: string;
+    month?: string;
+}
 
-    export interface State {
-        changedItems: TransactionViewModel[];
-        deletedItems: number[];
-        items: TransactionViewModel[];
-        month: number;
-        year: number;
-        maxYear: number;
-        balance?: BalanceInfo;
-    }
+export interface TransactionsProps extends Partial<RouteComponentProps<TransactionsParams>> {
+    wallets: Wallet[];
+    actions?: typeof AlertsActions;
+}
+
+export interface TransactionsState {
+    changedItems: TransactionViewModel[];
+    deletedItems: number[];
+    items: TransactionViewModel[];
+    month: number;
+    year: number;
+    balance?: BalanceInfo;
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-@withRouter
-export class Transactions extends React.Component<Transactions.Props, Transactions.State> {
+export class Transactions extends React.Component<TransactionsProps, TransactionsState> {
 
     constructor(props) {
         super(props);
@@ -45,8 +42,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
             deletedItems: [],
             items: [],
             year,
-            month,
-            maxYear: new Date().getFullYear()
+            month
         };
     }
 
@@ -58,14 +54,14 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
         this.dateSelected();
     }
 
-    componentWillReceiveProps(nextProps: Transactions.Props) {
+    componentWillReceiveProps(nextProps: TransactionsProps) {
         const { year, month } = this.getYearMonth(nextProps.match.params);
         if (this.state.year !== year || this.state.month !== month) {
             this.setState({ year, month }, this.dateSelected);
         }
     }
 
-    getYearMonth(params: Transactions.Params) {
+    getYearMonth(params: TransactionsParams) {
         const now = new Date();
         const year = parseInt(params.year, 10) || now.getFullYear();
         const month = parseInt(params.month, 10) || now.getMonth() + 1;
@@ -95,7 +91,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
 
     @bind
     deleteItem(item: TransactionViewModel) {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 items: _.remove(prevState.items, item),
                 changedItems: _.remove(prevState.changedItems, item),
@@ -127,7 +123,7 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 
     render() {
-        const { maxYear, items, changedItems, balance, year, month } = this.state;
+        const { items, changedItems, balance, year, month } = this.state;
         const { wallets } = this.props;
         return (
             <Layout>
@@ -150,13 +146,13 @@ export class Transactions extends React.Component<Transactions.Props, Transactio
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         wallets: state.wallets
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };

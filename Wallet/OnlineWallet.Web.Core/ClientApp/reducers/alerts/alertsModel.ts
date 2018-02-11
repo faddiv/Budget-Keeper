@@ -22,7 +22,7 @@ export default handleActions<AlertsModel, AlertMessage>({
     [Actions.dismissAlert](state, action) {
         return _.remove(state, action.payload);
     },
-    [Actions.dismissAllAlert](state, action) {
+    [Actions.dismissAllAlert]() {
         return [];
     }
 }, []);

@@ -9,24 +9,23 @@ import { Layout } from "layout";
 import { bind, validate, ValidationConfig, ValidationState, validators } from "helpers";
 import { RootState } from "reducers";
 
-export namespace Wallets {
-    export interface Props {
-        wallets: Wallet[];
-        actions: typeof WalletsActions;
-    }
-    export interface State {
-        name: string;
-        rules: ValidationConfig<State, Props>;
-        validation: ValidationState;
-    }
+export interface WalletsProps {
+    wallets: Wallet[];
+    actions: typeof WalletsActions;
+}
+
+export interface WalletsState {
+    name: string;
+    rules: ValidationConfig<WalletsState, WalletsProps>;
+    validation: ValidationState;
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
+export class Wallets extends React.Component<WalletsProps, WalletsState> {
 
-    constructor(props: Wallets.Props) {
+    constructor(props: WalletsProps) {
         super(props);
-        const rules: ValidationConfig<Wallets.State, Wallets.Props> = {
+        const rules: ValidationConfig<WalletsState, WalletsProps> = {
             name: {
                 validators: [
                     {
@@ -53,7 +52,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     }
 
     @bind
-    async saveWallet(newWallet: Wallet, original: Wallet) {
+    async saveWallet(newWallet: Wallet) {
         await this.props.actions.updateWallet(newWallet);
     }
 
@@ -70,10 +69,8 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
         await this.props.actions.insertWallet({
             name: this.state.name
         });
-        this.setState((prevState, props) => {
-            return {
-                name: ""
-            };
+        this.setState({
+            name: ""
         });
     }
 
@@ -118,6 +115,7 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,13 +129,13 @@ export class Wallets extends React.Component<Wallets.Props, Wallets.State> {
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         wallets: state.wallets
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(WalletsActions as any, dispatch) as typeof WalletsActions
     };

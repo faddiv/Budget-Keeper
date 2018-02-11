@@ -8,7 +8,7 @@ interface PagerProps {
     onPageSelected: (page: number) => void;
 }
 
-export const Pager: React.SFC<PagerProps> = ({ pageSize, page, countAll, onPageSelected, ...rest }) => {
+export const Pager: React.SFC<PagerProps> = ({ pageSize, page, countAll, onPageSelected }) => {
     if (pageSize === 0 || !countAll) {
         return null;
     }

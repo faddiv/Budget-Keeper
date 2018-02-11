@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Wallet, Transaction, walletService } from "walletApi";
+import { Wallet } from "walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel, ITransactionTableExtFunction } from "walletCommon";
 import { bind, _ } from "helpers";
-import { isClickableClicked } from "react-ext";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
@@ -15,27 +14,25 @@ enum SelectMode {
     select
 }
 
-export namespace TransactionTable {
-    export interface Props {
-        actions?: typeof TransactionSummaryActions;
-        items: TransactionViewModel[];
-        wallets: Wallet[];
-        changedItems?: TransactionViewModel[];
-        rowColor?: ITransactionTableExtFunction;
-        transactionSummary?: TransactionViewModel[];
-        update?(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
-        deleted?(items: TransactionViewModel): void;
-    }
+export interface TransactionTableProps {
+    actions?: typeof TransactionSummaryActions;
+    items: TransactionViewModel[];
+    wallets: Wallet[];
+    changedItems?: TransactionViewModel[];
+    rowColor?: ITransactionTableExtFunction;
+    transactionSummary?: TransactionViewModel[];
+    update?(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
+    deleted?(items: TransactionViewModel): void;
+}
 
-    export interface State {
-        selectMode: SelectMode;
-    }
+export interface TransactionTableState {
+    selectMode: SelectMode;
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export class TransactionTable extends React.Component<TransactionTable.Props, TransactionTable.State> {
+export class TransactionTable extends React.Component<TransactionTableProps, TransactionTableState> {
 
-    constructor(props: TransactionTable.Props) {
+    constructor(props: TransactionTableProps) {
         super(props);
         this.state = {
             selectMode: SelectMode.none
@@ -56,7 +53,7 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
 
     @bind
     startSelection(item: TransactionViewModel) {
-        this.setState((prevState: TransactionTable.State, props: TransactionTable.Props) => {
+        this.setState((_prevState: TransactionTableState, props: TransactionTableProps) => {
             const selectMode = _.contains(props.transactionSummary, item)
                 ? SelectMode.deselect
                 : SelectMode.select;
@@ -91,10 +88,8 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
 
     @bind
     endSelection() {
-        this.setState((prevState, props) => {
-            return {
-                selectMode: SelectMode.none
-            };
+        this.setState({
+            selectMode: SelectMode.none
         });
     }
 
@@ -135,13 +130,13 @@ export class TransactionTable extends React.Component<TransactionTable.Props, Tr
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
+function mapStateToProps(state: RootState) {
     return {
         transactionSummary: state.transactionSummary
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions
     };

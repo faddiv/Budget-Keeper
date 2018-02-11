@@ -6,28 +6,27 @@ import { bindActionCreators } from "redux";
 import { bind } from "helpers";
 import { NavLink, TabPane } from "react-ext";
 import { Layout } from "layout";
-import { RootState } from "reducers";
 import { AlertsActions } from "actions/alerts";
 import { CategoryStatisticsSummary, statisticsService, CategoryStatistics } from "walletApi";
 import { CategoryTable } from "./subComponents/categoryTable";
 import { YearSelector } from "./subComponents/yearSelector";
 
-export namespace CategoryStatisticsPage {
-    export interface Params {
-        year?: string;
-    }
-    export interface Props extends Partial<RouteComponentProps<Params>> {
-        actions: typeof AlertsActions;
-    }
-    export interface State {
-        activeTab: string;
-        stats: CategoryStatisticsSummary;
-        year: number;
-    }
+export interface CategoryStatisticsPageParams {
+    year?: string;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPage.Props, CategoryStatisticsPage.State> {
+export interface CategoryStatisticsPageProps extends Partial<RouteComponentProps<CategoryStatisticsPageParams>> {
+    actions: typeof AlertsActions;
+}
+
+export interface CategoryStatisticsPageState {
+    activeTab: string;
+    stats: CategoryStatisticsSummary;
+    year: number;
+}
+
+@connect(null, mapDispatchToProps)
+export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPageProps, CategoryStatisticsPageState> {
     constructor(props) {
         super(props);
         const year = parseInt(this.props.match.params.year, 10) || new Date().getFullYear();
@@ -53,7 +52,7 @@ export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPa
         }
     }
 
-    componentWillReceiveProps(nextProps: CategoryStatisticsPage.Props) {
+    componentWillReceiveProps(nextProps: CategoryStatisticsPageProps) {
         const year = parseInt(nextProps.match.params.year, 10) || new Date().getFullYear();
         this.setState({
             year
@@ -68,7 +67,7 @@ export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPa
     }
 
     @bind
-    renderMonthLink(monthData: CategoryStatistics[], monthIndex: number) {
+    renderMonthLink(_monthData: CategoryStatistics[], monthIndex: number) {
         const { activeTab } = this.state;
         const monthName = moment(monthIndex + 1, "MM").format("MMM");
         return (
@@ -98,25 +97,20 @@ export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPa
                 <YearSelector year={year} link="/statistics/category" />
                 <ul className="nav nav-tabs">
                     <NavLink key="yearly" name="yearly" activeKey={activeTab} onActivate={this.setActiveTab}>Full list</NavLink>
-                    {stats.monthly.map(this.renderMonthLink)}
+                    {monthly.map(this.renderMonthLink)}
                 </ul>
                 <div className="tab-content">
                     <TabPane name="yearly" activeKey={activeTab}>
                         <CategoryTable categories={yearly} />
                     </TabPane>
-                    {stats.monthly.map(this.renderMonthTable)}
+                    {monthly.map(this.renderMonthTable)}
                 </div>
             </Layout>
         );
     }
 }
 
-function mapStateToProps(state: RootState, ownProps: any) {
-    return {
-    };
-}
-
-function mapDispatchToProps(dispatch, ownProps: any) {
+function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };

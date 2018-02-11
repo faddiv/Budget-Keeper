@@ -4,19 +4,18 @@ import * as classNames from "classnames";
 import { findDOMNode } from "react-dom";
 import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from "react-router-dom";
 
-export namespace DropdownMenu {
-    export interface Props extends Partial<RouteComponentProps<Props>> {
-        name: string;
-    }
-    export interface State {
-        show: boolean;
-        id: string;
-        active: boolean;
-    }
+export interface DropdownMenuProps extends Partial<RouteComponentProps<void>> {
+    name: string;
+}
+
+export interface DropdownMenuState {
+    show: boolean;
+    id: string;
+    active: boolean;
 }
 
 @withRouter
-export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMenu.State> {
+export class DropdownMenu extends React.Component<DropdownMenuProps, DropdownMenuState> {
 
     constructor(props) {
         super(props);
@@ -68,7 +67,7 @@ export class DropdownMenu extends React.Component<DropdownMenu.Props, DropdownMe
     @bind
     openDropdown(event: React.MouseEvent<HTMLAnchorElement>) {
         event.preventDefault();
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 show: !prevState.show
             };

@@ -6,7 +6,7 @@ interface CategoryTableProps {
     categories: CategoryStatistics[];
 }
 
-export const CategoryTable: React.SFC<CategoryTableProps> = ({ categories, ...rest }) => {
+export const CategoryTable: React.SFC<CategoryTableProps> = ({ categories }) => {
     return (
         <table className="table category-statistics">
             <thead>
