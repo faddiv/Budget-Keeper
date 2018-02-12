@@ -10,7 +10,7 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.ExportExpensesModule
 {
-    [Trait("ExportController.FromRange", null)]
+    [Trait(nameof(ExportController), nameof(ExportController.FromRange))]
     [Collection("Database collection")]
     public class ExportControllerTests : IDisposable
     {

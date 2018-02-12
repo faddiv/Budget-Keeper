@@ -8,7 +8,7 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.CategoriesModule
 {
-    [Trait(nameof(CategoryController), "GetBy")]
+    [Trait(nameof(CategoryController), nameof(CategoryController.GetBy))]
     [Collection("Database collection")]
     public class CategoryControllerTests : IDisposable
     {
@@ -34,7 +34,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
             _fixture.Cleanup();
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Returns_the_categories_from_transactions))]
         public void Returns_the_categories_from_transactions()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -50,7 +50,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
             result.Select(e => e.Name).Should().OnlyHaveUniqueItems();
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Dont_return_null_or_empty_category))]
         public void Dont_return_null_or_empty_category()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -66,7 +66,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
                 .HaveCount(1);
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Returns_max_10_categories))]
         public void Returns_max_10_categories()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -81,7 +81,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
             result.Select(e => e.Name).Should().OnlyHaveUniqueItems();
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Returns_the_given_limit_categories))]
         public void Returns_the_given_limit_categories()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -96,7 +96,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
             result.Select(e => e.Name).Should().OnlyHaveUniqueItems();
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Search_is_contains_case_insensitive_and_ignore_space))]
         public void Search_is_contains_case_insensitive_and_ignore_space()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -118,7 +118,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
                 .And.NotContain(e => e.Name == "alfs");
         }
 
-        [Fact]
+        [Fact(DisplayName = nameof(Result_ordered_by_occurende_descending))]
         public void Result_ordered_by_occurende_descending()
         {
             _fixture.PrepareDataWith(tr => tr
@@ -138,7 +138,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
 
-        [Fact(DisplayName = "Highlights_the_match_in_name")]
+        [Fact(DisplayName = nameof(Highlights_the_match_in_name))]
         public void Highlights_the_match_in_name()
         {
             _fixture.PrepareDataWith(tr => tr

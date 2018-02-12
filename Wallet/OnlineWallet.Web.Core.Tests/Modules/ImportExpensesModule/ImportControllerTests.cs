@@ -13,7 +13,7 @@ using MoneyDirection = OnlineWallet.ExportImport.MoneyDirection;
 
 namespace OnlineWallet.Web.Modules.ImportExpensesModule
 {
-    [Trait("ImportController", null)]
+    [Trait(nameof(ImportController), nameof(ImportController.ProcessTransactions))]
     [Collection("Database collection")]
     public class ImportControllerTests : IDisposable
     {

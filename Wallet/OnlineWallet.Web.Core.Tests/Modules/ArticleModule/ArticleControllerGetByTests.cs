@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
@@ -26,14 +27,14 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Groups_transactions_by_name_case_sensitive))]
-        public void Groups_transactions_by_name_case_sensitive()
+        public async Task Groups_transactions_by_name_case_sensitive()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("Alfa")
                 .TheNext(5).WithName("alfa")
             );
 
-            var result = _controller.GetBy();
+            var result = await _controller.GetBy();
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -42,7 +43,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Search_is_case_insesitive))]
-        public void Search_is_case_insesitive()
+        public async Task Search_is_case_insesitive()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("Alfa")
@@ -50,14 +51,14 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             );
             
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa"));
         }
 
         [Fact(DisplayName = nameof(Search_is_contains_search))]
-        public void Search_is_contains_search()
+        public async Task Search_is_contains_search()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("aAlfas")
@@ -65,14 +66,14 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             );
 
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa"));
         }
 
         [Fact(DisplayName = nameof(In_search_text_space_does_not_considered))]
-        public void In_search_text_space_does_not_considered()
+        public async Task In_search_text_space_does_not_considered()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("Alfa")
@@ -82,7 +83,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(5).WithName("beta alfa")
             );
 
-            var result = _controller.GetBy("alfa beta");
+            var result = await _controller.GetBy("alfa beta");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("alfa")).And
@@ -90,7 +91,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Search_is_sparse_search))]
-        public void Search_is_sparse_search()
+        public async Task Search_is_sparse_search()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("xaxlxfxax")
@@ -98,14 +99,14 @@ namespace OnlineWallet.Web.Modules.ArticleModule
             );
 
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
             result.Should()
                 .NotBeNullOrEmpty().And
                 .OnlyContain(e => e.Name.ToLower().Contains("xaxlxfxax"));
         }
         
         [Fact(DisplayName = nameof(Returns_with_the_most_common_Category_value))]
-        public void Returns_with_the_most_common_Category_value()
+        public async Task Returns_with_the_most_common_Category_value()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("alfa").WithCategory("not common")
@@ -113,7 +114,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(10).WithName("alfa").WithCategory("second common")
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -121,7 +122,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Most_common_category_cant_be_null_if_there_is_one))]
-        public void Most_common_category_cant_be_null_if_there_is_one()
+        public async Task Most_common_category_cant_be_null_if_there_is_one()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("alfa").WithCategory("not common")
@@ -129,7 +130,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(10).WithName("alfa").WithCategory("most common")
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -137,7 +138,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Returns_with_the_count_of_occurence_descending_order))]
-        public void Returns_with_the_count_of_occurence_descending_order()
+        public async Task Returns_with_the_count_of_occurence_descending_order()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("alfa3")
@@ -145,7 +146,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(10).WithName("alfa2")
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(3);
@@ -155,7 +156,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Limits_the_result))]
-        public void Limits_the_result()
+        public async Task Limits_the_result()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(10).WithName("alfa1")
@@ -166,7 +167,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(5).WithName("alfa6")
             );
 
-            var result = _controller.GetBy("alfa", 5);
+            var result = await _controller.GetBy("alfa", 5);
 
             result.Should()
                 .HaveCount(5);
@@ -174,7 +175,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
         
         [Fact(DisplayName = nameof(Returns_with_the_most_recent_price))]
-        public void Returns_with_the_most_recent_price()
+        public async Task Returns_with_the_most_recent_price()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(3).WithName("alfa1")
@@ -187,7 +188,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(1).WithCreatedAt("2017-10-13").WithValue(3)
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(2).And
@@ -195,7 +196,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Returns_with_the_most_recent_wallet))]
-        public void Returns_with_the_most_recent_wallet()
+        public async Task Returns_with_the_most_recent_wallet()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(3).WithName("alfa1")
@@ -208,7 +209,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(1).WithCreatedAt("2017-10-13").WithWallet(_fixture.WalletCash)
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(2).And
@@ -216,7 +217,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
         }
 
         [Fact(DisplayName = nameof(Highlights_the_match_in_name))]
-        public void Highlights_the_match_in_name()
+        public async Task Highlights_the_match_in_name()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(3).WithName("alfa1")
@@ -226,7 +227,7 @@ namespace OnlineWallet.Web.Modules.ArticleModule
                 .TheNext(3).WithName("xalxfax")
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(5).And

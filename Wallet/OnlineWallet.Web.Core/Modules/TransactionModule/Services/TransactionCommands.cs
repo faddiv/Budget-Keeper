@@ -11,7 +11,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
     {
         #region Fields
 
-        private readonly IWalletDbContext db;
+        private readonly IWalletDbContext _db;
 
         #endregion
 
@@ -19,7 +19,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
 
         public BatchSaveCommand(IWalletDbContext db)
         {
-            this.db = db;
+            _db = db;
         }
 
         #endregion
@@ -30,7 +30,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
         {
             var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
             existingIds.AddRange(model.Delete);
-            var existingEntities = db.Transactions.Where(e => existingIds.Contains(e.TransactionId)).ToList();
+            var existingEntities = _db.Transactions.Where(e => existingIds.Contains(e.TransactionId)).ToList();
             foreach (var operation in model.Save)
             {
                 operation.CreatedAt = operation.CreatedAt.Date;
@@ -43,11 +43,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                     }
 
                     //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
-                    db.UpdateEntityValues(existingEntity, operation);
+                    _db.UpdateEntityValues(existingEntity, operation);
                 }
                 else
                 {
-                    await db.Transactions.AddAsync(operation, token);
+                    await _db.Transactions.AddAsync(operation, token);
                     token.ThrowIfCancellationRequested();
                 }
             }
@@ -57,11 +57,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                 var existingEntity = existingEntities.Find(e => e.TransactionId == id);
                 if (existingEntity != null)
                 {
-                    db.Transactions.Remove(existingEntity);
+                    _db.Transactions.Remove(existingEntity);
                 }
             }
 
-            await db.SaveChangesAsync(token);
+            await _db.SaveChangesAsync(token);
         }
 
         #endregion
