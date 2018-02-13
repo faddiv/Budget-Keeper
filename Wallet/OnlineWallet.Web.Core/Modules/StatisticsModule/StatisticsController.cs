@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.StatisticsModule.Models;
+using OnlineWallet.Web.Modules.StatisticsModule.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.StatisticsModule
@@ -18,15 +19,15 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
     {
         #region Fields
 
-        private readonly IWalletDbContext _db;
+        private readonly IStatisticsQueries _statisticsQueries;
 
         #endregion
 
         #region  Constructors
 
-        public StatisticsController(IWalletDbContext db)
+        public StatisticsController(IStatisticsQueries statisticsQueries)
         {
-            _db = db;
+            this._statisticsQueries = statisticsQueries;
         }
 
         #endregion
@@ -34,119 +35,24 @@ namespace OnlineWallet.Web.Modules.StatisticsModule
         #region  Public Methods
 
         [HttpGet("BalanceInfo")]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(BalanceInfo))]
-        public async Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token)
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(BalanceInfo))]
+        public Task<BalanceInfo> BalanceInfo(int year, int month, CancellationToken token = default(CancellationToken))
         {
-            var transactions = await _db.Transactions
-                .Where(e => e.CreatedAt.Year == year && e.CreatedAt.Month == month)
-                .ToListAsync(token);
-            int income = transactions.Where(e => e.Direction == MoneyDirection.Income).Sum(e => e.Value);
-            var balanceInfo = new BalanceInfo
-            {
-                Income = income,
-                Spent = transactions.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Value),
-                Planned = transactions.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Value)
-            };
-            return balanceInfo;
+            return _statisticsQueries.GetBalanceInfo(year, month, token);
         }
 
         [HttpGet("Categories")]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(CategoryStatisticsSummary))]
-        public async Task<CategoryStatisticsSummary> Categories(int year)
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(CategoryStatisticsSummary))]
+        public Task<CategoryStatisticsSummary> Categories(int year, CancellationToken token = default(CancellationToken))
         {
-            var monthlyStats = await _db.Transactions
-                .Where(e => e.CreatedAt.Year == year && e.Direction == MoneyDirection.Expense)
-                .GroupBy(e => new {e.CreatedAt.Month, Category = e.Category ?? string.Empty})
-                .Select(e => new
-                {
-                    e.Key.Month,
-                    e.Key.Category,
-                    Spent = e.Sum(t => t.Value),
-                    Count = e.Count()
-                })
-                .ToAsyncEnumerable()
-                .ToLookup(e => e.Month);
-            var monthly = new List<List<CategoryStatistics>>();
-            for (int i = 0; i < 12; i++)
-            {
-                var monthlyData = monthlyStats[i + 1].OrderByDescending(e => e.Spent).ToList();
-                var categories = new List<CategoryStatistics>();
-                foreach (var categoryData in monthlyData)
-                {
-                    var stats = new CategoryStatistics
-                    {
-                        Name = categoryData.Category,
-                        Count = categoryData.Count,
-                        Spent = categoryData.Spent
-                    };
-                    categories.Add(stats);
-                }
-
-                var sumSpent = categories.Sum(e => e.Spent);
-                foreach (var item in categories)
-                {
-                    item.SpentPercent = Math.Round((double) item.Spent / sumSpent, 4, MidpointRounding.AwayFromZero);
-                }
-
-                monthly.Add(categories);
-            }
-
-            var sumAllSpent = monthly.SelectMany(e => e).Sum(e => e.Spent);
-            var yearly = monthly
-                .SelectMany(e => e)
-                .GroupBy(e => e.Name)
-                .Select(e => new CategoryStatistics
-                {
-                    Name = e.Key,
-                    Count = e.Sum(f => f.Count),
-                    Spent = e.Sum(f => f.Spent),
-                    SpentPercent = Math.Round((double) e.Sum(f => f.Spent) / sumAllSpent, 4,
-                        MidpointRounding.AwayFromZero)
-                })
-                .OrderByDescending(e => e.Spent)
-                .ToList();
-            return new CategoryStatisticsSummary
-            {
-                Monthly = monthly,
-                Yearly = yearly
-            };
+            return _statisticsQueries.GetCategoriesSummary(year, token);
         }
 
         [HttpGet("Yearly")]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(YearlyStatistics))]
-        public async Task<YearlyStatistics> Yearly(int year)
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(YearlyStatistics))]
+        public Task<YearlyStatistics> Yearly(int year, CancellationToken token = default(CancellationToken))
         {
-            var monthlyStats = await _db.Transactions
-                .Where(e => e.CreatedAt.Year == year)
-                .GroupBy(e => new {e.CreatedAt.Month, e.Direction})
-                .Select(e => new
-                {
-                    e.Key.Month,
-                    e.Key.Direction,
-                    Sum = e.Sum(t => t.Value)
-                })
-                .ToAsyncEnumerable()
-                .ToLookup(e => e.Month);
-            var monthly = new List<BalanceInfo>();
-            for (int i = 0; i < 12; i++)
-            {
-                var monthlyData = monthlyStats[i + 1].ToList();
-                var balanceInfo = new BalanceInfo
-                {
-                    Income = monthlyData.Where(e => e.Direction == MoneyDirection.Income).Sum(e => e.Sum),
-                    Spent = monthlyData.Where(e => e.Direction == MoneyDirection.Expense).Sum(e => e.Sum),
-                    Planned = monthlyData.Where(e => e.Direction == MoneyDirection.Plan).Sum(e => e.Sum)
-                };
-                monthly.Add(balanceInfo);
-            }
-
-            return new YearlyStatistics
-            {
-                Income = monthly.Sum(e => e.Income),
-                Spent = monthly.Sum(e => e.Spent),
-                Planned = monthly.Sum(e => e.Planned),
-                Monthly = monthly
-            };
+            return _statisticsQueries.GetYearlySummary(year, token);
         }
 
         #endregion
