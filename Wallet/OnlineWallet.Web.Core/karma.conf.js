@@ -24,7 +24,10 @@ module.exports = function (config) {
     config.set({
         basePath: "",
         files: [
-            "ClientApp/webpack_test_entrypoint.js"
+            {
+                pattern: "ClientApp/webpack_test_entrypoint.ts",
+                watched: false
+            }
         ],
         exclude: [
             "ClientApp/index.tsx"
@@ -41,7 +44,7 @@ module.exports = function (config) {
             "text/x-typescript": ["ts", "tsx"]
         },
         preprocessors: {
-            "ClientApp/webpack_test_entrypoint.js": ["webpack", "sourcemap"]
+            "ClientApp/webpack_test_entrypoint.ts": ["webpack", "sourcemap"]
         },
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser

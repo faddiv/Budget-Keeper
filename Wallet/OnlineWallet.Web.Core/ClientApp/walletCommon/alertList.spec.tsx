@@ -3,8 +3,10 @@ import * as jasmineEnzyme from "jasmine-enzyme";
 import { shallow } from "enzyme";
 import { AlertList } from "./alertList";
 import { AlertMessage } from "reducers/alerts/alertsModel";
+import { unwrap } from 'helpers/testHelpers';
 
 describe("AlertList", () => {
+    const AlertList2 = unwrap(AlertList);
 
     beforeEach(() => {
         (jasmineEnzyme as any)();
@@ -21,7 +23,7 @@ describe("AlertList", () => {
             }
         ];
         // AlertList = (AlertList as any).WrappedComponent; //Can fix the error but syntactycally not correct.
-        const element = shallow(<AlertList alerts={alerts} />);
+        const element = shallow(<AlertList2 alerts={alerts} />);
         const dangerElement = element.find(".alert.alert-danger");
         expect(dangerElement).not.toBeUndefined();
     });
