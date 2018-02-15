@@ -65,7 +65,7 @@ export class AlertList extends React.Component<AlertListProps, AlertListState> {
 
     render() {
         return (
-            <div>
+            <div className="alerts">
                 {this.props.alerts.map(this.renderAlert)}
             </div>
         );
