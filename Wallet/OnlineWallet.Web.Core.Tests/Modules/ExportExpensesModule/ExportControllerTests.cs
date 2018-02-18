@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
@@ -81,30 +82,30 @@ namespace OnlineWallet.Web.Modules.ExportExpensesModule
         }
 
         [Fact(DisplayName = "returns with FileContentResult")]
-        public void Returns_with_FileContentResult()
+        public async Task Returns_with_FileContentResult()
         {
-            var result = _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file.csv") as FileContentResult;
+            var result = await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file.csv") as FileContentResult;
             result.Should().NotBeNull();
         }
 
         [Fact(DisplayName = "returns file with the given filename")]
-        public void Returns_file_with_the_given_filename()
+        public async Task Returns_file_with_the_given_filename()
         {
-            var result = (FileContentResult)_controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file.csv");
+            var result = (FileContentResult)await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file.csv");
             result.FileDownloadName.Should().Be("file.csv");
         }
 
         [Fact(DisplayName = "adds extension to the filename")]
-        public void Adds_extension_to_the_filename()
+        public async Task Adds_extension_to_the_filename()
         {
-            var result = (FileContentResult)_controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file");
+            var result = (FileContentResult)await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file");
             result.FileDownloadName.Should().Be("file.csv");
         }
 
         [Fact(DisplayName = "Returns the exported csv from range")]
-        public void Returns_the_exported_csv_from_range()
+        public async Task Returns_the_exported_csv_from_range()
         {
-            var result = (FileContentResult)_controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file");
+            var result = (FileContentResult)await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file");
             var fileContent = Encoding.UTF8.GetString(result.FileContents);
             fileContent.Should().NotBeNullOrEmpty();
             var expected = File.ReadAllText("exportedExpenses.csv");

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.StatisticsModule.Models;
@@ -12,12 +11,22 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
 {
     public class StatisticsQueries : IStatisticsQueries
     {
+        #region Fields
+
         private readonly IWalletDbContext _db;
+
+        #endregion
+
+        #region  Constructors
 
         public StatisticsQueries(IWalletDbContext db)
         {
             _db = db;
         }
+
+        #endregion
+
+        #region  Public Methods
 
         public async Task<BalanceInfo> GetBalanceInfo(int year, int month, CancellationToken token)
         {
@@ -35,7 +44,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
             {
                 Income = stats[MoneyDirection.Income].Sum(e => e.Value),
                 Spent = stats[MoneyDirection.Expense].Sum(e => e.Value),
-                Planned = stats[MoneyDirection.Plan].Sum(e => e.Value),
+                Planned = stats[MoneyDirection.Plan].Sum(e => e.Value)
             };
             return balanceInfo;
         }
@@ -44,7 +53,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
         {
             var monthlyStats = await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year && e.Direction == MoneyDirection.Expense)
-                .GroupBy(e => new { e.CreatedAt.Month, Category = e.Category ?? string.Empty })
+                .GroupBy(e => new {e.CreatedAt.Month, Category = e.Category ?? string.Empty})
                 .Select(e => new
                 {
                     e.Key.Month,
@@ -73,7 +82,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
                 var sumSpent = categories.Sum(e => e.Spent);
                 foreach (var item in categories)
                 {
-                    item.SpentPercent = Math.Round((double)item.Spent / sumSpent, 4, MidpointRounding.AwayFromZero);
+                    item.SpentPercent = Math.Round((double) item.Spent / sumSpent, 4, MidpointRounding.AwayFromZero);
                 }
 
                 monthly.Add(categories);
@@ -88,7 +97,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
                     Name = e.Key,
                     Count = e.Sum(f => f.Count),
                     Spent = e.Sum(f => f.Spent),
-                    SpentPercent = Math.Round((double)e.Sum(f => f.Spent) / sumAllSpent, 4,
+                    SpentPercent = Math.Round((double) e.Sum(f => f.Spent) / sumAllSpent, 4,
                         MidpointRounding.AwayFromZero)
                 })
                 .OrderByDescending(e => e.Spent)
@@ -104,7 +113,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
         {
             var monthlyStats = await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year)
-                .GroupBy(e => new { e.CreatedAt.Month, e.Direction })
+                .GroupBy(e => new {e.CreatedAt.Month, e.Direction})
                 .Select(e => new
                 {
                     e.Key.Month,
@@ -112,7 +121,7 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
                     Sum = e.Sum(t => t.Value)
                 })
                 .ToAsyncEnumerable()
-                .ToLookup(e => e.Month);
+                .ToLookup(e => e.Month, token);
             var monthly = new List<BalanceInfo>();
             for (int i = 0; i < 12; i++)
             {
@@ -134,12 +143,18 @@ namespace OnlineWallet.Web.Modules.StatisticsModule.Services
                 Monthly = monthly
             };
         }
+
+        #endregion
     }
 
     public interface IStatisticsQueries
     {
+        #region  Public Methods
+
         Task<BalanceInfo> GetBalanceInfo(int year, int month, CancellationToken token);
         Task<CategoryStatisticsSummary> GetCategoriesSummary(int year, CancellationToken token);
         Task<YearlyStatistics> GetYearlySummary(int year, CancellationToken token);
+
+        #endregion
     }
 }

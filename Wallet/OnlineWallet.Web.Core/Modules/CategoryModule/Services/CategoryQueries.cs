@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Common.Helpers;
@@ -10,14 +11,24 @@ namespace OnlineWallet.Web.Modules.CategoryModule.Services
 {
     public class CategoryQueries : ICategoryQueries
     {
+        #region Fields
+
         private readonly IWalletDbContext _db;
+
+        #endregion
+
+        #region  Constructors
 
         public CategoryQueries(IWalletDbContext db)
         {
             _db = db;
         }
 
-        public async Task<List<CategoryModel>> GetBySearchText(string search, int limit)
+        #endregion
+
+        #region  Public Methods
+
+        public async Task<List<CategoryModel>> GetBySearchText(string search, int limit, CancellationToken token)
         {
             var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
             var query = _db.Transactions.Where(e => !string.IsNullOrEmpty(e.Category)
@@ -36,13 +47,19 @@ namespace OnlineWallet.Web.Modules.CategoryModule.Services
                     Name = e.Name,
                     NameHighlighted = StringExtensions.Highlight(e.Name, "<strong>", "</strong>", search),
                     Occurence = e.Occurence
-                }).ToListAsync();
+                }).ToListAsync(token);
             return data;
         }
+
+        #endregion
     }
 
     public interface ICategoryQueries
     {
-        Task<List<CategoryModel>> GetBySearchText(string search, int limit);
+        #region  Public Methods
+
+        Task<List<CategoryModel>> GetBySearchText(string search, int limit, CancellationToken token);
+
+        #endregion
     }
 }

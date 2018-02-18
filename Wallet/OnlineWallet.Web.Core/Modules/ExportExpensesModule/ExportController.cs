@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OnlineWallet.ExportImport;
 using OnlineWallet.Web.Common.Swagger;
-using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.ExportExpensesModule.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.ExportExpensesModule
@@ -14,17 +14,15 @@ namespace OnlineWallet.Web.Modules.ExportExpensesModule
     {
         #region Fields
 
-        private readonly ICsvExportImport _csvExportImport;
-        private readonly IWalletDbContext _db;
+        private readonly IExportQueries _exportQueries;
 
         #endregion
 
         #region  Constructors
 
-        public ExportController(ICsvExportImport csvExportImport, IWalletDbContext db)
+        public ExportController(IExportQueries exportQueries)
         {
-            _csvExportImport = csvExportImport;
-            _db = db;
+            _exportQueries = exportQueries;
         }
 
         #endregion
@@ -33,27 +31,14 @@ namespace OnlineWallet.Web.Modules.ExportExpensesModule
 
         [HttpGet]
         [SwaggerOperationFilter(typeof(FileDownloadOperationFilter))]
-        public IActionResult FromRange(DateTime from, DateTime to, string fileName)
+        public async Task<IActionResult> FromRange(DateTime from, DateTime to, string fileName,
+            CancellationToken token = default(CancellationToken))
         {
             from = from.Date;
             to = to.AddDays(1);
-            var query = _db.Transactions.Where(e => from <= e.CreatedAt && e.CreatedAt < to)
-                .OrderBy(e => e.CreatedAt).ThenBy(e => e.TransactionId)
-                .Select(e => new ExportImportRow
-                {
-                    Name = e.Name,
-                    Amount = e.Value,
-                    Category = e.Category,
-                    Direction = (MoneyDirection) (int) e.Direction,
-                    Comment = e.Comment,
-                    MatchingId = e.TransactionId,
-                    Created = e.CreatedAt,
-                    Source = e.Wallet.Name
-                });
-
             using (var stream = new MemoryStream())
             {
-                _csvExportImport.ExportTransactions(query, stream);
+                await _exportQueries.ExportIntoFromRangeAsync(stream, from, to, token);
                 return File(stream.ToArray(), "text/csv", Path.ChangeExtension(fileName, "csv"));
             }
         }
