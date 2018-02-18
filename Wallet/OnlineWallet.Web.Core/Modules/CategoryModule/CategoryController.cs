@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OnlineWallet.Web.Common.Helpers;
-using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.CategoryModule.Models;
+using OnlineWallet.Web.Modules.CategoryModule.Services;
 
 namespace OnlineWallet.Web.Modules.CategoryModule
 {
@@ -12,15 +11,15 @@ namespace OnlineWallet.Web.Modules.CategoryModule
     {
         #region Fields
 
-        private readonly IWalletDbContext _db;
-
+        private readonly ICategoryQueries _categoryQueries;
+        
         #endregion
 
         #region  Constructors
 
-        public CategoryController(IWalletDbContext db)
+        public CategoryController(ICategoryQueries categoryQueries)
         {
-            _db = db;
+            _categoryQueries = categoryQueries;
         }
 
         #endregion
@@ -28,27 +27,9 @@ namespace OnlineWallet.Web.Modules.CategoryModule
         #region  Public Methods
 
         [HttpGet]
-        public List<CategoryModel> GetBy(string search = "", int limit = 10)
+        public Task<List<CategoryModel>> GetBy(string search = "", int limit = 10)
         {
-            var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
-            var query = _db.Transactions.Where(e => !string.IsNullOrEmpty(e.Category)
-                                                    && EF.Functions.Like(e.Category.ToLower(), querySearch));
-            var data = query
-                .GroupBy(e => e.Category)
-                .Take(limit)
-                .Select(e => new
-                {
-                    Name = e.Key,
-                    Occurence = e.Count()
-                })
-                .OrderByDescending(e => e.Occurence)
-                .Select(e => new CategoryModel
-                {
-                    Name = e.Name,
-                    NameHighlighted = StringExtensions.Highlight(e.Name, "<strong>", "</strong>", search),
-                    Occurence = e.Occurence
-                }).ToList();
-            return data;
+            return _categoryQueries.GetBySearchText(search, limit);
         }
 
         #endregion

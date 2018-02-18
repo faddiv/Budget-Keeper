@@ -1,4 +1,4 @@
-namespace OnlineWallet.Web.Modules.CategoryModule
+namespace OnlineWallet.Web.Modules.CategoryModule.Models
 {
     public class CategoryModel
     {

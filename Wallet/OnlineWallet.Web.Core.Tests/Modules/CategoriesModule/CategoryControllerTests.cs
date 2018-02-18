@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.Web.Modules.CategoryModule;
 using OnlineWallet.Web.TestHelpers;
@@ -35,14 +36,14 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
         [Fact(DisplayName = nameof(Returns_the_categories_from_transactions))]
-        public void Returns_the_categories_from_transactions()
+        public async Task Returns_the_categories_from_transactions()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithCategory("Alfa")
                 .TheNext(5).WithCategory("alfa")
             );
 
-            var result = _controller.GetBy();
+            var result = await _controller.GetBy();
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -51,7 +52,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
         [Fact(DisplayName = nameof(Dont_return_null_or_empty_category))]
-        public void Dont_return_null_or_empty_category()
+        public async Task Dont_return_null_or_empty_category()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithCategory("Alfa")
@@ -59,7 +60,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
                 .TheNext(5).WithCategory(null)
             );
 
-            var result = _controller.GetBy();
+            var result = await _controller.GetBy();
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -67,13 +68,13 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
         [Fact(DisplayName = nameof(Returns_max_10_categories))]
-        public void Returns_max_10_categories()
+        public async Task Returns_max_10_categories()
         {
             _fixture.PrepareDataWith(tr => tr
                 .All().WithCategoryRandom()
             );
 
-            var result = _controller.GetBy();
+            var result = await _controller.GetBy();
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -82,13 +83,13 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
         [Fact(DisplayName = nameof(Returns_the_given_limit_categories))]
-        public void Returns_the_given_limit_categories()
+        public async Task Returns_the_given_limit_categories()
         {
             _fixture.PrepareDataWith(tr => tr
                 .All().WithCategoryRandom()
             );
 
-            var result = _controller.GetBy("", 5);
+            var result = await _controller.GetBy("", 5);
 
             result.Should()
                 .NotBeNullOrEmpty().And
@@ -97,7 +98,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
         [Fact(DisplayName = nameof(Search_is_contains_case_insensitive_and_ignore_space))]
-        public void Search_is_contains_case_insensitive_and_ignore_space()
+        public async Task Search_is_contains_case_insensitive_and_ignore_space()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(2).WithCategory("sAlfas")
@@ -107,7 +108,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
                 .TheNext(2).WithCategory("alfs")
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .NotBeNullOrEmpty()
@@ -119,7 +120,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
         }
 
         [Fact(DisplayName = nameof(Result_ordered_by_occurende_descending))]
-        public void Result_ordered_by_occurende_descending()
+        public async Task Result_ordered_by_occurende_descending()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(1).WithCategory("a")
@@ -129,7 +130,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
                 .TheNext(4).WithCategory("e")
             );
 
-            var result = _controller.GetBy();
+            var result = await _controller.GetBy();
 
             result.Should()
                 .NotBeNullOrEmpty();
@@ -139,7 +140,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
 
 
         [Fact(DisplayName = nameof(Highlights_the_match_in_name))]
-        public void Highlights_the_match_in_name()
+        public async Task Highlights_the_match_in_name()
         {
             _fixture.PrepareDataWith(tr => tr
                 .TheFirst(3).WithCategory("alfa1")
@@ -149,7 +150,7 @@ namespace OnlineWallet.Web.Modules.CategoriesModule
                 .TheNext(3).WithCategory("xalxfax")
             );
 
-            var result = _controller.GetBy("alfa");
+            var result = await _controller.GetBy("alfa");
 
             result.Should()
                 .HaveCount(5).And

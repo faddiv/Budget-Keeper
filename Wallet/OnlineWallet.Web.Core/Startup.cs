@@ -10,6 +10,7 @@ using OnlineWallet.Web.Common;
 using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.ArticleModule.Services;
+using OnlineWallet.Web.Modules.CategoryModule.Services;
 using OnlineWallet.Web.Modules.StatisticsModule.Services;
 using OnlineWallet.Web.Modules.TransactionModule.Services;
 using OnlineWallet.Web.Modules.WalletModule.Services;
@@ -49,6 +50,7 @@ namespace OnlineWallet.Web
             services.AddScoped<IWalletCommands, WalletCommands>();
             services.AddScoped<IArticleQueries, ArticleQueries>();
             services.AddScoped<IStatisticsQueries, StatisticsQueries>();
+            services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 
