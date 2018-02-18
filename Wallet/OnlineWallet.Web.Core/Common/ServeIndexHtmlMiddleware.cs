@@ -57,37 +57,31 @@ namespace OnlineWallet.Web.Common
         {
             // If we get here, we can try to serve the file
             var headers = context.Request.GetTypedHeaders();
-            if (headers.Accept.FirstOrDefault()?.MediaType.Value == "text/html")
+            if (headers.Accept.FirstOrDefault()?.MediaType.Value != "text/html")
+                return _next(context);
+            var fileToServe = GetFileToServe();
+            if (fileToServe == null)
+                return _next(context);
+            if (ComputeIfModifiedSince(fileToServe, headers))
             {
-                var fileToServe = GetFileToServe();
-                if (fileToServe != null)
+                ApplyResponseHeaders(context.Response, 200, fileToServe);
+                var sendFile = context.Features.Get<IHttpSendFileFeature>();
+                if (sendFile != null)
                 {
-                    if (ComputeIfModifiedSince(fileToServe, headers))
-                    {
-                        ApplyResponseHeaders(context.Response, 200, fileToServe);
-                        var sendFile = context.Features.Get<IHttpSendFileFeature>();
-                        if (sendFile != null)
-                        {
-                            return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length,
-                                CancellationToken.None);
-                        }
+                    return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length,
+                        CancellationToken.None);
+                }
 
-                        using (var readStream = fileToServe.File.CreateReadStream())
-                        {
-                            readStream.Seek(0, SeekOrigin.Begin);
-                            return StreamCopyOperation.CopyToAsync(readStream, context.Response.Body,
-                                fileToServe.Length, context.RequestAborted);
-                        }
-                    }
-
-                    ApplyResponseHeaders(context.Response, 304, fileToServe);
-                    return
-                        Task.FromResult(
-                            0); //TODO: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/Constants.cs CompletedTask 
+                using (var readStream = fileToServe.File.CreateReadStream())
+                {
+                    readStream.Seek(0, SeekOrigin.Begin);
+                    return StreamCopyOperation.CopyToAsync(readStream, context.Response.Body,
+                        fileToServe.Length, context.RequestAborted);
                 }
             }
 
-            return _next(context);
+            ApplyResponseHeaders(context.Response, 304, fileToServe);
+            return Task.CompletedTask;
         }
 
         #endregion
@@ -155,7 +149,7 @@ namespace OnlineWallet.Web.Common
 
         #endregion
 
-        class FileToServe
+        private class FileToServe
         {
             #region  Constructors
 

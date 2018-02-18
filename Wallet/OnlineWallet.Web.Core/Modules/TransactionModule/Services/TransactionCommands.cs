@@ -37,10 +37,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Services
                 if (operation.TransactionId != 0)
                 {
                     var existingEntity = existingEntities.Find(e => e.TransactionId == operation.TransactionId);
-                    if (existingEntity == null)
-                    {
-                        throw new Exception("Money operation doesn't exists");
-                    }
 
                     //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
                     _db.UpdateEntityValues(existingEntity, operation);

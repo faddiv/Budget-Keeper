@@ -8,7 +8,7 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.WalletModule
 {
-    [Trait("WalletController", "Delete")]
+    [Trait(nameof(WalletController), nameof(WalletController.Delete))]
     public class WalletControllerDeleteTests : WalletControllerTests
     {
         public WalletControllerDeleteTests(DatabaseFixture fixture)
@@ -33,7 +33,7 @@ namespace OnlineWallet.Web.Modules.WalletModule
         public async Task Delete_returns_NotFound_if_object_doesnt_exists()
         {
             //Act
-            var result = await Controller.Delete(TestWallet.MoneyWalletId+100, CancellationToken.None);
+            var result = await Controller.Delete(TestWallet.MoneyWalletId + 100, CancellationToken.None);
 
             //Assert
             ResultShouldBeNotFound(result);
