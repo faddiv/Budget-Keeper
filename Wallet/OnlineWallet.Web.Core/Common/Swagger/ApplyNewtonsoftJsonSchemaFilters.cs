@@ -18,6 +18,7 @@ namespace OnlineWallet.Web.Common.Swagger
                     schema.Properties.Remove(propertyInfo.Name);
                     continue;
                 }
+
                 var jpa = (JsonPropertyAttribute) Attribute.GetCustomAttribute(propertyInfo,
                     typeof(JsonPropertyAttribute));
                 if (jpa != null && jpa.PropertyName != propertyInfo.Name)

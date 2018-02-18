@@ -22,6 +22,7 @@ namespace OnlineWallet.Web.Common.Helpers
                 {
                     return typeInfo.GenericTypeArguments[index];
                 }
+
                 if (typeInfo.BaseType == null)
                     return null;
                 typeInfo = typeInfo.BaseType.GetTypeInfo();

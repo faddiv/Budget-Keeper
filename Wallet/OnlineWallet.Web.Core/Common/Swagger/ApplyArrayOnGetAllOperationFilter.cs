@@ -28,6 +28,7 @@ namespace OnlineWallet.Web.Common.Swagger
                     response.Schema.Ref = null;
                 }
             }
+
             if (operation.Parameters != null)
             {
                 foreach (var parameter in operation.Parameters.OfType<NonBodyParameter>())

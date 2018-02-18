@@ -44,8 +44,10 @@ namespace OnlineWallet.Web.Common.Swagger
                 {
                     throw new Exception("attribute.Wrapper has to be generic type with one argument");
                 }
+
                 type = attribute.Wrapper.MakeGenericType(type);
             }
+
             response.Schema = context.SchemaRegistry.GetOrRegister(type);
             operation.Responses[key] = response;
         }

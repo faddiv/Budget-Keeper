@@ -6,11 +6,9 @@ namespace OnlineWallet.Web.DataLayer
     {
         #region Properties
 
-        [Key]
-        public int MoneyWalletId { get; set; }
+        [Key] public int MoneyWalletId { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        [Required] public string Name { get; set; }
 
         #endregion
     }

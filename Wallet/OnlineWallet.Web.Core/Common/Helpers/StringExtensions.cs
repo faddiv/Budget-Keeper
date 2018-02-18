@@ -15,6 +15,7 @@ namespace OnlineWallet.Web.Common.Helpers
             {
                 builder.Append(tch).Append(ch);
             }
+
             return builder.ToString();
         }
 
@@ -32,6 +33,7 @@ namespace OnlineWallet.Web.Common.Helpers
                         builder.Append(start);
                         closed = false;
                     }
+
                     index++;
                 }
                 else if (!closed)
@@ -39,12 +41,15 @@ namespace OnlineWallet.Web.Common.Helpers
                     builder.Append(end);
                     closed = true;
                 }
+
                 builder.Append(ch);
             }
+
             if (!closed)
             {
                 builder.Append(end);
             }
+
             return builder.ToString();
         }
 

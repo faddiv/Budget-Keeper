@@ -71,6 +71,7 @@ namespace OnlineWallet.Web.Common
                             return sendFile.SendFileAsync(fileToServe.PhysicalPath, 0, fileToServe.Length,
                                 CancellationToken.None);
                         }
+
                         using (var readStream = fileToServe.File.CreateReadStream())
                         {
                             readStream.Seek(0, SeekOrigin.Begin);
@@ -78,12 +79,14 @@ namespace OnlineWallet.Web.Common
                                 fileToServe.Length, context.RequestAborted);
                         }
                     }
+
                     ApplyResponseHeaders(context.Response, 304, fileToServe);
                     return
                         Task.FromResult(
                             0); //TODO: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/Constants.cs CompletedTask 
                 }
             }
+
             return _next(context);
         }
 
@@ -105,6 +108,7 @@ namespace OnlineWallet.Web.Common
                 responseHeaders.ETag = file.ETag;
                 responseHeaders.Headers[HeaderNames.AcceptRanges] = "bytes";
             }
+
             if (statusCode == 200)
             {
                 // this header is only returned here for 200
@@ -134,6 +138,7 @@ namespace OnlineWallet.Web.Common
                 bool unmodified = ifUnmodifiedSince >= file.LastModified;
                 return unmodified || true;
             }
+
             return true;
         }
 
@@ -144,6 +149,7 @@ namespace OnlineWallet.Web.Common
             {
                 return new FileToServe(fileInfo);
             }
+
             return null;
         }
 

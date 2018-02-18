@@ -41,6 +41,7 @@ namespace OnlineWallet.Web.DataLayer
                 {
                     continue;
                 }
+
                 property.CurrentValue = newEntry.Property(property.Metadata.Name).OriginalValue;
             }
         }

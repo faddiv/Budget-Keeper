@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -42,7 +43,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
         }
 
         [Fact(DisplayName = "ProcessTransactions detects if amount changes while name and direction remain same")]
-        public void ProcessTransactions_detects_if_amount_changes_while_name_and_direction_remain_same()
+        public async Task ProcessTransactions_detects_if_amount_changes_while_name_and_direction_remain_same()
         {
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
@@ -65,17 +66,17 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
 
                 //Act
-                var result = controller.ProcessTransactions(formFile.Object);
+                var result = await controller.ProcessTransactions(formFile.Object);
 
                 //Assert
                 var value = result.FirstOrDefault(e => e.Name == "expense 1");
                 value.Should().NotBeNull();
-                value.MatchingId.Should().Be(transaction.TransactionId);
+                value?.MatchingId.Should().Be(transaction.TransactionId);
             }
         }
 
         [Fact(DisplayName = "ProcessTransactions detects if name changes while wallet and Amount remain same")]
-        public void ProcessTransactions_detects_if_name_changes_while_wallet_and_Amount_remain_same()
+        public async Task ProcessTransactions_detects_if_name_changes_while_wallet_and_Amount_remain_same()
         {
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
@@ -98,29 +99,28 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
 
                 //Act
-                var result = controller.ProcessTransactions(formFile.Object);
+                var result = await controller.ProcessTransactions(formFile.Object);
 
                 //Assert
                 var value = result.FirstOrDefault(e => e.Name == "expense 1");
                 value.Should().NotBeNull();
-                value.MatchingId.Should().Be(transaction.TransactionId);
+                value?.MatchingId.Should().Be(transaction.TransactionId);
             }
         }
 
         [Fact(DisplayName = "ProcessTransactions reads valid import file")]
-        public void TransactionReadsValidImportFile()
+        public async Task TransactionReadsValidImportFile()
         {
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
                 //Arrange
-                var dbContext = _fixture.DbContext;
                 var controller = _fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
 
                 //Act
-                var result = controller.ProcessTransactions(formFile.Object);
+                var result = await controller.ProcessTransactions(formFile.Object);
 
                 //Assert
                 result.Should().NotBeNullOrEmpty("it reads the file");
@@ -131,7 +131,7 @@ namespace OnlineWallet.Web.Modules.ImportExpensesModule
         #endregion
 
         #region  Nonpublic Methods
-        
+
         private static List<ExportImportRow> GetSampleData()
         {
             return new List<ExportImportRow>
