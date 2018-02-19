@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using OnlineWallet.Web.Modules.GeneralDataModule;
 using OnlineWallet.Web.TestHelpers;
 using OnlineWallet.Web.TestHelpers.Builders;
 using Xunit;

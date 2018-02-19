@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.DataLayer;
 
-namespace OnlineWallet.Web.Modules.WalletModule.Services
+namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 {
     public interface IWalletQueries
     {

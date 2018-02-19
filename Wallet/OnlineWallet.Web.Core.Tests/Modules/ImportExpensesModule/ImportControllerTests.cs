@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 using MoneyDirection = OnlineWallet.ExportImport.MoneyDirection;

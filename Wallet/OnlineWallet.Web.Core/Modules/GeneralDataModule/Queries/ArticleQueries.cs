@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Common.Helpers;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.ArticleModule.Models;
+using OnlineWallet.Web.Modules.GeneralDataModule.Models;
 
-namespace OnlineWallet.Web.Modules.ArticleModule.Services
+namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 {
     public interface IArticleQueries
     {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 
-namespace OnlineWallet.Web.Modules.ImportExpensesModule.Services
+namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     public class ImportCommands : IImportCommands
     {

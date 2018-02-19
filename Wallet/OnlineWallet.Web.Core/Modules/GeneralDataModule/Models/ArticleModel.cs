@@ -1,4 +1,4 @@
-namespace OnlineWallet.Web.Modules.ArticleModule.Models
+namespace OnlineWallet.Web.Modules.GeneralDataModule.Models
 {
     public class ArticleModel
     {

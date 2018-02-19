@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
-using OnlineWallet.Web.Modules.ImportExpensesModule.Services;
+using OnlineWallet.Web.Modules.TransactionModule.Commands;
 
-namespace OnlineWallet.Web.Modules.ImportExpensesModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Route("api/v1/[controller]")]
     public class ImportController : Controller

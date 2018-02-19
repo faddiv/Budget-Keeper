@@ -1,11 +1,10 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.TransactionModule.Models;
 
-namespace OnlineWallet.Web.Modules.TransactionModule.Services
+namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     public class BatchSaveCommand : IBatchSaveCommand
     {

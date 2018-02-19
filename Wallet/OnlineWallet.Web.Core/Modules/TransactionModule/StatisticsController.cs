@@ -2,11 +2,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OnlineWallet.Web.Modules.StatisticsModule.Models;
-using OnlineWallet.Web.Modules.StatisticsModule.Services;
+using OnlineWallet.Web.Modules.TransactionModule.Models;
+using OnlineWallet.Web.Modules.TransactionModule.Queries;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Modules.StatisticsModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Route("api/v1/[controller]")]
     public class StatisticsController : Controller

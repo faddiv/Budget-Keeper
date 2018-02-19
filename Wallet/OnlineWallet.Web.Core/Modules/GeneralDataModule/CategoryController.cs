@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OnlineWallet.Web.Modules.CategoryModule.Models;
-using OnlineWallet.Web.Modules.CategoryModule.Services;
+using OnlineWallet.Web.Modules.GeneralDataModule.Models;
+using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
 
-namespace OnlineWallet.Web.Modules.CategoryModule
+namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Route("api/v1/[controller]")]
     public class CategoryController : Controller

@@ -1,4 +1,4 @@
-﻿using OnlineWallet.Web.Modules.StatisticsModule.Models;
+﻿using OnlineWallet.Web.Modules.TransactionModule.Models;
 
 namespace OnlineWallet.Web.Modules.StatisticsModule
 {

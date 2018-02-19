@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.StatisticsModule.Models;
+using OnlineWallet.Web.Modules.TransactionModule.Models;
 
-namespace OnlineWallet.Web.Modules.StatisticsModule.Services
+namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 {
     public class StatisticsQueries : IStatisticsQueries
     {

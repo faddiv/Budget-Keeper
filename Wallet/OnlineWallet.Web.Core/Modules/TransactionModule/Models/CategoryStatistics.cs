@@ -1,4 +1,4 @@
-namespace OnlineWallet.Web.Modules.StatisticsModule.Models
+namespace OnlineWallet.Web.Modules.TransactionModule.Models
 {
     public class CategoryStatistics
     {

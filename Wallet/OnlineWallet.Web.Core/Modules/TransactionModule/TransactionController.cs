@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.TransactionModule.Commands;
 using OnlineWallet.Web.Modules.TransactionModule.Models;
+using OnlineWallet.Web.Modules.TransactionModule.Queries;
 using OnlineWallet.Web.Modules.TransactionModule.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

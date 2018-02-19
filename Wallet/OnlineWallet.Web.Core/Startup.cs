@@ -9,13 +9,11 @@ using OnlineWallet.ExportImport;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.ArticleModule.Services;
-using OnlineWallet.Web.Modules.CategoryModule.Services;
-using OnlineWallet.Web.Modules.ExportExpensesModule.Services;
-using OnlineWallet.Web.Modules.ImportExpensesModule.Services;
-using OnlineWallet.Web.Modules.StatisticsModule.Services;
+using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
+using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
+using OnlineWallet.Web.Modules.TransactionModule.Commands;
+using OnlineWallet.Web.Modules.TransactionModule.Queries;
 using OnlineWallet.Web.Modules.TransactionModule.Services;
-using OnlineWallet.Web.Modules.WalletModule.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web

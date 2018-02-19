@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.DataLayer;
 
-namespace OnlineWallet.Web.Modules.WalletModule.Services
+namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 {
     public interface IWalletCommands
     {

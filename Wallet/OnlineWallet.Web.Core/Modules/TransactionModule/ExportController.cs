@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.Web.Common.Swagger;
-using OnlineWallet.Web.Modules.ExportExpensesModule.Services;
+using OnlineWallet.Web.Modules.TransactionModule.Queries;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Modules.ExportExpensesModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Route("api/v1/[controller]")]
     public class ExportController : Controller

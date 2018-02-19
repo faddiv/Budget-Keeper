@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 
-namespace OnlineWallet.Web.Modules.ExportExpensesModule.Services
+namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 {
     public class ExportQueries : IExportQueries
     {

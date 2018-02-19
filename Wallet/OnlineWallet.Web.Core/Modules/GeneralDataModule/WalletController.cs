@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.Web.Common;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.WalletModule.Services;
+using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
+using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OnlineWallet.Web.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Route("api/v1/[controller]")]
     public class WalletController : Controller
