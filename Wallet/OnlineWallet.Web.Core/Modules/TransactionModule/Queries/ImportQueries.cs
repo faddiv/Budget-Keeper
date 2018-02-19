@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 
-namespace OnlineWallet.Web.Modules.TransactionModule.Commands
+namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 {
-    public class ImportCommands : IImportCommands
+    public class ImportQueries : IImportQueries
     {
         #region Fields
 
@@ -22,7 +22,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         #region  Constructors
 
-        public ImportCommands(IWalletDbContext db, ICsvExportImport csvExportImport)
+        public ImportQueries(IWalletDbContext db, ICsvExportImport csvExportImport)
         {
             _db = db;
             _csvExportImport = csvExportImport;
@@ -106,7 +106,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         #endregion
     }
 
-    public interface IImportCommands
+    public interface IImportQueries
     {
         #region  Public Methods
 

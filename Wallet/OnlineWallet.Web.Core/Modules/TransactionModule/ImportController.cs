@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.Modules.TransactionModule.Commands;
+using OnlineWallet.Web.Modules.TransactionModule.Queries;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
@@ -13,15 +14,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         #region Fields
         
-        private readonly IImportCommands _importCommands;
+        private readonly IImportQueries _importQueries;
 
         #endregion
 
         #region  Constructors
 
-        public ImportController(IImportCommands importCommands)
+        public ImportController(IImportQueries importQueries)
         {
-            _importCommands = importCommands;
+            _importQueries = importQueries;
         }
 
         #endregion
@@ -32,7 +33,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public async Task<List<ExportImportRow>> ProcessTransactions(IFormFile file,
             CancellationToken token = default(CancellationToken))
         {
-            var list = await _importCommands.ProcessTransactions(file.OpenReadStream(), token);
+            var list = await _importQueries.ProcessTransactions(file.OpenReadStream(), token);
             return list;
         }
 

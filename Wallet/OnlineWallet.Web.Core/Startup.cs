@@ -52,7 +52,7 @@ namespace OnlineWallet.Web
             services.AddScoped<IStatisticsQueries, StatisticsQueries>();
             services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddScoped<IExportQueries, ExportQueries>();
-            services.AddScoped<IImportCommands, ImportCommands>();
+            services.AddScoped<IImportQueries, ImportQueries>();
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 
