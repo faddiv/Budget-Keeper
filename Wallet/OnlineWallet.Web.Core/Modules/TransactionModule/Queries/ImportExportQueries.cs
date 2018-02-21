@@ -8,6 +8,7 @@ using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 {
@@ -16,16 +17,18 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         #region Fields
 
         private readonly ICsvExportImport _csvExportImport;
-        private readonly IWalletDbContext _db;
+        private readonly ITransactionQueries _transactionQueries;
+        private readonly IWalletQueries _walletQueries;
 
         #endregion
 
         #region  Constructors
 
-        public ImportExportQueries(IWalletDbContext db, ICsvExportImport csvExportImport)
+        public ImportExportQueries(ICsvExportImport csvExportImport, ITransactionQueries transactionQueries, IWalletQueries walletQueries)
         {
-            _db = db;
             _csvExportImport = csvExportImport;
+            _transactionQueries = transactionQueries;
+            _walletQueries = walletQueries;
         }
 
         #endregion
@@ -34,8 +37,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         public async Task ExportIntoFromRangeAsync(Stream stream, DateTime from, DateTime to, CancellationToken token)
         {
-            var query = await _db.Transactions.Where(e => from <= e.CreatedAt && e.CreatedAt < to)
-                .OrderBy(e => e.CreatedAt).ThenBy(e => e.TransactionId)
+            var query = (await _transactionQueries.FetchByDateRange(from, to))
                 .Select(e => new ExportImportRow
                 {
                     Name = e.Name,
@@ -46,7 +48,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     MatchingId = e.TransactionId,
                     Created = e.CreatedAt,
                     Source = e.Wallet.Name
-                }).ToListAsync(token);
+                })
+                .OrderBy(e => e.Created)
+                .ThenBy(e => e.Name)
+                .ToList();
 
             _csvExportImport.ExportTransactions(query, stream);
         }
@@ -55,51 +60,13 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         {
             var list = _csvExportImport.ImportTransactions(input).ToList();
             if (list.Count == 0) return list;
+            var wallets = await _walletQueries.GetAll(token);
             var from = list.Min(e => e.Created);
             var to = list.Max(e => e.Created);
-            var directions = list.Select(e => e.Direction).Distinct().Cast<short>().Cast<MoneyDirection>().ToList();
-            var sources = list.Select(e => e.Source).Distinct().ToList();
-            var categories = list.Select(e => e.Category).Distinct().Select(e => e?.ToLower()).ToList();
-            var query = _db.Transactions.AsNoTracking().Where(e => from <= e.CreatedAt && e.CreatedAt <= to);
-            var wallets = _db.Wallets.AsNoTracking().ToList();
-            if (directions.Count > 0)
-            {
-                var predicate = PredicateBuilder.New<Transaction>();
-                foreach (var direction in directions)
-                {
-                    predicate = predicate.Or(e => e.Direction == direction);
-                }
-
-                query = query.Where(predicate);
-            }
-
-            if (sources.Count > 0)
-            {
-                var predicate = PredicateBuilder.New<Transaction>();
-                foreach (var source in sources)
-                {
-                    var wallet = wallets.Find(e => e.Name?.ToLower() == source.ToString().ToLower());
-                    if (wallet == null) continue;
-                    predicate = predicate.Or(e => e.Wallet == wallet);
-                }
-
-                query = query.Where(predicate);
-            }
-
-            if (categories.Count > 0 && categories.Count < 100)
-            {
-                var predicate = PredicateBuilder.New<Transaction>();
-                foreach (var category in categories)
-                {
-                    predicate = string.IsNullOrEmpty(category)
-                        ? predicate.Or(e => e.Category == null || e.Category == string.Empty)
-                        : predicate.Or(e => e.Category.ToLower() == category);
-                }
-
-                query = query.Where(predicate);
-            }
-
-            var savedItems = await query.OrderBy(e => e.TransactionId).ToListAsync(token);
+            var directions = ExtractDirections(list);
+            var walletIds = ExtractWalletIds(list, wallets);
+            var categories = extractCategories(list);
+            var savedItems = await _transactionQueries.FetchByFilters(from, to, directions, walletIds, categories, token);
             foreach (var item in list)
             {
                 var wallet = wallets.Find(e => e.Name?.ToLower() == item.Source.ToString().ToLower());
@@ -120,6 +87,25 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
             }
 
             return list;
+        }
+
+        private static List<string> extractCategories(List<ExportImportRow> list)
+        {
+            return list.Select(e => e.Category).Distinct().Select(e => e?.ToLower()).ToList();
+        }
+
+        private static List<MoneyDirection> ExtractDirections(List<ExportImportRow> list)
+        {
+            return list.Select(e => e.Direction).Distinct().Cast<short>().Cast<MoneyDirection>().ToList();
+        }
+
+        private static List<int> ExtractWalletIds(List<ExportImportRow> list, List<Wallet> wallets)
+        {
+            return list.Select(eir => eir.Source).Distinct()
+                            .Select(walletName => wallets.Find(wallet => wallet.Name?.ToLower() == walletName?.ToString().ToLower())?.MoneyWalletId)
+                            .Where(walletId => walletId.HasValue)
+                            .Select(walletId => walletId.Value)
+                            .ToList();
         }
 
         #endregion

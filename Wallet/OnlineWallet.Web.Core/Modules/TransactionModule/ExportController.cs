@@ -35,7 +35,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             CancellationToken token = default(CancellationToken))
         {
             from = from.Date;
-            to = to.AddDays(1);
+            to = to.Date.Add(new TimeSpan(23, 59, 59));
             using (var stream = new MemoryStream())
             {
                 await _exportQueries.ExportIntoFromRangeAsync(stream, from, to, token);
