@@ -9,7 +9,7 @@ using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 {
-    public class ExportQueries : IExportQueries
+    public class ImportExportQueries : IImportExportQueries
     {
         #region Fields
 
@@ -20,7 +20,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         #region  Constructors
 
-        public ExportQueries(IWalletDbContext db, ICsvExportImport csvExportImport)
+        public ImportExportQueries(IWalletDbContext db, ICsvExportImport csvExportImport)
         {
             _db = db;
             _csvExportImport = csvExportImport;
@@ -52,7 +52,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         #endregion
     }
 
-    public interface IExportQueries
+    public interface IImportExportQueries
     {
         #region  Public Methods
 

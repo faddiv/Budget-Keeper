@@ -14,13 +14,13 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         #region Fields
 
-        private readonly IExportQueries _exportQueries;
+        private readonly IImportExportQueries _exportQueries;
 
         #endregion
 
         #region  Constructors
 
-        public ExportController(IExportQueries exportQueries)
+        public ExportController(IImportExportQueries exportQueries)
         {
             _exportQueries = exportQueries;
         }
