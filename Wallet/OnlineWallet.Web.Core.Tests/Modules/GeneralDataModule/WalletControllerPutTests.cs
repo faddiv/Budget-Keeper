@@ -6,7 +6,7 @@ using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait("WalletController", "Put")]
     public class WalletControllerPutTests : WalletControllerTests

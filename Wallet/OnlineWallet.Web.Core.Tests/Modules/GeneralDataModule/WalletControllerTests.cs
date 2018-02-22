@@ -1,9 +1,8 @@
 ﻿using OnlineWallet.Web.Common;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.GeneralDataModule;
 using OnlineWallet.Web.TestHelpers;
 
-namespace OnlineWallet.Web.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     public class WalletControllerTests : CrudControllerTests<Wallet>
     {

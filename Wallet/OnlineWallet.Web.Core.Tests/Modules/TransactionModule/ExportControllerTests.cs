@@ -6,11 +6,10 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.ExportExpensesModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(ExportController), nameof(ExportController.FromRange))]
     [Collection("Database collection")]

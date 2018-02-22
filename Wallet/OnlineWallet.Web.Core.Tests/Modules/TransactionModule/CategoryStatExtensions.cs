@@ -1,6 +1,6 @@
 ﻿using OnlineWallet.Web.Modules.TransactionModule.Models;
 
-namespace OnlineWallet.Web.Modules.StatisticsModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     static class CategoryStatExtensions
     {

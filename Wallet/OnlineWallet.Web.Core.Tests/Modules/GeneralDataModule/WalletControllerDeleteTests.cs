@@ -2,12 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using OnlineWallet.Web.Modules.GeneralDataModule;
 using OnlineWallet.Web.TestHelpers;
 using OnlineWallet.Web.TestHelpers.Builders;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait(nameof(WalletController), nameof(WalletController.Delete))]
     public class WalletControllerDeleteTests : WalletControllerTests

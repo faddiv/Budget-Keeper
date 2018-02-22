@@ -5,7 +5,7 @@ using FluentAssertions;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
-namespace OnlineWallet.Web.Modules.WalletModule
+namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait("WalletController", "Post")]
     public class WalletControllerPostTests : WalletControllerTests

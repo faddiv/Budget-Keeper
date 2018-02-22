@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.TransactionModule.Models;

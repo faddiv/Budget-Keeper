@@ -3,14 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.ExportImport;
-using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.Modules.TransactionModule.Models;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace OnlineWallet.Web.Modules.StatisticsModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.Yearly))]
     [Collection("Database collection")]

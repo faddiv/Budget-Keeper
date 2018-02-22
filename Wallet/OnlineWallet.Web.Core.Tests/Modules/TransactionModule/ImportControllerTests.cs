@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.TestHelpers;
 using Xunit;
 using MoneyDirection = OnlineWallet.ExportImport.MoneyDirection;
 
-namespace OnlineWallet.Web.Modules.ImportExpensesModule
+namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(ImportController), nameof(ImportController.ProcessTransactions))]
     [Collection("Database collection")]
