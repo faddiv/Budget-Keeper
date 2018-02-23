@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Layout } from "layout";
 import { ArticleModel, articleService, Wallet, transactionService } from "walletApi";
-import { bind, _ } from "helpers";
+import { bind } from "helpers";
 import { updateState, Collapse, noAction } from "react-ext";
 import { getWalletNameById, TransactionViewModel, mapTransactionViewModel, getDirectionColoring, TransactionTable } from "walletCommon";
 import { connect } from "react-redux";
@@ -39,22 +39,6 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
     }
 
     @bind
-    deleteItem(item: TransactionViewModel) {
-        this.setState((prevState) => {
-            return {
-                openedArticleTransactions: _.remove(prevState.openedArticleTransactions, item)
-            };
-        });
-    }
-
-    @bind
-    update(openedArticleTransactions: TransactionViewModel[]): void {
-        this.setState({
-            openedArticleTransactions
-        });
-    }
-
-    @bind
     async handleInputChange(event: React.SyntheticEvent<HTMLInputElement>) {
         const state = updateState(event);
         if (state.name && state.name.length > 1) {
@@ -73,31 +57,39 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
     async openRow(item: ArticleModel) {
         const state = this.state;
         const openItem = state.openItem === item ? null : item;
+        console.log("openRow 1", this.state);
         if (openItem) {
             let transactionsPages = state.transactionsCache[openItem.name];
             if (!transactionsPages || !transactionsPages.length) {
                 const transactions = await transactionService
                     .fetchArticle(openItem.name)
                     .then(mapTransactionViewModel);
+                console.log("openRow 2", this.state);
                 transactionsPages = [transactions];
                 this.setState((prevState) => {
+                    console.log("openRow settingState", prevState);
                     return {
                         transactionsCache: { ...prevState.transactionsCache, [openItem.name]: transactionsPages }
                     };
+                }, () => {
+                    console.log("openRow settingState finished", this.state);
                 });
             }
+            console.log("openRow 3", this.state);
             this.setState({
                 openedArticleTransactions: transactionsPages[0],
                 openItem,
                 pageNumber: 0
             });
         } else {
+            console.log("openRow 4", this.state);
             this.setState({
                 openedArticleTransactions: [],
                 openItem,
                 pageNumber: 0
             });
         }
+        console.log("openRow 5", this.state);
     }
 
     @bind
@@ -189,6 +181,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
 
     render() {
         const { name, articles } = this.state;
+        console.log("rendering", this.state, "props", this.props);
         return (
             <Layout>
                 <form onSubmit={noAction}>
