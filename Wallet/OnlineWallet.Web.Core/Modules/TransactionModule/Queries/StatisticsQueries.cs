@@ -39,7 +39,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     Value = e.Sum(r => r.Value)
                 })
                 .ToAsyncEnumerable()
-                .ToLookup(e => e.Direction);
+                .ToLookup(e => e.Direction, token);
             var balanceInfo = new BalanceInfo
             {
                 Income = stats[MoneyDirection.Income].Sum(e => e.Value),
@@ -62,7 +62,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     Count = e.Count()
                 })
                 .ToAsyncEnumerable()
-                .ToLookup(e => e.Month);
+                .ToLookup(e => e.Month, token);
             var monthly = new List<List<CategoryStatistics>>();
             for (int i = 0; i < 12; i++)
             {
