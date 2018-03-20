@@ -77,8 +77,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         
         public void Dispose()
         {
-            _fixture.DbContext.Transactions.RemoveRange(_fixture.DbContext.Transactions);
-            _controller?.Dispose();
+            _fixture.Cleanup();
         }
 
         [Fact(DisplayName = "returns with FileContentResult")]
