@@ -39,6 +39,32 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
         };
     }
 
+    private getFromSummaryById(item: TransactionViewModel): TransactionViewModel {
+        return this.props.transactionSummary.find(ts => {
+            if (ts === item) {
+                return true;
+            }
+            if (ts.transactionId && item.transactionId) {
+                return ts.transactionId === item.transactionId;
+            }
+            return ts.key === item.key;
+        });
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<TransactionTableProps>) {
+        if (this.props.items !== nextProps.items) {
+            const newSelection = [];
+            for (const newTransaction of nextProps.items) {
+                const originalTransaction = this.getFromSummaryById(newTransaction);
+                if (!originalTransaction) {
+                    continue;
+                }
+                newSelection.push(newTransaction);
+            }
+            this.props.actions.transactionsSelected(newSelection);
+        }
+    }
+
     @bind
     saveTransaction(newItem: TransactionViewModel, original: TransactionViewModel) {
         const items = _.replace(this.props.items, newItem, original);
