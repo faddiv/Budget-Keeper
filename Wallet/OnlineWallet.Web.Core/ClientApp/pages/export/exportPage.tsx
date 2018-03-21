@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as moment from "moment";
+import { bind } from "bind-decorator";
 
 import { renderRange, switchCase, updateState } from "react-ext";
-import { bind, dateFormat } from "helpers";
+import { dateFormat } from "helpers";
 import { Layout } from "layout";
 import { importExportService } from "walletApi";
 

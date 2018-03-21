@@ -1,9 +1,10 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 import * as classNames from "classnames";
+import { bind } from "bind-decorator";
+
 import { MenuItem } from "./menuItem";
 import { DropdownMenu } from "./dropdownMenu";
-import { bind } from "helpers";
 import { Collapse } from "react-ext";
 
 export interface NavbarProps {

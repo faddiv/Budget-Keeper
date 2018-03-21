@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Transition } from "react-transition-group";
 import * as classNames from "classnames";
-import { bind } from "helpers";
+import { bind } from "bind-decorator";
 
 export interface CollapseProps {
     open: boolean;

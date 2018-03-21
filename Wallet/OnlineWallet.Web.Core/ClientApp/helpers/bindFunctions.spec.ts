@@ -1,4 +1,4 @@
-import { bind } from "./bindFunctions";
+import { bind } from "bind-decorator";
 
 class Dummy {
 

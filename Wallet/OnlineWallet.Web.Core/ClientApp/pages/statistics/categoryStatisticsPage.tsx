@@ -3,8 +3,9 @@ import * as moment from "moment";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { bindActionCreators } from "redux";
-import { bind } from "helpers";
 import { NavLink, TabPane } from "react-ext";
+import { bind } from "bind-decorator";
+
 import { Layout } from "layout";
 import { AlertsActions } from "actions/alerts";
 import { CategoryStatisticsSummary, statisticsService, CategoryStatistics } from "walletApi";

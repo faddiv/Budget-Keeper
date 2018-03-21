@@ -2,11 +2,13 @@ import * as React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as classNames from "classnames";
+import { bind } from "bind-decorator";
+
 import * as WalletsActions from "actions/wallets";
 import { Wallet } from "walletApi";
 import { WalletsRow } from "./walletsRow";
 import { Layout } from "layout";
-import { bind, validate, ValidationConfig, ValidationState, validators } from "helpers";
+import { validate, ValidationConfig, ValidationState, validators } from "helpers";
 import { RootState } from "reducers";
 
 export interface WalletsProps {

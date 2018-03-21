@@ -1,7 +1,9 @@
 import * as React from "react";
 import * as classNames from "classnames";
+import { bind } from "bind-decorator";
+
 import { updateState } from "react-ext";
-import { validate, ValidationState, bind, toDateString, _ } from "helpers";
+import { validate, ValidationState, toDateString, _ } from "helpers";
 import { FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from "walletCommon";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionCheck } from "./directionCheck";

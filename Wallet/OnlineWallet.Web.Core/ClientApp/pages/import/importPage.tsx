@@ -1,12 +1,13 @@
 import * as React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { bind } from "bind-decorator";
 
 import { AlertsActions } from "actions/alerts";
 import { Layout } from "layout";
 import { updateState, NavLink, TabPane } from "react-ext";
 import { StockTable } from "./subComponents";
-import { bind, _, toDateString } from "helpers";
+import { _, toDateString } from "helpers";
 import { transactionService, importExportService, Wallet, ArticleModel } from "walletApi";
 import { RootState } from "reducers";
 import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "walletCommon";

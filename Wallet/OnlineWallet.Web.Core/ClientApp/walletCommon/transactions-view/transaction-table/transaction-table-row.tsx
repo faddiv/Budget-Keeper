@@ -1,8 +1,10 @@
 import * as React from "react";
 import * as classNames from "classnames";
+import { bind } from "bind-decorator";
+
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
-import { bind, noop } from "helpers";
+import { noop } from "helpers";
 import { updateState, isClickableClicked } from "react-ext";
 
 export interface TransactionTableRowProps {

@@ -1,10 +1,11 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import { bind } from "bind-decorator";
+
 import { Layout } from "layout";
 import { ArticleModel, articleService, Wallet, transactionService } from "walletApi";
-import { bind } from "helpers";
 import { updateState, Collapse, noAction } from "react-ext";
 import { getWalletNameById, TransactionViewModel, mapTransactionViewModel, getDirectionColoring, TransactionTable } from "walletCommon";
-import { connect } from "react-redux";
 import { RootState } from "reducers";
 
 interface OpenedArticles {

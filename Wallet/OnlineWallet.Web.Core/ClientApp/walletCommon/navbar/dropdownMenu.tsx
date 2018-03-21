@@ -1,5 +1,5 @@
 import * as React from "react";
-import { bind } from "helpers";
+import { bind } from "bind-decorator";
 import * as classNames from "classnames";
 import { findDOMNode } from "react-dom";
 import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from "react-router-dom";

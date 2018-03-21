@@ -2,11 +2,11 @@ import * as React from "react";
 import { bindActionCreators } from "redux";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
+import { bind } from "bind-decorator";
 
 import { AlertsActions } from "actions/alerts";
 import { AlertMessage } from "reducers/alerts/alertsModel";
 import { RootState } from "reducers";
-import { bind } from "helpers";
 
 export interface AlertListProps extends Partial<RouteComponentProps<void>> {
     alerts?: AlertMessage[];

@@ -1,10 +1,12 @@
 import * as React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { bind } from "bind-decorator";
+
 import { Wallet } from "walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel, ITransactionTableExtFunction } from "walletCommon";
-import { bind, _ } from "helpers";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { _ } from "helpers";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { RootState } from "reducers";
 

@@ -3,10 +3,11 @@ import * as moment from "moment";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { bind } from "bind-decorator";
 
 import { AlertsActions } from "actions/alerts";
 import { transactionService, Wallet, BalanceInfo, statisticsService } from "walletApi";
-import { bind, _ } from "helpers";
+import { _ } from "helpers";
 import { Layout } from "layout";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "walletCommon";
 import { MonthSelector, Balance } from "./subComponents";

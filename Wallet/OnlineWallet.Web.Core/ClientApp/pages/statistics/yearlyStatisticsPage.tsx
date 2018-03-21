@@ -3,8 +3,10 @@ import * as moment from "moment";
 import { RouteComponentProps } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { bind } from "bind-decorator";
+
 import { YearlyStatistics, statisticsService } from "walletApi";
-import { bind, formatInt } from "helpers";
+import { formatInt } from "helpers";
 import { Layout } from "layout";
 import { AlertsActions } from "actions/alerts";
 import { YearSelector } from "./subComponents/yearSelector";

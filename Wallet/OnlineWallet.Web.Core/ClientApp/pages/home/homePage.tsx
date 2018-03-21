@@ -1,13 +1,14 @@
 import * as React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { bind } from "bind-decorator";
 
 import { AlertsActions } from "actions/alerts";
 import { Wallet, transactionService } from "walletApi";
 import { Layout } from "layout";
 import { AddItemForm, SaveAllResult } from "./subComponents";
 import { RootState } from "reducers";
-import { _, bind } from "helpers";
+import { _ } from "helpers";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransaction } from "walletCommon";
 
 export interface HomeProps {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as classNames from "classnames";
-import { bind } from "helpers";
+import { bind } from "bind-decorator";
 
 export interface AutocompleteModel {
     name?: string;
