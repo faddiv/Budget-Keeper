@@ -107,7 +107,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         const { items } = this.state;
         return (
             <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
-                <AddItemForm addLine={this.addLine} saveAll={this.saveAll} wallets={wallets} />
+                <AddItemForm addLine={this.addLine} saveAll={this.saveAll} wallets={wallets} items={items} />
                 <TransactionTable
                     items={items} wallets={wallets}
                     deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as classNames from "classnames";
 import { updateState } from "react-ext";
-import { validate, ValidationState, bind, toDateString } from "helpers";
+import { validate, ValidationState, bind, toDateString, _ } from "helpers";
 import { FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from "walletCommon";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionCheck } from "./directionCheck";
@@ -10,6 +10,7 @@ export interface AddItemFormProps {
     addLine: (model: TransactionViewModel) => void;
     saveAll: () => Promise<SaveAllResult>;
     wallets: Wallet[];
+    items: TransactionViewModel[];
 }
 
 export interface AddItemFormState extends TransactionViewModel {
@@ -106,11 +107,12 @@ export class AddItemForm extends React.Component<AddItemFormProps, AddItemFormSt
 
     @bind
     nameSelected(item: ArticleModel) {
+        const otherElement = _.findLast(this.props.items, i => i.name === item.name);
         this.setState({
-            name: item.name,
-            category: item.category,
-            price: item.lastPrice.toString(10),
-            walletId: item.lastWallet
+            name: (otherElement && otherElement.name) ||  item.name,
+            category: (otherElement && otherElement.category) || item.category,
+            price: (otherElement && otherElement.price) || item.lastPrice.toString(10),
+            walletId: (otherElement && otherElement.walletId) || item.lastWallet
         }, this.validate);
     }
 
