@@ -1,19 +1,59 @@
 {
     "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Debug Project",
+            "configurations": [
+                "Client Debug",
+                "Server Debug"
+            ],
+        }
+    ],
     "configurations": [
         {
-            "type": "chrome",
+            "name": "Server Debug",
+            "type": "coreclr",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:4200",
-            "webRoot": "${workspaceRoot}"
+            "preLaunchTask": "dotnet: build",
+            "program": "${workspaceRoot}/bin/Debug/netcoreapp2.0/OnlineWallet.Web.Core.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": false,
+                //"args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start --launch-profile IIS Express" //"args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                },
+                "applicationUrl": "http://localhost:56491/",
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceRoot}/Views"
+            },
+            "logging": {
+                "programOutput": true,
+                "engineLogging": true
+            }
         },
         {
             "type": "chrome",
-            "request": "attach",
-            "name": "Attach to Chrome",
+            "request": "launch",
+            "name": "Client Debug",
             "port": 9222,
-            "webRoot": "${workspaceRoot}"
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceRoot}",
+            "sourceMaps": true,
+            "preLaunchTask": "npm: vsstart"
         }
     ]
 }

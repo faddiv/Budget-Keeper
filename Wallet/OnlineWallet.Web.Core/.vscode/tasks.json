@@ -1,0 +1,64 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "vsstart",
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": "^([^\\\\s].*)\\\\((\\\\d+,\\\\d+)\\\\):\\\\s*(.*)$",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "webpack: Compiling\\.\\.\\.",
+                        "endsPattern": "webpack: Compiled successfully\\."
+                    }
+                }
+            ],
+            "isBackground": true
+        },
+        {
+            "type": "shell",
+            "label": "dotnet: run",
+            "command": "dotnet",
+            "group": "build",
+            "args": [
+                "run"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": "^([^\\\\s].*)\\\\((\\\\d+,\\\\d+)\\\\):\\\\s*(.*)$",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "Using launch settings from",
+                        "endsPattern": "Application started\\. Press Ctrl\\+C to shut down\\."
+                    }
+                }
+            ]
+        },
+        {
+            "type": "shell",
+            "label": "dotnet: build",
+            "command": "dotnet",
+            "group": "build",
+            "args": [
+                "build"
+            ]
+        }
+    ],
+    "promptOnClose": true
+}

@@ -29,11 +29,7 @@ module.exports = function (env) {
                  */
                 watchContentBase: true,
                 port: 4200,
-                historyApiFallback: true,
-                /**
-                 * default true, opens the root url.
-                 */
-                open: true
+                historyApiFallback: true
             }
         })
 
