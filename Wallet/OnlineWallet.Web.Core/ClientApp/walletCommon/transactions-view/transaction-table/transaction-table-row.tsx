@@ -5,7 +5,7 @@ import { bind } from "bind-decorator";
 import { Wallet, ArticleModel, CategoryModel } from "walletApi";
 import { DirectionIcon, SaveCancel, EditDelete, ITransactionTableExtFunction, WalletSelector, NameInput, CategoryInput, TransactionViewModel, nextDirection, getWalletNameById } from "walletCommon";
 import { noop } from "helpers";
-import { updateState, isClickableClicked } from "react-ext";
+import { updateState, isClickableClicked, preventDefault } from "react-ext";
 
 export interface TransactionTableRowProps {
     item: TransactionViewModel;
@@ -166,7 +166,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRowProp
                 <td>
                     <NameInput value={item.name} className="form-control" onSelect={this.nameSelected} />
                 </td>
-                <td onClick={this.changeDirection}>
+                <td onClick={this.changeDirection} onMouseDown={preventDefault}>
                     <DirectionIcon direction={item.direction} />
                 </td>
                 <td>

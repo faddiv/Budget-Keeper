@@ -31,3 +31,7 @@ export function isClickableClicked(event: React.MouseEvent<HTMLElement>): boolea
     }
     return false;
 }
+
+export function preventDefault(event: React.MouseEvent<HTMLElement>) {
+    event.preventDefault();
+}
