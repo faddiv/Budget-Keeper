@@ -18,7 +18,7 @@ export interface TransactionSummaryState {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-@withRouter
+@(withRouter as any)
 export class TransactionSummary extends React.Component<TransactionSummaryProps, TransactionSummaryState> {
 
     private navListener: () => void;
