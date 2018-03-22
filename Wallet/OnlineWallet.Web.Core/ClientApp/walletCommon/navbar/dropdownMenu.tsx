@@ -14,7 +14,7 @@ export interface DropdownMenuState {
     active: boolean;
 }
 
-@(withRouter as any)
+@withRouter
 export class DropdownMenu extends React.Component<DropdownMenuProps, DropdownMenuState> {
 
     constructor(props) {

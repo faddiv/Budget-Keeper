@@ -111,7 +111,7 @@ export class AddItemForm extends React.Component<AddItemFormProps, AddItemFormSt
     nameSelected(item: ArticleModel) {
         const otherElement = _.findLast(this.props.items, i => i.name === item.name);
         this.setState({
-            name: (otherElement && otherElement.name) ||  item.name,
+            name: (otherElement && otherElement.name) || item.name,
             category: (otherElement && otherElement.category) || item.category,
             price: (otherElement && otherElement.price) || item.lastPrice.toString(10),
             walletId: (otherElement && otherElement.walletId) || item.lastWallet

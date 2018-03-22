@@ -17,7 +17,7 @@ export interface AlertListState {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-@(withRouter as any)
+@withRouter
 export class AlertList extends React.Component<AlertListProps, AlertListState> {
 
     private navListener: () => void;
