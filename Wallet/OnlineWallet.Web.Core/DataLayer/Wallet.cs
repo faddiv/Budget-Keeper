@@ -8,7 +8,7 @@ namespace OnlineWallet.Web.DataLayer
 
         [Key] public int MoneyWalletId { get; set; }
 
-        [Required] public string Name { get; set; }
+        [Required] [StringLength(200)] public string Name { get; set; }
 
         #endregion
     }
