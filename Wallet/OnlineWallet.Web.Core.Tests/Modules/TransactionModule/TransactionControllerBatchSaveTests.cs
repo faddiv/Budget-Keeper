@@ -17,10 +17,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     [Collection("Database collection")]
     public class TransactionControllerBatchSaveTests : TransactionControllerTests
     {
+        private const string firstArticle = "first";
+        private const string secondArticle = "second";
+        private const string exampleCategory = "cat";
         #region Fields
 
         private readonly Transaction _transaction1;
         private readonly Transaction _transaction2;
+        private readonly Article _article1;
+        private readonly Article _article2;
 
         #endregion
 
@@ -30,8 +35,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             _transaction1 = new Transaction
             {
-                Name = "first",
-                Category = "cat",
+                Name = firstArticle,
+                Category = exampleCategory,
                 Comment = "comment",
                 CreatedAt = DateTime.Parse("2017-09-16"),
                 Direction = MoneyDirection.Expense,
@@ -40,8 +45,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             };
             _transaction2 = new Transaction
             {
-                Name = "second",
-                Category = "cat",
+                Name = secondArticle,
+                Category = exampleCategory,
                 Comment = "comment",
                 CreatedAt = DateTime.Parse("2017-09-16"),
                 Direction = MoneyDirection.Expense,
@@ -49,6 +54,26 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 WalletId = Fixture.WalletBankAccount.MoneyWalletId
             };
             DbSet.AddRange(_transaction1, _transaction2);
+            _article1 = new Article
+            {
+                Name = firstArticle,
+                Category = exampleCategory,
+                LastPrice = 101,
+                LastUpdate = DateTime.Parse("2017-09-16"),
+                LastWalletId = Fixture.WalletCash.MoneyWalletId,
+                Occurence = 1
+            };
+            Fixture.DbContext.Article.Add(_article1);
+            _article2 = new Article
+            {
+                Name = secondArticle,
+                Category = exampleCategory,
+                LastPrice = 102,
+                LastUpdate = DateTime.Parse("2017-09-16"),
+                LastWalletId = Fixture.WalletBankAccount.MoneyWalletId,
+                Occurence = 1
+            };
+            Fixture.DbContext.Article.Add(_article2);
             Fixture.DbContext.SaveChanges();
         }
 
@@ -56,8 +81,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #region  Public Methods
 
-        [Fact(DisplayName = "BatchSave saves new Transactions")]
-        public async Task BatchSave_saves_new_Transactions()
+        [Fact(DisplayName = nameof(Saves_new_Transactions))]
+        public async Task Saves_new_Transactions()
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
@@ -68,7 +93,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     new Transaction
                     {
                     Name = "third",
-                    Category = "cat",
+                    Category = exampleCategory,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -78,7 +103,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 new Transaction
                 {
                     Name = "fourth",
-                    Category = "cat",
+                    Category = exampleCategory,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -100,10 +125,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().OnlyContain(e => e.TransactionId > 0, "all element got an id");
         }
 
-
-
-        [Fact(DisplayName = "BatchSave updates existing Transactions")]
-        public async Task BatchSave_updates_existing_Transactions()
+        [Fact(DisplayName = nameof(Updates_existing_Transactions))]
+        public async Task Updates_existing_Transactions()
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
@@ -115,7 +138,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     TransactionId = _transaction1.TransactionId,
                     Name = "third",
-                    Category = "cat",
+                    Category = exampleCategory,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -126,7 +149,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     TransactionId = _transaction2.TransactionId,
                     Name = "fourth",
-                    Category = "cat",
+                    Category = exampleCategory,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -144,8 +167,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             DbSet.Should().Contain(e => e.Name == "fourth");
         }
 
-        [Fact(DisplayName = "BatchSave only saves date not time")]
-        public async Task BatchSave_only_saves_date_not_time()
+        [Fact(DisplayName = nameof(Only_saves_date_not_time))]
+        public async Task Only_saves_date_not_time()
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
@@ -156,7 +179,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 new Transaction
                 {
                     Name = "third",
-                    Category = "cat",
+                    Category = exampleCategory,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16 13:12"),
                     Direction = MoneyDirection.Expense,
@@ -176,8 +199,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             entity.CreatedAt.Should().Be(dateTime, "it removes time part in the database");
         }
 
-        [Fact(DisplayName = "BatchSave can delete transactions by id")]
-        public async Task BatchSave_can_delete_transactions_by_id()
+        [Fact(DisplayName = nameof(Can_delete_transactions_by_id))]
+        public async Task Can_delete_transactions_by_id()
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
@@ -194,8 +217,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             DbSet.Should().NotContain(e => e.TransactionId == _transaction1.TransactionId, "it is deleted");
         }
 
-        [Fact(DisplayName = "BatchSave_returns_BadRequest_if_input_invalid")]
-        public async Task BatchSave_returns_BadRequest_if_input_invalid()
+        [Fact(DisplayName = nameof(Returns_BadRequest_if_input_invalid))]
+        public async Task Returns_BadRequest_if_input_invalid()
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
@@ -210,6 +233,179 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
             ControllerTestHelpers.ResultShouldBeBadRequest(actionResult);
 
+        }
+
+        [Fact(DisplayName = nameof(On_updating_transaction_updates_article_table))]
+        public async Task On_updating_transaction_updates_article_table()
+        {
+            //arrange
+            var newCategory = "cat2";
+            var controller = Fixture.GetService<TransactionController>();
+            DateTime newDate = DateTime.Parse("2017-10-17");
+            var transactions = new TransactionOperationBatch
+            {
+                Save = new List<Transaction>
+                {
+                    new Transaction
+                    {
+                        TransactionId = _transaction1.TransactionId,
+                        Name = firstArticle,
+                        Category = newCategory,
+                        Comment = "comment",
+                        CreatedAt = newDate,
+                        Direction = MoneyDirection.Expense,
+                        Value = 105,
+                        WalletId = Fixture.WalletBankAccount.MoneyWalletId
+                    }
+                }
+            };
+            //act
+            await controller.BatchSave(transactions, CancellationToken.None);
+
+            //assert
+            var articles = Fixture.DbContext.Article.ToList();
+
+            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articleEntity.Should().NotBeNull();
+            articleEntity.Category.Should().Be(newCategory);
+            articleEntity.LastPrice.Should().Be(105);
+            articleEntity.LastUpdate.Should().Be(newDate);
+            articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
+            articleEntity.Occurence.Should().Be(1);
+        }
+
+        [Fact(DisplayName = nameof(On_new_transaction_with_unknown_article_updates_article_table))]
+        public async Task On_new_transaction_with_unknown_article_updates_article_table()
+        {
+            //arrange
+            var newCategory = "cat2";
+            var controller = Fixture.GetService<TransactionController>();
+            DateTime newDate = DateTime.Parse("2017-10-17");
+            const string newArticleName = "third";
+            var transactions = new TransactionOperationBatch
+{
+                Save = new List<Transaction>
+                {
+                    new Transaction
+                    {
+                        Name = newArticleName,
+                        Category = newCategory,
+                        Comment = "comment",
+                        CreatedAt = newDate,
+                        Direction = MoneyDirection.Expense,
+                        Value = 105,
+                        WalletId = Fixture.WalletBankAccount.MoneyWalletId
+                    }
+                }
+            };
+            //act
+            await controller.BatchSave(transactions, CancellationToken.None);
+
+            //assert
+            var articles = Fixture.DbContext.Article.ToList();
+
+            articles.Where(e => e.Name == newArticleName).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == newArticleName);
+            articleEntity.Should().NotBeNull();
+            articleEntity.Category.Should().Be(newCategory);
+            articleEntity.LastPrice.Should().Be(105);
+            articleEntity.LastUpdate.Should().Be(newDate);
+            articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
+            articleEntity.Occurence.Should().Be(1);
+        }
+
+        [Fact(DisplayName = nameof(On_new_transaction_with_known_article_updates_article_table))]
+        public async Task On_new_transaction_with_known_article_updates_article_table()
+        {
+            //arrange
+            var newCategory = "cat2";
+            var controller = Fixture.GetService<TransactionController>();
+            DateTime newDate = DateTime.Parse("2017-10-17");
+            var transactions = new TransactionOperationBatch
+            {
+                Save = new List<Transaction>
+                {
+                    new Transaction
+                    {
+                        Name = firstArticle,
+                        Category = newCategory,
+                        Comment = "comment",
+                        CreatedAt = newDate,
+                        Direction = MoneyDirection.Expense,
+                        Value = 105,
+                        WalletId = Fixture.WalletBankAccount.MoneyWalletId
+                    }
+                }
+            };
+            //act
+            var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
+
+            //assert
+            var articles = Fixture.DbContext.Article.ToList();
+
+            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articleEntity.Should().NotBeNull();
+            articleEntity.Category.Should().Be(newCategory);
+            articleEntity.LastPrice.Should().Be(105);
+            articleEntity.LastUpdate.Should().Be(newDate);
+            articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
+            articleEntity.Occurence.Should().Be(2);
+        }
+
+        [Fact(DisplayName = nameof(On_delete_transaction_in_article_occurence_reduced))]
+        public async Task On_delete_transaction_in_article_occurence_reduced()
+        {
+            //arrange
+            var controller = Fixture.GetService<TransactionController>();
+            var articleName = _transaction1.Name;
+            {
+                // Prepare database.
+                var transaction3 = new TransactionBuilder()
+                .WithName(firstArticle)
+                .Build();
+                Fixture.DbContext.Transactions.Add(transaction3);
+                _article1.Occurence = 2;
+                Fixture.DbContext.SaveChanges();
+            }
+            var transactions = new TransactionOperationBatch
+            {
+                Delete = new List<long> { _transaction1.TransactionId }
+            };
+            //act
+            await controller.BatchSave(transactions, CancellationToken.None);
+
+            //assert
+            var articles = Fixture.DbContext.Article.ToList();
+
+            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articleEntity.Should().NotBeNull();
+            articleEntity.Occurence.Should().Be(1);
+        }
+
+
+        [Fact(DisplayName = nameof(On_delete_last_transaction_in_article_occurence_become_zero))]
+        public async Task On_delete_last_transaction_in_article_occurence_become_zero()
+        {
+            //arrange
+            var controller = Fixture.GetService<TransactionController>();
+            var articleName = _transaction1.Name;
+            var transactions = new TransactionOperationBatch
+            {
+                Delete = new List<long> { _transaction1.TransactionId }
+            };
+            //act
+            await controller.BatchSave(transactions, CancellationToken.None);
+
+            //assert
+            var articles = Fixture.DbContext.Article.ToList();
+
+            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articleEntity.Should().NotBeNull();
+            articleEntity.Occurence.Should().Be(0);
         }
 
         #endregion

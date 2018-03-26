@@ -62,6 +62,7 @@ namespace OnlineWallet.Web.TestHelpers
         public void Cleanup()
         {
             DbContext.RemoveRange(DbContext.Transactions);
+            DbContext.RemoveRange(DbContext.Article);
             DbContext.RemoveRange(DbContext.Wallets.Skip(2));
             DbContext.SaveChanges();
             Services.Dispose();

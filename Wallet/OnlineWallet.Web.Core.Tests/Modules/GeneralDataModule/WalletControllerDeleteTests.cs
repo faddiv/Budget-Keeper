@@ -17,8 +17,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
         }
 
-        [Fact(DisplayName = nameof(Delete_deletes_line_if_possible))]
-        public async Task Delete_deletes_line_if_possible()
+        [Fact(DisplayName = nameof(Deletes_line_if_possible))]
+        public async Task Deletes_line_if_possible()
         {
             //Act
             var result = await Controller.Delete(TestWallet.MoneyWalletId, CancellationToken.None);
@@ -29,8 +29,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
         }
 
-        [Fact(DisplayName = nameof(Delete_returns_NotFound_if_object_doesnt_exists))]
-        public async Task Delete_returns_NotFound_if_object_doesnt_exists()
+        [Fact(DisplayName = nameof(Returns_NotFound_if_object_doesnt_exists))]
+        public async Task Returns_NotFound_if_object_doesnt_exists()
         {
             //Act
             var result = await Controller.Delete(TestWallet.MoneyWalletId + 100, CancellationToken.None);
@@ -40,8 +40,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
         }
 
-        [Fact(DisplayName = nameof(Delete_returns_BadRequest_if_already_used))]
-        public async Task Delete_returns_BadRequest_if_already_used()
+        [Fact(DisplayName = nameof(Returns_BadRequest_if_already_used))]
+        public async Task Returns_BadRequest_if_already_used()
         {
             //Arrange
             Fixture.DbContext.Add(new TransactionBuilder()
