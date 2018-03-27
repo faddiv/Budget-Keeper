@@ -8,6 +8,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Models
 {
     public interface IBatchSaveEventHandler
     {
-        void Execute(BatchSaveEventArgs args);
+        void Execute(TransactionEventArgs args);
     }
 }

@@ -45,7 +45,7 @@ namespace OnlineWallet.Web
         public static void AddWalletServices(IServiceCollection services)
         {
             services.AddScoped<ITransactionQueries, TransactionQueries>();
-            services.AddScoped<IBatchSaveCommand, BatchSaveCommand>();
+            services.AddScoped<ITransactionCommand, TransactionCommand>();
             services.AddScoped<IWalletQueries, WalletQueries>();
             services.AddScoped<IWalletCommands, WalletCommands>();
             services.AddScoped<IArticleQueries, ArticleQueries>();

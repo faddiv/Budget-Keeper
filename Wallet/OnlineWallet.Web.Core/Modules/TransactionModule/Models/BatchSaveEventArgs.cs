@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Models
 {
-    public class BatchSaveEventArgs
+    public class TransactionEventArgs
     {
-        public BatchSaveEventArgs(
+        public TransactionEventArgs(
             Transaction oldTransaction,
             Transaction newTransaction,
             BatchSaveOperationType operationType)

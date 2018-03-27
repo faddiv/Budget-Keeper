@@ -6,7 +6,7 @@ using OnlineWallet.Web.Modules.TransactionModule.Models;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
-    public class BatchSaveCommand : IBatchSaveCommand
+    public class TransactionCommand : ITransactionCommand
     {
         #region Fields
 
@@ -16,12 +16,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         #region  Constructors
 
-        public BatchSaveCommand(IWalletDbContext db)
+        public TransactionCommand(IWalletDbContext db, ITransactionEvent events)
         {
             _db = db;
+            Events = events;
         }
 
         #endregion
+
+        public ITransactionEvent Events { get; }
 
         #region  Public Methods
 
@@ -63,7 +66,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
     }
 
 
-    public interface IBatchSaveCommand
+    public interface ITransactionCommand
     {
         #region  Public Methods
 
