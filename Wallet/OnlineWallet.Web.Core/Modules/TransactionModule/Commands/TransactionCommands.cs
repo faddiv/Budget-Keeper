@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         #region  Constructors
 
-        public TransactionCommand(IWalletDbContext db, ITransactionEvent events)
+        public TransactionCommand(IWalletDbContext db, IReadOnlyCollection<ITransactionEvent> events)
         {
             _db = db;
             Events = events;
@@ -24,7 +25,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         #endregion
 
-        public ITransactionEvent Events { get; }
+        public IReadOnlyCollection<ITransactionEvent> Events { get; }
 
         #region  Public Methods
 
