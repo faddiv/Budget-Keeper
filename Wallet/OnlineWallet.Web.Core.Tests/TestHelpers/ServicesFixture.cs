@@ -10,17 +10,15 @@ namespace OnlineWallet.Web.TestHelpers
 {
     public class ServicesFixture : IDisposable
     {
-        private readonly DatabaseFixture _fixture;
-        public WalletDbContext DbContext => _fixture.DbContext;
-        public Wallet WalletCash => _fixture.WalletCash;
-        public Wallet WalletBankAccount => _fixture.WalletBankAccount;
-        private readonly IServiceScope _services;
-        private readonly IDisposable _disposable;
+        #region Fields
 
-        internal T GetService<T>()
-        {
-            return (T)_services.ServiceProvider.GetRequiredService(typeof(T));
-        }
+        private readonly IDisposable _disposable;
+        private readonly DatabaseFixture _fixture;
+        private readonly IServiceScope _services;
+
+        #endregion
+
+        #region  Constructors
 
         public ServicesFixture(DatabaseFixture fixture, Action<ServiceCollection> setup = null)
         {
@@ -28,10 +26,12 @@ namespace OnlineWallet.Web.TestHelpers
             var services = new ServiceCollection();
             services.AddSingleton<IWalletDbContext>(_fixture.DbContext);
             Startup.AddWalletServices(services);
-            foreach (var controller in typeof(Startup).Assembly.GetTypes().Where(e => typeof(ControllerBase).IsAssignableFrom(e)))
+            foreach (var controller in typeof(Startup).Assembly.GetTypes()
+                .Where(e => typeof(ControllerBase).IsAssignableFrom(e)))
             {
                 services.AddScoped(controller);
             }
+
             setup?.Invoke(services);
             var containerBuilder = new Autofac.ContainerBuilder();
             containerBuilder.Populate(services);
@@ -40,16 +40,30 @@ namespace OnlineWallet.Web.TestHelpers
             var rootServices = new AutofacServiceProvider(container);
             _services = rootServices.CreateScope();
         }
-        
+
+        #endregion
+
+        #region Properties
+
+        public WalletDbContext DbContext => _fixture.DbContext;
+        public Wallet WalletBankAccount => _fixture.WalletBankAccount;
+        public Wallet WalletCash => _fixture.WalletCash;
+
+        #endregion
+
+        #region  Public Methods
+
+        public void Cleanup()
+        {
+            _fixture.Cleanup();
+        }
+
+        public TEntity Clone<TEntity>(TEntity original) => _fixture.Clone(original);
+
         public void Dispose()
         {
             _fixture.Dispose();
             _disposable.Dispose();
-        }
-        
-        public void Cleanup()
-        {
-            _fixture.Cleanup();
         }
 
         public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
@@ -57,6 +71,15 @@ namespace OnlineWallet.Web.TestHelpers
             _fixture.PrepareDataWith(rules, size);
         }
 
-        public TEntity Clone<TEntity>(TEntity original) => _fixture.Clone(original);
+        #endregion
+
+        #region  Nonpublic Methods
+
+        internal T GetService<T>()
+        {
+            return (T) _services.ServiceProvider.GetRequiredService(typeof(T));
+        }
+
+        #endregion
     }
 }

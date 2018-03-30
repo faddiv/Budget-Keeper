@@ -14,10 +14,8 @@ namespace OnlineWallet.Web.TestHelpers
 {
     public class DatabaseFixture : IDisposable
     {
-        public WalletDbContext DbContext { get; set; }
-        public Wallet WalletCash { get; set; }
-        public Wallet WalletBankAccount { get; set; }
-        
+        #region  Constructors
+
         public DatabaseFixture()
         {
             var optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
@@ -27,12 +25,12 @@ namespace OnlineWallet.Web.TestHelpers
             {
                 new ConsoleLoggerProvider(new ConsoleLoggerSettings
                 {
-                    IncludeScopes = true,
+                    IncludeScopes = true
                 })
             }));
             DbContext = new WalletDbContext(optionsBuilder.Options);
-            WalletCash = new Wallet { Name = MoneySource.Cash.ToString() };
-            WalletBankAccount = new Wallet { Name = MoneySource.BankAccount.ToString() };
+            WalletCash = new Wallet {Name = MoneySource.Cash.ToString()};
+            WalletBankAccount = new Wallet {Name = MoneySource.BankAccount.ToString()};
             DbContext.Wallets.AddRange(
                 WalletCash,
                 WalletBankAccount);
@@ -44,6 +42,18 @@ namespace OnlineWallet.Web.TestHelpers
             });
         }
 
+        #endregion
+
+        #region Properties
+
+        public WalletDbContext DbContext { get; set; }
+        public Wallet WalletBankAccount { get; set; }
+        public Wallet WalletCash { get; set; }
+
+        #endregion
+
+        #region  Public Methods
+
         public void Cleanup()
         {
             DbContext.RemoveRange(DbContext.Transactions);
@@ -52,40 +62,44 @@ namespace OnlineWallet.Web.TestHelpers
             DbContext.SaveChanges();
         }
 
-        public void Dispose()
-        {
-            DbContext.Dispose();
-        }
-
         public TEntity Clone<TEntity>(TEntity original)
         {
             return AutoMapper.Mapper.Map<TEntity>(original);
-        }
-
-        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
-        {
-            var transactions = rules(TransactionBuilder.CreateListOfSize(size)
-                .All().WithName("Nothing").WithCategory(null))
-                .BuildList();
-            DbContext.Transactions.AddRange(transactions);
-            DbContext.SaveChanges();
         }
 
         public ServicesFixture CreateServiceFixture(Action<ServiceCollection> setup = null)
         {
             return new ServicesFixture(this, setup);
         }
+
         public ServicesFixture CreateServiceFixture(params Mock[] mocks)
         {
             return new ServicesFixture(this, s =>
             {
                 foreach (var mock in mocks)
                 {
-                    var serviceType = mock.Object.GetType().GetInterfaces().First(e => !e.Name.StartsWith("IMocked") && e.Name != "IProxyTargetAccessor");
+                    var serviceType = mock.Object.GetType().GetInterfaces().First(e =>
+                        !e.Name.StartsWith("IMocked") && e.Name != "IProxyTargetAccessor");
                     s.RemoveAll(e => e.ServiceType == serviceType);
                     s.AddSingleton(serviceType, mock.Object);
                 }
             });
         }
+
+        public void Dispose()
+        {
+            DbContext.Dispose();
+        }
+
+        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
+        {
+            var transactions = rules(TransactionBuilder.CreateListOfSize(size)
+                    .All().WithName("Nothing").WithCategory(null))
+                .BuildList();
+            DbContext.Transactions.AddRange(transactions);
+            DbContext.SaveChanges();
+        }
+
+        #endregion
     }
 }
