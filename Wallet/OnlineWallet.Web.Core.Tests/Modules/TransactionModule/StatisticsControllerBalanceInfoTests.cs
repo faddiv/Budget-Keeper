@@ -17,7 +17,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         #region Fields
 
-        private readonly DatabaseFixture _fixture;
+        private readonly ServicesFixture _fixture;
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         public StatisticsControllerBalanceInfoTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture.CreateServiceFixture();
             BuildDataWith(MoneyDirection.Expense, 0);
             BuildDataWith(MoneyDirection.Plan, -15);
             BuildDataWith(MoneyDirection.Income, 25);

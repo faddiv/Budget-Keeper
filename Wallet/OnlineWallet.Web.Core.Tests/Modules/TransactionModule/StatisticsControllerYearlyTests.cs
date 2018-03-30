@@ -17,17 +17,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         #region Fields
 
-        private readonly DatabaseFixture _fixture;
-        private readonly ITestOutputHelper output;
+        private readonly ServicesFixture _fixture;
 
         #endregion
 
         #region  Constructors
 
-        public StatisticsControllerYearlyTests(DatabaseFixture fixture, ITestOutputHelper output)
+        public StatisticsControllerYearlyTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
-            this.output = output;
+            _fixture = fixture.CreateServiceFixture();
         }
 
         #endregion

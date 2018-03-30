@@ -14,7 +14,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     {
         #region Fields
 
-        private readonly DatabaseFixture _fixture;
+        private readonly ServicesFixture _fixture;
         private readonly CategoryController _controller;
 
         #endregion
@@ -23,7 +23,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
         public CategoryControllerTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<CategoryController>();
         }
 

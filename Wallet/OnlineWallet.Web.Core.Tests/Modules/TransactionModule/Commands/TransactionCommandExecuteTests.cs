@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
@@ -16,7 +18,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     [Trait(nameof(TransactionCommand), nameof(TransactionCommand.Execute))]
     [Collection("Database collection")]
-    public class TransactionCommandTests
+    public class TransactionCommandExecuteTests : IDisposable
     {
         private readonly DatabaseFixture _fixture;
         private Transaction _transaction1;
@@ -24,10 +26,16 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         private const string firstArticle = "first";
         private const string secondArticle = "second";
         private const string exampleCategory = "cat";
+        private readonly Mock<ITransactionEvent> _mockEvent;
+        private readonly ServicesFixture _services;
+        private readonly ITransactionCommand _command;
 
-        public TransactionCommandTests(DatabaseFixture fixture)
+        public TransactionCommandExecuteTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
+            _mockEvent = new Mock<ITransactionEvent>();
+            _services = _fixture.CreateServiceFixture(_mockEvent);
+            _command = _services.GetService<ITransactionCommand>();
             _transaction1 = new Transaction
             {
                 Name = firstArticle,
@@ -56,10 +64,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         public async Task ShouldInvokeEventsOnUpdate()
         {
             //Arrange
-            var mockEvent = new Moq.Mock<ITransactionEvent>();
-            var events = new List<ITransactionEvent> {mockEvent.Object};
-            var command = new TransactionCommand(_fixture.DbContext, events);
-            //Act
+            
+
             var modifiedTransaction = AutoMapper.Mapper.Map<Transaction>(_transaction1);
             var batch = new TransactionOperationBatch
             {
@@ -69,12 +75,19 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
                 },
                 Delete = new List<long>()
             };
-            await command.Execute(batch, CancellationToken.None);
+
+            //Act
+            await _command.Execute(batch, CancellationToken.None);
             //Assert
-            mockEvent.Verify(e => e.Execute(It.Is<TransactionEventArgs>(args => 
-                object.ReferenceEquals(args.OldTransaction, _transaction1) &&
-                object.ReferenceEquals(args.NewTransaction, modifiedTransaction) &&
+            _mockEvent.Verify(e => e.Execute(It.Is<TransactionEventArgs>(args => 
+                ReferenceEquals(args.OldTransaction, _transaction1) &&
+                ReferenceEquals(args.NewTransaction, modifiedTransaction) &&
                 args.OperationType ==BatchSaveOperationType.Update)));
+        }
+
+        public void Dispose()
+        {
+            _services.Cleanup();
         }
     }
 }

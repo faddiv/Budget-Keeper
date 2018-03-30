@@ -12,12 +12,12 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Collection("Database collection")]
     public class ArticleControllerGetByTests : IDisposable
     {
-        private readonly DatabaseFixture _fixture;
+        private readonly ServicesFixture _fixture;
         private readonly ArticleController _controller;
 
         public ArticleControllerGetByTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<ArticleController>();
         }
 

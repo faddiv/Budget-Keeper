@@ -22,7 +22,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         private const string ImportCsvFilePath = "expectedExpenses.csv";
 
-        private readonly DatabaseFixture _fixture;
+        private readonly ServicesFixture _fixture;
 
         #endregion
 
@@ -30,7 +30,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         public ImportControllerTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture.CreateServiceFixture();
         }
 
         #endregion

@@ -11,14 +11,14 @@ namespace OnlineWallet.Web.Common
     [Collection("Database collection")]
     public class CrudControllerTests<TEntity> : IDisposable where TEntity : class
     {
-        protected DatabaseFixture Fixture { get; }
+        protected ServicesFixture Fixture { get; }
 
         protected DbSet<TEntity> DbSet => Fixture?.DbContext.Set<TEntity>();
 
 
         public CrudControllerTests(DatabaseFixture fixture)
         {
-            Fixture = fixture;
+            Fixture = fixture.CreateServiceFixture();
         }
 
         protected void ResultShouldBeOk(ActionResult result, HttpStatusCode statusCode)

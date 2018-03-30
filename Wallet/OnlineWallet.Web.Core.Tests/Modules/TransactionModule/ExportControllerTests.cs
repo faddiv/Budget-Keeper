@@ -15,12 +15,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     [Collection("Database collection")]
     public class ExportControllerTests : IDisposable
     {
-        private readonly DatabaseFixture _fixture;
+        private readonly ServicesFixture _fixture;
         private readonly ExportController _controller;
 
         public ExportControllerTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture.CreateServiceFixture();
             var dbContext = fixture.DbContext;
 
             #region Test data

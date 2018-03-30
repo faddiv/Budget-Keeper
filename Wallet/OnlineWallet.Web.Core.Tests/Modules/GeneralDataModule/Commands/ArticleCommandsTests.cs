@@ -4,16 +4,16 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 {
-    [Trait(nameof(ArticleController), nameof(ArticleController.GetBy))]
+    //[Trait(nameof(ArticleCommands), nameof(ArticleCommands.))]
     [Collection("Database collection")]
-    public class ArticleControllerGetByTests : IDisposable
+    public class ArticleCommandsTests : IDisposable
     {
-        private readonly DatabaseFixture _fixture;
+        private readonly ServicesFixture _fixture;
         private readonly IArticleCommands _articleCommands;
 
-        public ArticleControllerGetByTests(DatabaseFixture fixture)
+        public ArticleCommandsTests(DatabaseFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture.CreateServiceFixture();
             _articleCommands = _fixture.GetService<IArticleCommands>();
         }
 
