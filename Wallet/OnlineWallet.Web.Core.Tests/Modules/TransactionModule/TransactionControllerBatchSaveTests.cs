@@ -17,9 +17,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     [Collection("Database collection")]
     public class TransactionControllerBatchSaveTests : TransactionControllerTests
     {
-        private const string firstArticle = "first";
-        private const string secondArticle = "second";
-        private const string exampleCategory = "cat";
+        private const string FirstArticleName = "first";
+        private const string SecondArticleName = "second";
+        private const string ExampleCategoryName = "cat";
         #region Fields
 
         private readonly Transaction _transaction1;
@@ -35,8 +35,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             _transaction1 = new Transaction
             {
-                Name = firstArticle,
-                Category = exampleCategory,
+                Name = FirstArticleName,
+                Category = ExampleCategoryName,
                 Comment = "comment",
                 CreatedAt = DateTime.Parse("2017-09-16"),
                 Direction = MoneyDirection.Expense,
@@ -45,8 +45,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             };
             _transaction2 = new Transaction
             {
-                Name = secondArticle,
-                Category = exampleCategory,
+                Name = SecondArticleName,
+                Category = ExampleCategoryName,
                 Comment = "comment",
                 CreatedAt = DateTime.Parse("2017-09-16"),
                 Direction = MoneyDirection.Expense,
@@ -56,8 +56,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             DbSet.AddRange(_transaction1, _transaction2);
             _article1 = new Article
             {
-                Name = firstArticle,
-                Category = exampleCategory,
+                Name = FirstArticleName,
+                Category = ExampleCategoryName,
                 LastPrice = 101,
                 LastUpdate = DateTime.Parse("2017-09-16"),
                 LastWalletId = Fixture.WalletCash.MoneyWalletId,
@@ -66,8 +66,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             Fixture.DbContext.Article.Add(_article1);
             _article2 = new Article
             {
-                Name = secondArticle,
-                Category = exampleCategory,
+                Name = SecondArticleName,
+                Category = ExampleCategoryName,
                 LastPrice = 102,
                 LastUpdate = DateTime.Parse("2017-09-16"),
                 LastWalletId = Fixture.WalletBankAccount.MoneyWalletId,
@@ -93,7 +93,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     new Transaction
                     {
                     Name = "third",
-                    Category = exampleCategory,
+                    Category = ExampleCategoryName,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -103,7 +103,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 new Transaction
                 {
                     Name = "fourth",
-                    Category = exampleCategory,
+                    Category = ExampleCategoryName,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -138,7 +138,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     TransactionId = _transaction1.TransactionId,
                     Name = "third",
-                    Category = exampleCategory,
+                    Category = ExampleCategoryName,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -149,7 +149,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     TransactionId = _transaction2.TransactionId,
                     Name = "fourth",
-                    Category = exampleCategory,
+                    Category = ExampleCategoryName,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16"),
                     Direction = MoneyDirection.Expense,
@@ -179,7 +179,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 new Transaction
                 {
                     Name = "third",
-                    Category = exampleCategory,
+                    Category = ExampleCategoryName,
                     Comment = "comment",
                     CreatedAt = DateTime.Parse("2017-09-16 13:12"),
                     Direction = MoneyDirection.Expense,
@@ -249,7 +249,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     new Transaction
                     {
                         TransactionId = _transaction1.TransactionId,
-                        Name = firstArticle,
+                        Name = FirstArticleName,
                         Category = newCategory,
                         Comment = "comment",
                         CreatedAt = newDate,
@@ -265,8 +265,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
             var articles = Fixture.DbContext.Article.ToList();
 
-            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
             articleEntity.Should().NotBeNull();
             articleEntity.Category.Should().Be(newCategory);
             articleEntity.LastPrice.Should().Be(105);
@@ -328,7 +328,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     new Transaction
                     {
-                        Name = firstArticle,
+                        Name = FirstArticleName,
                         Category = newCategory,
                         Comment = "comment",
                         CreatedAt = newDate,
@@ -344,8 +344,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
             var articles = Fixture.DbContext.Article.ToList();
 
-            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
             articleEntity.Should().NotBeNull();
             articleEntity.Category.Should().Be(newCategory);
             articleEntity.LastPrice.Should().Be(105);
@@ -363,7 +363,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             {
                 // Prepare database.
                 var transaction3 = new TransactionBuilder()
-                .WithName(firstArticle)
+                .WithName(FirstArticleName)
                 .Build();
                 Fixture.DbContext.Transactions.Add(transaction3);
                 _article1.Occurence = 2;
@@ -379,8 +379,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
             var articles = Fixture.DbContext.Article.ToList();
 
-            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
             articleEntity.Should().NotBeNull();
             articleEntity.Occurence.Should().Be(1);
         }
@@ -402,8 +402,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
             var articles = Fixture.DbContext.Article.ToList();
 
-            articles.Where(e => e.Name == firstArticle).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == firstArticle);
+            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
+            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
             articleEntity.Should().NotBeNull();
             articleEntity.Occurence.Should().Be(0);
         }

@@ -8,6 +8,8 @@ namespace OnlineWallet.Web.TestHelpers
 {
     public class ControllerTestHelpers
     {
+        #region  Public Methods
+
         public static void AddModelErrorsFrom(object model, Controller controller)
         {
             var validationResults = new List<ValidationResult>();
@@ -24,27 +26,29 @@ namespace OnlineWallet.Web.TestHelpers
             }
         }
 
+        public static void ResultShouldBeBadRequest(ActionResult result)
+        {
+            result.Should()
+                .NotBeNull().And
+                .BeOfType(typeof(ContentResult));
+            var contentResult = (ContentResult) result;
+            contentResult.StatusCode.Should().Be((int) HttpStatusCode.BadRequest);
+        }
+
         public static TJsonValue ValidateJsonResult<TJsonValue>(ActionResult actionResult)
         {
             actionResult.Should()
                 .NotBeNull().And
                 .BeOfType<JsonResult>();
 
-            var jsonResult = (JsonResult)actionResult;
+            var jsonResult = (JsonResult) actionResult;
             jsonResult.Value.Should()
                 .NotBeNull().And
                 .BeOfType<TJsonValue>();
 
-            return (TJsonValue)jsonResult.Value;
+            return (TJsonValue) jsonResult.Value;
         }
 
-        public static void ResultShouldBeBadRequest(ActionResult result)
-        {
-            result.Should()
-                .NotBeNull().And
-                .BeOfType(typeof(ContentResult));
-            var contentResult = (ContentResult)result;
-            contentResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
+        #endregion
     }
 }

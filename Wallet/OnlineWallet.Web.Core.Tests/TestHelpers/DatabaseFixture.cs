@@ -81,9 +81,9 @@ namespace OnlineWallet.Web.TestHelpers
             {
                 foreach (var mock in mocks)
                 {
-                    var serviceType = mock.Object.GetType().GetInterfaces().First();
+                    var serviceType = mock.Object.GetType().GetInterfaces().First(e => !e.Name.StartsWith("IMocked") && e.Name != "IProxyTargetAccessor");
                     s.RemoveAll(e => e.ServiceType == serviceType);
-                    s.AddSingleton(mock.Object);
+                    s.AddSingleton(serviceType, mock.Object);
                 }
             });
         }
