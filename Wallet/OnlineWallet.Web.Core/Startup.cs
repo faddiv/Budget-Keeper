@@ -45,7 +45,7 @@ namespace OnlineWallet.Web
         public static void AddWalletServices(IServiceCollection services)
         {
             services.AddScoped<ITransactionQueries, TransactionQueries>();
-            services.AddScoped<ITransactionCommand, TransactionCommand>();
+            services.AddScoped<IBatchSaveCommand, BatchSaveCommand>();
             services.AddScoped<IWalletQueries, WalletQueries>();
             services.AddScoped<IWalletCommands, WalletCommands>();
             services.AddScoped<IArticleQueries, ArticleQueries>();
@@ -53,7 +53,7 @@ namespace OnlineWallet.Web
             services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddScoped<IImportExportQueries, ImportExportQueries>();
             services.AddScoped<IArticleCommands, ArticleCommands>();
-            services.AddScoped<ITransactionEvent, ArticleUpdateCommands>();
+            services.AddScoped<IBatchSaveEvent, ArticleUpdateCommands>();
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 

@@ -11,20 +11,20 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
-    [Trait(nameof(TransactionCommand), nameof(TransactionCommand.Execute))]
+    [Trait(nameof(BatchSaveCommand), nameof(BatchSaveCommand.Execute))]
     [Collection("Database collection")]
-    public class TransactionCommandExecuteTests : IDisposable
+    public class BatchSaveCommandExecuteTests : IDisposable
     {
         private readonly Transaction _transaction1;
-        private readonly Mock<ITransactionEvent> _mockEvent;
+        private readonly Mock<IBatchSaveEvent> _mockEvent;
         private readonly ServicesFixture _services;
-        private readonly ITransactionCommand _command;
+        private readonly IBatchSaveCommand _command;
 
-        public TransactionCommandExecuteTests(DatabaseFixture fixture)
+        public BatchSaveCommandExecuteTests(DatabaseFixture fixture)
         {
-            _mockEvent = new Mock<ITransactionEvent>();
+            _mockEvent = new Mock<IBatchSaveEvent>();
             _services = fixture.CreateServiceFixture(_mockEvent);
-            _command = _services.GetService<ITransactionCommand>();
+            _command = _services.GetService<IBatchSaveCommand>();
             _transaction1 = new TransactionBuilder().Build();
             fixture.DbContext.Transactions.AddRange(_transaction1);
             fixture.DbContext.SaveChanges();

@@ -20,14 +20,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         #region Fields
 
-        private readonly ITransactionCommand batchSave;
+        private readonly IBatchSaveCommand batchSave;
         private readonly ITransactionQueries queries;
 
         #endregion
 
         #region  Constructors
 
-        public TransactionController(ITransactionQueries queries, ITransactionCommand batchSave)
+        public TransactionController(ITransactionQueries queries, IBatchSaveCommand batchSave)
         {
             this.queries = queries;
             this.batchSave = batchSave;
