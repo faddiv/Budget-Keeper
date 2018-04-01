@@ -35,14 +35,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         {
             //Arrange
             var modifiedTransaction = AutoMapper.Mapper.Map<Transaction>(_transaction1);
-            var batch = new TransactionOperationBatch
-            {
-                Save = new List<Transaction>
+            var batch = new TransactionOperationBatch(
+                new List<Transaction>
                 {
                     modifiedTransaction
-                },
-                Delete = new List<long>()
-            };
+                });
 
             //Act
             await _command.Execute(batch, CancellationToken.None);
@@ -58,14 +55,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         {
             //Arrange
             var newTransaction = new TransactionBuilder().Build();
-            var batch = new TransactionOperationBatch
+            var batch = new TransactionOperationBatch(new List<Transaction>
             {
-                Save = new List<Transaction>
-                {
-                    newTransaction
-                },
-                Delete = new List<long>()
-            };
+                newTransaction
+            });
 
             //Act
             await _command.Execute(batch, CancellationToken.None);
@@ -80,11 +73,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         public async Task ShouldInvokeEventsOnDelete()
         {
             //Arrange
-            var batch = new TransactionOperationBatch
-            {
-                Save = new List<Transaction>(),
-                Delete = new List<long> { _transaction1.TransactionId }
-            };
+            var batch = new TransactionOperationBatch(
+                new List<long> { _transaction1.TransactionId });
 
             //Act
             await _command.Execute(batch, CancellationToken.None);

@@ -86,12 +86,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch
+            var transactions = new TransactionOperationBatch(new List<Transaction>
             {
-                Save = new List<Transaction>
+                new Transaction
                 {
-                    new Transaction
-                    {
                     Name = "third",
                     Category = ExampleCategoryName,
                     Comment = "comment",
@@ -110,8 +108,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     Value = 102,
                     WalletId = Fixture.WalletBankAccount.MoneyWalletId
                 }
-            }
-            };
+            });
             //act
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -130,9 +127,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch
-            {
-                Save = new List<Transaction>
+            var transactions = new TransactionOperationBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -156,8 +151,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     Value = 102,
                     WalletId = Fixture.WalletBankAccount.MoneyWalletId
                 }
-            }
-            };
+            });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -172,9 +166,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch
-            {
-                Save = new List<Transaction>
+            var transactions = new TransactionOperationBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -186,8 +178,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     Value = 101,
                     WalletId = Fixture.WalletCash.MoneyWalletId
                 }
-            }
-            };
+            });
             //act
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -204,10 +195,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch
-            {
-                Delete = new List<long> { _transaction1.TransactionId }
-            };
+            var transactions = new TransactionOperationBatch(
+                new List<long> { _transaction1.TransactionId });
             //act
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -222,10 +211,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch
-            {
-                Save = TransactionBuilder.CreateListOfSize(1).BuildList().ToList()
-            };
+            var transactions = new TransactionOperationBatch(
+                TransactionBuilder.CreateListOfSize(1).BuildList().ToList());
             controller.ModelState.AddModelError("Name", "Invalid");
             //act
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
@@ -242,23 +229,20 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var newCategory = "cat2";
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
-            var transactions = new TransactionOperationBatch
+            var transactions = new TransactionOperationBatch(new List<Transaction>
             {
-                Save = new List<Transaction>
+                new Transaction
                 {
-                    new Transaction
-                    {
-                        TransactionId = _transaction1.TransactionId,
-                        Name = FirstArticleName,
-                        Category = newCategory,
-                        Comment = "comment",
-                        CreatedAt = newDate,
-                        Direction = MoneyDirection.Expense,
-                        Value = 105,
-                        WalletId = Fixture.WalletBankAccount.MoneyWalletId
-                    }
+                    TransactionId = _transaction1.TransactionId,
+                    Name = FirstArticleName,
+                    Category = newCategory,
+                    Comment = "comment",
+                    CreatedAt = newDate,
+                    Direction = MoneyDirection.Expense,
+                    Value = 105,
+                    WalletId = Fixture.WalletBankAccount.MoneyWalletId
                 }
-            };
+            });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -283,22 +267,19 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
             const string newArticleName = "third";
-            var transactions = new TransactionOperationBatch
-{
-                Save = new List<Transaction>
+            var transactions = new TransactionOperationBatch(new List<Transaction>
+            {
+                new Transaction
                 {
-                    new Transaction
-                    {
-                        Name = newArticleName,
-                        Category = newCategory,
-                        Comment = "comment",
-                        CreatedAt = newDate,
-                        Direction = MoneyDirection.Expense,
-                        Value = 105,
-                        WalletId = Fixture.WalletBankAccount.MoneyWalletId
-                    }
+                    Name = newArticleName,
+                    Category = newCategory,
+                    Comment = "comment",
+                    CreatedAt = newDate,
+                    Direction = MoneyDirection.Expense,
+                    Value = 105,
+                    WalletId = Fixture.WalletBankAccount.MoneyWalletId
                 }
-            };
+            });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -322,22 +303,19 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var newCategory = "cat2";
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
-            var transactions = new TransactionOperationBatch
+            var transactions = new TransactionOperationBatch(new List<Transaction>
             {
-                Save = new List<Transaction>
+                new Transaction
                 {
-                    new Transaction
-                    {
-                        Name = FirstArticleName,
-                        Category = newCategory,
-                        Comment = "comment",
-                        CreatedAt = newDate,
-                        Direction = MoneyDirection.Expense,
-                        Value = 105,
-                        WalletId = Fixture.WalletBankAccount.MoneyWalletId
-                    }
+                    Name = FirstArticleName,
+                    Category = newCategory,
+                    Comment = "comment",
+                    CreatedAt = newDate,
+                    Direction = MoneyDirection.Expense,
+                    Value = 105,
+                    WalletId = Fixture.WalletBankAccount.MoneyWalletId
                 }
-            };
+            });
             //act
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -369,10 +347,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 _article1.Occurence = 2;
                 Fixture.DbContext.SaveChanges();
             }
-            var transactions = new TransactionOperationBatch
-            {
-                Delete = new List<long> { _transaction1.TransactionId }
-            };
+            var transactions = new TransactionOperationBatch(
+                new List<long> { _transaction1.TransactionId });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -386,15 +362,13 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         }
 
 
-        [Fact(DisplayName = nameof(On_delete_last_transaction_in_article_occurence_become_zero))]
-        public async Task On_delete_last_transaction_in_article_occurence_become_zero()
+        [Fact(DisplayName = nameof(On_delete_last_transaction_it_removes_article))]
+        public async Task On_delete_last_transaction_it_removes_article()
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch
-            {
-                Delete = new List<long> { _transaction1.TransactionId }
-            };
+            var transactions = new TransactionOperationBatch(
+                new List<long> { _transaction1.TransactionId });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);
 
@@ -403,8 +377,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
             articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
             var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
-            articleEntity.Should().NotBeNull();
-            articleEntity.Occurence.Should().Be(0);
+            articleEntity.Should().BeNull();
         }
 
         #endregion

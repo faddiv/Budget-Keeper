@@ -75,11 +75,8 @@ namespace OnlineWallet.Web.TestHelpers
         {
             var transactions = _fixture.BuildTransactions(rules, size);
             var controller = GetService<TransactionController>();
-            return controller.BatchSave(new TransactionOperationBatch
-            {
-                Save = transactions,
-                Delete = new List<long>()
-            }, CancellationToken.None);
+            return controller.BatchSave(new TransactionOperationBatch(transactions)
+                , CancellationToken.None);
         }
 
         public Task PrepareArticlesWith(Func<ArticleBuilder, ArticleBuilder> rules, int size = 100)

@@ -41,14 +41,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
                 {
                     var existingEntity = existingEntities.Find(e => e.TransactionId == operation.TransactionId);
 
-                    FireEvents(BatchSaveOperationType.Update, existingEntity, operation);
+                    await FireEvents(BatchSaveOperationType.Update, existingEntity, operation);
                     //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
                     _db.UpdateEntityValues(existingEntity, operation);
 
                 }
                 else
                 {
-                    FireEvents(BatchSaveOperationType.New, null, operation);
+                    await FireEvents(BatchSaveOperationType.New, null, operation);
                     await _db.Transactions.AddAsync(operation, token);
                     token.ThrowIfCancellationRequested();
                 }
@@ -59,7 +59,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
                 var existingEntity = existingEntities.Find(e => e.TransactionId == id);
                 if (existingEntity != null)
                 {
-                    FireEvents(BatchSaveOperationType.Delete, existingEntity, null);
+                    await FireEvents(BatchSaveOperationType.Delete, existingEntity, null);
                     _db.Transactions.Remove(existingEntity);
                 }
             }
@@ -67,12 +67,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             await _db.SaveChangesAsync(token);
         }
 
-        private void FireEvents(BatchSaveOperationType type, Transaction oldTransaction, Transaction newTransaction)
+        private async Task FireEvents(BatchSaveOperationType type, Transaction oldTransaction, Transaction newTransaction)
         {
             var args = new TransactionEventArgs(oldTransaction, newTransaction, type);
             foreach (var transactionEvent in Events)
             {
-                transactionEvent.Execute(args);
+                await transactionEvent.Execute(args);
             }
         }
 

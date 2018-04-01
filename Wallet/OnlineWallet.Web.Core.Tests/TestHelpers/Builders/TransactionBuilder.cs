@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using TestStack.Dossier;
@@ -72,6 +74,17 @@ namespace OnlineWallet.Web.TestHelpers.Builders
         public virtual TransactionBuilder WithWallet(Wallet wallet)
         {
             return Set(e => e.WalletId, wallet.MoneyWalletId);
+        }
+
+        public virtual TransactionBuilder WithContinousWallet(WalletDbContext context)
+        {
+            List<Wallet> wallets = null;
+            int i = 0;
+            return Set(e => e.WalletId, () =>
+            {
+                wallets = wallets ?? context.Wallets.ToList();
+                return wallets[i++ % wallets.Count].MoneyWalletId;
+            });
         }
 
         #endregion

@@ -1,11 +1,12 @@
 
+using System.Threading.Tasks;
 using OnlineWallet.Web.Modules.TransactionModule.Models;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
-    public class ArticleUpdateCommands : IBatchSaveEvent
+    public class ArticleUpdateOnBachSave : IBatchSaveEvent
     {
-        public void Execute(TransactionEventArgs args)
+        public async Task Execute(TransactionEventArgs args)
         {
         }
     }
