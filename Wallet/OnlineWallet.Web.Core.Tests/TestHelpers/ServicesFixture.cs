@@ -71,15 +71,22 @@ namespace OnlineWallet.Web.TestHelpers
             _disposable.Dispose();
         }
 
-        public async Task PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
+        public Task PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
         {
             var transactions = _fixture.BuildTransactions(rules, size);
             var controller = GetService<TransactionController>();
-            await controller.BatchSave(new TransactionOperationBatch
+            return controller.BatchSave(new TransactionOperationBatch
             {
                 Save = transactions,
                 Delete = new List<long>()
             }, CancellationToken.None);
+        }
+
+        public Task PrepareArticlesWith(Func<ArticleBuilder, ArticleBuilder> rules, int size = 100)
+        {
+            var transactions = _fixture.BuildArticles(rules, size);
+            DbContext.Article.AddRange(transactions);
+            return DbContext.SaveChangesAsync();
         }
 
         #endregion

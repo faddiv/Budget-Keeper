@@ -38,10 +38,23 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 
         #region  Public Methods
 
-        public async Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token)
+        public Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token)
         {
             search = search ?? "";
             var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
+            return _db.Article.Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch))
+                .OrderByDescending(e => e.Occurence)
+                .Take(limit)
+                .Select(e => new ArticleModel
+                {
+                    Name = e.Name,
+                    Occurence = e.Occurence,
+                    Category = e.Category,
+                    LastWallet = e.LastWalletId,
+                    LastPrice = e.LastPrice,
+                    NameHighlighted = StringExtensions.Highlight(e.Name, "<strong>", "</strong>", search)
+                }).ToListAsync(token);
+            /*
             var transactionQuery = _db.Transactions
                 .Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch));
             var requiredTransactions = await transactionQuery
@@ -73,7 +86,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
                 })
                 .OrderByDescending(a => a.Occurence)
                 .ToList();
-            return result;
+            return result;*/
         }
 
         public Task<Article> GetByName(string name, CancellationToken token)

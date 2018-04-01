@@ -100,6 +100,13 @@ namespace OnlineWallet.Web.TestHelpers
             return transactions;
         }
 
+        public IList<Article> BuildArticles(Func<ArticleBuilder, ArticleBuilder> rules, int size = 100)
+        {
+            var transactions = rules(ArticleBuilder.CreateListOfSize(size).All())
+                .BuildList();
+            return transactions;
+        }
+
         #endregion
     }
 }
