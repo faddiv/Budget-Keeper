@@ -52,15 +52,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics))]
         public async Task Should_load_yearly_category_statistics()
         {
-            _fixture.PrepareDataWith(r => r
-                          .All()
-                            .WithValue(1)
-                            .WithDirection(MoneyDirection.Expense)
-                            .WithCreatedAt("2017.01.01", "2017.12.31")
-                            .WithCategory("food")
-                          .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
-                          .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
-                            );
+            await _fixture.PrepareDataWith(r => r
+                .All()
+                .WithValue(1)
+                .WithDirection(MoneyDirection.Expense)
+                .WithCreatedAt("2017.01.01", "2017.12.31")
+                .WithCategory("food")
+                .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
+                .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
+            );
             var controller = _fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
@@ -76,7 +76,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_load_monthly_category_statistics))]
         public async Task Should_load_monthly_category_statistics()
         {
-            _fixture.PrepareDataWith(r => r
+            await _fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
                             .WithDirection(MoneyDirection.Expense)
@@ -100,7 +100,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_group_by_category))]
         public async Task Should_group_by_category()
         {
-            _fixture.PrepareDataWith(r => r
+            await _fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
                             .WithDirection(MoneyDirection.Expense)

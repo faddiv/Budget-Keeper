@@ -31,7 +31,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         public Task<List<ArticleModel>> GetBy(string search = "", int limit = 10,
             CancellationToken token = default(CancellationToken))
         {
-            return _articleQueries.GetByText(search, limit, token);
+            return _articleQueries.SearchByText(search, limit, token);
         }
 
         #endregion

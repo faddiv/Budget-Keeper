@@ -37,7 +37,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Returns_the_categories_from_transactions))]
         public async Task Returns_the_categories_from_transactions()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithCategory("Alfa")
                 .TheNext(5).WithCategory("alfa")
             );
@@ -53,7 +53,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Dont_return_null_or_empty_category))]
         public async Task Dont_return_null_or_empty_category()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithCategory("Alfa")
                 .TheNext(5).WithCategory("")
                 .TheNext(5).WithCategory(null)
@@ -69,7 +69,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Returns_max_10_categories))]
         public async Task Returns_max_10_categories()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .All().WithCategoryRandom()
             );
 
@@ -84,7 +84,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Returns_the_given_limit_categories))]
         public async Task Returns_the_given_limit_categories()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .All().WithCategoryRandom()
             );
 
@@ -99,7 +99,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Search_is_contains_case_insensitive_and_ignore_space))]
         public async Task Search_is_contains_case_insensitive_and_ignore_space()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .TheFirst(2).WithCategory("sAlfas")
                 .TheNext(2).WithCategory("salfas")
                 .TheNext(2).WithCategory("al fa")
@@ -121,7 +121,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Result_ordered_by_occurende_descending))]
         public async Task Result_ordered_by_occurende_descending()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .TheFirst(1).WithCategory("a")
                 .TheNext(5).WithCategory("b")
                 .TheNext(3).WithCategory("c")
@@ -141,7 +141,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         [Fact(DisplayName = nameof(Highlights_the_match_in_name))]
         public async Task Highlights_the_match_in_name()
         {
-            _fixture.PrepareDataWith(tr => tr
+            await _fixture.PrepareDataWith(tr => tr
                 .TheFirst(3).WithCategory("alfa1")
                 .TheNext(3).WithCategory("2alfa")
                 .TheNext(3).WithCategory("3alfa3")

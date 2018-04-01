@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineWallet.Web.DataLayer;
+using OnlineWallet.Web.Modules.TransactionModule;
+using OnlineWallet.Web.Modules.TransactionModule.Models;
 using OnlineWallet.Web.TestHelpers.Builders;
 
 namespace OnlineWallet.Web.TestHelpers
@@ -66,9 +71,15 @@ namespace OnlineWallet.Web.TestHelpers
             _disposable.Dispose();
         }
 
-        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
+        public async Task PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
         {
-            _fixture.PrepareDataWith(rules, size);
+            var transactions = _fixture.BuildTransactions(rules, size);
+            var controller = GetService<TransactionController>();
+            await controller.BatchSave(new TransactionOperationBatch
+            {
+                Save = transactions,
+                Delete = new List<long>()
+            }, CancellationToken.None);
         }
 
         #endregion

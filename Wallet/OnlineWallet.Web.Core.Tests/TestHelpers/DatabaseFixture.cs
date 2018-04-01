@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -90,14 +91,13 @@ namespace OnlineWallet.Web.TestHelpers
         {
             DbContext.Dispose();
         }
-
-        public void PrepareDataWith(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
+        
+        public IList<Transaction> BuildTransactions(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)
         {
             var transactions = rules(TransactionBuilder.CreateListOfSize(size)
                     .All().WithName("Nothing").WithCategory(null))
                 .BuildList();
-            DbContext.Transactions.AddRange(transactions);
-            DbContext.SaveChanges();
+            return transactions;
         }
 
         #endregion

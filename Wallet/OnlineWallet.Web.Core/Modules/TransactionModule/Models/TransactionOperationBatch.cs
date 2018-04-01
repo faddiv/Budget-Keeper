@@ -7,8 +7,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Models
     {
         #region Properties
 
-        public List<long> Delete { get; set; }
-        public List<Transaction> Save { get; set; }
+        public IList<long> Delete { get; set; }
+        public IList<Transaction> Save { get; set; }
 
         #endregion
     }

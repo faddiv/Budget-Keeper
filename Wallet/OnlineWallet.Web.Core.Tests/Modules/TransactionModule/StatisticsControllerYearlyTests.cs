@@ -94,9 +94,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             statistics.Unused.Should().Be(0);
         }
 
-        private Task<YearlyStatistics> PrepareDataAndRunTest(MoneyDirection tested, MoneyDirection rest1, MoneyDirection rest2)
+        private async Task<YearlyStatistics> PrepareDataAndRunTest(MoneyDirection tested, MoneyDirection rest1, MoneyDirection rest2)
         {
-            _fixture.PrepareDataWith(r => r
+            await _fixture.PrepareDataWith(r => r
                             .All().WithValue(1).WithCreatedAt("2017.01.01", "2017.12.31")
                             .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
                             .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
@@ -106,14 +106,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                             );
             var controller = _fixture.GetService<StatisticsController>();
 
-            var statistics = controller.Yearly(2017);
+            var statistics = await controller.Yearly(2017);
             return statistics;
         }
 
         [Fact(DisplayName = nameof(ReturnsMonthlySummaries))]
         public async Task ReturnsMonthlySummaries()
         {
-            _fixture.PrepareDataWith(r =>
+            await _fixture.PrepareDataWith(r =>
             {
                 r = r.TheFirst(0);
                 for (int i = 1; i <= 12; i++)

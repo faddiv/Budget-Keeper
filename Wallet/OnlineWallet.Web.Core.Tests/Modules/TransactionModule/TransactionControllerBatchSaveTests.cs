@@ -391,7 +391,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var articleName = _transaction1.Name;
             var transactions = new TransactionOperationBatch
             {
                 Delete = new List<long> { _transaction1.TransactionId }

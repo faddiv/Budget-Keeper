@@ -13,7 +13,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
     {
         #region  Public Methods
 
-        Task<List<ArticleModel>> GetByText(string search, int limit, CancellationToken token);
+        Task<Article> GetByName(string name, CancellationToken token);
+        Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token);
 
         #endregion
     }
@@ -37,7 +38,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 
         #region  Public Methods
 
-        public async Task<List<ArticleModel>> GetByText(string search, int limit, CancellationToken token)
+        public async Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token)
         {
             search = search ?? "";
             var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
@@ -75,6 +76,10 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
             return result;
         }
 
+        public Task<Article> GetByName(string name, CancellationToken token)
+        {
+            return _db.Article.FindAsync(name);
+        }
         #endregion
     }
 }
