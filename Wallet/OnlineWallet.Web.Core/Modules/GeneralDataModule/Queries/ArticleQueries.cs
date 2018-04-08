@@ -38,6 +38,13 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 
         #region  Public Methods
 
+        public Task<Article> GetByName(string name, CancellationToken token)
+        {
+            if (string.IsNullOrEmpty(name))
+                return Task.FromResult<Article>(null);
+            return _db.Article.FindAsync(name);
+        }
+
         public Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token)
         {
             search = search ?? "";
@@ -54,45 +61,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
                     LastPrice = e.LastPrice,
                     NameHighlighted = StringExtensions.Highlight(e.Name, "<strong>", "</strong>", search)
                 }).ToListAsync(token);
-            /*
-            var transactionQuery = _db.Transactions
-                .Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch));
-            var requiredTransactions = await transactionQuery
-                .GroupBy(e => e.Name)
-                .OrderByDescending(a => a.Count())
-                .Take(limit)
-                .SelectMany(g => g.Select(e => new
-                {
-                    e.Name,
-                    e.Category,
-                    e.Value,
-                    e.CreatedAt,
-                    e.WalletId
-                }))
-                .ToListAsync(token);
-            var result = requiredTransactions
-                .GroupBy(e => e.Name)
-                .Select(g => new ArticleModel
-                {
-                    Name = g.Key,
-                    Occurence = g.Count(),
-                    Category = g.Where(c => c.Category != null)
-                        .GroupBy(c => c.Category)
-                        .OrderByDescending(c => c.Count())
-                        .Select(c => c.Key).FirstOrDefault(),
-                    LastWallet = g.OrderByDescending(e => e.CreatedAt).Select(e => e.WalletId).FirstOrDefault(),
-                    LastPrice = g.OrderByDescending(e => e.CreatedAt).Select(e => e.Value).FirstOrDefault(),
-                    NameHighlighted = StringExtensions.Highlight(g.Key, "<strong>", "</strong>", search)
-                })
-                .OrderByDescending(a => a.Occurence)
-                .ToList();
-            return result;*/
         }
 
-        public Task<Article> GetByName(string name, CancellationToken token)
-        {
-            return _db.Article.FindAsync(name);
-        }
         #endregion
     }
 }

@@ -44,10 +44,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Act
             await _command.Execute(batch, CancellationToken.None);
             //Assert
-            _mockEvent.Verify(e => e.Execute(It.Is<TransactionEventArgs>(args => 
-                ReferenceEquals(args.OldTransaction, _transaction1) &&
-                ReferenceEquals(args.NewTransaction, modifiedTransaction) &&
-                args.OperationType ==BatchSaveOperationType.Update)));
+            VerifyExecuteCalledWith(_transaction1, modifiedTransaction, BatchSaveOperationType.Update);
         }
 
         [Fact(DisplayName = nameof(ShouldInvokeEventsOnUpdate))]
@@ -63,10 +60,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Act
             await _command.Execute(batch, CancellationToken.None);
             //Assert
-            _mockEvent.Verify(e => e.Execute(It.Is<TransactionEventArgs>(args =>
-                ReferenceEquals(args.OldTransaction, null) &&
-                ReferenceEquals(args.NewTransaction, newTransaction) &&
-                args.OperationType == BatchSaveOperationType.New)));
+            VerifyExecuteCalledWith(null, newTransaction, BatchSaveOperationType.New);
         }
 
         [Fact(DisplayName = nameof(ShouldInvokeEventsOnUpdate))]
@@ -79,15 +73,27 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Act
             await _command.Execute(batch, CancellationToken.None);
             //Assert
-            _mockEvent.Verify(e => e.Execute(It.Is<TransactionEventArgs>(args =>
-                ReferenceEquals(args.OldTransaction, _transaction1) &&
-                ReferenceEquals(args.NewTransaction, null) &&
-                args.OperationType == BatchSaveOperationType.Delete)));
+            VerifyExecuteCalledWith(_transaction1, null, BatchSaveOperationType.Delete);
         }
 
         public void Dispose()
         {
             _services.Cleanup();
+        }
+
+        private void VerifyExecuteCalledWith(Transaction oldTransaction, Transaction newTransaction, BatchSaveOperationType operationType)
+        {
+            _mockEvent.Verify(e => e.BeforeSave(It.Is<TransactionEventArgs>(args =>
+                args.Operations.Count == 1 &&
+                ReferenceEquals(args.Operations[0].OldTransaction, oldTransaction) &&
+                ReferenceEquals(args.Operations[0].NewTransaction, newTransaction) &&
+                args.Operations[0].OperationType == operationType), CancellationToken.None));
+
+            _mockEvent.Verify(e => e.AfterSave(It.Is<TransactionEventArgs>(args =>
+                args.Operations.Count == 1 &&
+                ReferenceEquals(args.Operations[0].OldTransaction, oldTransaction) &&
+                ReferenceEquals(args.Operations[0].NewTransaction, newTransaction) &&
+                args.Operations[0].OperationType == operationType), CancellationToken.None));
         }
     }
 }

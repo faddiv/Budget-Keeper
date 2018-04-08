@@ -301,20 +301,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         {
             //Arrange
             var transaction = _transactionBuilder.Build();
-            var batch = new TransactionOperationBatch(transaction);
+            var batch = new TransactionOperationBatch(saves: transaction);
             await Execute(batch);
             //Act
-            batch = new TransactionOperationBatch(transaction.TransactionId);
+            batch = new TransactionOperationBatch(delete: transaction.TransactionId);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction.Name);
-            article.Should().NotBeNull();
-            article.Name.Should().Be(transaction.Name);
-            article.Occurence.Should().Be(1);
-            article.Category.Should().Be(transaction.Category);
-            article.LastPrice.Should().Be(transaction.Value);
-            article.LastUpdate.Should().Be(transaction.CreatedAt);
-            article.LastWalletId.Should().Be(transaction.WalletId);
+            article.Should().BeNull();
         }
 
         private async Task Execute(TransactionOperationBatch args)

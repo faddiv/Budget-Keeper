@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;
@@ -105,38 +106,31 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
                 .OnlyContain(e => e.Name.ToLower().Contains("xaxlxfxax"));
         }
         
-        [Fact(DisplayName = nameof(Returns_with_the_most_common_Category_value))]
-        public async Task Returns_with_the_most_common_Category_value()
+        [Fact(DisplayName = nameof(Returns_with_the_last_Category_value))]
+        public async Task Returns_with_the_last_Category_value()
         {
-            await _fixture.PrepareDataWith(tr => tr
-                .TheFirst(5).WithName("alfa").WithCategory("not common")
-                .TheNext(20).WithName("alfa").WithCategory("most common")
-                .TheNext(10).WithName("alfa").WithCategory("second common")
+            await _fixture.PrepareDataWith(tr => tr.WithCategoryRandom()
+                .TheFirst(10).WithName("alfa1")
+                .TheNext(10).WithName("alfa2")
+                .TheNext(10).WithName("alfa3")
             );
+            var categories = _fixture.DbContext.Transactions.Where(e => e.Name.StartsWith("alfa"))
+                .GroupBy(e => e.Name)
+                .Select(e => new
+                {
+                    Name = e.Key,
+                    Category = e.OrderByDescending(t => t.CreatedAt).Select(t => t.Category).FirstOrDefault()
+                }).ToDictionary(e => e.Name, e => e.Category);
 
             var result = await _controller.GetBy("alfa");
 
-            result.Should()
-                .NotBeNullOrEmpty().And
-                .OnlyContain(e => e.Category == "most common");
+            result.Should().NotBeNullOrEmpty();
+            foreach (var articleModel in result)
+            {
+                categories.Should().ContainKey(articleModel.Name).WhichValue.Should().Be(articleModel.Category);
+            }
         }
-
-        [Fact(DisplayName = nameof(Most_common_category_cant_be_null_if_there_is_one))]
-        public async Task Most_common_category_cant_be_null_if_there_is_one()
-        {
-            await _fixture.PrepareDataWith(tr => tr
-                .TheFirst(5).WithName("alfa").WithCategory("not common")
-                .TheNext(20).WithName("alfa").WithCategory(null)
-                .TheNext(10).WithName("alfa").WithCategory("most common")
-            );
-
-            var result = await _controller.GetBy("alfa");
-
-            result.Should()
-                .NotBeNullOrEmpty().And
-                .OnlyContain(e => e.Category == "most common");
-        }
-
+        
         [Fact(DisplayName = nameof(Returns_with_the_count_of_occurence_descending_order))]
         public async Task Returns_with_the_count_of_occurence_descending_order()
         {

@@ -375,9 +375,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
             var articles = Fixture.DbContext.Article.ToList();
 
-            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
-            articleEntity.Should().BeNull();
+            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(0);
         }
 
         #endregion

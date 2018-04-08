@@ -25,7 +25,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         #endregion
 
+        #region Properties
+
         public IReadOnlyCollection<IBatchSaveEvent> Events { get; }
+
+        #endregion
 
         #region  Public Methods
 
@@ -34,45 +38,64 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var existingIds = model.Save.Where(e => e.TransactionId > 0).Select(e => e.TransactionId).ToList();
             existingIds.AddRange(model.Delete);
             var existingEntities = _db.Transactions.Where(e => existingIds.Contains(e.TransactionId)).ToList();
+            var operations = new List<TransactionOperation>();
             foreach (var operation in model.Save)
             {
+                token.ThrowIfCancellationRequested();
                 operation.CreatedAt = operation.CreatedAt.Date;
                 if (operation.TransactionId != 0)
                 {
                     var existingEntity = existingEntities.Find(e => e.TransactionId == operation.TransactionId);
 
-                    await FireEvents(BatchSaveOperationType.Update, existingEntity, operation);
-                    //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
-                    _db.UpdateEntityValues(existingEntity, operation);
-
+                    operations.Add(new TransactionOperation(existingEntity, operation, BatchSaveOperationType.Update));
                 }
                 else
                 {
-                    await FireEvents(BatchSaveOperationType.New, null, operation);
-                    await _db.Transactions.AddAsync(operation, token);
-                    token.ThrowIfCancellationRequested();
+                    operations.Add(new TransactionOperation(null, operation, BatchSaveOperationType.New));
                 }
             }
 
             foreach (var id in model.Delete)
             {
+                token.ThrowIfCancellationRequested();
                 var existingEntity = existingEntities.Find(e => e.TransactionId == id);
                 if (existingEntity != null)
                 {
-                    await FireEvents(BatchSaveOperationType.Delete, existingEntity, null);
-                    _db.Transactions.Remove(existingEntity);
+                    operations.Add(new TransactionOperation(existingEntity, null, BatchSaveOperationType.Delete));
+                }
+            }
+
+            var args = new TransactionEventArgs(operations);
+            foreach (var transactionEvent in Events)
+            {
+                token.ThrowIfCancellationRequested();
+                transactionEvent.BeforeSave(args, token);
+            }
+
+            foreach (var operation in operations)
+            {
+                token.ThrowIfCancellationRequested();
+                switch (operation.OperationType)
+                {
+                    case BatchSaveOperationType.Update:
+                        //Too slow. Need to be replaced with a custom solution. (And should make multi threaded)
+                        _db.UpdateEntityValues(operation.OldTransaction, operation.NewTransaction);
+                        break;
+                    case BatchSaveOperationType.New:
+                        await _db.Transactions.AddAsync(operation.NewTransaction, token);
+                        break;
+                    case BatchSaveOperationType.Delete:
+                        _db.Transactions.Remove(operation.OldTransaction);
+                        break;
                 }
             }
 
             await _db.SaveChangesAsync(token);
-        }
 
-        private async Task FireEvents(BatchSaveOperationType type, Transaction oldTransaction, Transaction newTransaction)
-        {
-            var args = new TransactionEventArgs(oldTransaction, newTransaction, type);
             foreach (var transactionEvent in Events)
             {
-                await transactionEvent.Execute(args);
+                token.ThrowIfCancellationRequested();
+                transactionEvent.AfterSave(args, token);
             }
         }
 

@@ -1,25 +1,22 @@
-using OnlineWallet.Web.DataLayer;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OnlineWallet.Web.Modules.TransactionModule.Models
 {
     public class TransactionEventArgs
     {
-        public TransactionEventArgs(
-            Transaction oldTransaction,
-            Transaction newTransaction,
-            BatchSaveOperationType operationType)
+        #region  Constructors
+
+        public TransactionEventArgs(List<TransactionOperation> operations)
         {
-            OldTransaction = oldTransaction;
-            NewTransaction = newTransaction;
-            OperationType = operationType;
+            Operations = operations;
         }
 
-        public Transaction OldTransaction { get; }
-        public Transaction NewTransaction { get; }
-        public BatchSaveOperationType OperationType { get; }
+        #endregion
+
+        #region Properties
+
+        public List<TransactionOperation> Operations { get; }
+
+        #endregion
     }
 }
