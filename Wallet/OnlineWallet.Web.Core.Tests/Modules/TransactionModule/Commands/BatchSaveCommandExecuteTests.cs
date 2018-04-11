@@ -47,7 +47,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             VerifyExecuteCalledWith(_transaction1, modifiedTransaction, BatchSaveOperationType.Update);
         }
 
-        [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
+        [Fact(DisplayName = nameof(Should_invoke_events_on_insert))]
         public async Task Should_invoke_events_on_insert()
         {
             //Arrange
@@ -63,7 +63,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             VerifyExecuteCalledWith(null, newTransaction, BatchSaveOperationType.New);
         }
 
-        [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
+        [Fact(DisplayName = nameof(Should_invoke_events_on_delete))]
         public async Task Should_invoke_events_on_delete()
         {
             //Arrange

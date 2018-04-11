@@ -222,14 +222,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         }
 
-        [Fact(DisplayName = nameof(On_updating_transaction_updates_article_table))]
-        public async Task On_updating_transaction_updates_article_table()
+        [Fact(DisplayName = nameof(Updates_article_table))]
+        public async Task Updates_article_table()
         {
             //arrange
             var newCategory = "cat2";
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
-            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
+            var transactions = new TransactionOperationBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -241,70 +241,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     Direction = MoneyDirection.Expense,
                     Value = 105,
                     WalletId = Fixture.WalletBankAccount.MoneyWalletId
-                }
-            });
-            //act
-            await controller.BatchSave(transactions, CancellationToken.None);
-
-            //assert
-            var articles = Fixture.DbContext.Article.ToList();
-
-            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
-            articleEntity.Should().NotBeNull();
-            articleEntity.Category.Should().Be(newCategory);
-            articleEntity.LastPrice.Should().Be(105);
-            articleEntity.LastUpdate.Should().Be(newDate);
-            articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
-            articleEntity.Occurence.Should().Be(1);
-        }
-
-        [Fact(DisplayName = nameof(On_new_transaction_with_unknown_article_updates_article_table))]
-        public async Task On_new_transaction_with_unknown_article_updates_article_table()
-        {
-            //arrange
-            var newCategory = "cat2";
-            var controller = Fixture.GetService<TransactionController>();
-            DateTime newDate = DateTime.Parse("2017-10-17");
-            const string newArticleName = "third";
-            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
-            {
-                new Transaction
-                {
-                    Name = newArticleName,
-                    Category = newCategory,
-                    Comment = "comment",
-                    CreatedAt = newDate,
-                    Direction = MoneyDirection.Expense,
-                    Value = 105,
-                    WalletId = Fixture.WalletBankAccount.MoneyWalletId
-                }
-            });
-            //act
-            await controller.BatchSave(transactions, CancellationToken.None);
-
-            //assert
-            var articles = Fixture.DbContext.Article.ToList();
-
-            articles.Where(e => e.Name == newArticleName).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == newArticleName);
-            articleEntity.Should().NotBeNull();
-            articleEntity.Category.Should().Be(newCategory);
-            articleEntity.LastPrice.Should().Be(105);
-            articleEntity.LastUpdate.Should().Be(newDate);
-            articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
-            articleEntity.Occurence.Should().Be(1);
-        }
-
-        [Fact(DisplayName = nameof(On_new_transaction_with_known_article_updates_article_table))]
-        public async Task On_new_transaction_with_known_article_updates_article_table()
-        {
-            //arrange
-            var newCategory = "cat2";
-            var controller = Fixture.GetService<TransactionController>();
-            DateTime newDate = DateTime.Parse("2017-10-17");
-            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
-            {
+                },
                 new Transaction
                 {
                     Name = FirstArticleName,
@@ -315,9 +252,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                     Value = 105,
                     WalletId = Fixture.WalletBankAccount.MoneyWalletId
                 }
-            });
+            }, new List<long> { _transaction2.TransactionId });
             //act
-            var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
+            await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
             var articles = Fixture.DbContext.Article.ToList();
@@ -330,52 +267,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             articleEntity.LastUpdate.Should().Be(newDate);
             articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
             articleEntity.Occurence.Should().Be(2);
-        }
 
-        [Fact(DisplayName = nameof(On_delete_transaction_in_article_occurence_reduced))]
-        public async Task On_delete_transaction_in_article_occurence_reduced()
-        {
-            //arrange
-            var controller = Fixture.GetService<TransactionController>();
-            var articleName = _transaction1.Name;
-            {
-                // Prepare database.
-                var transaction3 = new TransactionBuilder()
-                .WithName(FirstArticleName)
-                .Build();
-                Fixture.DbContext.Transactions.Add(transaction3);
-                _article1.Occurence = 2;
-                Fixture.DbContext.SaveChanges();
-            }
-            var transactions = TransactionOperationBatch.DeleteBatch(
-                new List<long> { _transaction1.TransactionId });
-            //act
-            await controller.BatchSave(transactions, CancellationToken.None);
-
-            //assert
-            var articles = Fixture.DbContext.Article.ToList();
-
-            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
-            articleEntity.Should().NotBeNull();
-            articleEntity.Occurence.Should().Be(1);
-        }
-
-
-        [Fact(DisplayName = nameof(On_delete_last_transaction_it_removes_article))]
-        public async Task On_delete_last_transaction_it_removes_article()
-        {
-            //arrange
-            var controller = Fixture.GetService<TransactionController>();
-            var transactions = TransactionOperationBatch.DeleteBatch(
-                new List<long> { _transaction1.TransactionId });
-            //act
-            await controller.BatchSave(transactions, CancellationToken.None);
-
-            //assert
-            var articles = Fixture.DbContext.Article.ToList();
-
-            articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(0);
+            articles.Where(e => e.Name == SecondArticleName).Should().HaveCount(0);
         }
 
         #endregion
