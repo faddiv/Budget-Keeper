@@ -60,8 +60,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #endregion
 
-        [Fact(DisplayName = nameof(Only_Fetches_In_Date_Range))]
-        public async Task Only_Fetches_In_Date_Range()
+        [Fact(DisplayName = nameof(Only_Fetches_in_date_range))]
+        public async Task Only_Fetches_in_date_range()
         {
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-10-15"),
@@ -73,8 +73,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().NotContain(_transaction3);
         }
 
-        [Fact(DisplayName = nameof(Only_Fetches_In_Date_Range))]
-        public async Task Fetches_Date_Range_Inclusive()
+        [Fact(DisplayName = nameof(Only_Fetches_in_date_range))]
+        public async Task Fetches_date_range_inclusive()
         {
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-09-16"),
@@ -84,8 +84,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().Contain(_transaction2);
         }
 
-        [Fact(DisplayName = nameof(Fetches_LatesFirst))]
-        public async Task Fetches_LatesFirst()
+        [Fact(DisplayName = nameof(Fetches_latest_first))]
+        public async Task Fetches_latest_first()
         {
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-09-15"),

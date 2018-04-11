@@ -8,7 +8,7 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
-    [Trait("WalletController", "Put")]
+    [Trait(nameof(WalletController), nameof(WalletController.Put))]
     public class WalletControllerPutTests : WalletControllerTests
     {
         public WalletControllerPutTests(DatabaseFixture fixture)
@@ -16,8 +16,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         {
         }
 
-        [Fact(DisplayName = "Put_returns_BadRequest_if_no_name_provided")]
-        public async Task Put_returns_BadRequest_if_no_name_provided()
+        [Fact(DisplayName = nameof(Returns_BadRequest_if_no_name_provided))]
+        public async Task Returns_BadRequest_if_no_name_provided()
         {
             //Arrange
             var entity = Fixture.Clone(TestWallet);
@@ -31,8 +31,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             ControllerTestHelpers.ResultShouldBeBadRequest(result);
         }
 
-        [Fact(DisplayName = "Post_saves_new_wallet_if_everything_is_ok")]
-        public async Task Put_updates_wallet_if_everything_is_ok()
+        [Fact(DisplayName = nameof(Updates_wallet_if_everything_is_ok))]
+        public async Task Updates_wallet_if_everything_is_ok()
         {
             //Arrange
             var entity = Fixture.Clone(TestWallet);
@@ -47,8 +47,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             DbSet.Should().Contain(e => e.MoneyWalletId == TestWallet.MoneyWalletId && e.Name == "Changed Wallet");
         }
 
-        [Fact(DisplayName = nameof(Put_returns_NotFound_if_object_doesnt_exists))]
-        public async Task Put_returns_NotFound_if_object_doesnt_exists()
+        [Fact(DisplayName = nameof(Returns_NotFound_if_object_doesnt_exists))]
+        public async Task Returns_NotFound_if_object_doesnt_exists()
         {
             //Act
             var result = await Controller.Put(TestWallet.MoneyWalletId + 100, new Wallet { Name = "st" }, CancellationToken.None);

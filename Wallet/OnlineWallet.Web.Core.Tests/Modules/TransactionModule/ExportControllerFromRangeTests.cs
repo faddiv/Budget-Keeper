@@ -13,12 +13,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(ExportController), nameof(ExportController.FromRange))]
     [Collection("Database collection")]
-    public class ExportControllerTests : IDisposable
+    public class ExportControllerFromRangeTests : IDisposable
     {
         private readonly ServicesFixture _fixture;
         private readonly ExportController _controller;
 
-        public ExportControllerTests(DatabaseFixture fixture)
+        public ExportControllerFromRangeTests(DatabaseFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
             var dbContext = fixture.DbContext;
@@ -80,28 +80,28 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             _fixture.Cleanup();
         }
 
-        [Fact(DisplayName = "returns with FileContentResult")]
+        [Fact(DisplayName = nameof(Returns_with_FileContentResult))]
         public async Task Returns_with_FileContentResult()
         {
             var result = await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file.csv") as FileContentResult;
             result.Should().NotBeNull();
         }
 
-        [Fact(DisplayName = "returns file with the given filename")]
+        [Fact(DisplayName = nameof(Returns_file_with_the_given_filename))]
         public async Task Returns_file_with_the_given_filename()
         {
             var result = (FileContentResult)await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file.csv");
             result.FileDownloadName.Should().Be("file.csv");
         }
 
-        [Fact(DisplayName = "adds extension to the filename")]
+        [Fact(DisplayName = nameof(Adds_extension_to_the_filename))]
         public async Task Adds_extension_to_the_filename()
         {
             var result = (FileContentResult)await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file");
             result.FileDownloadName.Should().Be("file.csv");
         }
 
-        [Fact(DisplayName = "Returns the exported csv from range")]
+        [Fact(DisplayName = nameof(Returns_the_exported_csv_from_range))]
         public async Task Returns_the_exported_csv_from_range()
         {
             var result = (FileContentResult)await _controller.FromRange(DateTime.Parse("2017-10-01"), DateTime.Parse("2017-10-31"), "file");

@@ -41,7 +41,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Arrange
             var transaction = _transactionBuilder.Build();
             //Act
-            var batch = new TransactionOperationBatch(transaction);
+            var batch = TransactionOperationBatch.SaveBatch(transaction);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction.Name);
@@ -64,10 +64,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 2)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1);
             await Execute(batch);
             //Act
-            batch = new TransactionOperationBatch(transaction2);
+            batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
@@ -91,7 +91,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
                 .WithName("Article1").WithCreatedAt(2017, 2)
                 .Build();
             //Act
-            var batch = new TransactionOperationBatch(transaction1, transaction2);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
@@ -114,11 +114,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 2)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1);
             await Execute(batch);
             transaction2.TransactionId = transaction1.TransactionId;
             //Act
-            batch = new TransactionOperationBatch(transaction2);
+            batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
@@ -141,11 +141,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 1)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1);
             await Execute(batch);
             transaction2.TransactionId = transaction1.TransactionId;
             //Act
-            batch = new TransactionOperationBatch(transaction2);
+            batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
@@ -168,10 +168,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 2)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1, transaction2);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             //Act
-            batch = new TransactionOperationBatch(transaction2.TransactionId);
+            batch = TransactionOperationBatch.DeleteBatch(transaction2.TransactionId);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction1.Name);
@@ -195,11 +195,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1);
             await Execute(batch);
             transaction2.TransactionId = transaction1.TransactionId;
             //Act
-            batch = new TransactionOperationBatch(transaction2);
+            batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
             var article1 = _fixture.DbContext.Article.Find(transaction1Orig.Name);
@@ -224,11 +224,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction3 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1, transaction2);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             transaction3.TransactionId = transaction2.TransactionId;
             //Act
-            batch = new TransactionOperationBatch(transaction3);
+            batch = TransactionOperationBatch.SaveBatch(transaction3);
             await Execute(batch);
             //Assert
             var article1 = _fixture.DbContext.Article.Find(transaction1Orig.Name);
@@ -255,11 +255,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction3 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1, transaction2);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             transaction3.TransactionId = transaction1.TransactionId;
             //Act
-            batch = new TransactionOperationBatch(transaction3);
+            batch = TransactionOperationBatch.SaveBatch(transaction3);
             await Execute(batch);
             //Assert
             var article1 = _fixture.DbContext.Article.Find(transaction1Orig.Name);
@@ -280,10 +280,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 1)
                 .Build();
-            var batch = new TransactionOperationBatch(transaction1, transaction2);
+            var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             //Act
-            batch = new TransactionOperationBatch(transaction2.TransactionId);
+            batch = TransactionOperationBatch.DeleteBatch(transaction2.TransactionId);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction1.Name);
@@ -301,10 +301,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
         {
             //Arrange
             var transaction = _transactionBuilder.Build();
-            var batch = new TransactionOperationBatch(saves: transaction);
+            var batch = TransactionOperationBatch.SaveBatch(transaction);
             await Execute(batch);
             //Act
-            batch = new TransactionOperationBatch(delete: transaction.TransactionId);
+            batch = TransactionOperationBatch.DeleteBatch(delete: transaction.TransactionId);
             await Execute(batch);
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction.Name);

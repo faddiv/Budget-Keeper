@@ -35,8 +35,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             _fixture.Cleanup();
         }
 
-        [Fact(DisplayName = nameof(ReturnsYearlyIncome))]
-        public async Task ReturnsYearlyIncome()
+        [Fact(DisplayName = nameof(Returns_yearly_income))]
+        public async Task Returns_yearly_income()
         {
             var statistics = await PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
 
@@ -44,8 +44,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             statistics.Income.Should().Be(70, "it sums all the income in the given year");
         }
 
-        [Fact(DisplayName = nameof(ReturnsYearlyExpense))]
-        public async Task ReturnsYearlyExpense()
+        [Fact(DisplayName = nameof(Returns_yearly_expense))]
+        public async Task Returns_yearly_expense()
         {
             var statistics = await PrepareDataAndRunTest(MoneyDirection.Expense, MoneyDirection.Income, MoneyDirection.Plan);
 
@@ -53,8 +53,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             statistics.Spent.Should().Be(70, "it sums all the expense in the given year");
         }
 
-        [Fact(DisplayName = nameof(ReturnsYearlyPlan))]
-        public async Task ReturnsYearlyPlan()
+        [Fact(DisplayName = nameof(Returns_yearly_plan))]
+        public async Task Returns_yearly_plan()
         {
             var statistics = await PrepareDataAndRunTest(MoneyDirection.Plan, MoneyDirection.Income, MoneyDirection.Expense);
 
@@ -62,8 +62,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             statistics.Planned.Should().Be(70, "it sums all the expense in the given year");
         }
 
-        [Fact(DisplayName = nameof(ReturnsYearlySavings))]
-        public async Task ReturnsYearlySavings()
+        [Fact(DisplayName = nameof(Returns_yearly_savings))]
+        public async Task Returns_yearly_savings()
         {
             var statistics = await PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
 
@@ -71,8 +71,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             statistics.ToSaving.Should().Be(18, "it calculates savings in the given year");
         }
 
-        [Fact(DisplayName = nameof(ReturnsYearlyUnused))]
-        public async Task ReturnsYearlyUnused()
+        [Fact(DisplayName = nameof(Returns_yearly_unused))]
+        public async Task Returns_yearly_unused()
         {
             var statistics = await PrepareDataAndRunTest(MoneyDirection.Income, MoneyDirection.Expense, MoneyDirection.Plan);
 
@@ -80,8 +80,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             statistics.Unused.Should().Be(17, "it calculates savings in the given year");
         }
 
-        [Fact(DisplayName = nameof(ReturnsZerosForEmptyYear))]
-        public async Task ReturnsZerosForEmptyYear()
+        [Fact(DisplayName = nameof(Returns_zeros_for_empty_year))]
+        public async Task Returns_zeros_for_empty_year()
         {
             var controller = _fixture.GetService<StatisticsController>();
 
@@ -110,8 +110,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             return statistics;
         }
 
-        [Fact(DisplayName = nameof(ReturnsMonthlySummaries))]
-        public async Task ReturnsMonthlySummaries()
+        [Fact(DisplayName = nameof(Returns_monthly_summaries))]
+        public async Task Returns_monthly_summaries()
         {
             await _fixture.PrepareDataWith(r =>
             {
@@ -159,8 +159,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             }
         }
 
-        [Fact(DisplayName = nameof(ReturnsZeroMotnhlyDataForEmptyYear))]
-        public async Task ReturnsZeroMotnhlyDataForEmptyYear()
+        [Fact(DisplayName = nameof(Returns_zero_monthly_data_for_empty_year))]
+        public async Task Returns_zero_monthly_data_for_empty_year()
         {
             var controller = _fixture.GetService<StatisticsController>();
 

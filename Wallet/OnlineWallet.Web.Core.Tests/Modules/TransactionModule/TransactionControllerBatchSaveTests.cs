@@ -86,7 +86,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch(new List<Transaction>
+            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -127,7 +127,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch(new List<Transaction>
+            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -166,7 +166,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch(new List<Transaction>
+            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -195,7 +195,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch(
+            var transactions = TransactionOperationBatch.DeleteBatch(
                 new List<long> { _transaction1.TransactionId });
             //act
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
@@ -211,7 +211,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch(
+            var transactions = TransactionOperationBatch.SaveBatch(
                 TransactionBuilder.CreateListOfSize(1).BuildList().ToList());
             controller.ModelState.AddModelError("Name", "Invalid");
             //act
@@ -229,7 +229,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var newCategory = "cat2";
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
-            var transactions = new TransactionOperationBatch(new List<Transaction>
+            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -267,7 +267,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
             const string newArticleName = "third";
-            var transactions = new TransactionOperationBatch(new List<Transaction>
+            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -303,7 +303,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var newCategory = "cat2";
             var controller = Fixture.GetService<TransactionController>();
             DateTime newDate = DateTime.Parse("2017-10-17");
-            var transactions = new TransactionOperationBatch(new List<Transaction>
+            var transactions = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 new Transaction
                 {
@@ -347,7 +347,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 _article1.Occurence = 2;
                 Fixture.DbContext.SaveChanges();
             }
-            var transactions = new TransactionOperationBatch(
+            var transactions = TransactionOperationBatch.DeleteBatch(
                 new List<long> { _transaction1.TransactionId });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);
@@ -367,7 +367,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             //arrange
             var controller = Fixture.GetService<TransactionController>();
-            var transactions = new TransactionOperationBatch(
+            var transactions = TransactionOperationBatch.DeleteBatch(
                 new List<long> { _transaction1.TransactionId });
             //act
             await controller.BatchSave(transactions, CancellationToken.None);

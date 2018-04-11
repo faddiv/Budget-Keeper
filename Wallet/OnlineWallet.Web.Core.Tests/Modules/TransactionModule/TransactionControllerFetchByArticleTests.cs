@@ -17,6 +17,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         private readonly Transaction _transaction1;
         private readonly Transaction _transaction2;
         private readonly Transaction _transaction3;
+        private readonly Transaction _transaction4;
 
         #endregion
 
@@ -26,7 +27,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         {
             _transaction1 = new Transaction
             {
-                Name = "first",
+                Name = "seconder",
                 Category = "cat",
                 Comment = "comment",
                 CreatedAt = DateTime.Parse("2017-09-16"),
@@ -54,25 +55,36 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 Value = 102,
                 WalletId = Fixture.WalletBankAccount.MoneyWalletId
             };
-            DbSet.AddRange(_transaction1, _transaction2, _transaction3);
+            _transaction4 = new Transaction
+            {
+                Name = "Second",
+                Category = "cat",
+                Comment = "comment",
+                CreatedAt = DateTime.Parse("2017-09-17"),
+                Direction = MoneyDirection.Expense,
+                Value = 102,
+                WalletId = Fixture.WalletBankAccount.MoneyWalletId
+            };
+            DbSet.AddRange(_transaction1, _transaction2, _transaction3, _transaction4);
             Fixture.DbContext.SaveChanges();
         }
 
         #endregion
 
-        [Fact(DisplayName = nameof(Only_Fetches_Contcrete_Article))]
-        public async Task Only_Fetches_Contcrete_Article()
+        [Fact(DisplayName = nameof(Only_fetches_exact_article))]
+        public async Task Only_fetches_exact_article()
         {
             var result = await Controller.FetchByArticle("second");
 
             result.Should().NotBeNullOrEmpty();
             result.Should().NotContain(_transaction1);
+            result.Should().NotContain(_transaction4);
             result.Should().Contain(_transaction2);
             result.Should().Contain(_transaction3);
         }
 
-        [Fact(DisplayName =nameof(Fetches_LatesFirst))]
-        public async Task Fetches_LatesFirst()
+        [Fact(DisplayName =nameof(Fetches_latest_first))]
+        public async Task Fetches_latest_first()
         {
             var result = await Controller.FetchByArticle("second");
             

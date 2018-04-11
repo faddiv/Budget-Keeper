@@ -30,12 +30,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             fixture.DbContext.SaveChanges();
         }
 
-        [Fact(DisplayName = nameof(ShouldInvokeEventsOnUpdate))]
-        public async Task ShouldInvokeEventsOnUpdate()
+        [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
+        public async Task Should_invoke_events_on_update()
         {
             //Arrange
             var modifiedTransaction = AutoMapper.Mapper.Map<Transaction>(_transaction1);
-            var batch = new TransactionOperationBatch(
+            var batch = TransactionOperationBatch.SaveBatch(
                 new List<Transaction>
                 {
                     modifiedTransaction
@@ -47,12 +47,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             VerifyExecuteCalledWith(_transaction1, modifiedTransaction, BatchSaveOperationType.Update);
         }
 
-        [Fact(DisplayName = nameof(ShouldInvokeEventsOnUpdate))]
-        public async Task ShouldInvokeEventsOnInsert()
+        [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
+        public async Task Should_invoke_events_on_insert()
         {
             //Arrange
             var newTransaction = new TransactionBuilder().Build();
-            var batch = new TransactionOperationBatch(new List<Transaction>
+            var batch = TransactionOperationBatch.SaveBatch(new List<Transaction>
             {
                 newTransaction
             });
@@ -63,11 +63,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             VerifyExecuteCalledWith(null, newTransaction, BatchSaveOperationType.New);
         }
 
-        [Fact(DisplayName = nameof(ShouldInvokeEventsOnUpdate))]
-        public async Task ShouldInvokeEventsOnDelete()
+        [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
+        public async Task Should_invoke_events_on_delete()
         {
             //Arrange
-            var batch = new TransactionOperationBatch(
+            var batch = TransactionOperationBatch.DeleteBatch(
                 new List<long> { _transaction1.TransactionId });
 
             //Act

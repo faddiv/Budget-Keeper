@@ -42,8 +42,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             _fixture.Cleanup();
         }
 
-        [Fact(DisplayName = "ProcessTransactions detects if amount changes while name and direction remain same")]
-        public async Task ProcessTransactions_detects_if_amount_changes_while_name_and_direction_remain_same()
+        [Fact(DisplayName = nameof(Detects_if_amount_changes_while_name_and_direction_remain_same))]
+        public async Task Detects_if_amount_changes_while_name_and_direction_remain_same()
         {
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
@@ -75,8 +75,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             }
         }
 
-        [Fact(DisplayName = "ProcessTransactions detects if name changes while wallet and Amount remain same")]
-        public async Task ProcessTransactions_detects_if_name_changes_while_wallet_and_Amount_remain_same()
+        [Fact(DisplayName = nameof(Detects_if_name_changes_while_wallet_and_Amount_remain_same))]
+        public async Task Detects_if_name_changes_while_wallet_and_Amount_remain_same()
         {
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
@@ -108,8 +108,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             }
         }
 
-        [Fact(DisplayName = "ProcessTransactions reads valid import file")]
-        public async Task TransactionReadsValidImportFile()
+        [Fact(DisplayName = nameof(Reads_valid_import_file))]
+        public async Task Reads_valid_import_file()
         {
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
