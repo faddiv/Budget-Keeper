@@ -16,7 +16,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(ImportController), nameof(ImportController.ProcessTransactions))]
     [Collection("Database collection")]
-    public class ImportControllerTests : IDisposable
+    public class ImportControllerProcessTransactionsTests : IDisposable
     {
         #region Fields
 
@@ -28,7 +28,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #region  Constructors
 
-        public ImportControllerTests(DatabaseFixture fixture)
+        public ImportControllerProcessTransactionsTests(DatabaseFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
         }
