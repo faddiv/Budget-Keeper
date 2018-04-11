@@ -34,6 +34,11 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             return _articleQueries.SearchByText(search, limit, token);
         }
 
+        public async Task<IActionResult> SyncFromTransactions(List<string> articles = null)
+        {
+            return Ok();
+        }
+
         #endregion
     }
 }
