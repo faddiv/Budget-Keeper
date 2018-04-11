@@ -65,7 +65,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
             var to = list.Max(e => e.Created);
             var directions = ExtractDirections(list);
             var walletIds = ExtractWalletIds(list, wallets);
-            var categories = extractCategories(list);
+            var categories = ExtractCategories(list);
             var savedItems = await _transactionQueries.FetchByFilters(from, to, directions, walletIds, categories, token);
             foreach (var item in list)
             {
@@ -89,7 +89,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
             return list;
         }
 
-        private static List<string> extractCategories(List<ExportImportRow> list)
+        private static List<string> ExtractCategories(List<ExportImportRow> list)
         {
             return list.Select(e => e.Category).Distinct().Select(e => e?.ToLower()).ToList();
         }

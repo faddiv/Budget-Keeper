@@ -80,8 +80,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             article.LastWalletId.Should().Be(transaction2.WalletId);
         }
 
-        [Fact(DisplayName = nameof(occurence_is_correct_on_more_new_transaction))]
-        public async Task occurence_is_correct_on_more_new_transaction()
+        [Fact(DisplayName = nameof(Occurence_is_correct_on_more_new_transaction))]
+        public async Task Occurence_is_correct_on_more_new_transaction()
         {
             //Arrange
             var transaction1 = _transactionBuilder
@@ -102,6 +102,37 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             article.LastPrice.Should().Be(transaction2.Value);
             article.LastUpdate.Should().Be(transaction2.CreatedAt);
             article.LastWalletId.Should().Be(transaction2.WalletId);
+        }
+
+        [Fact(DisplayName = nameof(Occurence_is_correct_on_new_and_updated_transaction))]
+        public async Task Occurence_is_correct_on_new_and_updated_transaction()
+        {
+            //Arrange
+            var transaction1 = _transactionBuilder
+                .WithName("Article1").WithCreatedAt(2017, 1)
+                .Build();
+            var transaction2 = _transactionBuilder
+                .WithName("Article1").WithCreatedAt(2017, 2)
+                .Build();
+            var transaction3 = _transactionBuilder
+                .WithName("Article1").WithCreatedAt(2017, 3)
+                .Build();
+
+            var batch = TransactionOperationBatch.SaveBatch(transaction1);
+            await Execute(batch);
+            transaction2.TransactionId = transaction1.TransactionId;
+            //Act
+            batch = TransactionOperationBatch.SaveBatch(transaction3, transaction2);
+            await Execute(batch);
+            //Assert
+            var article = _fixture.DbContext.Article.Find(transaction3.Name);
+            article.Should().NotBeNull();
+            article.Name.Should().Be(transaction3.Name);
+            article.Occurence.Should().Be(2);
+            article.Category.Should().Be(transaction3.Category);
+            article.LastPrice.Should().Be(transaction3.Value);
+            article.LastUpdate.Should().Be(transaction3.CreatedAt);
+            article.LastWalletId.Should().Be(transaction3.WalletId);
         }
 
         [Fact(DisplayName = nameof(Updates_existing_article_on_update_transaction_if_newer))]
@@ -129,6 +160,36 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             article.LastPrice.Should().Be(transaction2.Value);
             article.LastUpdate.Should().Be(transaction2.CreatedAt);
             article.LastWalletId.Should().Be(transaction2.WalletId);
+        }
+
+        [Fact(DisplayName = nameof(Updates_existing_article_on_update_transaction_on_mixing_date))]
+        public async Task Updates_existing_article_on_update_transaction_on_mixing_date()
+        {
+            //Arrange
+            var transaction1 = _transactionBuilder
+                .WithName("Article1").WithCreatedAt(2017, 1)
+                .Build();
+            var transaction2 = _transactionBuilder
+                .WithName("Article1").WithCreatedAt(2017, 2)
+                .Build();
+            var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
+            await Execute(batch);
+            //Act
+            transaction1 = _fixture.Clone(transaction1);
+            transaction2 = _fixture.Clone(transaction2);
+            transaction1.CreatedAt = new DateTime(2017, 3, 11);
+            transaction2.CreatedAt = new DateTime(2017, 1, 1);
+            batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
+            await Execute(batch);
+            //Assert
+            var article = _fixture.DbContext.Article.Find(transaction1.Name);
+            article.Should().NotBeNull();
+            article.Name.Should().Be(transaction1.Name);
+            article.Occurence.Should().Be(2);
+            article.Category.Should().Be(transaction1.Category);
+            article.LastPrice.Should().Be(transaction1.Value);
+            article.LastUpdate.Should().Be(transaction1.CreatedAt);
+            article.LastWalletId.Should().Be(transaction1.WalletId);
         }
 
         [Fact(DisplayName = nameof(Leave_existing_article_on_update_transaction_if_older))]
@@ -184,8 +245,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             article.LastWalletId.Should().Be(transaction1.WalletId);
         }
 
-        [Fact(DisplayName = nameof(Transaction_name_change_Scenario1))]
-        public async Task Transaction_name_change_Scenario1()
+        [Fact(DisplayName = nameof(Transaction_name_change_for_all_article))]
+        public async Task Transaction_name_change_for_all_article()
         {
             //Arrange
             var transaction1 = _transactionBuilder
@@ -210,8 +271,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             article2.Occurence.Should().Be(1);
         }
 
-        [Fact(DisplayName = nameof(Transaction_name_change_Scenario2))]
-        public async Task Transaction_name_change_Scenario2()
+        [Fact(DisplayName = nameof(Transaction_name_change_one_with_new_name))]
+        public async Task Transaction_name_change_one_with_new_name()
         {
             //Arrange
             var transaction1 = _transactionBuilder
@@ -241,8 +302,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             article2.Occurence.Should().Be(1);
         }
 
-        [Fact(DisplayName = nameof(Transaction_name_change_Scenario3))]
-        public async Task Transaction_name_change_Scenario3()
+        [Fact(DisplayName = nameof(Transaction_name_change_last_article_to_existing))]
+        public async Task Transaction_name_change_last_article_to_existing()
         {
             //Arrange
             var transaction1 = _transactionBuilder
