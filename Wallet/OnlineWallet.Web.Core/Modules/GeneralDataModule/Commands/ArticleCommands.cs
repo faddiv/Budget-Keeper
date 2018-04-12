@@ -48,11 +48,12 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             {
                 articleQuery = articleQuery.Where(e => articleNames.Contains(e.Name));
             }
-            if(!Has(articleNames))
-            {
-                articleNames = articleOccurences.Select(e => e.Article).ToList();
-            }
             var articles = await articleQuery.ToListAsync(token);
+            if (!Has(articleNames))
+            {
+                articleNames = articles.Select(e => e.Name).ToList();
+                articleNames = articleNames.Union(articleOccurences.Select(e => e.Article)).ToList();
+            }
             foreach (var articleName in articleNames)
             {
                 var occurence = articleOccurences.Find(e => e.Article == articleName)?.Occurence ?? 0;

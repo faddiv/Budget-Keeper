@@ -46,12 +46,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction.Name);
+            article.Should().BasedOn(transaction);
             article.Occurence.Should().Be(1);
-            article.Category.Should().Be(transaction.Category);
-            article.LastPrice.Should().Be(transaction.Value);
-            article.LastUpdate.Should().Be(transaction.CreatedAt);
-            article.LastWalletId.Should().Be(transaction.WalletId);
         }
 
         [Fact(DisplayName = nameof(Updates_existing_article_on_new_transaction))]
@@ -72,12 +68,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction2.Name);
+            article.Should().BasedOn(transaction2);
             article.Occurence.Should().Be(2);
-            article.Category.Should().Be(transaction2.Category);
-            article.LastPrice.Should().Be(transaction2.Value);
-            article.LastUpdate.Should().Be(transaction2.CreatedAt);
-            article.LastWalletId.Should().Be(transaction2.WalletId);
         }
 
         [Fact(DisplayName = nameof(Occurence_is_correct_on_more_new_transaction))]
@@ -96,12 +88,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction2.Name);
+            article.Should().BasedOn(transaction2);
             article.Occurence.Should().Be(2);
-            article.Category.Should().Be(transaction2.Category);
-            article.LastPrice.Should().Be(transaction2.Value);
-            article.LastUpdate.Should().Be(transaction2.CreatedAt);
-            article.LastWalletId.Should().Be(transaction2.WalletId);
         }
 
         [Fact(DisplayName = nameof(Occurence_is_correct_on_new_and_updated_transaction))]
@@ -127,12 +115,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction3.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction3.Name);
+            article.Should().BasedOn(transaction3);
             article.Occurence.Should().Be(2);
-            article.Category.Should().Be(transaction3.Category);
-            article.LastPrice.Should().Be(transaction3.Value);
-            article.LastUpdate.Should().Be(transaction3.CreatedAt);
-            article.LastWalletId.Should().Be(transaction3.WalletId);
         }
 
         [Fact(DisplayName = nameof(Updates_existing_article_on_update_transaction_if_newer))]
@@ -154,12 +138,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction2.Name);
+            article.Should().BasedOn(transaction2);
             article.Occurence.Should().Be(1);
-            article.Category.Should().Be(transaction2.Category);
-            article.LastPrice.Should().Be(transaction2.Value);
-            article.LastUpdate.Should().Be(transaction2.CreatedAt);
-            article.LastWalletId.Should().Be(transaction2.WalletId);
         }
 
         [Fact(DisplayName = nameof(Updates_existing_article_on_update_transaction_on_mixing_date))]
@@ -184,12 +164,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction1.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction1.Name);
+            article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(2);
-            article.Category.Should().Be(transaction1.Category);
-            article.LastPrice.Should().Be(transaction1.Value);
-            article.LastUpdate.Should().Be(transaction1.CreatedAt);
-            article.LastWalletId.Should().Be(transaction1.WalletId);
         }
 
         [Fact(DisplayName = nameof(Leave_existing_article_on_update_transaction_if_older))]
@@ -211,12 +187,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction1.Name);
+            article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(1);
-            article.Category.Should().Be(transaction1.Category);
-            article.LastPrice.Should().Be(transaction1.Value);
-            article.LastUpdate.Should().Be(transaction1.CreatedAt);
-            article.LastWalletId.Should().Be(transaction1.WalletId);
         }
 
         [Fact(DisplayName = nameof(Updates_existing_article_on_delete_transaction_if_newer))]
@@ -237,12 +209,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction1.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction1.Name);
+            article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(1);
-            article.Category.Should().Be(transaction1.Category);
-            article.LastPrice.Should().Be(transaction1.Value);
-            article.LastUpdate.Should().Be(transaction1.CreatedAt);
-            article.LastWalletId.Should().Be(transaction1.WalletId);
         }
 
         [Fact(DisplayName = nameof(Transaction_name_change_for_all_article))]
@@ -349,12 +317,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             var article = _fixture.DbContext.Article.Find(transaction1.Name);
             article.Should().NotBeNull();
-            article.Name.Should().Be(transaction1.Name);
+            article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(1);
-            article.Category.Should().Be(transaction1.Category);
-            article.LastPrice.Should().Be(transaction1.Value);
-            article.LastUpdate.Should().Be(transaction1.CreatedAt);
-            article.LastWalletId.Should().Be(transaction1.WalletId);
         }
 
         [Fact(DisplayName = nameof(Removes_article_if_no_more_transaction))]
