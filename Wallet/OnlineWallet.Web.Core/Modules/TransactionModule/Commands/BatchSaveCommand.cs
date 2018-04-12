@@ -69,7 +69,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             foreach (var transactionEvent in Events)
             {
                 token.ThrowIfCancellationRequested();
-                transactionEvent.BeforeSave(args, token);
+                await transactionEvent.BeforeSave(args, token);
             }
 
             foreach (var operation in operations)
@@ -95,7 +95,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             foreach (var transactionEvent in Events)
             {
                 token.ThrowIfCancellationRequested();
-                transactionEvent.AfterSave(args, token);
+                await transactionEvent.AfterSave(args, token);
             }
         }
 
