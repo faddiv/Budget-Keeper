@@ -31,15 +31,28 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 
         public async Task UpdateArticleStatuses(List<string> articleNames, CancellationToken token)
         {
-            var articleOccurences = await _db.Transactions
-                .Where(e => articleNames.Contains(e.Name))
+            IQueryable<Transaction> transactionQuery = _db.Transactions;
+            if (Has(articleNames))
+            {
+                transactionQuery = transactionQuery.Where(e => articleNames.Contains(e.Name));
+            }
+            var articleOccurences = await transactionQuery
                 .GroupBy(e => e.Name)
                 .Select(e => new
                 {
                     Article = e.Key,
                     Occurence = e.Count()
                 }).ToListAsync(token);
-            var articles = await _db.Article.Where(e => articleNames.Contains(e.Name)).ToListAsync(token);
+            IQueryable<Article> articleQuery = _db.Article;
+            if (Has(articleNames))
+            {
+                articleQuery = articleQuery.Where(e => articleNames.Contains(e.Name));
+            }
+            if(!Has(articleNames))
+            {
+                articleNames = articleOccurences.Select(e => e.Article).ToList();
+            }
+            var articles = await articleQuery.ToListAsync(token);
             foreach (var articleName in articleNames)
             {
                 var occurence = articleOccurences.Find(e => e.Article == articleName)?.Occurence ?? 0;
@@ -75,6 +88,11 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             }
 
             await _db.SaveChangesAsync(token);
+        }
+
+        private static bool Has(List<string> articleNames)
+        {
+            return articleNames != null && articleNames.Count > 0;
         }
 
         #endregion

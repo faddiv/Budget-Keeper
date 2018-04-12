@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
 using OnlineWallet.Web.Modules.GeneralDataModule.Models;
 using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
 
@@ -13,14 +14,16 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         #region Fields
 
         private readonly IArticleQueries _articleQueries;
+        private readonly IArticleCommands _articleCommands;
 
         #endregion
 
         #region  Constructors
 
-        public ArticleController(IArticleQueries articleQueries)
+        public ArticleController(IArticleQueries articleQueries, IArticleCommands articleCommands)
         {
             _articleQueries = articleQueries;
+            _articleCommands = articleCommands;
         }
 
         #endregion
@@ -34,8 +37,10 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             return _articleQueries.SearchByText(search, limit, token);
         }
 
-        public async Task<IActionResult> SyncFromTransactions(List<string> articles = null)
+        public async Task<IActionResult> SyncFromTransactions(List<string> articles = null,
+            CancellationToken token = default(CancellationToken))
         {
+            await _articleCommands.UpdateArticleStatuses(articles, token);
             return Ok();
         }
 
