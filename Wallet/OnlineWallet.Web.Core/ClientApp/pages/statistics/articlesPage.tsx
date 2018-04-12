@@ -55,6 +55,15 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
     }
 
     @bind
+    async synchronize() {
+        await articleService.syncFromTransactions();
+        const articles = await articleService.filterBy(this.state.name, 30);
+        this.setState({
+            articles
+        });
+    }
+
+    @bind
     async openRow(item: ArticleModel) {
         const state = this.state;
         const openItem = state.openItem === item ? null : item;
@@ -188,8 +197,11 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
                 <form onSubmit={noAction}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Article</label>
-                        <div className="col-sm-10">
+                        <div className="col-sm-8">
                             <input type="name" className="form-control" id="name" name="name" placeholder="Search article..." value={name} onChange={this.handleInputChange} />
+                        </div>
+                        <div className="col-sm-2">
+                            <button className="btn btn-danger" type="button" onClick={this.synchronize}>Synchronize</button>
                         </div>
                     </div>
                 </form>

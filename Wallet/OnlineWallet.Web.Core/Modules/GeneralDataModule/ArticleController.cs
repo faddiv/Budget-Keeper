@@ -37,6 +37,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             return _articleQueries.SearchByText(search, limit, token);
         }
 
+        [HttpPost("[action]")]
         public async Task<IActionResult> SyncFromTransactions(List<string> articles = null,
             CancellationToken token = default(CancellationToken))
         {

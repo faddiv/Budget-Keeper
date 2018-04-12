@@ -192,5 +192,12 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             articles.Should().OnlyContain(e => articleNamesToInsert.Contains(e.Name));
             articles.Should().NotContain(e => articleNamesToDelete.Contains(e.Name));
         }
+        
+        [Fact(DisplayName = nameof(Calculates_occurence_correctly))]
+        public async Task Calculates_occurence_correctly()
+        {
+            Assert.True(false, "Test if adding multiple transaction with sme name brokes the system. (It does currently)");
+            // TODO: Maybe test case sensitivity. It seems pizzás rúd vs Pizzás rúd case difference also brokes the system.
+        }
     }
 }
