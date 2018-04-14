@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TestStack.Dossier.Lists;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 {
@@ -16,18 +17,22 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
     [Collection("Database collection")]
     public class ArticleCommandsUpdateArticleStatusesTests : IDisposable
     {
+        private readonly ITestOutputHelper _output;
         private readonly ServicesFixture _fixture;
         private readonly IArticleCommands _articleCommands;
 
-        public ArticleCommandsUpdateArticleStatusesTests(DatabaseFixture fixture)
+        public ArticleCommandsUpdateArticleStatusesTests(DatabaseFixture fixture, ITestOutputHelper output)
         {
+            _output = output;
             _fixture = fixture.CreateServiceFixture();
             _articleCommands = _fixture.GetService<IArticleCommands>();
+            _output.WriteLine("Initialized");
         }
 
         public void Dispose()
         {
             _fixture?.Cleanup();
+            _output.WriteLine("Cleaned Up {0}", _fixture.DbContext.Article.Count());
         }
 
         [Fact(DisplayName = nameof(Inserts_all_new_article_if_null_provided))]
@@ -42,7 +47,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 
             // Assert
             var articles = _fixture.DbContext.Article.ToList();
-            articles.Should().HaveCount(_fixture.DbContext.Transactions.Select(e => e.Name).Distinct().Count());
+            articles.Should().HaveDistinctArticleNamesOnlyFrom(_fixture.DbContext.Transactions);
         }
 
         [Fact(DisplayName = nameof(Inserts_only_given_articles_if_provided))]
@@ -196,8 +201,69 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
         [Fact(DisplayName = nameof(Calculates_occurence_correctly))]
         public async Task Calculates_occurence_correctly()
         {
-            Assert.True(false, "Test if adding multiple transaction with sme name brokes the system. (It does currently)");
-            // TODO: Maybe test case sensitivity. It seems pizzás rúd vs Pizzás rúd case difference also brokes the system.
+            // Arrange
+            _fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(10)
+                .TheFirst(2).WithName("alfa")
+                .TheNext(1).WithName("Alfa")
+                .TheNext(7).WithName("beta")
+                .BuildList());
+            _fixture.DbContext.SaveChanges();
+
+            // Act
+            await _articleCommands.UpdateArticleStatuses(null, CancellationToken.None);
+
+            // Assert
+            var articles = _fixture.DbContext.Article.ToList();
+            articles.Should().HaveCount(2);
+            articles.Should().Contain(e => string.Equals(e.Name, "alfa", StringComparison.InvariantCultureIgnoreCase))
+                .Which.Occurence.Should().Be(3);
+            articles.Should().Contain(e => e.Name == "beta")
+                .Which.Occurence.Should().Be(7);
+        }
+
+        [Fact(DisplayName = nameof(Dont_insert_case_insensitive_duplicate_if_article_names_provided))]
+        public async Task Dont_insert_case_insensitive_duplicate_if_article_names_provided()
+        {
+            // Arrange
+            _fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(10)
+                .TheFirst(5).WithName("alfa")
+                .TheNext(5).WithName("Alfa")
+                .BuildList());
+            _fixture.DbContext.SaveChanges();
+
+            // Act
+            await _articleCommands.UpdateArticleStatuses(new List<string>{"alfa", "Alfa"}, CancellationToken.None);
+
+            // Assert
+            var articles = _fixture.DbContext.Article.ToList();
+            articles.Should().HaveCount(1);
+            articles.Should().Contain(e => string.Equals(e.Name, "alfa", StringComparison.InvariantCultureIgnoreCase))
+                .Which.Occurence.Should().Be(10);
+        }
+
+        [Fact(DisplayName = nameof(Inserts_The_first_name_it_encounters))]
+        public async Task Inserts_The_first_name_it_encounters()
+        {
+            // Arrange
+
+            // Act
+            _fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(5)
+                .All().WithName("ALFA")
+                .BuildList());
+            _fixture.DbContext.SaveChanges();
+            await _articleCommands.UpdateArticleStatuses(null, CancellationToken.None);
+
+            _fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(5)
+                .All().WithName("alfa")
+                .BuildList());
+            _fixture.DbContext.SaveChanges();
+            await _articleCommands.UpdateArticleStatuses(null, CancellationToken.None);
+
+            // Assert
+            var articles = _fixture.DbContext.Article.ToList();
+            articles.Should().HaveCount(1);
+            articles.Should().Contain(e => e.Name == "ALFA")
+                .Which.Occurence.Should().Be(10);
         }
     }
 }

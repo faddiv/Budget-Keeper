@@ -26,8 +26,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             _fixture.Cleanup();
         }
 
-        [Fact(DisplayName = nameof(Groups_transactions_by_name_case_sensitive))]
-        public async Task Groups_transactions_by_name_case_sensitive()
+        [Fact(DisplayName = nameof(Groups_transactions_by_name_case_insensitive))]
+        public async Task Groups_transactions_by_name_case_insensitive()
         {
             await _fixture.PrepareDataWith(tr => tr
                 .TheFirst(5).WithName("Alfa")
@@ -38,8 +38,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
             result.Should()
                 .NotBeNullOrEmpty().And
-                .HaveCount(3);
-            result.Select(e => e.Name).Should().OnlyHaveUniqueItems();
+                .HaveCount(2);
+            result.Select(e => e.Name.ToLower()).Should().OnlyHaveUniqueItems();
         }
 
         [Fact(DisplayName = nameof(Search_is_case_insesitive))]

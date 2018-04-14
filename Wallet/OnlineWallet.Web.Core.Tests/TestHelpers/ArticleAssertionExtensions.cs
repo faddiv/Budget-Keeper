@@ -1,7 +1,5 @@
-﻿using OnlineWallet.Web.DataLayer;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.TestHelpers
 {
@@ -10,6 +8,11 @@ namespace OnlineWallet.Web.TestHelpers
         public static ArticleAssertion Should(this Article article)
         {
             return new ArticleAssertion(article);
+        }
+
+        public static ArticleListAssertion Should(this List<Article> article)
+        {
+            return new ArticleListAssertion(article);
         }
     }
 }

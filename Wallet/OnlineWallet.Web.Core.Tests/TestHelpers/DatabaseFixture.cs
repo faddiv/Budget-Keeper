@@ -15,11 +15,13 @@ namespace OnlineWallet.Web.TestHelpers
 {
     public class DatabaseFixture : IDisposable
     {
+        private DbContextOptionsBuilder<WalletDbContext> optionsBuilder;
         #region  Constructors
 
         public DatabaseFixture()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
+            
+            optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
             optionsBuilder.UseInMemoryDatabase("Wallet");
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseLoggerFactory(new LoggerFactory(new[]
@@ -57,6 +59,8 @@ namespace OnlineWallet.Web.TestHelpers
 
         public void Cleanup()
         {
+            DbContext.Dispose();
+            DbContext = new WalletDbContext(optionsBuilder.Options);
             DbContext.RemoveRange(DbContext.Transactions);
             DbContext.RemoveRange(DbContext.Article);
             DbContext.RemoveRange(DbContext.Wallets.Skip(2));
@@ -90,6 +94,7 @@ namespace OnlineWallet.Web.TestHelpers
         public void Dispose()
         {
             DbContext.Dispose();
+            DbContext = new WalletDbContext(optionsBuilder.Options);
         }
         
         public IList<Transaction> BuildTransactions(Func<TransactionBuilder, TransactionBuilder> rules, int size = 100)

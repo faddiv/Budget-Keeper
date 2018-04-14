@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -34,30 +35,34 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             IQueryable<Transaction> transactionQuery = _db.Transactions;
             if (Has(articleNames))
             {
-                transactionQuery = transactionQuery.Where(e => articleNames.Contains(e.Name));
+                articleNames = ToLowerDistinct(articleNames);
+                var an = articleNames;
+                transactionQuery = transactionQuery.Where(e => an.Contains(e.Name.ToLower()));
             }
             var articleOccurences = await transactionQuery
-                .GroupBy(e => e.Name)
+                .GroupBy(e => e.Name.ToLower())
                 .Select(e => new
                 {
-                    Article = e.Key,
+                    Article = e.Key.ToLower(),
                     Occurence = e.Count()
                 }).ToListAsync(token);
             IQueryable<Article> articleQuery = _db.Article;
             if (Has(articleNames))
             {
-                articleQuery = articleQuery.Where(e => articleNames.Contains(e.Name));
+                var an = articleNames;
+                articleQuery = articleQuery.Where(e => an.Contains(e.Name.ToLower()));
             }
             var articles = await articleQuery.ToListAsync(token);
             if (!Has(articleNames))
             {
                 articleNames = articles.Select(e => e.Name).ToList();
                 articleNames = articleNames.Union(articleOccurences.Select(e => e.Article)).ToList();
+                articleNames = ToLowerDistinct(articleNames);
             }
             foreach (var articleName in articleNames)
             {
                 var occurence = articleOccurences.Find(e => e.Article == articleName)?.Occurence ?? 0;
-                var article = articles.Find(e => e.Name == articleName);
+                var article = articles.Find(e => string.Equals(e.Name, articleName, StringComparison.InvariantCultureIgnoreCase));
                 if (occurence == 0)
                 {
                     if (article != null)
@@ -75,7 +80,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
                     {
                         article = new Article
                         {
-                            Name = articleName
+                            Name = transaction.Name
                         };
                         _db.Article.Add(article);
                     }
@@ -89,6 +94,13 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             }
 
             await _db.SaveChangesAsync(token);
+        }
+
+        private static List<string> ToLowerDistinct(List<string> articleNames)
+        {
+            return Has(articleNames)
+                ? articleNames.Select(e => e.ToLower()).Distinct().ToList()
+                : articleNames;
         }
 
         private static bool Has(List<string> articleNames)
