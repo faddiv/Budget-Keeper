@@ -82,7 +82,14 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
                         {
                             Name = transaction.Name
                         };
-                        _db.Article.Add(article);
+                        try
+                        {
+                            _db.Article.Add(article);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            throw new InvalidOperationException($"Invalid operation on {articleName} ({transaction.Name})", ex);
+                        }
                     }
 
                     article.Category = transaction.Category;

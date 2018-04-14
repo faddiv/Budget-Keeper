@@ -42,7 +42,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             foreach (var operation in model.Save)
             {
                 token.ThrowIfCancellationRequested();
-                operation.CreatedAt = operation.CreatedAt.Date;
+                FormatData(operation);
                 if (operation.TransactionId != 0)
                 {
                     var existingEntity = existingEntities.Find(e => e.TransactionId == operation.TransactionId);
@@ -97,6 +97,16 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
                 token.ThrowIfCancellationRequested();
                 await transactionEvent.AfterSave(args, token);
             }
+        }
+
+        private static void FormatData(Transaction operation)
+        {
+            operation.CreatedAt = operation.CreatedAt.Date;
+            operation.Name = operation.Name?.Trim();
+            operation.Comment = operation.Comment?.Trim();
+            operation.Comment = string.IsNullOrEmpty(operation.Comment) ? null : operation.Comment;
+            operation.Category = operation.Category?.Trim();
+            operation.Category = string.IsNullOrEmpty(operation.Category) ? null : operation.Category;
         }
 
         #endregion

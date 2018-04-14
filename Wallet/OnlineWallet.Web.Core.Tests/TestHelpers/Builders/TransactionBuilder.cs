@@ -32,6 +32,22 @@ namespace OnlineWallet.Web.TestHelpers.Builders
             return Set(e => e.Category, () => Any.StringOfLength(5));
         }
 
+        public virtual TransactionBuilder WithComment(string comment)
+        {
+            return Set(e => e.Comment, comment);
+        }
+
+        public virtual TransactionBuilder WithContinousWallet(IWalletDbContext context)
+        {
+            List<Wallet> wallets = null;
+            int i = 0;
+            return Set(e => e.WalletId, () =>
+            {
+                wallets = wallets ?? context.Wallets.ToList();
+                return wallets[i++ % wallets.Count].MoneyWalletId;
+            });
+        }
+
         public virtual TransactionBuilder WithCreatedAt(string date)
         {
             var realDate = DateTime.Parse(date);
@@ -66,6 +82,11 @@ namespace OnlineWallet.Web.TestHelpers.Builders
             return Set(e => e.Name, name);
         }
 
+        public virtual TransactionBuilder WithTransactionId(long transactionId)
+        {
+            return Set(e => e.TransactionId, transactionId);
+        }
+
         public virtual TransactionBuilder WithValue(int value)
         {
             return Set(e => e.Value, value);
@@ -74,17 +95,6 @@ namespace OnlineWallet.Web.TestHelpers.Builders
         public virtual TransactionBuilder WithWallet(Wallet wallet)
         {
             return Set(e => e.WalletId, wallet.MoneyWalletId);
-        }
-
-        public virtual TransactionBuilder WithContinousWallet(IWalletDbContext context)
-        {
-            List<Wallet> wallets = null;
-            int i = 0;
-            return Set(e => e.WalletId, () =>
-            {
-                wallets = wallets ?? context.Wallets.ToList();
-                return wallets[i++ % wallets.Count].MoneyWalletId;
-            });
         }
 
         #endregion

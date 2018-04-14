@@ -44,7 +44,7 @@ namespace OnlineWallet.Web.TestHelpers
             var jsonResult = (JsonResult) actionResult;
             jsonResult.Value.Should()
                 .NotBeNull().And
-                .BeOfType<TJsonValue>();
+                .BeAssignableTo<TJsonValue>();
 
             return (TJsonValue) jsonResult.Value;
         }
