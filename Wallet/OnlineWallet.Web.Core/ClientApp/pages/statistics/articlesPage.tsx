@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { bind } from "bind-decorator";
 
 import { Layout } from "layout";
@@ -7,6 +8,7 @@ import { ArticleModel, articleService, Wallet, transactionService } from "wallet
 import { updateState, Collapse, noAction } from "react-ext";
 import { getWalletNameById, TransactionViewModel, mapTransactionViewModel, getDirectionColoring, TransactionTable } from "walletCommon";
 import { RootState } from "reducers";
+import { AlertsActions } from "actions/alerts";
 
 interface OpenedArticles {
     [name: string]: TransactionViewModel[][];
@@ -14,6 +16,7 @@ interface OpenedArticles {
 
 export interface ArticlesPageProps {
     wallets: Wallet[];
+    actions: typeof AlertsActions;
 }
 
 export interface ArticlesPageState {
@@ -23,9 +26,10 @@ export interface ArticlesPageState {
     openedArticleTransactions: TransactionViewModel[];
     transactionsCache: OpenedArticles;
     pageNumber: number;
+    sync: boolean;
 }
 
-@connect(mapStateToProps, undefined)
+@connect(mapStateToProps, mapDispatchToProps)
 export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPageState> {
     constructor(props) {
         super(props);
@@ -35,7 +39,8 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
             openItem: null,
             openedArticleTransactions: [],
             transactionsCache: {},
-            pageNumber: 0
+            pageNumber: 0,
+            sync: false
         };
     }
 
@@ -56,11 +61,29 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
 
     @bind
     async synchronize() {
-        await articleService.syncFromTransactions();
-        const articles = await articleService.filterBy(this.state.name, 30);
         this.setState({
-            articles
+            sync: true
         });
+        try {
+            await articleService.syncFromTransactions();
+            const articles = await articleService.filterBy(this.state.name, 30);
+            this.setState({
+                articles,
+                sync: false
+            });
+            this.props.actions.showAlert({
+                type: "success",
+                message: "Synchronization successful"
+            });
+        } catch {
+            this.setState({
+                sync: false
+            });
+            this.props.actions.showAlert({
+                type: "danger",
+                message: "Synchronization failed"
+            });
+        }
     }
 
     @bind
@@ -190,7 +213,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
     }
 
     render() {
-        const { name, articles } = this.state;
+        const { name, articles, sync } = this.state;
         console.log("rendering", this.state, "props", this.props);
         return (
             <Layout>
@@ -201,7 +224,9 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
                             <input type="name" className="form-control" id="name" name="name" placeholder="Search article..." value={name} onChange={this.handleInputChange} />
                         </div>
                         <div className="col-sm-2">
-                            <button className="btn btn-danger" type="button" onClick={this.synchronize}>Synchronize</button>
+                            <button className="btn btn-danger" type="button" onClick={this.synchronize} disabled={sync}>
+                                Synchronize {sync ? <i className="fa fa-spinner fa-spin"></i> : null}
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -222,6 +247,12 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
             </Layout>
         );
     }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
+    };
 }
 
 function mapStateToProps(state: RootState) {
