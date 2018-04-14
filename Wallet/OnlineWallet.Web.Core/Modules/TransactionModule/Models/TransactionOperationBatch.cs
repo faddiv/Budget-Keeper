@@ -5,6 +5,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Models
 {
     public class TransactionOperationBatch
     {
+        #region  Constructors
+
         public TransactionOperationBatch()
         {
         }
@@ -15,15 +17,16 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Models
             Delete = delete;
         }
 
-        public static TransactionOperationBatch SaveBatch(IList<Transaction> save)
-        {
-            return new TransactionOperationBatch(save, new List<long>());
-        }
+        #endregion
 
-        public static TransactionOperationBatch SaveBatch(params Transaction[] save)
-        {
-            return new TransactionOperationBatch(save, new List<long>());
-        }
+        #region Properties
+
+        public IList<long> Delete { get; set; }
+        public IList<Transaction> Save { get; set; }
+
+        #endregion
+
+        #region  Public Methods
 
         public static TransactionOperationBatch DeleteBatch(IList<long> delete)
         {
@@ -35,10 +38,15 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Models
             return new TransactionOperationBatch(new List<Transaction>(), delete);
         }
 
-        #region Properties
+        public static TransactionOperationBatch SaveBatch(IList<Transaction> save)
+        {
+            return new TransactionOperationBatch(save, new List<long>());
+        }
 
-        public IList<long> Delete { get; set; }
-        public IList<Transaction> Save { get; set; }
+        public static TransactionOperationBatch SaveBatch(params Transaction[] save)
+        {
+            return new TransactionOperationBatch(save, new List<long>());
+        }
 
         #endregion
     }

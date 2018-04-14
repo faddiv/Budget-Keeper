@@ -99,6 +99,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             }
         }
 
+        #endregion
+
+        #region  Nonpublic Methods
+
         private static void FormatData(Transaction operation)
         {
             operation.CreatedAt = operation.CreatedAt.Date;

@@ -13,7 +13,6 @@ using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
 using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
 using OnlineWallet.Web.Modules.TransactionModule.Commands;
 using OnlineWallet.Web.Modules.TransactionModule.Queries;
-using OnlineWallet.Web.Modules.TransactionModule.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web

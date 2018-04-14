@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.ExportImport;
-using OnlineWallet.Web.Modules.TransactionModule.Commands;
 using OnlineWallet.Web.Modules.TransactionModule.Queries;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
@@ -13,7 +12,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     public class ImportController : Controller
     {
         #region Fields
-        
+
         private readonly IImportExportQueries _importQueries;
 
         #endregion

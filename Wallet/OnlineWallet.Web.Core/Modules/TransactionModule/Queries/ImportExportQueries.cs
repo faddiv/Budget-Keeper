@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LinqKit;
-using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
@@ -24,7 +22,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         #region  Constructors
 
-        public ImportExportQueries(ICsvExportImport csvExportImport, ITransactionQueries transactionQueries, IWalletQueries walletQueries)
+        public ImportExportQueries(ICsvExportImport csvExportImport, ITransactionQueries transactionQueries,
+            IWalletQueries walletQueries)
         {
             _csvExportImport = csvExportImport;
             _transactionQueries = transactionQueries;
@@ -66,13 +65,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
             var directions = ExtractDirections(list);
             var walletIds = ExtractWalletIds(list, wallets);
             var categories = ExtractCategories(list);
-            var savedItems = await _transactionQueries.FetchByFilters(from, to, directions, walletIds, categories, token);
+            var savedItems =
+                await _transactionQueries.FetchByFilters(from, to, directions, walletIds, categories, token);
             foreach (var item in list)
             {
                 var wallet = wallets.Find(e => e.Name?.ToLower() == item.Source.ToString().ToLower());
                 var index = savedItems.FindIndex(e => e.CreatedAt == item.Created
                                                       && (
-                                                          (int)e.Direction == (int)item.Direction &&
+                                                          (int) e.Direction == (int) item.Direction &&
                                                           string.Equals(e.Name, item.Name,
                                                               StringComparison.CurrentCultureIgnoreCase)
                                                           || e.WalletId == wallet?.MoneyWalletId &&
@@ -89,6 +89,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
             return list;
         }
 
+        #endregion
+
+        #region  Nonpublic Methods
+
         private static List<string> ExtractCategories(List<ExportImportRow> list)
         {
             return list.Select(e => e.Category).Distinct().Select(e => e?.ToLower()).ToList();
@@ -102,10 +106,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         private static List<int> ExtractWalletIds(List<ExportImportRow> list, List<Wallet> wallets)
         {
             return list.Select(eir => eir.Source).Distinct()
-                            .Select(walletName => wallets.Find(wallet => wallet.Name?.ToLower() == walletName?.ToString().ToLower())?.MoneyWalletId)
-                            .Where(walletId => walletId.HasValue)
-                            .Select(walletId => walletId.Value)
-                            .ToList();
+                .Select(walletName => wallets.Find(wallet => wallet.Name?.ToLower() == walletName?.ToString().ToLower())
+                    ?.MoneyWalletId)
+                .Where(walletId => walletId.HasValue)
+                .Select(walletId => walletId.Value)
+                .ToList();
         }
 
         #endregion

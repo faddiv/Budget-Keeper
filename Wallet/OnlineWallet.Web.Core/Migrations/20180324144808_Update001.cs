@@ -1,11 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineWallet.Web.Migrations
 {
     public partial class Update001 : Migration
     {
+        #region  Nonpublic Methods
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Article");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "Wallets",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(200)",
+                oldMaxLength: 200);
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
@@ -45,18 +60,6 @@ namespace OnlineWallet.Web.Migrations
                 column: "LastWalletId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Article");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Wallets",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(200)",
-                oldMaxLength: 200);
-        }
+        #endregion
     }
 }

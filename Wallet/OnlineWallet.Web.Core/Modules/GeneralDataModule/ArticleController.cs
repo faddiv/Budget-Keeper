@@ -13,8 +13,9 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     {
         #region Fields
 
-        private readonly IArticleQueries _articleQueries;
         private readonly IArticleCommands _articleCommands;
+
+        private readonly IArticleQueries _articleQueries;
 
         #endregion
 

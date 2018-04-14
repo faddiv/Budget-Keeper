@@ -39,6 +39,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
                 var an = articleNames;
                 transactionQuery = transactionQuery.Where(e => an.Contains(e.Name.ToLower()));
             }
+
             var articleOccurences = await transactionQuery
                 .GroupBy(e => e.Name.ToLower())
                 .Select(e => new
@@ -52,6 +53,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
                 var an = articleNames;
                 articleQuery = articleQuery.Where(e => an.Contains(e.Name.ToLower()));
             }
+
             var articles = await articleQuery.ToListAsync(token);
             if (!Has(articleNames))
             {
@@ -59,10 +61,12 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
                 articleNames = articleNames.Union(articleOccurences.Select(e => e.Article)).ToList();
                 articleNames = ToLowerDistinct(articleNames);
             }
+
             foreach (var articleName in articleNames)
             {
                 var occurence = articleOccurences.Find(e => e.Article == articleName)?.Occurence ?? 0;
-                var article = articles.Find(e => string.Equals(e.Name, articleName, StringComparison.InvariantCultureIgnoreCase));
+                var article = articles.Find(e =>
+                    string.Equals(e.Name, articleName, StringComparison.InvariantCultureIgnoreCase));
                 if (occurence == 0)
                 {
                     if (article != null)
@@ -88,7 +92,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
                         }
                         catch (InvalidOperationException ex)
                         {
-                            throw new InvalidOperationException($"Invalid operation on {articleName} ({transaction.Name})", ex);
+                            throw new InvalidOperationException(
+                                $"Invalid operation on {articleName} ({transaction.Name})", ex);
                         }
                     }
 
@@ -103,16 +108,20 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             await _db.SaveChangesAsync(token);
         }
 
+        #endregion
+
+        #region  Nonpublic Methods
+
+        private static bool Has(List<string> articleNames)
+        {
+            return articleNames != null && articleNames.Count > 0;
+        }
+
         private static List<string> ToLowerDistinct(List<string> articleNames)
         {
             return Has(articleNames)
                 ? articleNames.Select(e => e.ToLower()).Distinct().ToList()
                 : articleNames;
-        }
-
-        private static bool Has(List<string> articleNames)
-        {
-            return articleNames != null && articleNames.Count > 0;
         }
 
         #endregion
