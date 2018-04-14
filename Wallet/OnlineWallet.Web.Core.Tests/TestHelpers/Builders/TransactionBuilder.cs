@@ -76,7 +76,7 @@ namespace OnlineWallet.Web.TestHelpers.Builders
             return Set(e => e.WalletId, wallet.MoneyWalletId);
         }
 
-        public virtual TransactionBuilder WithContinousWallet(WalletDbContext context)
+        public virtual TransactionBuilder WithContinousWallet(IWalletDbContext context)
         {
             List<Wallet> wallets = null;
             int i = 0;

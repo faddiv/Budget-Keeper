@@ -26,8 +26,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             _services = fixture.CreateServiceFixture(_mockEvent);
             _command = _services.GetService<IBatchSaveCommand>();
             _transaction1 = new TransactionBuilder().Build();
-            fixture.DbContext.Transactions.AddRange(_transaction1);
-            fixture.DbContext.SaveChanges();
+            _services.DbContext.Transactions.AddRange(_transaction1);
+            _services.DbContext.SaveChanges();
         }
 
         [Fact(DisplayName = nameof(Should_invoke_events_on_update))]

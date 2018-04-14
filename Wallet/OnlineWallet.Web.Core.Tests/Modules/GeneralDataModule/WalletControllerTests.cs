@@ -17,8 +17,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
             {
                 Name = "Test"
             };
-            fixture.DbContext.Add(TestWallet);
-            fixture.DbContext.SaveChanges();
+            Fixture.DbContext.Wallets.Add(TestWallet);
+            Fixture.DbContext.SaveChanges();
         }
     }
 }

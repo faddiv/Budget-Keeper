@@ -17,22 +17,18 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
     [Collection("Database collection")]
     public class ArticleCommandsUpdateArticleStatusesTests : IDisposable
     {
-        private readonly ITestOutputHelper _output;
         private readonly ServicesFixture _fixture;
         private readonly IArticleCommands _articleCommands;
 
-        public ArticleCommandsUpdateArticleStatusesTests(DatabaseFixture fixture, ITestOutputHelper output)
+        public ArticleCommandsUpdateArticleStatusesTests(DatabaseFixture fixture)
         {
-            _output = output;
             _fixture = fixture.CreateServiceFixture();
             _articleCommands = _fixture.GetService<IArticleCommands>();
-            _output.WriteLine("Initialized");
         }
 
         public void Dispose()
         {
             _fixture?.Cleanup();
-            _output.WriteLine("Cleaned Up {0}", _fixture.DbContext.Article.Count());
         }
 
         [Fact(DisplayName = nameof(Inserts_all_new_article_if_null_provided))]
@@ -73,16 +69,15 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
         {
             // Arrange
             var trans = TransactionBuilder.CreateListOfSize(10).BuildList();
-            var articles = trans.Select(e => new Article { Name = e.Name }).ToList();
+            _fixture.CreateArticlesFromTransactions(trans);
             _fixture.DbContext.Transactions.AddRange(trans);
-            _fixture.DbContext.Article.AddRange(articles);
             _fixture.DbContext.SaveChanges();
 
             // Act
             await _articleCommands.UpdateArticleStatuses(null, CancellationToken.None);
 
             // Assert
-            articles = _fixture.DbContext.Article.ToList();
+            var articles = _fixture.DbContext.Article.ToList();
             articles.Should().HaveCount(trans.Count);
             foreach (var article in articles)
             {
@@ -99,20 +94,15 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
             var trans = TransactionBuilder.CreateListOfSize(10)
                 .TheFirst(1).WithName("alfa")
                 .TheNext(1).WithName("beta").BuildList();
-            var articles = trans.Select(e => new Article
-            {
-                Name = e.Name,
-                Category = String.Empty
-            }).ToList();
+            _fixture.CreateArticlesFromTransactions(trans);
             _fixture.DbContext.Transactions.AddRange(trans);
-            _fixture.DbContext.Article.AddRange(articles);
             _fixture.DbContext.SaveChanges();
 
             // Act
             await _articleCommands.UpdateArticleStatuses(new List<string> { "alfa", "beta" }, CancellationToken.None);
 
             // Assert
-            articles = _fixture.DbContext.Article.ToList();
+            var articles = _fixture.DbContext.Article.ToList();
             articles.Should().HaveCount(trans.Count);
             foreach (var article in articles)
             {
@@ -135,9 +125,9 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
         {
             // Arrange
             var trans = TransactionBuilder.CreateListOfSize(10).BuildList();
-            var articles = trans.Select(e => new Article { Name = e.Name }).ToList();
+            _fixture.CreateArticlesFromTransactions(trans);
             // Additional articles with no respective Transaction;
-            articles.AddRange(ArticleBuilder.CreateListOfSize(5).BuildList());
+            var articles = ArticleBuilder.CreateListOfSize(5).BuildList();
             _fixture.DbContext.Transactions.AddRange(trans);
             _fixture.DbContext.Article.AddRange(articles);
             _fixture.DbContext.SaveChanges();
@@ -155,11 +145,11 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
         {
             // Arrange
             var trans = TransactionBuilder.CreateListOfSize(10).BuildList();
-            var articles = trans.Select(e => new Article { Name = e.Name }).ToList();
+            _fixture.CreateArticlesFromTransactions(trans);
             // Additional articles with no respective Transaction;
-            articles.AddRange(ArticleBuilder.CreateListOfSize(5)
+            var articles = ArticleBuilder.CreateListOfSize(5)
                 .TheFirst(1).WithName("alfa")
-                .TheNext(1).WithName("beta").BuildList());
+                .TheNext(1).WithName("beta").BuildList();
             _fixture.DbContext.Transactions.AddRange(trans);
             _fixture.DbContext.Article.AddRange(articles);
             _fixture.DbContext.SaveChanges();

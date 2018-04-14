@@ -53,7 +53,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 Value = 102,
                 WalletId = Fixture.WalletBankAccount.MoneyWalletId
             };
-            DbSet.AddRange(_transaction1, _transaction2);
+            Fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2);
             _article1 = new Article
             {
                 Name = FirstArticleName,
@@ -113,9 +113,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var actionResult = await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
-            DbSet.Count().Should().Be(4);
-            DbSet.Should().Contain(e => e.Name == "third");
-            DbSet.Should().Contain(e => e.Name == "fourth");
+            Fixture.DbContext.Transactions.Count().Should().Be(4);
+            Fixture.DbContext.Transactions.Should().Contain(e => e.Name == "third");
+            Fixture.DbContext.Transactions.Should().Contain(e => e.Name == "fourth");
 
             var result = ControllerTestHelpers.ValidateJsonResult<List<Transaction>>(actionResult);
             result.Should().NotBeNullOrEmpty();
@@ -156,9 +156,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             await controller.BatchSave(transactions, CancellationToken.None);
 
             //assert
-            DbSet.Count().Should().Be(2);
-            DbSet.Should().Contain(e => e.Name == "third");
-            DbSet.Should().Contain(e => e.Name == "fourth");
+            Fixture.DbContext.Transactions.Count().Should().Be(2);
+            Fixture.DbContext.Transactions.Should().Contain(e => e.Name == "third");
+            Fixture.DbContext.Transactions.Should().Contain(e => e.Name == "fourth");
         }
 
         [Fact(DisplayName = nameof(Only_saves_date_not_time))]
@@ -203,7 +203,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             //assert
 
             var result = ControllerTestHelpers.ValidateJsonResult<List<Transaction>>(actionResult);
-            DbSet.Should().NotContain(e => e.TransactionId == _transaction1.TransactionId, "it is deleted");
+            Fixture.DbContext.Transactions.Should().NotContain(e => e.TransactionId == _transaction1.TransactionId, "it is deleted");
         }
 
         [Fact(DisplayName = nameof(Returns_BadRequest_if_input_invalid))]

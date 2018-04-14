@@ -25,7 +25,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.OK);
-            DbSet.Should().NotContain(e => e.MoneyWalletId == TestWallet.MoneyWalletId);
+            Fixture.DbContext.Wallets.Should().NotContain(e => e.MoneyWalletId == TestWallet.MoneyWalletId);
 
         }
 
@@ -44,7 +44,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         public async Task Returns_BadRequest_if_already_used()
         {
             //Arrange
-            Fixture.DbContext.Add(new TransactionBuilder()
+            Fixture.DbContext.Transactions.Add(new TransactionBuilder()
                 .WithWallet(TestWallet).Build());
             Fixture.DbContext.SaveChanges();
             //Act

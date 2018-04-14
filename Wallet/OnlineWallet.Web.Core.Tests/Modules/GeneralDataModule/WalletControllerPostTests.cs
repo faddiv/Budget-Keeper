@@ -48,7 +48,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.Created);
-            DbSet.Should().Contain(e => e.Name == "New Wallet");
+            Fixture.DbContext.Wallets.Should().Contain(e => e.Name == "New Wallet");
         }
 
     }

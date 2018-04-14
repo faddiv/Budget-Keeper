@@ -54,7 +54,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 Value = 102,
                 WalletId = Fixture.WalletBankAccount.MoneyWalletId
             };
-            DbSet.AddRange(_transaction1, _transaction2, _transaction3);
+            Fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2, _transaction3);
             Fixture.DbContext.SaveChanges();
         }
 

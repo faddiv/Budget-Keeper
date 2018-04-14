@@ -65,22 +65,22 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 Value = 102,
                 WalletId = Fixture.WalletBankAccount.MoneyWalletId
             };
-            DbSet.AddRange(_transaction1, _transaction2, _transaction3, _transaction4);
+            Fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2, _transaction3, _transaction4);
             Fixture.DbContext.SaveChanges();
         }
 
         #endregion
 
-        [Fact(DisplayName = nameof(Only_fetches_exact_article))]
-        public async Task Only_fetches_exact_article()
+        [Fact(DisplayName = nameof(Fetch_is_case_insensitive))]
+        public async Task Fetch_is_case_insensitive()
         {
             var result = await Controller.FetchByArticle("second");
 
             result.Should().NotBeNullOrEmpty();
             result.Should().NotContain(_transaction1);
-            result.Should().NotContain(_transaction4);
             result.Should().Contain(_transaction2);
             result.Should().Contain(_transaction3);
+            result.Should().Contain(_transaction4);
         }
 
         [Fact(DisplayName =nameof(Fetches_latest_first))]

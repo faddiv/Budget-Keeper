@@ -12,10 +12,7 @@ namespace OnlineWallet.Web.Common
     public class CrudControllerTests<TEntity> : IDisposable where TEntity : class
     {
         protected ServicesFixture Fixture { get; }
-
-        protected DbSet<TEntity> DbSet => Fixture?.DbContext.Set<TEntity>();
-
-
+        
         public CrudControllerTests(DatabaseFixture fixture)
         {
             Fixture = fixture.CreateServiceFixture();

@@ -8,7 +8,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     public class TransactionControllerTests : CrudControllerTests<Transaction>
     {
         protected TransactionController Controller { get; }
-        protected Transaction TestTransaction { get; }
 
         public TransactionControllerTests(DatabaseFixture fixture) : base(fixture)
         {

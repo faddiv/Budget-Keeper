@@ -44,7 +44,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.OK);
-            DbSet.Should().Contain(e => e.MoneyWalletId == TestWallet.MoneyWalletId && e.Name == "Changed Wallet");
+            Fixture.DbContext.Wallets.Should().Contain(e => e.MoneyWalletId == TestWallet.MoneyWalletId && e.Name == "Changed Wallet");
         }
 
         [Fact(DisplayName = nameof(Returns_NotFound_if_object_doesnt_exists))]
