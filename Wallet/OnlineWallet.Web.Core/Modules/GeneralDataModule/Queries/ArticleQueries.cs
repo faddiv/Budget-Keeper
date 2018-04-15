@@ -13,7 +13,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
     {
         #region  Public Methods
 
-        Task<List<ArticleModel>> GetByText(string search, int limit, CancellationToken token);
+        Task<Article> GetByName(string name, CancellationToken token);
+        Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token);
 
         #endregion
     }
@@ -37,42 +38,29 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 
         #region  Public Methods
 
-        public async Task<List<ArticleModel>> GetByText(string search, int limit, CancellationToken token)
+        public Task<Article> GetByName(string name, CancellationToken token)
+        {
+            if (string.IsNullOrEmpty(name))
+                return Task.FromResult<Article>(null);
+            return _db.Article.FindAsync(name);
+        }
+
+        public Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token)
         {
             search = search ?? "";
             var querySearch = search.Replace(" ", "").ToLower().FillWith('%');
-            var transactionQuery = _db.Transactions
-                .Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch));
-            var requiredTransactions = await transactionQuery
-                .GroupBy(e => e.Name)
-                .OrderByDescending(a => a.Count())
+            return _db.Article.Where(e => EF.Functions.Like(e.Name.ToLower(), querySearch))
+                .OrderByDescending(e => e.Occurence)
                 .Take(limit)
-                .SelectMany(g => g.Select(e => new
+                .Select(e => new ArticleModel
                 {
-                    e.Name,
-                    e.Category,
-                    e.Value,
-                    e.CreatedAt,
-                    e.WalletId
-                }))
-                .ToListAsync(token);
-            var result = requiredTransactions
-                .GroupBy(e => e.Name)
-                .Select(g => new ArticleModel
-                {
-                    Name = g.Key,
-                    Occurence = g.Count(),
-                    Category = g.Where(c => c.Category != null)
-                        .GroupBy(c => c.Category)
-                        .OrderByDescending(c => c.Count())
-                        .Select(c => c.Key).FirstOrDefault(),
-                    LastWallet = g.OrderByDescending(e => e.CreatedAt).Select(e => e.WalletId).FirstOrDefault(),
-                    LastPrice = g.OrderByDescending(e => e.CreatedAt).Select(e => e.Value).FirstOrDefault(),
-                    NameHighlighted = StringExtensions.Highlight(g.Key, "<strong>", "</strong>", search)
-                })
-                .OrderByDescending(a => a.Occurence)
-                .ToList();
-            return result;
+                    Name = e.Name,
+                    Occurence = e.Occurence,
+                    Category = e.Category,
+                    LastWallet = e.LastWalletId,
+                    LastPrice = e.LastPrice,
+                    NameHighlighted = StringExtensions.Highlight(e.Name, "<strong>", "</strong>", search)
+                }).ToListAsync(token);
         }
 
         #endregion

@@ -7,16 +7,11 @@ using Xunit;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
-    [Trait("WalletController", "Post")]
+    [Trait(nameof(WalletController), nameof(WalletController.Post))]
     public class WalletControllerPostTests : WalletControllerTests
     {
-        public WalletControllerPostTests(DatabaseFixture fixture) 
-            : base(fixture)
-        {
-        }
-
-        [Fact(DisplayName = "Post_returns_BadRequest_if_no_name_provided")]
-        public async Task Post_returns_BadRequest_if_no_name_provided()
+        [Fact(DisplayName = nameof(Returns_BadRequest_if_no_name_provided))]
+        public async Task Returns_BadRequest_if_no_name_provided()
         {
             //Arrange
             var entity = new DataLayer.Wallet
@@ -33,8 +28,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         }
 
 
-        [Fact(DisplayName = "Post_saves_new_wallet_if_everything_is_ok")]
-        public async Task Post_saves_new_wallet_if_everything_is_ok()
+        [Fact(DisplayName = nameof(Saves_new_wallet_if_everything_is_ok))]
+        public async Task Saves_new_wallet_if_everything_is_ok()
         {
             //Arrange
             var entity = new DataLayer.Wallet
@@ -48,7 +43,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.Created);
-            DbSet.Should().Contain(e => e.Name == "New Wallet");
+            Fixture.DbContext.Wallets.Should().Contain(e => e.Name == "New Wallet");
         }
 
     }

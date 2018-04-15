@@ -12,20 +12,12 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.BalanceInfo))]
-    [Collection("Database collection")]
-    public class StatisticsControllerBalanceInfoTests : IDisposable
+    public class StatisticsControllerBalanceInfoTests : ServiceTestBase
     {
-        #region Fields
-
-        private readonly DatabaseFixture _fixture;
-
-        #endregion
-
         #region  Constructors
 
-        public StatisticsControllerBalanceInfoTests(DatabaseFixture fixture)
+        public StatisticsControllerBalanceInfoTests()
         {
-            _fixture = fixture;
             BuildDataWith(MoneyDirection.Expense, 0);
             BuildDataWith(MoneyDirection.Plan, -15);
             BuildDataWith(MoneyDirection.Income, 25);
@@ -61,11 +53,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.ToSaving.Should().Be(25);
             result.Unused.Should().Be(5);
         }
-
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
+        
     }
 }

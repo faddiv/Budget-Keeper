@@ -1,0 +1,4 @@
+﻿Food/Groceries
+Food/Restaurant
+Household Items/Supplies
+Etc

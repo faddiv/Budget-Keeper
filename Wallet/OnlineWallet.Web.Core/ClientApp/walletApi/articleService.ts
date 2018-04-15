@@ -15,6 +15,14 @@ class ArticleService {
         const result = await ThenJson<ArticleModel[]>(response);
         return result;
     }
+
+    async syncFromTransactions(articles?: string[]): Promise<boolean> {
+        const url = buildUrl(urlBase + "/SyncFromTransactions", walletApiConfig.baseUrl);
+        const response = await fetch(url.toString(), walletApiConfig.jsonRequestConfig({
+            articles
+        }, "POST"));
+        return response.ok;
+    }
 }
 
 export const articleService = new ArticleService();

@@ -13,7 +13,6 @@ using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
 using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
 using OnlineWallet.Web.Modules.TransactionModule.Commands;
 using OnlineWallet.Web.Modules.TransactionModule.Queries;
-using OnlineWallet.Web.Modules.TransactionModule.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace OnlineWallet.Web
@@ -53,6 +52,7 @@ namespace OnlineWallet.Web
             services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddScoped<IImportExportQueries, ImportExportQueries>();
             services.AddScoped<IArticleCommands, ArticleCommands>();
+            services.AddScoped<IBatchSaveEvent, ArticleUpdateOnBachSave>();
             services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
         }
 

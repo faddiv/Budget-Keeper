@@ -9,7 +9,6 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(TransactionController), nameof(TransactionController.FetchByDateRange))]
-    [Collection("Database collection")]
     public class TransactionControllerFetchByDateRangeTests : TransactionControllerTests
     {
         #region Fields
@@ -22,7 +21,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #region  Constructors
 
-        public TransactionControllerFetchByDateRangeTests(DatabaseFixture fixture) : base(fixture)
+        public TransactionControllerFetchByDateRangeTests()
         {
             _transaction1 = new Transaction
             {
@@ -54,14 +53,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 Value = 102,
                 WalletId = Fixture.WalletBankAccount.MoneyWalletId
             };
-            DbSet.AddRange(_transaction1, _transaction2, _transaction3);
+            Fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2, _transaction3);
             Fixture.DbContext.SaveChanges();
         }
 
         #endregion
 
-        [Fact(DisplayName = nameof(Only_Fetches_In_Date_Range))]
-        public async Task Only_Fetches_In_Date_Range()
+        [Fact(DisplayName = nameof(Only_Fetches_in_date_range))]
+        public async Task Only_Fetches_in_date_range()
         {
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-10-15"),
@@ -73,8 +72,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().NotContain(_transaction3);
         }
 
-        [Fact(DisplayName = nameof(Only_Fetches_In_Date_Range))]
-        public async Task Fetches_Date_Range_Inclusive()
+        [Fact(DisplayName = nameof(Only_Fetches_in_date_range))]
+        public async Task Fetches_date_range_inclusive()
         {
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-09-16"),
@@ -84,8 +83,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().Contain(_transaction2);
         }
 
-        [Fact(DisplayName = nameof(Fetches_LatesFirst))]
-        public async Task Fetches_LatesFirst()
+        [Fact(DisplayName = nameof(Fetches_latest_first))]
+        public async Task Fetches_latest_first()
         {
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-09-15"),

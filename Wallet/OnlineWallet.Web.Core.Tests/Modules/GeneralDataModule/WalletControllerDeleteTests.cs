@@ -11,12 +11,6 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Trait(nameof(WalletController), nameof(WalletController.Delete))]
     public class WalletControllerDeleteTests : WalletControllerTests
     {
-        public WalletControllerDeleteTests(DatabaseFixture fixture)
-            : base(fixture)
-        {
-
-        }
-
         [Fact(DisplayName = nameof(Deletes_line_if_possible))]
         public async Task Deletes_line_if_possible()
         {
@@ -25,7 +19,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
             //Assert
             ResultShouldBeOk(result, HttpStatusCode.OK);
-            DbSet.Should().NotContain(e => e.MoneyWalletId == TestWallet.MoneyWalletId);
+            Fixture.DbContext.Wallets.Should().NotContain(e => e.MoneyWalletId == TestWallet.MoneyWalletId);
 
         }
 
@@ -44,7 +38,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         public async Task Returns_BadRequest_if_already_used()
         {
             //Arrange
-            Fixture.DbContext.Add(new TransactionBuilder()
+            Fixture.DbContext.Transactions.Add(new TransactionBuilder()
                 .WithWallet(TestWallet).Build());
             Fixture.DbContext.SaveChanges();
             //Act

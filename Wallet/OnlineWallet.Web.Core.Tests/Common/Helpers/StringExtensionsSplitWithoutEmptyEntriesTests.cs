@@ -3,10 +3,10 @@ using Xunit;
 
 namespace OnlineWallet.Web.Common.Helpers
 {
-    [Trait("StringExtensions", "SplitWithoutEmptyEntries")]
+    [Trait(nameof(StringExtensions), nameof(StringExtensions.SplitWithoutEmptyEntries))]
     public class StringExtensionsSplitWithoutEmptyEntriesTests
     {
-        [Fact(DisplayName = "Splits text and remove empty entries")]
+        [Fact(DisplayName = nameof(Splits_Text_And_Remove_Empty_Entries))]
         public void Splits_Text_And_Remove_Empty_Entries()
         {
             var result = "alfa beta  gamma".SplitWithoutEmptyEntries(' ');

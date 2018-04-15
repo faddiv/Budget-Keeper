@@ -50,7 +50,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         public Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20, int skip = 0,
             CancellationToken token = default(CancellationToken))
         {
-            return FetchBy(e => e.Name == article, token, take, skip);
+            article = article?.ToLower();
+            return FetchBy(e => e.Name.ToLower() == article, token, take, skip);
         }
 
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
@@ -98,6 +99,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
                 query = query.Where(predicate);
             }
+
             return Fetch(query, token);
         }
 
@@ -105,12 +107,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         #region  Nonpublic Methods
 
-        private Task<List<Transaction>> FetchBy(Expression<Func<Transaction, bool>> filter,
-            CancellationToken token, int? take = null, int? skip = null)
-        {
-            return Fetch(Db.Transactions.Where(filter), token, take, skip);
-        }
-            private Task<List<Transaction>> Fetch(IQueryable<Transaction> query,
+        private Task<List<Transaction>> Fetch(IQueryable<Transaction> query,
             CancellationToken token, int? take = null, int? skip = null)
         {
             query = query
@@ -129,6 +126,12 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
             return query
                 .ToListAsync(token);
+        }
+
+        private Task<List<Transaction>> FetchBy(Expression<Func<Transaction, bool>> filter,
+            CancellationToken token, int? take = null, int? skip = null)
+        {
+            return Fetch(Db.Transactions.Where(filter), token, take, skip);
         }
 
         #endregion

@@ -1,24 +1,22 @@
-﻿using OnlineWallet.Web.Common;
-using OnlineWallet.Web.DataLayer;
+﻿using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
-    public class WalletControllerTests : CrudControllerTests<Wallet>
+    public class WalletControllerTests : ServiceTestBase
     {
         protected WalletController Controller { get; }
         protected Wallet TestWallet { get; }
 
-        public WalletControllerTests(DatabaseFixture fixture)
-            : base(fixture)
+        public WalletControllerTests()
         {
             Controller = Fixture.GetService<WalletController>();
             TestWallet = new Wallet
             {
                 Name = "Test"
             };
-            fixture.DbContext.Add(TestWallet);
-            fixture.DbContext.SaveChanges();
+            Fixture.DbContext.Wallets.Add(TestWallet);
+            Fixture.DbContext.SaveChanges();
         }
     }
 }
