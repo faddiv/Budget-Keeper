@@ -12,18 +12,18 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.BalanceInfo))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class StatisticsControllerBalanceInfoTests : IDisposable
     {
         #region Fields
 
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
 
         #endregion
 
         #region  Constructors
 
-        public StatisticsControllerBalanceInfoTests(DatabaseFixture fixture)
+        public StatisticsControllerBalanceInfoTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
             BuildDataWith(MoneyDirection.Expense, 0);

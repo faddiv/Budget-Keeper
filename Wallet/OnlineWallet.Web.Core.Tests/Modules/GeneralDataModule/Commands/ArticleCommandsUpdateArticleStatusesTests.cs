@@ -14,13 +14,13 @@ using Xunit.Abstractions;
 namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 {
     [Trait(nameof(ArticleCommands), nameof(ArticleCommands.UpdateArticleStatuses))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class ArticleCommandsUpdateArticleStatusesTests : IDisposable
     {
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
         private readonly IArticleCommands _articleCommands;
 
-        public ArticleCommandsUpdateArticleStatusesTests(DatabaseFixture fixture)
+        public ArticleCommandsUpdateArticleStatusesTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
             _articleCommands = _fixture.GetService<IArticleCommands>();

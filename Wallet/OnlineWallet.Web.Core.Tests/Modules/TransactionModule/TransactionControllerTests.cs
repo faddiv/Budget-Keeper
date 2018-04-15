@@ -9,7 +9,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         protected TransactionController Controller { get; }
 
-        public TransactionControllerTests(DatabaseFixture fixture) : base(fixture)
+        public TransactionControllerTests(TestServiceProviderFixture fixture) : base(fixture)
         {
             Controller = Fixture.GetService<TransactionController>();
         }

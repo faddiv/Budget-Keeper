@@ -15,20 +15,20 @@ using MoneyDirection = OnlineWallet.ExportImport.MoneyDirection;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(ImportController), nameof(ImportController.ProcessTransactions))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class ImportControllerProcessTransactionsTests : IDisposable
     {
         #region Fields
 
         private const string ImportCsvFilePath = "expectedExpenses.csv";
 
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
 
         #endregion
 
         #region  Constructors
 
-        public ImportControllerProcessTransactionsTests(DatabaseFixture fixture)
+        public ImportControllerProcessTransactionsTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
         }

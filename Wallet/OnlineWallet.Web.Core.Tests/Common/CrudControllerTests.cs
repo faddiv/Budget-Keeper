@@ -8,12 +8,12 @@ using Xunit;
 
 namespace OnlineWallet.Web.Common
 {
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class CrudControllerTests<TEntity> : IDisposable where TEntity : class
     {
-        protected ServicesFixture Fixture { get; }
+        protected TestServices Fixture { get; }
         
-        public CrudControllerTests(DatabaseFixture fixture)
+        public CrudControllerTests(TestServiceProviderFixture fixture)
         {
             Fixture = fixture.CreateServiceFixture();
         }

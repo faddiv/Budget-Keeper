@@ -12,13 +12,13 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait(nameof(ArticleController), nameof(ArticleController.SyncFromTransactions))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class ArticleControllerSyncFromTransactionsTests : IDisposable
     {
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
         private readonly ArticleController _controller;
 
-        public ArticleControllerSyncFromTransactionsTests(DatabaseFixture fixture)
+        public ArticleControllerSyncFromTransactionsTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<ArticleController>();

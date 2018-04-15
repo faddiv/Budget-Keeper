@@ -5,11 +5,11 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 {
     public class ArticleQueriesTests : IDisposable
     {
-        public ServicesFixture Fixture { get; }
+        public TestServices Fixture { get; }
         public IArticleQueries ArticleQueries { get; }
         protected const string ArticleName = "TestArticle";
 
-        public ArticleQueriesTests(DatabaseFixture fixture)
+        public ArticleQueriesTests(TestServiceProviderFixture fixture)
         {
             Fixture = fixture.CreateServiceFixture();
             ArticleQueries = Fixture.GetService<IArticleQueries>();

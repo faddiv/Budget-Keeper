@@ -12,18 +12,18 @@ using Xunit.Abstractions;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.Yearly))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class StatisticsControllerYearlyTests : IDisposable
     {
         #region Fields
 
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
 
         #endregion
 
         #region  Constructors
 
-        public StatisticsControllerYearlyTests(DatabaseFixture fixture)
+        public StatisticsControllerYearlyTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
         }

@@ -20,7 +20,7 @@ using TestStack.Dossier.Lists;
 
 namespace OnlineWallet.Web.TestHelpers
 {
-    public class ServicesFixture : IDisposable
+    public class TestServices : IDisposable
     {
         #region Fields
 
@@ -35,7 +35,7 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region  Constructors
 
-        public ServicesFixture(Action<ServiceCollection> setup = null)
+        public TestServices(Action<ServiceCollection> setup = null)
         {
             _connection = new SqliteConnection("DataSource=:memory:");
 

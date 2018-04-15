@@ -6,11 +6,11 @@ using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.TestHelpers
 {
-    public class DatabaseFixture : IDisposable
+    public class TestServiceProviderFixture : IDisposable
     {
         #region  Constructors
 
-        public DatabaseFixture()
+        public TestServiceProviderFixture()
         {
             AutoMapper.Mapper.Initialize(config =>
             {
@@ -23,14 +23,14 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region  Public Methods
 
-        public ServicesFixture CreateServiceFixture(Action<ServiceCollection> setup = null)
+        public TestServices CreateServiceFixture(Action<ServiceCollection> setup = null)
         {
-            return new ServicesFixture(setup);
+            return new TestServices(setup);
         }
 
-        public ServicesFixture CreateServiceFixture(params Mock[] mocks)
+        public TestServices CreateServiceFixture(params Mock[] mocks)
         {
-            return new ServicesFixture(s =>
+            return new TestServices(s =>
             {
                 foreach (var mock in mocks)
                 {

@@ -15,7 +15,7 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(TransactionController), nameof(TransactionController.BatchSave))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class TransactionControllerBatchSaveTests : TransactionControllerTests
     {
         #region Fields
@@ -31,7 +31,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #region  Constructors
 
-        public TransactionControllerBatchSaveTests(DatabaseFixture fixture) : base(fixture)
+        public TransactionControllerBatchSaveTests(TestServiceProviderFixture fixture) : base(fixture)
         {
             _transaction1 = new Transaction
             {

@@ -10,7 +10,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Trait(nameof(WalletController), nameof(WalletController.Post))]
     public class WalletControllerPostTests : WalletControllerTests
     {
-        public WalletControllerPostTests(DatabaseFixture fixture) 
+        public WalletControllerPostTests(TestServiceProviderFixture fixture) 
             : base(fixture)
         {
         }

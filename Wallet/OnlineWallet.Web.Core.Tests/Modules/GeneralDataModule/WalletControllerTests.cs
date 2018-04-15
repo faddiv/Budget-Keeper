@@ -9,7 +9,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         protected WalletController Controller { get; }
         protected Wallet TestWallet { get; }
 
-        public WalletControllerTests(DatabaseFixture fixture)
+        public WalletControllerTests(TestServiceProviderFixture fixture)
             : base(fixture)
         {
             Controller = Fixture.GetService<WalletController>();

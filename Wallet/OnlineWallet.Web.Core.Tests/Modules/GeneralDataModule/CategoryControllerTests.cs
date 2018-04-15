@@ -9,19 +9,19 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait(nameof(CategoryController), nameof(CategoryController.GetBy))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class CategoryControllerTests : IDisposable
     {
         #region Fields
 
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
         private readonly CategoryController _controller;
 
         #endregion
 
         #region  Constructors
 
-        public CategoryControllerTests(DatabaseFixture fixture)
+        public CategoryControllerTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<CategoryController>();

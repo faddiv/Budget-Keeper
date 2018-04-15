@@ -12,15 +12,15 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     [Trait(nameof(BatchSaveCommand), nameof(BatchSaveCommand.Execute))]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class BatchSaveCommandExecuteTests : IDisposable
     {
         private readonly Transaction _transaction1;
         private readonly Mock<IBatchSaveEvent> _mockEvent;
-        private readonly ServicesFixture _services;
+        private readonly TestServices _services;
         private readonly IBatchSaveCommand _command;
 
-        public BatchSaveCommandExecuteTests(DatabaseFixture fixture)
+        public BatchSaveCommandExecuteTests(TestServiceProviderFixture fixture)
         {
             _mockEvent = new Mock<IBatchSaveEvent>();
             _services = fixture.CreateServiceFixture(_mockEvent);

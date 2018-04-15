@@ -11,7 +11,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Trait(nameof(WalletController), nameof(WalletController.Delete))]
     public class WalletControllerDeleteTests : WalletControllerTests
     {
-        public WalletControllerDeleteTests(DatabaseFixture fixture)
+        public WalletControllerDeleteTests(TestServiceProviderFixture fixture)
             : base(fixture)
         {
 

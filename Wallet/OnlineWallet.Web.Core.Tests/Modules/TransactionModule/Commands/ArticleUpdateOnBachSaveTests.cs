@@ -11,14 +11,14 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     [Trait(nameof(ArticleUpdateOnBachSave), null)]
-    [Collection("Database collection")]
+    [Collection("Provide Test Service")]
     public class ArticleUpdateOnBachSaveTests : IDisposable
     {
-        private readonly ServicesFixture _fixture;
+        private readonly TestServices _fixture;
         private readonly IBatchSaveCommand _instance;
         private readonly TransactionBuilder _transactionBuilder;
 
-        public ArticleUpdateOnBachSaveTests(DatabaseFixture fixture)
+        public ArticleUpdateOnBachSaveTests(TestServiceProviderFixture fixture)
         {
             _fixture = fixture.CreateServiceFixture(e =>
                 {
