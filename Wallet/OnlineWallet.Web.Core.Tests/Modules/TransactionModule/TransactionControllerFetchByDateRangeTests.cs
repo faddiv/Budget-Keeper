@@ -9,7 +9,6 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(TransactionController), nameof(TransactionController.FetchByDateRange))]
-    [Collection("Provide Test Service")]
     public class TransactionControllerFetchByDateRangeTests : TransactionControllerTests
     {
         #region Fields
@@ -22,7 +21,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #region  Constructors
 
-        public TransactionControllerFetchByDateRangeTests(TestServiceProviderFixture fixture) : base(fixture)
+        public TransactionControllerFetchByDateRangeTests()
         {
             _transaction1 = new Transaction
             {

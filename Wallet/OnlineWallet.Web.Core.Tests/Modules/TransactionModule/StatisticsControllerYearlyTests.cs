@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -7,34 +6,12 @@ using OnlineWallet.Web.Modules.TransactionModule.Models;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.Yearly))]
-    [Collection("Provide Test Service")]
-    public class StatisticsControllerYearlyTests : IDisposable
+    public class StatisticsControllerYearlyTests : ServiceTestBase
     {
-        #region Fields
-
-        private readonly TestServices _fixture;
-
-        #endregion
-
-        #region  Constructors
-
-        public StatisticsControllerYearlyTests(TestServiceProviderFixture fixture)
-        {
-            _fixture = fixture.CreateServiceFixture();
-        }
-
-        #endregion
-
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
         [Fact(DisplayName = nameof(Returns_yearly_income))]
         public async Task Returns_yearly_income()
         {

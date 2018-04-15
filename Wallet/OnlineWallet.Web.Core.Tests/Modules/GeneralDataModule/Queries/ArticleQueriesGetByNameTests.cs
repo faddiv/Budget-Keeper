@@ -8,13 +8,11 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 {
     [Trait(nameof(Queries.ArticleQueries), nameof(Queries.ArticleQueries.GetByName))]
-    [Collection("Provide Test Service")]
     public class ArticleQueriesGetByNameTests : ArticleQueriesTests
     {
         #region  Constructors
 
-        public ArticleQueriesGetByNameTests(TestServiceProviderFixture fixture)
-            : base(fixture)
+        public ArticleQueriesGetByNameTests()
         {
             var articleBuilder = new ArticleBuilder();
             Fixture.DbContext.Article.Add(articleBuilder.WithName(ArticleName).Build());

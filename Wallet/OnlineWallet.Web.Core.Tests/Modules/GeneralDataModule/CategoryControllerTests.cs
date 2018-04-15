@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -9,31 +8,23 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait(nameof(CategoryController), nameof(CategoryController.GetBy))]
-    [Collection("Provide Test Service")]
-    public class CategoryControllerTests : IDisposable
+    public class CategoryControllerTests : ServiceTestBase
     {
         #region Fields
-
-        private readonly TestServices _fixture;
+        
         private readonly CategoryController _controller;
 
         #endregion
 
         #region  Constructors
 
-        public CategoryControllerTests(TestServiceProviderFixture fixture)
+        public CategoryControllerTests()
         {
-            _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<CategoryController>();
         }
 
         #endregion
-
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
+        
         [Fact(DisplayName = nameof(Returns_the_categories_from_transactions))]
         public async Task Returns_the_categories_from_transactions()
         {

@@ -7,34 +7,12 @@ using OnlineWallet.Web.Modules.TransactionModule.Models;
 using OnlineWallet.Web.TestHelpers;
 using TestStack.Dossier.Lists;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(StatisticsController), nameof(StatisticsController.Categories))]
-    [Collection("Provide Test Service")]
-    public class StatisticsControllerMonthlyTests : IDisposable
+    public class StatisticsControllerMonthlyTests : ServiceTestBase
     {
-        #region Fields
-
-        private readonly TestServices _fixture;
-
-        #endregion
-
-        #region  Constructors
-
-        public StatisticsControllerMonthlyTests(TestServiceProviderFixture fixture)
-        {
-            _fixture = fixture.CreateServiceFixture();
-        }
-
-        #endregion
-
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics_for_empty_year))]
         public async Task Should_load_yearly_category_statistics_for_empty_year()
         {

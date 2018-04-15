@@ -12,23 +12,15 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait(nameof(ArticleController), nameof(ArticleController.SyncFromTransactions))]
-    [Collection("Provide Test Service")]
-    public class ArticleControllerSyncFromTransactionsTests : IDisposable
+    public class ArticleControllerSyncFromTransactionsTests : ServiceTestBase
     {
-        private readonly TestServices _fixture;
         private readonly ArticleController _controller;
 
-        public ArticleControllerSyncFromTransactionsTests(TestServiceProviderFixture fixture)
+        public ArticleControllerSyncFromTransactionsTests()
         {
-            _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<ArticleController>();
         }
-
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
+        
         [Fact(DisplayName = nameof(Updates_all_article_if_no_parameter_provided))]
         public async Task Updates_all_article_if_no_parameter_provided()
         {

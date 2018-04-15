@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.TestHelpers
 {
-    public class TestServiceProviderFixture : IDisposable
+    public class TestServiceProviderFixture
     {
         #region  Constructors
 
-        public TestServiceProviderFixture()
+        static TestServiceProviderFixture()
         {
-            AutoMapper.Mapper.Initialize(config =>
+            Map = new Mapper(new MapperConfiguration(config =>
             {
                 config.CreateMap(typeof(Transaction), typeof(Transaction));
                 config.CreateMap(typeof(Wallet), typeof(Wallet));
-            });
+            }));
         }
+
+        #endregion
+
+        #region Properties
+
+        public static IMapper Map { get; }
 
         #endregion
 
@@ -25,7 +32,7 @@ namespace OnlineWallet.Web.TestHelpers
 
         public TestServices CreateServiceFixture(Action<ServiceCollection> setup = null)
         {
-            return new TestServices(setup);
+            return new TestServices(setup, Map);
         }
 
         public TestServices CreateServiceFixture(params Mock[] mocks)
@@ -39,12 +46,7 @@ namespace OnlineWallet.Web.TestHelpers
                     s.RemoveAll(e => e.ServiceType == serviceType);
                     s.AddSingleton(serviceType, mock.Object);
                 }
-            });
-        }
-
-        public void Dispose()
-        {
-            // Dispose
+            }, Map);
         }
 
         #endregion

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -35,8 +36,9 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region  Constructors
 
-        public TestServices(Action<ServiceCollection> setup = null)
+        public TestServices(Action<ServiceCollection> setup, IMapper map)
         {
+            Map = map;
             _connection = new SqliteConnection("DataSource=:memory:");
 
             var services = new ServiceCollection();
@@ -63,6 +65,8 @@ namespace OnlineWallet.Web.TestHelpers
                 return _dbContext;
             }
         }
+
+        public IMapper Map { get; }
 
         public Wallet WalletBankAccount
         {
@@ -108,7 +112,7 @@ namespace OnlineWallet.Web.TestHelpers
 
         public TEntity Clone<TEntity>(TEntity original)
         {
-            return AutoMapper.Mapper.Map<TEntity>(original);
+            return Map.Map<TEntity>(original);
         }
 
         public List<Article> CreateArticlesFromTransactions(IList<Transaction> trans)

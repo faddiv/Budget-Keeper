@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.TestHelpers;
 using Xunit;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule
@@ -10,13 +9,6 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Trait(nameof(WalletController), nameof(WalletController.GetAll))]
     public class WalletControllerGetAllTests : WalletControllerTests
     {
-        public WalletControllerGetAllTests(TestServiceProviderFixture fixture)
-            : base(fixture)
-        {
-
-        }
-
-
         [Fact(DisplayName = nameof(Returns_all_wallets))]
         public async Task Returns_all_wallets()
         {

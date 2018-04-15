@@ -1,28 +1,23 @@
-﻿using FluentAssertions;
-using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.TestHelpers;
-using OnlineWallet.Web.TestHelpers.Builders;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
+using OnlineWallet.Web.TestHelpers;
+using OnlineWallet.Web.TestHelpers.Builders;
 using TestStack.Dossier.Lists;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace OnlineWallet.Web.Modules.GeneralDataModule.Commands
 {
     [Trait(nameof(ArticleCommands), nameof(ArticleCommands.UpdateArticleStatuses))]
-    [Collection("Provide Test Service")]
-    public class ArticleCommandsUpdateArticleStatusesTests : IDisposable
+    public class ArticleCommandsUpdateArticleStatusesTests : ServiceTestBase
     {
-        private readonly TestServices _fixture;
         private readonly IArticleCommands _articleCommands;
 
-        public ArticleCommandsUpdateArticleStatusesTests(TestServiceProviderFixture fixture)
+        public ArticleCommandsUpdateArticleStatusesTests()
         {
-            _fixture = fixture.CreateServiceFixture();
             _articleCommands = _fixture.GetService<IArticleCommands>();
         }
 

@@ -9,7 +9,6 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(TransactionController), nameof(TransactionController.FetchByArticle))]
-    [Collection("Provide Test Service")]
     public class TransactionControllerFetchByArticleTests : TransactionControllerTests
     {
         #region Fields
@@ -23,7 +22,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         #region  Constructors
 
-        public TransactionControllerFetchByArticleTests(TestServiceProviderFixture fixture) : base(fixture)
+        public TransactionControllerFetchByArticleTests()
         {
             _transaction1 = new Transaction
             {

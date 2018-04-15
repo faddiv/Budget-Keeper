@@ -12,15 +12,12 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
     [Trait(nameof(ExportController), nameof(ExportController.FromRange))]
-    [Collection("Provide Test Service")]
-    public class ExportControllerFromRangeTests : IDisposable
+    public class ExportControllerFromRangeTests : ServiceTestBase
     {
-        private readonly TestServices _fixture;
         private readonly ExportController _controller;
 
-        public ExportControllerFromRangeTests(TestServiceProviderFixture fixture)
+        public ExportControllerFromRangeTests()
         {
-            _fixture = fixture.CreateServiceFixture();
             _fixture.DbContext.Transactions.AddRange(
                 new Transaction
                 {
@@ -69,11 +66,6 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             _controller = _fixture.GetService<ExportController>();
         }
         
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
         [Fact(DisplayName = nameof(Returns_with_FileContentResult))]
         public async Task Returns_with_FileContentResult()
         {

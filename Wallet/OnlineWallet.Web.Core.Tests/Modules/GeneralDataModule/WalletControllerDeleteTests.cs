@@ -11,12 +11,6 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Trait(nameof(WalletController), nameof(WalletController.Delete))]
     public class WalletControllerDeleteTests : WalletControllerTests
     {
-        public WalletControllerDeleteTests(TestServiceProviderFixture fixture)
-            : base(fixture)
-        {
-
-        }
-
         [Fact(DisplayName = nameof(Deletes_line_if_possible))]
         public async Task Deletes_line_if_possible()
         {

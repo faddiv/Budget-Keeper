@@ -12,29 +12,32 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     [Trait(nameof(BatchSaveCommand), nameof(BatchSaveCommand.Execute))]
-    [Collection("Provide Test Service")]
-    public class BatchSaveCommandExecuteTests : IDisposable
+    public class BatchSaveCommandExecuteTests : ServiceTestBase
     {
         private readonly Transaction _transaction1;
-        private readonly Mock<IBatchSaveEvent> _mockEvent;
-        private readonly TestServices _services;
+        private Mock<IBatchSaveEvent> _mockEvent;
         private readonly IBatchSaveCommand _command;
 
-        public BatchSaveCommandExecuteTests(TestServiceProviderFixture fixture)
+        public BatchSaveCommandExecuteTests()
+        {
+            _command = Fixture.GetService<IBatchSaveCommand>();
+            _transaction1 = new TransactionBuilder().Build();
+            Fixture.DbContext.Transactions.AddRange(_transaction1);
+            Fixture.DbContext.SaveChanges();
+        }
+
+        protected override TestServices Setup(TestServiceProviderFixture provider)
         {
             _mockEvent = new Mock<IBatchSaveEvent>();
-            _services = fixture.CreateServiceFixture(_mockEvent);
-            _command = _services.GetService<IBatchSaveCommand>();
-            _transaction1 = new TransactionBuilder().Build();
-            _services.DbContext.Transactions.AddRange(_transaction1);
-            _services.DbContext.SaveChanges();
+            return provider.CreateServiceFixture(_mockEvent);
+
         }
 
         [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
         public async Task Should_invoke_events_on_update()
         {
             //Arrange
-            var modifiedTransaction = AutoMapper.Mapper.Map<Transaction>(_transaction1);
+            var modifiedTransaction = Fixture.Clone(_transaction1);
             var batch = TransactionOperationBatch.SaveBatch(
                 new List<Transaction>
                 {
@@ -75,12 +78,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             VerifyExecuteCalledWith(_transaction1, null, BatchSaveOperationType.Delete);
         }
-
-        public void Dispose()
-        {
-            _services.Cleanup();
-        }
-
+        
         private void VerifyExecuteCalledWith(Transaction oldTransaction, Transaction newTransaction, BatchSaveOperationType operationType)
         {
             _mockEvent.Verify(e => e.BeforeSave(It.Is<TransactionEventArgs>(args =>

@@ -9,23 +9,15 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule
 {
     [Trait(nameof(ArticleController), nameof(ArticleController.GetBy))]
-    [Collection("Provide Test Service")]
-    public class ArticleControllerGetByTests : IDisposable
+    public class ArticleControllerGetByTests : ServiceTestBase
     {
-        private readonly TestServices _fixture;
         private readonly ArticleController _controller;
 
-        public ArticleControllerGetByTests(TestServiceProviderFixture fixture)
+        public ArticleControllerGetByTests()
         {
-            _fixture = fixture.CreateServiceFixture();
             _controller = _fixture.GetService<ArticleController>();
         }
-
-        public void Dispose()
-        {
-            _fixture.Cleanup();
-        }
-
+        
         [Fact(DisplayName = nameof(Groups_transactions_by_name_case_insensitive))]
         public async Task Groups_transactions_by_name_case_insensitive()
         {

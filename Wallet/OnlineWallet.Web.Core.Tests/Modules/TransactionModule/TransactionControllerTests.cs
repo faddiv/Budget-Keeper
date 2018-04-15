@@ -1,15 +1,12 @@
-﻿using System;
-using OnlineWallet.Web.Common;
-using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.TestHelpers;
+﻿using OnlineWallet.Web.TestHelpers;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
-    public class TransactionControllerTests : CrudControllerTests<Transaction>
+    public class TransactionControllerTests : ServiceTestBase
     {
         protected TransactionController Controller { get; }
 
-        public TransactionControllerTests(TestServiceProviderFixture fixture) : base(fixture)
+        public TransactionControllerTests()
         {
             Controller = Fixture.GetService<TransactionController>();
         }

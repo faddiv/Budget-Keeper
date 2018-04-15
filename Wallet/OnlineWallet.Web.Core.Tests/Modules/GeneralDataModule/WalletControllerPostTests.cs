@@ -10,11 +10,6 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
     [Trait(nameof(WalletController), nameof(WalletController.Post))]
     public class WalletControllerPostTests : WalletControllerTests
     {
-        public WalletControllerPostTests(TestServiceProviderFixture fixture) 
-            : base(fixture)
-        {
-        }
-
         [Fact(DisplayName = nameof(Returns_BadRequest_if_no_name_provided))]
         public async Task Returns_BadRequest_if_no_name_provided()
         {

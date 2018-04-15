@@ -5,6 +5,8 @@ namespace OnlineWallet.Web.TestHelpers
 {
     public static class ArticleAssertionExtensions
     {
+        #region  Public Methods
+
         public static ArticleAssertion Should(this Article article)
         {
             return new ArticleAssertion(article);
@@ -14,5 +16,7 @@ namespace OnlineWallet.Web.TestHelpers
         {
             return new ArticleListAssertion(article);
         }
+
+        #endregion
     }
 }

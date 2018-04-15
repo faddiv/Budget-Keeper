@@ -9,11 +9,9 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
 {
     [Trait(nameof(Queries.ArticleQueries), nameof(Queries.ArticleQueries.SearchByText))]
-    [Collection("Provide Test Service")]
     public class ArticleQueriesSearchByTextTests : ArticleQueriesTests
     {
-        public ArticleQueriesSearchByTextTests(TestServiceProviderFixture fixture)
-            : base(fixture)
+        public ArticleQueriesSearchByTextTests()
         {
             var articleBuilder = new ArticleBuilder();
             Fixture.DbContext.Article.Add(articleBuilder.WithName(ArticleName).Build());
