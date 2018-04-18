@@ -24,13 +24,15 @@ export interface ArticlesPageState {
     name: string;
     openItem: ArticleModel;
     openedArticleTransactions: TransactionViewModel[];
-    transactionsCache: OpenedArticles;
     pageNumber: number;
     sync: boolean;
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPageState> {
+
+    transactionsCache: OpenedArticles;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -38,10 +40,10 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
             name: "",
             openItem: null,
             openedArticleTransactions: [],
-            transactionsCache: {},
             pageNumber: 0,
             sync: false
         };
+        this.transactionsCache = {};
     }
 
     @bind
@@ -90,39 +92,27 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
     async openRow(item: ArticleModel) {
         const state = this.state;
         const openItem = state.openItem === item ? null : item;
-        console.log("openRow 1", this.state);
         if (openItem) {
-            let transactionsPages = state.transactionsCache[openItem.name];
+            let transactionsPages = this.transactionsCache[openItem.name];
             if (!transactionsPages || !transactionsPages.length) {
                 const transactions = await transactionService
                     .fetchArticle(openItem.name)
                     .then(mapTransactionViewModel);
-                console.log("openRow 2", this.state);
                 transactionsPages = [transactions];
-                this.setState((prevState) => {
-                    console.log("openRow settingState", prevState);
-                    return {
-                        transactionsCache: { ...prevState.transactionsCache, [openItem.name]: transactionsPages }
-                    };
-                }, () => {
-                    console.log("openRow settingState finished", this.state);
-                });
+                this.transactionsCache[openItem.name] = transactionsPages;
             }
-            console.log("openRow 3", this.state);
             this.setState({
                 openedArticleTransactions: transactionsPages[0],
                 openItem,
                 pageNumber: 0
             });
         } else {
-            console.log("openRow 4", this.state);
             this.setState({
                 openedArticleTransactions: [],
                 openItem,
                 pageNumber: 0
             });
         }
-        console.log("openRow 5", this.state);
     }
 
     @bind
@@ -144,7 +134,7 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
 
     async setPage(pageNumber: number) {
         const openItem = this.state.openItem;
-        const transactionsPages = this.state.transactionsCache[openItem.name];
+        const transactionsPages = this.transactionsCache[openItem.name];
         let openedArticleTransactions = transactionsPages[pageNumber];
         if (openedArticleTransactions) {
             this.setState({
@@ -155,14 +145,11 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
             openedArticleTransactions = await transactionService
                 .fetchArticle(openItem.name, 10, pageNumber * 10)
                 .then(mapTransactionViewModel);
-            this.setState((prevState) => {
-                const newPages = [...prevState.transactionsCache[openItem.name]];
-                newPages[pageNumber] = openedArticleTransactions;
-                return {
-                    pageNumber,
-                    openedArticleTransactions,
-                    transactionsCache: { ...prevState.transactionsCache, [openItem.name]: newPages }
-                };
+            const newPages = this.transactionsCache[openItem.name];
+            newPages[pageNumber] = openedArticleTransactions;
+            this.setState({
+                pageNumber,
+                openedArticleTransactions
             });
         }
     }
@@ -214,7 +201,6 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
 
     render() {
         const { name, articles, sync } = this.state;
-        console.log("rendering", this.state, "props", this.props);
         return (
             <Layout>
                 <form onSubmit={noAction}>
