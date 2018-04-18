@@ -4,8 +4,7 @@ const merge = require('webpack-merge');
 var runMode = require("./build-config/run-mode");
 const scssConfig = require("./build-config/scss-config")(runMode.cssOutput);
 const htmlConfig = require("./build-config/html-config");
-const vendorConfig = require("./build-config/vendor-config")({
-});
+const vendorConfig = require("./build-config/vendor-config");
 const variablesConfig = require("./build-config/variables-config")(runMode.production);
 const typescriptConfig = require("./build-config/typescript-config");
 
