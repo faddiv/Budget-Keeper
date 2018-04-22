@@ -1,10 +1,10 @@
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 /**
  * This file contains the style related webpack config. (css, and assets)
  */
 module.exports = function(cssOutput) {
-    var scssExtractTextPlugin = new ExtractTextPlugin({
+    var extractTextPlugin = new MiniCssExtractPlugin({
         filename: cssOutput
     });
     return {
@@ -12,18 +12,15 @@ module.exports = function(cssOutput) {
             rules: [
                 {
                     test: /\.scss$/,
-                    use: scssExtractTextPlugin.extract({
-                        fallback: "style-loader",
-                        use: ["css-loader", "autoprefixer-loader", "sass-loader"]
-                    })
+                    use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
                 },
                 {
                     test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svg)(\?|$)/,
                     use: [
                         {
-                            loader: "url-loader",
+                            loader: "file-loader",// TODO url-loader with explicit fallback come after 1.0.1 version. Recomended for a more general file handling.
                             options: {
-                                limit: 8192
+                                name: "[name]-[hash].[ext]"
                             }
                         }
                     ]
@@ -31,7 +28,7 @@ module.exports = function(cssOutput) {
             ]
         },
         plugins: [
-            scssExtractTextPlugin
+            extractTextPlugin
         ]
     };
 };
