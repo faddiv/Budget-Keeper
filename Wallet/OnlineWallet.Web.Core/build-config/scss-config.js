@@ -18,9 +18,9 @@ module.exports = function(cssOutput) {
                     test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svg)(\?|$)/,
                     use: [
                         {
-                            loader: "url-loader",
+                            loader: "file-loader",// TODO url-loader with explicit fallback come after 1.0.1 version. Recomended for a more general file handling.
                             options: {
-                                limit: 8192
+                                name: "[name]-[hash].[ext]"
                             }
                         }
                     ]
