@@ -8,6 +8,7 @@ const typescriptConfig = require("./build-config/typescript-config");
 
 function createWebpackConfig(env) {
     const webpackConfig = merge(typescriptConfig, variablesConfig, {
+        mode: "development",
         devtool: "inline-source-map",
         plugins: [
             new webpack.SourceMapDevToolPlugin({

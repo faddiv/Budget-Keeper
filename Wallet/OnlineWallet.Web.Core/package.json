@@ -34,6 +34,7 @@
     "autoprefixer-loader": "^3.2.0",
     "awesome-typescript-loader": "^5.0.0",
     "clean-webpack-plugin": "^0.1.19",
+    "core-js": "^2.5.5",
     "css-loader": "^0.28.11",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
