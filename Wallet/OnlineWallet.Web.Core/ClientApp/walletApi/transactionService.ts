@@ -6,8 +6,8 @@ const urlBase = "/api/v1/Transaction";
 
 class TransactionService {
 
-    async fetchDateRange(start: string, end: string) {
-        const url = buildUrl(urlBase + "/FetchByDateRange", walletApiConfig.baseUrl, { start, end });
+    async fetchDateRange(start: string, end: string, category?: string) {
+        const url = buildUrl(urlBase + "/FetchByDateRange", walletApiConfig.baseUrl, { start, end, category });
 
         const response = await fetch(url.toString());
         const result = await ThenJson<Transaction[]>(response);

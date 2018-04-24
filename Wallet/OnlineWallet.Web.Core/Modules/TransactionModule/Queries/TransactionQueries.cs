@@ -18,7 +18,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20, int skip = 0,
             CancellationToken token = default(CancellationToken));
 
-        Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
+        Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end, string category,
             CancellationToken token = default(CancellationToken));
 
         Task<List<Transaction>> FetchByFilters(DateTime start, DateTime end,
@@ -55,9 +55,17 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         }
 
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
+            string category,
             CancellationToken token = default(CancellationToken))
         {
-            return FetchBy(e => start <= e.CreatedAt && e.CreatedAt <= end, token);
+            var predicate = PredicateBuilder.New<Transaction>();
+            predicate = predicate.Start(e => start <= e.CreatedAt && e.CreatedAt <= end);
+            if (!string.IsNullOrEmpty(category))
+            {
+                category = category.ToLower();
+                predicate = predicate.And(e => e.Category.ToLower() == category);
+            }
+            return FetchBy(predicate, token);
         }
 
         public Task<List<Transaction>> FetchByFilters(DateTime start, DateTime end,
@@ -131,7 +139,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         private Task<List<Transaction>> FetchBy(Expression<Func<Transaction, bool>> filter,
             CancellationToken token, int? take = null, int? skip = null)
         {
-            return Fetch(Db.Transactions.Where(filter), token, take, skip);
+            return Fetch(Db.Transactions.AsNoTracking().Where(filter), token, take, skip);
         }
 
         #endregion

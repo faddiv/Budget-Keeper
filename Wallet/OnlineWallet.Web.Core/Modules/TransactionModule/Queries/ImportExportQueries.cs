@@ -36,7 +36,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         public async Task ExportIntoFromRangeAsync(Stream stream, DateTime from, DateTime to, CancellationToken token)
         {
-            var query = (await _transactionQueries.FetchByDateRange(from, to))
+            var wallets = await _walletQueries.GetAll(token);
+            var query = (await _transactionQueries.FetchByDateRange(from, to, null, token))
                 .Select(e => new ExportImportRow
                 {
                     Name = e.Name,
@@ -46,7 +47,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     Comment = e.Comment,
                     MatchingId = e.TransactionId,
                     Created = e.CreatedAt,
-                    Source = e.Wallet.Name
+                    Source = wallets.Find(w => w.MoneyWalletId == e.WalletId)?.Name
                 })
                 .OrderBy(e => e.Created)
                 .ThenBy(e => e.Name)

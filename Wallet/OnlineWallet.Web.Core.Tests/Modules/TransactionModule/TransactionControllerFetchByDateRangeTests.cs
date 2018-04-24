@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using OnlineWallet.ExportImport;
-using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.TestHelpers;
+using TestStack.Dossier.Lists;
 using Xunit;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
@@ -11,86 +10,80 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     [Trait(nameof(TransactionController), nameof(TransactionController.FetchByDateRange))]
     public class TransactionControllerFetchByDateRangeTests : TransactionControllerTests
     {
-        #region Fields
-
-        private readonly Transaction _transaction1;
-        private readonly Transaction _transaction2;
-        private readonly Transaction _transaction3;
-
-        #endregion
-
-        #region  Constructors
-
-        public TransactionControllerFetchByDateRangeTests()
-        {
-            _transaction1 = new Transaction
-            {
-                Name = "first",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-09-16"),
-                Direction = MoneyDirection.Expense,
-                Value = 101,
-                WalletId = Fixture.WalletCash.MoneyWalletId
-            };
-            _transaction2 = new Transaction
-            {
-                Name = "second",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-10-16"),
-                Direction = MoneyDirection.Expense,
-                Value = 102,
-                WalletId = Fixture.WalletBankAccount.MoneyWalletId
-            };
-            _transaction3 = new Transaction
-            {
-                Name = "second",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-11-16"),
-                Direction = MoneyDirection.Expense,
-                Value = 102,
-                WalletId = Fixture.WalletBankAccount.MoneyWalletId
-            };
-            Fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2, _transaction3);
-            Fixture.DbContext.SaveChanges();
-        }
-
-        #endregion
-
         [Fact(DisplayName = nameof(Only_Fetches_in_date_range))]
         public async Task Only_Fetches_in_date_range()
         {
-            var result = await Controller.FetchByDateRange(
-                DateTime.Parse("2017-10-15"),
-                DateTime.Parse("2017-10-17"));
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                .TheFirst(33).WithCreatedAt(2017, 9)
+                .TheNext(33).WithCreatedAt(2017, 10)
+                .TheNext(34).WithCreatedAt(2017, 11));
 
+            // Act
+            var result = await Controller.FetchByDateRange(
+                DateTime.Parse("2017-10-01"),
+                DateTime.Parse("2017-10-31"));
+
+            // Assert
             result.Should().NotBeNullOrEmpty();
-            result.Should().NotContain(_transaction1);
-            result.Should().Contain(_transaction2);
-            result.Should().NotContain(_transaction3);
+            result.Should().OnlyContain(e => e.CreatedAt.Month == 10);
         }
 
         [Fact(DisplayName = nameof(Only_Fetches_in_date_range))]
         public async Task Fetches_date_range_inclusive()
         {
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                .TheFirst(1).WithCreatedAt("2017-09-16")
+                .TheNext(1).WithCreatedAt("2017-10-16"));
+
+            // Act
             var result = await Controller.FetchByDateRange(
                 DateTime.Parse("2017-09-16"),
                 DateTime.Parse("2017-10-16"));
-            
-            result.Should().Contain(_transaction1);
-            result.Should().Contain(_transaction2);
+
+            // Assert
+            result.Should().NotBeEmpty();
+            result.Should().Contain(e => e.CreatedAt.EqualTo("2017-09-16"));
+            result.Should().Contain(e => e.CreatedAt.EqualTo("2017-10-16"));
         }
 
         [Fact(DisplayName = nameof(Fetches_latest_first))]
         public async Task Fetches_latest_first()
         {
-            var result = await Controller.FetchByDateRange(
-                DateTime.Parse("2017-09-15"),
-                DateTime.Parse("2017-11-17"));
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                .TheFirst(33).WithCreatedAt(2017, 9)
+                .TheNext(33).WithCreatedAt(2017, 10)
+                .TheNext(34).WithCreatedAt(2017, 11));
 
-            result.Should().ContainInOrder(_transaction3, _transaction2, _transaction1);
+            // Act
+            var result = await Controller.FetchByDateRange(
+                DateTime.Parse("2017-09-01"),
+                DateTime.Parse("2017-11-30"));
+
+            // Assert
+            result.Should().NotBeEmpty();
+            result.Should().BeInDescendingOrder(e => e.CreatedAt);
+        }
+
+        [Fact(DisplayName = nameof(Can_filter_by_category))]
+        public async Task Can_filter_by_category()
+        {
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                    .All().WithCreatedAt(2017, 10).WithCategoryRandom()
+                    .TheFirst(33).WithCategory("cat"));
+
+            // Act
+            var result = await Controller.FetchByDateRange(
+                DateTime.Parse("2017-10-01"),
+                DateTime.Parse("2017-11-01"),
+                "cat");
+
+            // Assert
+            result.Should().NotBeEmpty();
+            result.Should().OnlyContain(e => e.Category == "cat");
         }
     }
 }

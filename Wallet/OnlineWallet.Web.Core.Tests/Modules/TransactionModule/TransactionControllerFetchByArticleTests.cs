@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
-using OnlineWallet.ExportImport;
-using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.TestHelpers;
+using TestStack.Dossier.Lists;
 using Xunit;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
@@ -11,83 +8,35 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     [Trait(nameof(TransactionController), nameof(TransactionController.FetchByArticle))]
     public class TransactionControllerFetchByArticleTests : TransactionControllerTests
     {
-        #region Fields
-
-        private readonly Transaction _transaction1;
-        private readonly Transaction _transaction2;
-        private readonly Transaction _transaction3;
-        private readonly Transaction _transaction4;
-
-        #endregion
-
-        #region  Constructors
-
-        public TransactionControllerFetchByArticleTests()
-        {
-            _transaction1 = new Transaction
-            {
-                Name = "seconder",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-09-16"),
-                Direction = MoneyDirection.Expense,
-                Value = 101,
-                WalletId = Fixture.WalletCash.MoneyWalletId
-            };
-            _transaction2 = new Transaction
-            {
-                Name = "second",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-09-16"),
-                Direction = MoneyDirection.Expense,
-                Value = 102,
-                WalletId = Fixture.WalletBankAccount.MoneyWalletId
-            };
-            _transaction3 = new Transaction
-            {
-                Name = "second",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-09-17"),
-                Direction = MoneyDirection.Expense,
-                Value = 102,
-                WalletId = Fixture.WalletBankAccount.MoneyWalletId
-            };
-            _transaction4 = new Transaction
-            {
-                Name = "Second",
-                Category = "cat",
-                Comment = "comment",
-                CreatedAt = DateTime.Parse("2017-09-17"),
-                Direction = MoneyDirection.Expense,
-                Value = 102,
-                WalletId = Fixture.WalletBankAccount.MoneyWalletId
-            };
-            Fixture.DbContext.Transactions.AddRange(_transaction1, _transaction2, _transaction3, _transaction4);
-            Fixture.DbContext.SaveChanges();
-        }
-
-        #endregion
-
         [Fact(DisplayName = nameof(Fetch_is_case_insensitive))]
         public async Task Fetch_is_case_insensitive()
         {
-            var result = await Controller.FetchByArticle("second");
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                .TheFirst(1).WithName("SECOND")
+                .TheNext(1).WithName("second"));
 
+            // Act
+            var result = await Controller.FetchByArticle("Second");
+
+            // Assert
             result.Should().NotBeNullOrEmpty();
-            result.Should().NotContain(_transaction1);
-            result.Should().Contain(_transaction2);
-            result.Should().Contain(_transaction3);
-            result.Should().Contain(_transaction4);
+            result.Should().HaveCount(2);
         }
 
         [Fact(DisplayName =nameof(Fetches_latest_first))]
         public async Task Fetches_latest_first()
         {
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                    .All().WithName("second")
+                    .TheFirst(50).WithCreatedAt(2017,9)
+                    .TheNext(50).WithCreatedAt(2017,10));
+
+            // Act
             var result = await Controller.FetchByArticle("second");
             
-            result.Should().ContainInOrder(_transaction3, _transaction2);
+            result.Should().BeInDescendingOrder(e => e.CreatedAt);
         }
     }
 }

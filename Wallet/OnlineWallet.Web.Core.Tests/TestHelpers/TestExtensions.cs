@@ -1,10 +1,16 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace OnlineWallet.Web.TestHelpers
 {
     public static class TestExtensions
     {
         #region  Public Methods
+
+        public static bool EqualTo(this DateTime dateTime, string dateTimeString)
+        {
+            return dateTime == DateTime.Parse(dateTimeString);
+        }
 
         public static bool IsMatch(this string input, string pattern)
         {
@@ -15,7 +21,7 @@ namespace OnlineWallet.Web.TestHelpers
         {
             return Regex.IsMatch(input, pattern, options);
         }
-
+        
         #endregion
     }
 }
