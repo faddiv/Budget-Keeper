@@ -66,24 +66,5 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().NotBeEmpty();
             result.Should().BeInDescendingOrder(e => e.CreatedAt);
         }
-
-        [Fact(DisplayName = nameof(Can_filter_by_category))]
-        public async Task Can_filter_by_category()
-        {
-            // Arrange
-            await Fixture.PrepareDataWith(rules => rules
-                    .All().WithCreatedAt(2017, 10).WithCategoryRandom()
-                    .TheFirst(33).WithCategory("cat"));
-
-            // Act
-            var result = await Controller.FetchByDateRange(
-                DateTime.Parse("2017-10-01"),
-                DateTime.Parse("2017-11-01"),
-                "cat");
-
-            // Assert
-            result.Should().NotBeEmpty();
-            result.Should().OnlyContain(e => e.Category == "cat");
-        }
     }
 }

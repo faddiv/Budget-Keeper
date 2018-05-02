@@ -37,7 +37,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         public async Task ExportIntoFromRangeAsync(Stream stream, DateTime from, DateTime to, CancellationToken token)
         {
             var wallets = await _walletQueries.GetAll(token);
-            var query = (await _transactionQueries.FetchByDateRange(from, to, null, token))
+            var query = (await _transactionQueries.FetchByDateRange(@from, to, token))
                 .Select(e => new ExportImportRow
                 {
                     Name = e.Name,

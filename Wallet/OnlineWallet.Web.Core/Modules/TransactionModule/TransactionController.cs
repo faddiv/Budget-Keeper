@@ -70,12 +70,20 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         
         [HttpGet(nameof(FetchByDateRange))]
         [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
-        public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end, string category = null,
+        public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
             CancellationToken token = default(CancellationToken))
         {
-            return queries.FetchByDateRange(start, end, category, token);
+            return queries.FetchByDateRange(start, end, token);
         }
-        
+
+        [HttpGet(nameof(FetchByCategory))]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
+        public Task<List<Transaction>> FetchByCategory(string category, DateTime? start = null, DateTime? end = null,
+            int? limit = null, int? skip = null, CancellationToken token = default(CancellationToken))
+        {
+            return queries.FetchByCategory(category, start, end, limit, skip, token);
+        }
+
         #endregion
     }
 }

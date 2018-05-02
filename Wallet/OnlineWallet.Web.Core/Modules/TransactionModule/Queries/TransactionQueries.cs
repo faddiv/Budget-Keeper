@@ -18,8 +18,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         Task<List<Transaction>> FetchByArticleAsync(string article, int take = 20, int skip = 0,
             CancellationToken token = default(CancellationToken));
 
-        Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end, string category,
+        Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
             CancellationToken token = default(CancellationToken));
+
+        Task<List<Transaction>> FetchByCategory(string category, DateTime? start, DateTime? end,
+            int? take, int? skip, CancellationToken token = default(CancellationToken));
 
         Task<List<Transaction>> FetchByFilters(DateTime start, DateTime end,
             List<MoneyDirection> directions, List<int> walletIds, List<string> categories,
@@ -55,17 +58,25 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         }
 
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
-            string category,
-            CancellationToken token = default(CancellationToken))
+            CancellationToken token = default (CancellationToken))
+        {
+            return FetchBy(e => start <= e.CreatedAt && e.CreatedAt <= end, token);
+        }
+
+        public Task<List<Transaction>> FetchByCategory(string category, DateTime? start, DateTime? end,
+            int? take, int? skip, CancellationToken token = default(CancellationToken))
         {
             var predicate = PredicateBuilder.New<Transaction>();
-            predicate = predicate.Start(e => start <= e.CreatedAt && e.CreatedAt <= end);
-            if (!string.IsNullOrEmpty(category))
+            predicate = predicate.Start(e => e.Category.ToLower() == category.ToLower());
+            if (start.HasValue)
             {
-                category = category.ToLower();
-                predicate = predicate.And(e => e.Category.ToLower() == category);
+                predicate = predicate.And(e => start <= e.CreatedAt);
             }
-            return FetchBy(predicate, token);
+            if (end.HasValue)
+            {
+                predicate = predicate.And(e => e.CreatedAt <= end);
+            }
+            return FetchBy(predicate, token, take, skip);
         }
 
         public Task<List<Transaction>> FetchByFilters(DateTime start, DateTime end,

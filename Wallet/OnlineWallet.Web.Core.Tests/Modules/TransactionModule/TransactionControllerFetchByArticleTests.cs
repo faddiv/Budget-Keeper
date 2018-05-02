@@ -35,7 +35,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
             // Act
             var result = await Controller.FetchByArticle("second");
-            
+
+            result.Should().NotBeEmpty();
             result.Should().BeInDescendingOrder(e => e.CreatedAt);
         }
     }

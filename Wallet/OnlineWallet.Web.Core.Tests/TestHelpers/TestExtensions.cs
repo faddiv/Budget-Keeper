@@ -12,6 +12,16 @@ namespace OnlineWallet.Web.TestHelpers
             return dateTime == DateTime.Parse(dateTimeString);
         }
 
+        public static bool GreaterOrEqualTo(this DateTime dateTime, string dateTimeString)
+        {
+            return dateTime >= DateTime.Parse(dateTimeString);
+        }
+
+        public static bool LessOrEqualTo(this DateTime dateTime, string dateTimeString)
+        {
+            return dateTime <= DateTime.Parse(dateTimeString);
+        }
+
         public static bool IsMatch(this string input, string pattern)
         {
             return Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase);
