@@ -2,7 +2,11 @@ import * as moment from "moment";
 
 export const dateFormat = "YYYY-MM-DD";
 export function toDateString(dateTime: Date) {
-    return moment(dateTime).format(dateFormat);
+    return toServerDate(moment(dateTime));
+}
+
+export function toServerDate(dateTime: moment.Moment) {
+    return dateTime.format(dateFormat);
 }
 
 export function toUTCDate(value: any): Date | undefined {
