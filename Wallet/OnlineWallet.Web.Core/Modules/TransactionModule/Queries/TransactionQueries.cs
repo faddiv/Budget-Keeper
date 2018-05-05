@@ -58,7 +58,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
         }
 
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
-            CancellationToken token = default (CancellationToken))
+            CancellationToken token = default(CancellationToken))
         {
             return FetchBy(e => start <= e.CreatedAt && e.CreatedAt <= end, token);
         }
@@ -67,7 +67,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
             int? take, int? skip, CancellationToken token = default(CancellationToken))
         {
             var predicate = PredicateBuilder.New<Transaction>();
-            predicate = predicate.Start(e => e.Category.ToLower() == category.ToLower());
+            var categoryLower = category?.ToLower() ?? "";
+            predicate = predicate.Start(e => (e.Category.ToLower() ?? "") == categoryLower);
             if (start.HasValue)
             {
                 predicate = predicate.And(e => start <= e.CreatedAt);

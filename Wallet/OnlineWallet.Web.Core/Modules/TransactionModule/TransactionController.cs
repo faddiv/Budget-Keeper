@@ -19,8 +19,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
     {
         #region Fields
 
-        private readonly IBatchSaveCommand batchSave;
-        private readonly ITransactionQueries queries;
+        private readonly IBatchSaveCommand _batchSave;
+        private readonly ITransactionQueries _queries;
 
         #endregion
 
@@ -28,8 +28,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         public TransactionController(ITransactionQueries queries, IBatchSaveCommand batchSave)
         {
-            this.queries = queries;
-            this.batchSave = batchSave;
+            _queries = queries;
+            _batchSave = batchSave;
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
             model.Save = model.Save ?? new List<Transaction>();
             model.Delete = model.Delete ?? new List<long>();
-            await batchSave.Execute(model, token);
+            await _batchSave.Execute(model, token);
             return new JsonResult(model.Save)
             {
                 StatusCode = (int) HttpStatusCode.OK
@@ -65,7 +65,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public Task<List<Transaction>> FetchByArticle(string article, int limit = 20, int skip = 0,
             CancellationToken token = default(CancellationToken))
         {
-            return queries.FetchByArticleAsync(article, limit, skip, token);
+            return _queries.FetchByArticleAsync(article, limit, skip, token);
         }
         
         [HttpGet(nameof(FetchByDateRange))]
@@ -73,7 +73,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
             CancellationToken token = default(CancellationToken))
         {
-            return queries.FetchByDateRange(start, end, token);
+            return _queries.FetchByDateRange(start, end, token);
         }
 
         [HttpGet(nameof(FetchByCategory))]
@@ -81,7 +81,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         public Task<List<Transaction>> FetchByCategory(string category, DateTime? start = null, DateTime? end = null,
             int? limit = null, int? skip = null, CancellationToken token = default(CancellationToken))
         {
-            return queries.FetchByCategory(category, start, end, limit, skip, token);
+            return _queries.FetchByCategory(category, start, end, limit, skip, token);
         }
 
         #endregion

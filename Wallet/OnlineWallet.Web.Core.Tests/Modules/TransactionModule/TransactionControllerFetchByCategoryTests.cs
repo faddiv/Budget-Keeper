@@ -97,6 +97,24 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             result.Should().BeInDescendingOrder(e => e.CreatedAt);
         }
 
+        [Theory(DisplayName = nameof(Returns_Category_eq_null_if_null_or_empty_category_provided))]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task Returns_Category_eq_null_if_null_or_empty_category_provided(string searchCategory)
+        {
+            // Arrange
+            await Fixture.PrepareDataWith(rules => rules
+                .TheFirst(50).WithCategory("cat")
+                .TheNext(50).WithCategory(null));
+
+            // Act
+            var result = await Controller.FetchByCategory(searchCategory);
+
+            // Assert
+            result.Should().NotBeEmpty();
+            result.Should().OnlyContain(e => e.Category == null);
+        }
+
         private async Task PrepareData()
         {
             await Fixture.PrepareDataWith(rules => rules
