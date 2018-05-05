@@ -5,14 +5,11 @@ import { bind } from "bind-decorator";
 
 import { Layout } from "layout";
 import { ArticleModel, articleService, Wallet, transactionService } from "walletApi";
-import { updateState, Collapse, noAction } from "react-ext";
-import { getWalletNameById, TransactionViewModel, mapTransactionViewModel, getDirectionColoring, TransactionTable } from "walletCommon";
+import { updateState, noAction } from "react-ext";
+import { getWalletNameById, TransactionViewModel, mapTransactionViewModel } from "walletCommon";
 import { RootState } from "reducers";
 import { AlertsActions } from "actions/alerts";
-
-interface OpenedArticles {
-    [name: string]: TransactionViewModel[][];
-}
+import { DetailsTable } from "./subComponents/detailsTable";
 
 export interface ArticlesPageProps {
     wallets: Wallet[];
@@ -23,15 +20,11 @@ export interface ArticlesPageState {
     articles: ArticleModel[];
     name: string;
     openItem: ArticleModel;
-    openedArticleTransactions: TransactionViewModel[];
-    pageNumber: number;
     sync: boolean;
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPageState> {
-
-    transactionsCache: OpenedArticles;
 
     constructor(props) {
         super(props);
@@ -39,11 +32,8 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
             articles: [],
             name: "",
             openItem: null,
-            openedArticleTransactions: [],
-            pageNumber: 0,
             sync: false
         };
-        this.transactionsCache = {};
     }
 
     @bind
@@ -90,99 +80,39 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
 
     @bind
     async openRow(item: ArticleModel) {
-        const state = this.state;
-        const openItem = state.openItem === item ? null : item;
-        if (openItem) {
-            let transactionsPages = this.transactionsCache[openItem.name];
-            if (!transactionsPages || !transactionsPages.length) {
-                const transactions = await transactionService
-                    .fetchArticle(openItem.name)
-                    .then(mapTransactionViewModel);
-                transactionsPages = [transactions];
-                this.transactionsCache[openItem.name] = transactionsPages;
-            }
-            this.setState({
-                openedArticleTransactions: transactionsPages[0],
-                openItem,
-                pageNumber: 0
-            });
-        } else {
-            this.setState({
-                openedArticleTransactions: [],
-                openItem,
-                pageNumber: 0
-            });
-        }
+        this.setState((prevState) => {
+            return {
+                openItem: prevState.openItem === item ? null : item
+            };
+        });
     }
 
     @bind
-    firstPage() {
-        this.setPage(0);
+    async queryDetails(parentRow: ArticleModel, take: number, skip: number): Promise<TransactionViewModel[]> {
+        const transactions = await transactionService
+            .fetchArticle(parentRow.name, take, skip)
+            .then(mapTransactionViewModel);
+        return transactions;
     }
 
     @bind
-    prevPage() {
-        if (this.state.pageNumber > 0) {
-            this.setPage(this.state.pageNumber - 1);
-        }
-    }
-
-    @bind
-    nextPage() {
-        this.setPage(this.state.pageNumber + 1);
-    }
-
-    async setPage(pageNumber: number) {
-        const openItem = this.state.openItem;
-        const transactionsPages = this.transactionsCache[openItem.name];
-        let openedArticleTransactions = transactionsPages[pageNumber];
-        if (openedArticleTransactions) {
-            this.setState({
-                pageNumber,
-                openedArticleTransactions
-            });
-        } else {
-            openedArticleTransactions = await transactionService
-                .fetchArticle(openItem.name, 10, pageNumber * 10)
-                .then(mapTransactionViewModel);
-            const newPages = this.transactionsCache[openItem.name];
-            newPages[pageNumber] = openedArticleTransactions;
-            this.setState({
-                pageNumber,
-                openedArticleTransactions
-            });
-        }
+    toggleDetails(parentRow: any, open: boolean) {
+        this.setState({
+            openItem: open ? parentRow : undefined
+        });
     }
 
     renderSubTable(item: ArticleModel) {
-        const { openItem, openedArticleTransactions } = this.state;
+        const { openItem } = this.state;
         const { wallets } = this.props;
         return (
-            <tr key={item.name + "collapse"}>
-                <td colSpan={5} style={{ padding: "0" }}>
-                    <Collapse open={item === openItem}>
-                        <div className="card" style={{ margin: "5px" }}>
-                            <div className="card-body">
-                                <TransactionTable wallets={wallets}
-                                    items={openedArticleTransactions} rowColor={getDirectionColoring} />
-                            </div>
-                        </div>
-                        <div className="card-footer">
-                            <ul className="pagination justify-content-center">
-                                <li className="page-item">
-                                    <button className="page-link" type="button" onClick={this.firstPage}>First</button>
-                                </li>
-                                <li className="page-item">
-                                    <button className="page-link" type="button" onClick={this.prevPage}>Previous</button>
-                                </li>
-                                <li className="page-item">
-                                    <button className="page-link" type="button" onClick={this.nextPage}>Next</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </Collapse>
-                </td>
-            </tr>
+            <DetailsTable key={name + "collapse"}
+                open={item === openItem}
+                colSpan={5}
+                parentRow={item}
+                wallets={wallets}
+                queryDetails={this.queryDetails}
+                toggleDetails={this.toggleDetails} />
         );
     }
 
