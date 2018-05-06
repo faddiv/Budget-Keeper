@@ -11,27 +11,30 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     [Trait(nameof(ArticleUpdateOnBachSave), null)]
-    public class ArticleUpdateOnBachSaveTests : ServiceTestBase
+    public class ArticleUpdateOnBachSaveTests : IDisposable
     {
         private readonly IBatchSaveCommand _instance;
         private readonly TransactionBuilder _transactionBuilder;
 
         public ArticleUpdateOnBachSaveTests()
         {
+            Fixture = TestServicesFactory.CreateServiceFixture(e =>
+            {
+                e.RemoveAll(descriptor => descriptor.ServiceType == typeof(IBatchSaveEvent));
+                e.AddScoped<IBatchSaveEvent, ArticleUpdateOnBachSave>();
+            });
             _instance = Fixture.GetService<IBatchSaveCommand>();
             _transactionBuilder = new TransactionBuilder()
                 .WithContinousWallet(Fixture.DbContext);
         }
 
-        protected override TestServices Setup(TestServiceProviderFixture provider)
+        public TestServices Fixture { get; }
+
+        public void Dispose()
         {
-            return provider.CreateServiceFixture(e =>
-            {
-                e.RemoveAll(descriptor => descriptor.ServiceType == typeof(IBatchSaveEvent));
-                e.AddScoped<IBatchSaveEvent, ArticleUpdateOnBachSave>();
-            });
+            Fixture?.Dispose();
         }
-        
+
         [Fact(DisplayName = nameof(Adds_new_article_on_new_transaction))]
         public async Task Adds_new_article_on_new_transaction()
         {

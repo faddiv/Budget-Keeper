@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Net;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace OnlineWallet.Web.TestHelpers
 {
@@ -11,9 +8,7 @@ namespace OnlineWallet.Web.TestHelpers
 
         public ServiceTestBase()
         {
-            var provider = new TestServiceProviderFixture();
-            // ReSharper disable once VirtualMemberCallInConstructor
-            Fixture = Setup(provider);
+            Fixture = TestServicesFactory.CreateServiceFixture();
         }
 
         #endregion
@@ -29,15 +24,6 @@ namespace OnlineWallet.Web.TestHelpers
         public virtual void Dispose()
         {
             Fixture?.Dispose();
-        }
-
-        #endregion
-
-        #region  Nonpublic Methods
-
-        protected virtual TestServices Setup(TestServiceProviderFixture provider)
-        {
-            return provider.CreateServiceFixture();
         }
 
         #endregion

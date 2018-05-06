@@ -12,7 +12,7 @@ using Xunit;
 namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 {
     [Trait(nameof(BatchSaveCommand), nameof(BatchSaveCommand.Execute))]
-    public class BatchSaveCommandExecuteTests : ServiceTestBase
+    public class BatchSaveCommandExecuteTests : IDisposable
     {
         private readonly Transaction _transaction1;
         private Mock<IBatchSaveEvent> _mockEvent;
@@ -20,17 +20,19 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         public BatchSaveCommandExecuteTests()
         {
+            _mockEvent = new Mock<IBatchSaveEvent>();
+            Fixture = TestServicesFactory.CreateServiceFixture(_mockEvent);
             _command = Fixture.GetService<IBatchSaveCommand>();
             _transaction1 = new TransactionBuilder().Build();
             Fixture.DbContext.Transactions.AddRange(_transaction1);
             Fixture.DbContext.SaveChanges();
         }
 
-        protected override TestServices Setup(TestServiceProviderFixture provider)
-        {
-            _mockEvent = new Mock<IBatchSaveEvent>();
-            return provider.CreateServiceFixture(_mockEvent);
+        public TestServices Fixture { get; }
 
+        public void Dispose()
+        {
+            Fixture?.Dispose();
         }
 
         [Fact(DisplayName = nameof(Should_invoke_events_on_update))]
@@ -78,7 +80,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             //Assert
             VerifyExecuteCalledWith(_transaction1, null, BatchSaveOperationType.Delete);
         }
-        
+
         private void VerifyExecuteCalledWith(Transaction oldTransaction, Transaction newTransaction, BatchSaveOperationType operationType)
         {
             _mockEvent.Verify(e => e.BeforeSave(It.Is<TransactionEventArgs>(args =>

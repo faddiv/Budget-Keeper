@@ -7,11 +7,11 @@ using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.TestHelpers
 {
-    public class TestServiceProviderFixture
+    public class TestServicesFactory
     {
         #region  Constructors
 
-        static TestServiceProviderFixture()
+        static TestServicesFactory()
         {
             Map = new Mapper(new MapperConfiguration(config =>
             {
@@ -30,12 +30,12 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region  Public Methods
 
-        public TestServices CreateServiceFixture(Action<ServiceCollection> setup = null)
+        public static TestServices CreateServiceFixture(Action<ServiceCollection> setup = null)
         {
             return new TestServices(setup, Map);
         }
 
-        public TestServices CreateServiceFixture(params Mock[] mocks)
+        public static TestServices CreateServiceFixture(params Mock[] mocks)
         {
             return new TestServices(s =>
             {
