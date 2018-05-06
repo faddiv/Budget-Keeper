@@ -1,13 +1,12 @@
-import { walletApiConfig, ThenJson } from "./walletApiConfig";
 import { Transaction } from "./model";
-import { buildUrl } from "./linkHelpers";
+import { ThenJson, jsonRequestInit, buildUrl } from "helpers";
 
 const urlBase = "/api/v1/Transaction";
 
 class TransactionService {
 
     async fetchDateRange(start: string, end: string) {
-        const url = buildUrl(urlBase + "/FetchByDateRange", walletApiConfig.baseUrl, { start, end });
+        const url = buildUrl([urlBase, "/FetchByDateRange"], { start, end });
 
         const response = await fetch(url.toString());
         const result = await ThenJson<Transaction[]>(response);
@@ -15,7 +14,7 @@ class TransactionService {
     }
 
     async fetchCategory(category: string, args: { start?: string, end?: string, limit?: number, skip?: number } = {}) {
-        const url = buildUrl(urlBase + "/FetchByCategory", walletApiConfig.baseUrl,
+        const url = buildUrl([urlBase, "/FetchByCategory"],
             {
                 start: args.start,
                 end: args.end,
@@ -30,7 +29,7 @@ class TransactionService {
     }
 
     async fetchArticle(article: string, limit: number = 10, skip: number = 0) {
-        const url = buildUrl(urlBase + "/FetchByArticle", walletApiConfig.baseUrl, { article, limit, skip });
+        const url = buildUrl([urlBase, "/FetchByArticle"], { article, limit, skip });
 
         const response = await fetch(url.toString());
         const result = await ThenJson<Transaction[]>(response);
@@ -47,9 +46,9 @@ class TransactionService {
             }
         });
 
-        const url = buildUrl(urlBase + "/BatchSave", walletApiConfig.baseUrl);
+        const url = buildUrl([urlBase, "/BatchSave"]);
 
-        const response = await fetch(url.toString(), walletApiConfig.jsonRequestConfig({
+        const response = await fetch(url.toString(), jsonRequestInit({
             save: transactions,
             delete: idToDelete
         }, "POST"));

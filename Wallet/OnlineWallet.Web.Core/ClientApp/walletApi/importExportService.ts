@@ -1,6 +1,5 @@
-import { walletApiConfig, ThenJson } from "./walletApiConfig";
 import { ExportImportRow } from "./model";
-import { buildUrl } from "./linkHelpers";
+import { ThenJson, buildUrl } from "helpers";
 
 const importUrl = "/api/v1/Import/ProcessTransactions";
 const exportUrl = "/api/v1/Export";
@@ -8,7 +7,7 @@ const exportUrl = "/api/v1/Export";
 class ImportExportService {
 
     async uploadTransactions(file: File): Promise<ExportImportRow[]> {
-        const url = buildUrl(importUrl, walletApiConfig.baseUrl);
+        const url = buildUrl([importUrl]);
         const formData = new FormData();
         formData.append("file", file as any, file.name);
         const response = await fetch(url.toString(), {
@@ -21,7 +20,7 @@ class ImportExportService {
     }
 
     exportRange(from: string, to: string, fileName: string): void {
-        window.location.href = `${walletApiConfig.baseUrl}${exportUrl}?from=${from}&to=${to}&fileName=${fileName}`;
+        window.location.href = `${exportUrl}?from=${from}&to=${to}&fileName=${fileName}`;
     }
 
 }

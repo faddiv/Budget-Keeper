@@ -1,13 +1,12 @@
-import { walletApiConfig, ThenJson } from "./walletApiConfig";
 import { ArticleModel } from "./model";
-import { buildUrl } from "./linkHelpers";
+import { ThenJson, jsonRequestInit, buildUrl } from "helpers";
 
 const urlBase = "/api/v1/Article";
 
 class ArticleService {
 
     async filterBy(search: string, limit?: number): Promise<ArticleModel[]> {
-        const url = buildUrl(urlBase, walletApiConfig.baseUrl, {
+        const url = buildUrl([urlBase], {
             search,
             limit
         });
@@ -17,8 +16,8 @@ class ArticleService {
     }
 
     async syncFromTransactions(articles?: string[]): Promise<boolean> {
-        const url = buildUrl(urlBase + "/SyncFromTransactions", walletApiConfig.baseUrl);
-        const response = await fetch(url.toString(), walletApiConfig.jsonRequestConfig({
+        const url = buildUrl([urlBase, "/SyncFromTransactions"]);
+        const response = await fetch(url.toString(), jsonRequestInit({
             articles
         }, "POST"));
         return response.ok;

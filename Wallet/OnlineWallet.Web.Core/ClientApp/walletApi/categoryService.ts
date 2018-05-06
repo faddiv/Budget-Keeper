@@ -1,13 +1,12 @@
-import { walletApiConfig, ThenJson } from "./walletApiConfig";
 import { CategoryModel } from "./model";
-import { buildUrl } from "./linkHelpers";
+import { ThenJson, buildUrl } from "helpers";
 
 const urlBase = "/api/v1/Category";
 
 class CategoryService {
 
     async filterBy(search: string, limit?: number): Promise<CategoryModel[]> {
-        const url = buildUrl(urlBase, walletApiConfig.baseUrl, {
+        const url = buildUrl([urlBase], {
             search,
             limit
         });

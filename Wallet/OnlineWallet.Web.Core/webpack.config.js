@@ -32,7 +32,13 @@ module.exports = function (env) {
                  */
                 watchContentBase: true,
                 port: 4200,
-                historyApiFallback: true
+                historyApiFallback: true,
+                proxy: {
+                    "/api/*": {
+                        target: "http://localhost:56491",
+                        secure: false
+                    }
+                }
             }
         })
 
