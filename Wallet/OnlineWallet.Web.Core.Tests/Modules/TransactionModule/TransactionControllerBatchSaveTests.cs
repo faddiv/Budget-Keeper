@@ -250,15 +250,13 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             var articles = Fixture.DbContext.Article.ToList();
 
             articles.Where(e => e.Name == FirstArticleName).Should().HaveCount(1);
-            var articleEntity = articles.FirstOrDefault(e => e.Name == FirstArticleName);
+            var articleEntity = articles.Should().Contain(e => e.Name == FirstArticleName).Which;
             articleEntity.Should().NotBeNull();
-            // ReSharper disable PossibleNullReferenceException
             articleEntity.Category.Should().Be(newCategory);
             articleEntity.LastPrice.Should().Be(105);
             articleEntity.LastUpdate.Should().Be(newDate);
             articleEntity.LastWalletId.Should().Be(Fixture.WalletBankAccount.MoneyWalletId);
             articleEntity.Occurence.Should().Be(2);
-            // ReSharper restore PossibleNullReferenceException
 
             articles.Where(e => e.Name == SecondArticleName).Should().HaveCount(0);
         }
