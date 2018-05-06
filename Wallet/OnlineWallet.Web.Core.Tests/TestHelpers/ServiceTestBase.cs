@@ -35,24 +35,6 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region  Nonpublic Methods
 
-        protected void ResultShouldBeNotFound(ActionResult result)
-        {
-            result.Should()
-                .NotBeNull().And
-                .BeOfType(typeof(NotFoundResult));
-            var jsonResult = (NotFoundResult) result;
-            jsonResult.StatusCode.Should().Be((int) HttpStatusCode.NotFound);
-        }
-
-        protected void ResultShouldBeOk(ActionResult result, HttpStatusCode statusCode)
-        {
-            result.Should()
-                .NotBeNull().And
-                .BeOfType(typeof(JsonResult));
-            var jsonResult = (JsonResult) result;
-            jsonResult.StatusCode.Should().Be((int) statusCode);
-        }
-
         protected virtual TestServices Setup(TestServiceProviderFixture provider)
         {
             return provider.CreateServiceFixture();
