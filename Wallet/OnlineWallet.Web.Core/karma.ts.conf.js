@@ -34,7 +34,7 @@ module.exports = function (config) {
         karmaTypescriptConfig: {
             bundlerOptions: {
                 constants: {
-                    PRODUCTION: false
+                    MODE: "development"
                 },
                 entrypoints: /\.spec\.tsx?$/
             },

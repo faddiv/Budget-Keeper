@@ -50,9 +50,6 @@ export function jsonRequestInit(data: any, method: "PUT" | "POST" | "DELETE", ex
     if (extra) {
         requestInit = { ...requestInit, ...extra };
     }
-    if (!PRODUCTION) {
-        requestInit.mode = "cors";
-    }
     return requestInit;
 }
 

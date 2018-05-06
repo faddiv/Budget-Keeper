@@ -71,7 +71,6 @@ namespace OnlineWallet.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseCors("ApiCors");
             app.UseStaticFiles();
             app.UseSwagger(options => { });
             app.UseSwaggerUI(c =>
@@ -104,16 +103,6 @@ namespace OnlineWallet.Web
             AddWalletServices(services);
             // Add framework services.
             services.AddMvc();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("ApiCors", builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200");
-                    builder.WithOrigins("http://localhost:4201");
-                    builder.AllowAnyMethod();
-                    builder.AllowAnyHeader();
-                });
-            });
 
             services.AddSwaggerGen(c =>
             {

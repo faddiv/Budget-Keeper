@@ -8,7 +8,7 @@
     "start": "./node_modules/.bin/webpack-dev-server --debug --hot --inline --progress --colors --open --mode=development",
     "vsstart": "./node_modules/.bin/webpack-dev-server --debug --hot --inline --progress --colors",
     "build": "./node_modules/.bin/webpack --progress --colors",
-    "release": "./node_modules/.bin/webpack -p --progress --colors --mode=production",
+    "release": "./node_modules/.bin/webpack --progress --colors --mode=production",
     "lint": "tslint ClientApp/**/*.ts ClientApp/**/*.tsx -t verbose"
   },
   "author": "",

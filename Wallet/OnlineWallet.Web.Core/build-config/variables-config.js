@@ -3,12 +3,15 @@ const webpack = require('webpack');
 /**
  * This file inject variables into the code.
  */
-module.exports = function (production) {
+module.exports = function (mode) {
+    var options = {
+        MODE: JSON.stringify(mode),
+        "process.env.NODE_ENV": JSON.stringify(mode)
+    };
+
     return {
         plugins: [
-            new webpack.DefinePlugin({
-                PRODUCTION: JSON.stringify(production)
-            })
+            new webpack.DefinePlugin(options)
         ]
     };
 }

@@ -1,4 +1,4 @@
 /**
- * Injected from webpack. If true this is a production build.
+ * Injected from webpack. It can be development or production.
  */
-declare const PRODUCTION: boolean;
+declare const MODE: string;

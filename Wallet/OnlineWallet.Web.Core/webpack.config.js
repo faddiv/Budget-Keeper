@@ -6,11 +6,10 @@ var runMode = require("./build-config/run-mode");
 const scssConfig = require("./build-config/scss-config")(runMode.cssOutput);
 const htmlConfig = require("./build-config/html-config");
 const vendorConfig = require("./build-config/vendor-config");
-const variablesConfig = require("./build-config/variables-config")(runMode.production);
+const variablesConfig = require("./build-config/variables-config")(runMode.mode);
 const typescriptConfig = require("./build-config/typescript-config");
 const outputPath = "wwwroot";
-module.exports = function (env) {
-    console.log("env variable:", env);
+module.exports = function () {
     return [merge(scssConfig, htmlConfig, vendorConfig, typescriptConfig, variablesConfig,
         {
             entry: {
@@ -24,7 +23,7 @@ module.exports = function (env) {
             plugins: [
                 new CleanWebpackPlugin([outputPath + "/*"])
             ],
-            devtool: runMode.production ? undefined : 'source-map',
+            devtool: runMode.mode === "production" ? undefined : 'source-map',
             devServer: {
                 contentBase: "ClientApp",
                 /**
