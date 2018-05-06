@@ -72,7 +72,6 @@ namespace OnlineWallet.Web
             }
 
             app.UseCors("ApiCors");
-            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseSwagger(options => { });
             app.UseSwaggerUI(c =>
@@ -80,8 +79,13 @@ namespace OnlineWallet.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
                 c.ShowJsonEditor();
             });
-            app.UseMvc(route => { route.MapRoute("Default", "{controller}/{action}/{id?}"); });
-            app.UseMiddleware<ServeIndexHtmlMiddleware>();
+            app.UseMvc(route => {
+                route.MapRoute("Default", "{controller}/{action}/{id?}");
+
+                route.MapRoute("spa-fallback", "{*clientRoute}",
+                    defaults: new { controller = "Home", action = "Index" });
+
+            });
         }
 
 
