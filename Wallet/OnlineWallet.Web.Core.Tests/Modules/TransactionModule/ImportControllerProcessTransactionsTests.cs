@@ -31,7 +31,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
                 //Arrange
-                var dbContext = _fixture.DbContext;
+                var dbContext = Fixture.DbContext;
                 var transaction = new Transaction
                 {
                     Name = "expense 1",
@@ -43,7 +43,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 };
                 dbContext.Transactions.Add(transaction);
                 dbContext.SaveChanges();
-                var controller = _fixture.GetService<ImportController>();
+                var controller = Fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
@@ -64,7 +64,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
                 //Arrange
-                var dbContext = _fixture.DbContext;
+                var dbContext = Fixture.DbContext;
                 var transaction = new Transaction
                 {
                     Name = "Original Name",
@@ -76,7 +76,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 };
                 dbContext.Transactions.Add(transaction);
                 dbContext.SaveChanges();
-                var controller = _fixture.GetService<ImportController>();
+                var controller = Fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);
@@ -97,7 +97,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             using (var stream = new FileStream(ImportCsvFilePath, FileMode.Open))
             {
                 //Arrange
-                var controller = _fixture.GetService<ImportController>();
+                var controller = Fixture.GetService<ImportController>();
                 var formFile = new Mock<IFormFile>();
                 formFile.SetupAllProperties();
                 formFile.Setup(e => e.OpenReadStream()).Returns(stream);

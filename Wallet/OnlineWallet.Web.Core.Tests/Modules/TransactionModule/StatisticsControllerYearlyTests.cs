@@ -60,7 +60,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Returns_zeros_for_empty_year))]
         public async Task Returns_zeros_for_empty_year()
         {
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
@@ -73,7 +73,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         private async Task<YearlyStatistics> PrepareDataAndRunTest(MoneyDirection tested, MoneyDirection rest1, MoneyDirection rest2)
         {
-            await _fixture.PrepareDataWith(r => r
+            await Fixture.PrepareDataWith(r => r
                             .All().WithValue(1).WithCreatedAt("2017.01.01", "2017.12.31")
                             .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
                             .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
@@ -81,7 +81,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                             .TheNext(25).WithDirection(rest1)
                             .TheNext(10).WithDirection(rest2)
                             );
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             return statistics;
@@ -90,7 +90,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Returns_monthly_summaries))]
         public async Task Returns_monthly_summaries()
         {
-            await _fixture.PrepareDataWith(r =>
+            await Fixture.PrepareDataWith(r =>
             {
                 r = r.TheFirst(0);
                 for (int i = 1; i <= 12; i++)
@@ -113,7 +113,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 return r;
             }, (100 + 10 + 10) * 12);
 
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();
@@ -139,7 +139,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Returns_zero_monthly_data_for_empty_year))]
         public async Task Returns_zero_monthly_data_for_empty_year()
         {
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Yearly(2017);
             statistics.Should().NotBeNull();

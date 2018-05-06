@@ -20,7 +20,6 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region Properties
 
-        public TestServices _fixture => Fixture;
         public TestServices Fixture { get; }
 
         #endregion

@@ -41,7 +41,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var batch = TransactionOperationBatch.SaveBatch(transaction);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction.Name);
+            var article = Fixture.DbContext.Article.Find(transaction.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction);
             article.Occurence.Should().Be(1);
@@ -63,7 +63,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article = Fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction2);
             article.Occurence.Should().Be(2);
@@ -83,7 +83,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article = Fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction2);
             article.Occurence.Should().Be(2);
@@ -110,7 +110,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction3, transaction2);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction3.Name);
+            var article = Fixture.DbContext.Article.Find(transaction3.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction3);
             article.Occurence.Should().Be(2);
@@ -133,7 +133,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article = Fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction2);
             article.Occurence.Should().Be(1);
@@ -152,14 +152,14 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             //Act
-            transaction1 = _fixture.Clone(transaction1);
-            transaction2 = _fixture.Clone(transaction2);
+            transaction1 = Fixture.Clone(transaction1);
+            transaction2 = Fixture.Clone(transaction2);
             transaction1.CreatedAt = new DateTime(2017, 3, 11);
             transaction2.CreatedAt = new DateTime(2017, 1, 1);
             batch = TransactionOperationBatch.SaveBatch(transaction1, transaction2);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction1.Name);
+            var article = Fixture.DbContext.Article.Find(transaction1.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(2);
@@ -182,7 +182,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article = Fixture.DbContext.Article.Find(transaction2.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(1);
@@ -204,7 +204,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.DeleteBatch(transaction2.TransactionId);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction1.Name);
+            var article = Fixture.DbContext.Article.Find(transaction1.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(1);
@@ -217,7 +217,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction1 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 1)
                 .Build();
-            var transaction1Orig = _fixture.Clone(transaction1);
+            var transaction1Orig = Fixture.Clone(transaction1);
             var transaction2 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
@@ -228,9 +228,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction2);
             await Execute(batch);
             //Assert
-            var article1 = _fixture.DbContext.Article.Find(transaction1Orig.Name);
+            var article1 = Fixture.DbContext.Article.Find(transaction1Orig.Name);
             article1.Should().BeNull();
-            var article2 = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article2 = Fixture.DbContext.Article.Find(transaction2.Name);
             article2.Should().NotBeNull();
             article2.Name.Should().Be(transaction2.Name);
             article2.Occurence.Should().Be(1);
@@ -246,7 +246,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article1").WithCreatedAt(2017, 2)
                 .Build();
-            var transaction1Orig = _fixture.Clone(transaction1);
+            var transaction1Orig = Fixture.Clone(transaction1);
             var transaction3 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
@@ -257,11 +257,11 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction3);
             await Execute(batch);
             //Assert
-            var article1 = _fixture.DbContext.Article.Find(transaction1Orig.Name);
+            var article1 = Fixture.DbContext.Article.Find(transaction1Orig.Name);
             article1.Should().NotBeNull();
             article1.Name.Should().Be(transaction1Orig.Name);
             article1.Occurence.Should().Be(1);
-            var article2 = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article2 = Fixture.DbContext.Article.Find(transaction2.Name);
             article2.Should().NotBeNull();
             article2.Name.Should().Be(transaction2.Name);
             article2.Occurence.Should().Be(1);
@@ -277,7 +277,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             var transaction2 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
-            var transaction1Orig = _fixture.Clone(transaction1);
+            var transaction1Orig = Fixture.Clone(transaction1);
             var transaction3 = _transactionBuilder
                 .WithName("Article2").WithCreatedAt(2017, 2)
                 .Build();
@@ -288,9 +288,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.SaveBatch(transaction3);
             await Execute(batch);
             //Assert
-            var article1 = _fixture.DbContext.Article.Find(transaction1Orig.Name);
+            var article1 = Fixture.DbContext.Article.Find(transaction1Orig.Name);
             article1.Should().BeNull();
-            var article2 = _fixture.DbContext.Article.Find(transaction2.Name);
+            var article2 = Fixture.DbContext.Article.Find(transaction2.Name);
             article2.Should().NotBeNull();
             article2.Name.Should().Be(transaction2.Name);
             article2.Occurence.Should().Be(2);
@@ -312,7 +312,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.DeleteBatch(transaction2.TransactionId);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction1.Name);
+            var article = Fixture.DbContext.Article.Find(transaction1.Name);
             article.Should().NotBeNull();
             article.Should().BasedOn(transaction1);
             article.Occurence.Should().Be(1);
@@ -329,7 +329,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
             batch = TransactionOperationBatch.DeleteBatch(delete: transaction.TransactionId);
             await Execute(batch);
             //Assert
-            var article = _fixture.DbContext.Article.Find(transaction.Name);
+            var article = Fixture.DbContext.Article.Find(transaction.Name);
             article.Should().BeNull();
         }
 

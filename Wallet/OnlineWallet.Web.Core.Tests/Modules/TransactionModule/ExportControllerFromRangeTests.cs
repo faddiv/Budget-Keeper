@@ -18,22 +18,22 @@ namespace OnlineWallet.Web.Modules.TransactionModule
 
         public ExportControllerFromRangeTests()
         {
-            _fixture.DbContext.Transactions.AddRange(
+            Fixture.DbContext.Transactions.AddRange(
                 new Transaction
                 {
                     Name = "tr1",
                     CreatedAt = DateTime.Parse("2017-09-01"),
-                    Wallet = _fixture.WalletBankAccount
+                    Wallet = Fixture.WalletBankAccount
                 }, new Transaction
                 {
                     Name = "tr2",
                     CreatedAt = DateTime.Parse("2017-09-30"),
-                    Wallet = _fixture.WalletBankAccount
+                    Wallet = Fixture.WalletBankAccount
                 }, new Transaction
                 {
                     Name = "tr3",
                     CreatedAt = DateTime.Parse("2017-10-01"),
-                    Wallet = _fixture.WalletBankAccount,
+                    Wallet = Fixture.WalletBankAccount,
                     Category = "cat 1",
                     Direction = MoneyDirection.Expense,
                     Comment = "comm 1",
@@ -42,7 +42,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     Name = "tr4",
                     CreatedAt = DateTime.Parse("2017-10-31"),
-                    Wallet = _fixture.WalletCash,
+                    Wallet = Fixture.WalletCash,
                     Category = "cat 2",
                     Direction = MoneyDirection.Income,
                     Comment = "comm 2",
@@ -51,7 +51,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     Name = "tr5",
                     CreatedAt = DateTime.Parse("2017-10-15"),
-                    Wallet = _fixture.WalletBankAccount,
+                    Wallet = Fixture.WalletBankAccount,
                     Category = "cat 1",
                     Direction = MoneyDirection.Expense,
                     Comment = "comm 1",
@@ -60,10 +60,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 {
                     Name = "tr6",
                     CreatedAt = DateTime.Parse("2017-11-01"),
-                    Wallet = _fixture.WalletBankAccount
+                    Wallet = Fixture.WalletBankAccount
                 });
-            _fixture.DbContext.SaveChanges();
-            _controller = _fixture.GetService<ExportController>();
+            Fixture.DbContext.SaveChanges();
+            _controller = Fixture.GetService<ExportController>();
         }
         
         [Fact(DisplayName = nameof(Returns_with_FileContentResult))]

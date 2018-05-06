@@ -22,7 +22,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
             BuildDataWith(MoneyDirection.Plan, -15);
             BuildDataWith(MoneyDirection.Income, 25);
 
-            _fixture.DbContext.SaveChanges();
+            Fixture.DbContext.SaveChanges();
         }
 
         #endregion
@@ -36,13 +36,13 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                             .TheNext(1).WithCreatedAt("2017-10-01").WithValue(40 + shift)
                             .All().WithDirection(direction)
                             .BuildList();
-            _fixture.DbContext.Transactions.AddRange(transactions);
+            Fixture.DbContext.Transactions.AddRange(transactions);
         }
 
         [Fact(DisplayName = nameof(Queries_BalanceInfo_for_the_given_month))]
         public async Task Queries_BalanceInfo_for_the_given_month()
         {
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var result = await controller.BalanceInfo(2017, 9, CancellationToken.None);
 

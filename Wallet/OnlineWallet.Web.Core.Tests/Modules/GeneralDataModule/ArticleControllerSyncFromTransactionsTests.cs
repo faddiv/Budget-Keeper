@@ -18,35 +18,35 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
 
         public ArticleControllerSyncFromTransactionsTests()
         {
-            _controller = _fixture.GetService<ArticleController>();
+            _controller = Fixture.GetService<ArticleController>();
         }
         
         [Fact(DisplayName = nameof(Updates_all_article_if_no_parameter_provided))]
         public async Task Updates_all_article_if_no_parameter_provided()
         {
-            _fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(10).BuildList());
-            _fixture.DbContext.SaveChanges();
+            Fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(10).BuildList());
+            Fixture.DbContext.SaveChanges();
 
             var result = await _controller.SyncFromTransactions();
 
             result.Should().BeOfType<OkResult>();
-            var articles = _fixture.DbContext.Article.ToList();
-            articles.Should().HaveCount(_fixture.DbContext.Transactions.Select(e => e.Name).Distinct().Count());
+            var articles = Fixture.DbContext.Article.ToList();
+            articles.Should().HaveCount(Fixture.DbContext.Transactions.Select(e => e.Name).Distinct().Count());
         }
 
         [Fact(DisplayName = nameof(Updates_only_given_articles_if_provided))]
         public async Task Updates_only_given_articles_if_provided()
         {
-            _fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(10)
+            Fixture.DbContext.Transactions.AddRange(TransactionBuilder.CreateListOfSize(10)
                 .TheFirst(1).WithName("alfa")
                 .TheNext(1).WithName("beta")
                 .BuildList());
-            _fixture.DbContext.SaveChanges();
+            Fixture.DbContext.SaveChanges();
 
             var result = await _controller.SyncFromTransactions(new List<string> { "alfa", "beta" });
 
             result.Should().BeOfType<OkResult>();
-            var articles = _fixture.DbContext.Article.ToList();
+            var articles = Fixture.DbContext.Article.ToList();
             articles.Should().HaveCount(2);
         }
     }

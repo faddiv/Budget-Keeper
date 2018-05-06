@@ -16,7 +16,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics_for_empty_year))]
         public async Task Should_load_yearly_category_statistics_for_empty_year()
         {
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
@@ -30,7 +30,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_load_yearly_category_statistics))]
         public async Task Should_load_yearly_category_statistics()
         {
-            await _fixture.PrepareDataWith(r => r
+            await Fixture.PrepareDataWith(r => r
                 .All()
                 .WithValue(1)
                 .WithDirection(MoneyDirection.Expense)
@@ -39,7 +39,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                 .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
                 .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
             );
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
@@ -54,7 +54,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_load_monthly_category_statistics))]
         public async Task Should_load_monthly_category_statistics()
         {
-            await _fixture.PrepareDataWith(r => r
+            await Fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
                             .WithDirection(MoneyDirection.Expense)
@@ -63,7 +63,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                           .TheFirst(15).WithCreatedAt("2016.12.31").WithValue(100)
                           .TheNext(15).WithCreatedAt("2018.01.01").WithValue(100)
                             );
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Should().NotBeNull();
@@ -78,7 +78,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         [Fact(DisplayName = nameof(Should_group_by_category))]
         public async Task Should_group_by_category()
         {
-            await _fixture.PrepareDataWith(r => r
+            await Fixture.PrepareDataWith(r => r
                           .All()
                             .WithValue(1)
                             .WithDirection(MoneyDirection.Expense)
@@ -88,7 +88,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
                           .TheNext(30).WithCategory("rest")
                           .TheNext(30).WithCategory("boo")
                             );
-            var controller = _fixture.GetService<StatisticsController>();
+            var controller = Fixture.GetService<StatisticsController>();
 
             var statistics = await controller.Categories(2017);
             statistics.Yearly.Should().HaveCount(4);
