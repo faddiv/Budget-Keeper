@@ -12,7 +12,7 @@ export function loadWallets() {
             const wallets = await walletService.getAll();
             dispatch(loadWalletSuccess(wallets));
         } catch (error) {
-            dispatch(AlertsActions.showAlert({type: "danger", message: error}));
+            dispatch(AlertsActions.showAlert({type: "danger", message: error.message}));
         }
     };
 }
@@ -23,7 +23,7 @@ export function insertWallet(wallet: Wallet) {
             await walletService.insert(wallet);
             await loadWallets()(dispatch);
         } catch (error) {
-            dispatch(AlertsActions.showAlert({type: "danger", message: error}));
+            dispatch(AlertsActions.showAlert({type: "danger", message: error.message}));
         }
     };
 }
