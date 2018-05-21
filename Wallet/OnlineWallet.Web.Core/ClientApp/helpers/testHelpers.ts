@@ -1,3 +1,3 @@
-export function unwrap<T>(component:T) {
-    return <T>(<any>component).WrappedComponent;
+export function unwrap<T>(component: T) {
+    return (component as any).WrappedComponent as T;
 }

@@ -136,7 +136,8 @@
       true,
       "actions",
       "reducers",
-      "constants"
+      "constants",
+      "helpers"
     ]
   }
 }

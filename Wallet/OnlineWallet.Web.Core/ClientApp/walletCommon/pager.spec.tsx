@@ -33,27 +33,27 @@ describe("Pager", () => {
         const element = shallow(<Pager countAll={100} page={5} pageSize={10} onPageSelected={onPageSelected} />);
         const liElements = element.find(".pagination > li").children();
         liElements.at(3).simulate("click", {
-            preventDefault: preventDefault
+            preventDefault
         });
         expect(onPageSelected).toHaveBeenCalledWith(2);
         expect(preventDefault).toHaveBeenCalled();
     });
-    
+
     it("should call pageSelected with prev page on clicking Previous.", () => {
         const element = shallow(<Pager countAll={100} page={5} pageSize={10} onPageSelected={onPageSelected} />);
         const liElements = element.find(".pagination > li").children();
         liElements.at(1).simulate("click", {
-            preventDefault: preventDefault
+            preventDefault
         });
         expect(onPageSelected).toHaveBeenCalledWith(4);
         expect(preventDefault).toHaveBeenCalled();
     });
-    
+
     it("should call pageSelected with next page on clicking Next.", () => {
         const element = shallow(<Pager countAll={100} page={5} pageSize={10} onPageSelected={onPageSelected} />);
         const liElements = element.find(".pagination > li").children();
         liElements.at(12).simulate("click", {
-            preventDefault: preventDefault
+            preventDefault
         });
         expect(onPageSelected).toHaveBeenCalledWith(6);
         expect(preventDefault).toHaveBeenCalled();
@@ -63,7 +63,7 @@ describe("Pager", () => {
         const element = shallow(<Pager countAll={100} page={5} pageSize={10} onPageSelected={onPageSelected} />);
         const liElements = element.find(".pagination > li").children();
         liElements.at(0).simulate("click", {
-            preventDefault: preventDefault
+            preventDefault
         });
         expect(onPageSelected).toHaveBeenCalledWith(1);
         expect(preventDefault).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe("Pager", () => {
         const element = shallow(<Pager countAll={100} page={5} pageSize={10} onPageSelected={onPageSelected} />);
         const liElements = element.find(".pagination > li").children();
         liElements.at(13).simulate("click", {
-            preventDefault: preventDefault
+            preventDefault
         });
         expect(onPageSelected).toHaveBeenCalledWith(10);
         expect(preventDefault).toHaveBeenCalled();

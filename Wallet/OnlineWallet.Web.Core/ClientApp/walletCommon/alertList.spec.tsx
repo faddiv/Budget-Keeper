@@ -3,9 +3,9 @@ import * as jasmineEnzyme from "jasmine-enzyme";
 import { shallow } from "enzyme";
 import { AlertList } from "./alertList";
 import { AlertMessage } from "reducers/alerts/alertsModel";
-import { unwrap } from 'helpers/testHelpers';
+import { unwrap } from "helpers/testHelpers";
 import * as H from "history";
-import { AlertsActions } from 'actions/alerts';
+import { AlertsActions } from "actions/alerts";
 
 describe("AlertList", () => {
     const AlertList2 = unwrap(AlertList);
@@ -18,8 +18,8 @@ describe("AlertList", () => {
         actions = {
             dismissAlert: jasmine.createSpy("dismissAlert"),
             dismissAllAlert: jasmine.createSpy("dismissAllAlert"),
-            showAlert: jasmine.createSpy("showAlert"),
-        }
+            showAlert: jasmine.createSpy("showAlert")
+        };
     });
 
     afterEach(() => {

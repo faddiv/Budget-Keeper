@@ -8,6 +8,5 @@ const context = require.context("./", true, /\.spec\.tsx?$/);
 // And load the modules.
 context.keys().map(context);
 
-
 // Finally, start Karma to run the tests.
 __karma__.start();
