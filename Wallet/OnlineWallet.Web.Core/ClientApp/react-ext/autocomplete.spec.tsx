@@ -1,6 +1,6 @@
 import * as React from "react";
-import * as jasmineEnzyme from "jasmine-enzyme";
 import { shallow } from "enzyme";
+import "jest-enzyme";
 import { Autocomplete, AutocompleteModel } from "./autocomplete";
 
 describe("Autocomplete", () => {
@@ -8,7 +8,6 @@ describe("Autocomplete", () => {
 
     const filter = () => Promise.resolve(filterResult);
     beforeEach(() => {
-        (jasmineEnzyme as any)();
     });
 
     it("should an input with the value.", () => {

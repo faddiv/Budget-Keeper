@@ -1,13 +1,12 @@
 import * as React from "react";
-import * as jasmineEnzyme from "jasmine-enzyme";
 import { shallow } from "enzyme";
+import "jest-enzyme";
 import { Pager } from "./pager";
 
 describe("Pager", () => {
     let onPageSelected: (page: number) => void;
     let preventDefault: () => void;
     beforeEach(() => {
-        (jasmineEnzyme as any)();
         onPageSelected = jasmine.createSpy("onPageSelected");
         preventDefault = jasmine.createSpy("preventDefault");
     });

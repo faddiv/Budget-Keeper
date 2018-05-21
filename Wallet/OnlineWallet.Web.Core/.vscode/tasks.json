@@ -16,8 +16,8 @@
                     ],
                     "background": {
                         "activeOnStart": true,
-                        "beginsPattern": "webpack: Compiling\\.\\.\\.",
-                        "endsPattern": "webpack: Compiled successfully\\."
+                        "beginsPattern": "build mode: .*",
+                        "endsPattern": ".*: Compiled successfully\\."
                     }
                 }
             ],

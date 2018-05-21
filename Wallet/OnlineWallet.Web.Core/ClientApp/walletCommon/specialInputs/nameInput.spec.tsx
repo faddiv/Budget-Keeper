@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as jasmineEnzyme from "jasmine-enzyme";
+import "jest-enzyme";
 import { mount } from "enzyme";
 import * as fetchMock from "fetch-mock";
 import { NameInput } from "./nameInput";
@@ -9,7 +9,6 @@ import { delay } from "helpers";
 describe("NameInput", () => {
 
     beforeEach(() => {
-        (jasmineEnzyme as any)();
     });
 
     afterEach(() => {
