@@ -1,4 +1,3 @@
-/**
- * Injected from webpack. It can be development or production.
- */
-declare const MODE: string;
+interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+}
