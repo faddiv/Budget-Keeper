@@ -5,7 +5,6 @@ const webpack = require('webpack');
  */
 module.exports = function (mode) {
     var options = {
-        MODE: JSON.stringify(mode),
         "process.env.NODE_ENV": JSON.stringify(mode)
     };
 
