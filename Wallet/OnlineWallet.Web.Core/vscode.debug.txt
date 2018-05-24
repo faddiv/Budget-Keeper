@@ -1,0 +1,8 @@
+The working visual studio code debug based on the following things:
+ - In package.json there is a special vsstart that is only differ from start in lack of open argument.
+   vs code opens the brwoser itself.
+ - In .vscode/tasks.json there is a vsstart task. Its name matches with the npm task and runs it. 
+   It watches the console output and decides when to start chrome and attaches it.
+ - In .vscode/launch.json there is Client Debug which calls the task defined in above.
+
+To debug the tests there is a "Debug tests" in .vscode/launch.json.

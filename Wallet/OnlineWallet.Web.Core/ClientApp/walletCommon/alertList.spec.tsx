@@ -1,10 +1,10 @@
 import * as React from "react";
-import * as jasmineEnzyme from "jasmine-enzyme";
+import * as H from "history";
 import { shallow } from "enzyme";
+import "jest-enzyme";
 import { AlertList } from "./alertList";
 import { AlertMessage } from "reducers/alerts/alertsModel";
 import { unwrap } from "helpers/testHelpers";
-import * as H from "history";
 import { AlertsActions } from "actions/alerts";
 
 describe("AlertList", () => {
@@ -13,7 +13,6 @@ describe("AlertList", () => {
     let actions: typeof AlertsActions;
 
     beforeEach(() => {
-        (jasmineEnzyme as any)();
         defaultHistory = H.createMemoryHistory();
         actions = {
             dismissAlert: jasmine.createSpy("dismissAlert"),
