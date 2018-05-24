@@ -52,7 +52,11 @@ class TransactionService {
             save: transactions,
             delete: idToDelete
         }, "POST"));
-        return response.ok;
+        if (response.ok) {
+            return true;
+        } else {
+            throw Error(response.statusText);
+        }
     }
 
 }

@@ -13,6 +13,7 @@ export interface AddItemFormProps {
     saveAll: () => Promise<SaveAllResult>;
     wallets: Wallet[];
     items: TransactionViewModel[];
+    onError: (error: Error) => void;
 }
 
 export interface AddItemFormState extends TransactionViewModel {
@@ -134,7 +135,7 @@ export class AddItemForm extends React.Component<AddItemFormProps, AddItemFormSt
     }
 
     render() {
-        const { wallets } = this.props;
+        const { wallets, onError } = this.props;
         const { category, comment, createdAt, direction, name, price, walletId, validation } = this.state;
         return (
             <form onChange={this.handleInputChange} onSubmit={this.addLine}>
@@ -144,7 +145,7 @@ export class AddItemForm extends React.Component<AddItemFormProps, AddItemFormSt
                 <FormGroup name="name" label="Name">
                     <NameInput focusAction={this.focusStartBind}
                         value={name} autoFocus={true} onSelect={this.nameSelected}
-                        className={classNames("form-control", { "is-invalid": validation.name.showError })} >
+                        className={classNames("form-control", { "is-invalid": validation.name.showError })} onError={onError} >
                         <div className="invalid-feedback">
                             {validation.name.message}
                         </div>
@@ -152,7 +153,7 @@ export class AddItemForm extends React.Component<AddItemFormProps, AddItemFormSt
                 </FormGroup>
                 <FormGroup name="price" label="Price" type="number" value={price} validation={validation.price} />
                 <FormGroup name="category" label="Category" value={category}>
-                    <CategoryInput value={category} className="form-control" onSelect={this.categorySelected} />
+                    <CategoryInput value={category} className="form-control" onSelect={this.categorySelected} onError={onError} />
                 </FormGroup>
                 <FormGroup name="createdAt" label="Date" type="date" value={createdAt} />
                 <FormGroup name="comment" label="Comment" value={comment} />

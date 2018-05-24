@@ -86,7 +86,7 @@ export class Transactions extends React.Component<TransactionsProps, Transaction
             await this.dateSelected();
             this.alertsService.showAlert({ type: "success", message: "Changes saved successfully." });
         } catch (error) {
-            this.alertsService.showAlert({ type: "danger", message: error });
+            this.alertsService.showAlert({ type: "danger", message: error.message });
         }
     }
 
@@ -111,16 +111,20 @@ export class Transactions extends React.Component<TransactionsProps, Transaction
 
     @bind
     async dateSelected() {
-        const { year, month } = this.state;
-        const start = moment([year, month - 1, 1]);
-        const end = moment(start).endOf("month");
-        const fetchTransactions = transactionService.fetchDateRange(start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD"));
-        const fetchBalance = statisticsService.balanceInfo(start.year(), start.month() + 1);
-        const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
-        this.setState({
-            items: mapTransactionViewModel(transactions),
-            balance
-        });
+        try {
+            const { year, month } = this.state;
+            const start = moment([year, month - 1, 1]);
+            const end = moment(start).endOf("month");
+            const fetchTransactions = transactionService.fetchDateRange(start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD"));
+            const fetchBalance = statisticsService.balanceInfo(start.year(), start.month() + 1);
+            const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
+            this.setState({
+                items: mapTransactionViewModel(transactions),
+                balance
+            });
+        } catch (error) {
+            this.alertsService.showAlert({ type: "danger", message: error.message });
+        }
     }
 
     render() {

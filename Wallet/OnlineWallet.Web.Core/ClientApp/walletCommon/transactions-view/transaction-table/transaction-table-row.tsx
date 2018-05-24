@@ -18,6 +18,7 @@ export interface TransactionTableRowProps {
     rowMouseDown(item: TransactionViewModel): void;
     rowMouseUp(): void;
     rowMouseEnter(item: TransactionViewModel): void;
+    onError(error: Error): void;
 }
 
 export interface TransactionTableRowState {
@@ -155,7 +156,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRowProp
 
     renderEditRow() {
         const { item } = this.state;
-        const { wallets, rowColor, selected } = this.props;
+        const { wallets, rowColor, selected, onError } = this.props;
         const hasRowColor = !!rowColor;
         return (
             <tr className={classNames({ [rowColor(item)]: hasRowColor }, { selected })} onChange={this.handleInputChange}
@@ -164,7 +165,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRowProp
                     <input type="date" className="form-control" value={item.createdAt} name="createdAt" onChange={noop} />
                 </td>
                 <td>
-                    <NameInput value={item.name} className="form-control" onSelect={this.nameSelected} />
+                    <NameInput value={item.name} className="form-control" onSelect={this.nameSelected} onError={onError} />
                 </td>
                 <td onClick={this.changeDirection} onMouseDown={preventDefault}>
                     <DirectionIcon direction={item.direction} />
@@ -176,7 +177,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRowProp
                     <WalletSelector walletId={item.walletId} wallets={wallets} className="form-control" />
                 </td>
                 <td>
-                    <CategoryInput value={item.category} onSelect={this.categorySelected} className="form-control" />
+                    <CategoryInput value={item.category} onSelect={this.categorySelected} className="form-control" onError={onError} />
                 </td>
                 <td>
                     <input type="text" className="form-control" value={item.comment} name="comment" autoComplete="off" onChange={noop} />

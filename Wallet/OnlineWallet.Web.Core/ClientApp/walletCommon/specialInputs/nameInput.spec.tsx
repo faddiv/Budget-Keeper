@@ -4,7 +4,7 @@ import { mount } from "enzyme";
 import * as fetchMock from "fetch-mock";
 import { NameInput } from "./nameInput";
 import { ArticleModel } from "walletApi";
-import { delay } from "helpers";
+import { delay, noop } from "helpers";
 
 describe("NameInput", () => {
 
@@ -26,7 +26,7 @@ describe("NameInput", () => {
             }
         ];
         fetchMock.get(/.*\/api\/v1\/Article.*/, filterResult);
-        const wrapper = mount(<NameInput value="" />);
+        const wrapper = mount(<NameInput value="" onError={noop} />);
         const input = wrapper.find("input");
         input.simulate("focus");
         input.simulate("change", { target: { value: "holiday" }, preventDefault() { } });

@@ -38,16 +38,20 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
 
     @bind
     async handleInputChange(event: React.SyntheticEvent<HTMLInputElement>) {
-        const state = updateState(event);
-        if (state.name && state.name.length > 1) {
-            this.setState(state);
-            const articles = await articleService.filterBy(state.name, 30);
-            this.setState({
-                articles
-            });
-        } else {
-            state.articles = [];
-            this.setState(state);
+        try {
+            const state = updateState(event);
+            if (state.name && state.name.length > 1) {
+                this.setState(state);
+                const articles = await articleService.filterBy(state.name, 30);
+                this.setState({
+                    articles
+                });
+            } else {
+                state.articles = [];
+                this.setState(state);
+            }
+        } catch (error) {
+            this.props.actions.showAlert({ type: "danger", message: error.message });
         }
     }
 
@@ -67,13 +71,13 @@ export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPag
                 type: "success",
                 message: "Synchronization successful"
             });
-        } catch {
+        } catch (error) {
             this.setState({
                 sync: false
             });
             this.props.actions.showAlert({
                 type: "danger",
-                message: "Synchronization failed"
+                message: "Synchronization failed: " + error.message
             });
         }
     }

@@ -34,7 +34,7 @@ export function updateWallet(wallet: Wallet) {
             await walletService.update(wallet);
             await loadWallets()(dispatch);
         } catch (error) {
-            dispatch(AlertsActions.showAlert({type: "danger", message: error}));
+            dispatch(AlertsActions.showAlert({type: "danger", message: error.message}));
         }
     };
 }
@@ -45,7 +45,7 @@ export function deleteWallet(wallet: Wallet) {
             await walletService.delete(wallet);
             await loadWallets()(dispatch);
         } catch (error) {
-            dispatch(AlertsActions.showAlert({type: "danger", message: error}));
+            dispatch(AlertsActions.showAlert({type: "danger", message: error.message}));
         }
     };
 }

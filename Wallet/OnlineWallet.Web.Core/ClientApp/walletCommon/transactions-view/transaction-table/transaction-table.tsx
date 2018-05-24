@@ -9,6 +9,7 @@ import { TransactionViewModel, ITransactionTableExtFunction } from "walletCommon
 import { _ } from "helpers";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { RootState } from "reducers";
+import { AlertsActions } from "actions/alerts";
 
 enum SelectMode {
     deselect,
@@ -18,6 +19,7 @@ enum SelectMode {
 
 export interface TransactionTableProps {
     actions?: typeof TransactionSummaryActions;
+    alerts?: typeof AlertsActions;
     items: TransactionViewModel[];
     wallets: Wallet[];
     changedItems?: TransactionViewModel[];
@@ -121,6 +123,11 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
         });
     }
 
+    @bind
+    errorHandler(e: Error) {
+        this.props.alerts.showAlert({ type: "danger", message: e.message });
+    }
+
     render() {
         const { items, wallets, rowColor, transactionSummary, update } = this.props;
         const editable = !!update;
@@ -151,7 +158,8 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
                             rowColor={rowColor}
                             rowMouseDown={this.startSelection}
                             rowMouseEnter={this.selectingRow}
-                            rowMouseUp={this.endSelection} />)}
+                            rowMouseUp={this.endSelection}
+                            onError={this.errorHandler} />)}
                 </tbody>
             </table>
         );
@@ -166,6 +174,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions
+        actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions,
+        alerts: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }

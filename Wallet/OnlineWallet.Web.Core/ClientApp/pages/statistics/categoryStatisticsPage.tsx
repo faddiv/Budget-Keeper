@@ -52,7 +52,7 @@ export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPa
             this.setState({
                 stats: defaultData()
             });
-            this.props.actions.showAlert({ type: "danger", message: "Failed to load yearly statistics." });
+            this.props.actions.showAlert({ type: "danger", message: error.message });
         }
     }
 

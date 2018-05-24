@@ -10,8 +10,12 @@ describe("Autocomplete", () => {
     beforeEach(() => {
     });
 
+    function errorHandler(error) {
+        console.log(error);
+    }
+
     it("should an input with the value.", () => {
-        const wrapper = shallow(<Autocomplete value="alma" onFilter={filter} name="name" />);
+        const wrapper = shallow(<Autocomplete value="alma" onFilter={filter} name="name" onError={errorHandler} />);
         const input = wrapper.find("input");
         expect(input).toHaveValue("alma");
     });
@@ -23,7 +27,7 @@ describe("Autocomplete", () => {
                 nameHighlighted: "Pizza <strong>Holiday</strong> ebéd"
             }
         ];
-        const wrapper = shallow(<Autocomplete value="" onFilter={filter} name="name" />);
+        const wrapper = shallow(<Autocomplete value="" onFilter={filter} name="name" onError={errorHandler} />);
         const input = wrapper.find("input");
         input.simulate("focus");
         input.simulate("change", { target: { value: "holiday" }, preventDefault() { } });

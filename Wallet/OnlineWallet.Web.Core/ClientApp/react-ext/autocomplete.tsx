@@ -19,6 +19,7 @@ export interface AutocompleteProps {
     onSelect?: (selected: AutocompleteModel) => void;
     className?: string;
     focusAction?: (focus: () => void) => void;
+    onError: (error: Error) => void;
 }
 
 export interface AutocompleteState {
@@ -112,15 +113,24 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         const value = getInputValue(event);
         this.setValue(value);
         if (canOpen(value)) {
-            const items = await this.props.onFilter(value);
-            if (items.length > 0) {
-                this.open({
-                    items
-                });
-            } else {
+            try {
+                const items = await this.props.onFilter(value);
+                if (items.length > 0) {
+                    this.open({
+                        items
+                    });
+                } else {
+                    this.close({
+                        items: []
+                    });
+                }
+            } catch (error) {
                 this.close({
                     items: []
                 });
+                if (this.props.onError) {
+                    this.props.onError(error);
+                }
             }
         } else {
             this.close({

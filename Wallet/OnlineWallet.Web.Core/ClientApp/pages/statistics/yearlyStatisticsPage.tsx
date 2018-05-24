@@ -46,7 +46,7 @@ export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPagePr
             this.setState({
                 yearly: defaultYearly()
             });
-            this.props.actions.showAlert({ type: "danger", message: "Failed to load yearly statistics." });
+            this.props.actions.showAlert({ type: "danger", message: error.message });
         }
     }
 

@@ -99,58 +99,66 @@ export class ImportPage extends React.Component<ImportPageProps, ImportPageState
 
     @bind
     async upload(event: React.FormEvent<HTMLFormElement>) {
-        const { file } = this.state;
-        const { actions } = this.props;
-        event.preventDefault();
-        actions.dismissAllAlert();
-        if (!file || !file.length) {
-            actions.showAlert({ type: "danger", message: "Please select a file" });
-            return;
+        try {
+            const { file } = this.state;
+            const { actions } = this.props;
+            event.preventDefault();
+            actions.dismissAllAlert();
+            if (!file || !file.length) {
+                actions.showAlert({ type: "danger", message: "Please select a file" });
+                return;
+            }
+            const transactions = await importExportService.uploadTransactions(file[0]);
+            this.setState({
+                transactions: transactions.map((tr, index) => {
+                    return {
+                        category: tr.category,
+                        comment: tr.comment,
+                        createdAt: toDateString(tr.created),
+                        direction: tr.direction,
+                        key: index,
+                        name: tr.name,
+                        price: tr.amount.toString(10),
+                        transactionId: tr.matchingId,
+                        walletId: tr.source === "Cash" ? 1 : 2
+                    };
+                }),
+                page: 1,
+                pageStocks: 1
+            });
+            this.createStockGroups(transactions);
+        } catch (error) {
+            this.props.actions.showAlert({ type: "danger", message: error.message });
         }
-        const transactions = await importExportService.uploadTransactions(file[0]);
-        this.setState({
-            transactions: transactions.map((tr, index) => {
-                return {
-                    category: tr.category,
-                    comment: tr.comment,
-                    createdAt: toDateString(tr.created),
-                    direction: tr.direction,
-                    key: index,
-                    name: tr.name,
-                    price: tr.amount.toString(10),
-                    transactionId: tr.matchingId,
-                    walletId: tr.source === "Cash" ? 1 : 2
-                };
-            }),
-            page: 1,
-            pageStocks: 1
-        });
-        this.createStockGroups(transactions);
     }
 
     @bind
     async save() {
-        const { transactions } = this.state;
-        const { actions } = this.props;
-        actions.dismissAllAlert();
-        const serverTransactions = transactions.map(tr => {
-            return {
-                category: tr.category,
-                comment: tr.comment,
-                createdAt: new Date(tr.createdAt),
-                direction: tr.direction,
-                name: tr.name,
-                transactionId: tr.transactionId,
-                value: parseInt(tr.price, 10),
-                walletId: tr.walletId
-            };
-        });
-        await transactionService.batchUpdate(serverTransactions);
-        this.setState({
-            transactions: [],
-            stocks: [],
-            activeTab: "full"
-        });
+        try {
+            const { transactions } = this.state;
+            const { actions } = this.props;
+            actions.dismissAllAlert();
+            const serverTransactions = transactions.map(tr => {
+                return {
+                    category: tr.category,
+                    comment: tr.comment,
+                    createdAt: new Date(tr.createdAt),
+                    direction: tr.direction,
+                    name: tr.name,
+                    transactionId: tr.transactionId,
+                    value: parseInt(tr.price, 10),
+                    walletId: tr.walletId
+                };
+            });
+            await transactionService.batchUpdate(serverTransactions);
+            this.setState({
+                transactions: [],
+                stocks: [],
+                activeTab: "full"
+            });
+        } catch (error) {
+            this.props.actions.showAlert({ type: "danger", message: error.message });
+        }
     }
 
     @bind

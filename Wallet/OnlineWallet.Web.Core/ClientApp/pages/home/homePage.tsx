@@ -99,6 +99,11 @@ export class Home extends React.Component<HomeProps, HomeState> {
         }
     }
 
+    @bind
+    errorHandler(e: Error) {
+        this.alertsService.showAlert({ type: "danger", message: e.message });
+    }
+
     needLeaveConfirmation() {
         return this.state.items.length > 0;
     }
@@ -108,7 +113,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         const { items } = this.state;
         return (
             <Layout leaveConfirmation={{ when: this.needLeaveConfirmation(), message: leaveConfirmation }}>
-                <AddItemForm addLine={this.addLine} saveAll={this.saveAll} wallets={wallets} items={items} />
+                <AddItemForm addLine={this.addLine} saveAll={this.saveAll} wallets={wallets} items={items} onError={this.errorHandler} />
                 <TransactionTable
                     items={items} wallets={wallets}
                     deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />

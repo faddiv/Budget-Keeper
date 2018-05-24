@@ -1,8 +1,11 @@
 import * as React from "react";
+import { bind } from "bind-decorator";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import { TransactionViewModel, TransactionTable, getDirectionColoring } from "walletCommon";
 import { Wallet } from "walletApi";
-import { bind } from "bind-decorator";
 import { Collapse } from "react-ext";
+import { AlertsActions } from "actions/alerts";
 
 export interface DetailsTableProps {
     parentRow: any;
@@ -11,6 +14,7 @@ export interface DetailsTableProps {
     toggleDetails: (parentRow: any, open: boolean) => void;
     wallets: Wallet[];
     open: boolean;
+    actions?: typeof AlertsActions;
 }
 
 export interface DetailsTableState {
@@ -20,6 +24,7 @@ export interface DetailsTableState {
     open: boolean;
 }
 
+@connect(undefined, mapDispatchToProps)
 export class DetailsTable extends React.Component<DetailsTableProps, DetailsTableState> {
     constructor(props: DetailsTableProps) {
         super(props);
@@ -68,12 +73,21 @@ export class DetailsTable extends React.Component<DetailsTableProps, DetailsTabl
     }
 
     async setPage(page: number, parentRow: any) {
-        const openedArticleTransactions = await this.props.queryDetails(parentRow, this.state.pageSize, (page - 1) * this.state.pageSize);
-        this.setState({
-            openedArticleTransactions,
-            page,
-            open: true
-        });
+        try {
+            const openedArticleTransactions = await this.props.queryDetails(parentRow, this.state.pageSize, (page - 1) * this.state.pageSize);
+            this.setState({
+                openedArticleTransactions,
+                page,
+                open: true
+            });
+        } catch (error) {
+            this.props.actions.showAlert({
+                type: "danger",
+                message: error.message
+            });
+            this.props.toggleDetails(this.props.parentRow, false);
+            return Promise.resolve([]);
+        }
     }
 
     render() {
@@ -107,4 +121,10 @@ export class DetailsTable extends React.Component<DetailsTableProps, DetailsTabl
             </tr>
         );
     }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
+    };
 }
