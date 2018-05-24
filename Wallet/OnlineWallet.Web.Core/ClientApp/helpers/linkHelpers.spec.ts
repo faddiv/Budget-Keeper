@@ -1,4 +1,4 @@
-import { ThenJson, jsonRequestInit } from "./linkHelpers";
+import { ThenJson, jsonRequestInit, buildUrl } from "./linkHelpers";
 
 describe("linkHelpers", () => {
 
@@ -52,5 +52,74 @@ describe("linkHelpers", () => {
             expect(result.mode).toBe("navigate");
         });
 
+    });
+
+    describe("buildUrl", () => {
+        
+        it("returns with the provided base url", () => {
+            const url = buildUrl(["/url"]);
+
+            expect(url).toBe("/url");
+        });
+        
+        it("adds / to the base url", () => {
+            const url = buildUrl(["url"]);
+
+            expect(url).toBe("/url");
+        });
+        
+        it("concats the base urls", () => {
+            const url = buildUrl(["url", "url2", "/url3"]);
+
+            expect(url).toBe("/url/url2/url3");
+        });
+        
+        it("the base urls concatenation doesn't duplicate /", () => {
+            const url = buildUrl(["/url/", "/url2/"]);
+
+            expect(url).toBe("/url/url2");
+        });
+        
+        it("handles absolute http urls", () => {
+            const url = buildUrl(["http://domain.com/", "/url"]);
+
+            expect(url).toBe("http://domain.com/url");
+        });
+        
+        it("handles absolute https urls", () => {
+            const url = buildUrl(["https://domain.com/", "/url"]);
+
+            expect(url).toBe("https://domain.com/url");
+        });
+        
+        it("adds query params", () => {
+            const url = buildUrl(["/url"], { id: 5, q: "asdf" });
+
+            expect(url).toBe("/url?id=5&q=asdf");
+        });
+        
+        it("skips undefined query params", () => {
+            const url = buildUrl(["/url"], { id: 5, q: undefined });
+
+            expect(url).toBe("/url?id=5");
+        });
+        
+        it("skips null query params", () => {
+            const url = buildUrl(["/url"], { id: 5, q: null });
+
+            expect(url).toBe("/url?id=5");
+        });
+        
+        it("skips empty string query params", () => {
+            const url = buildUrl(["/url"], { id: 5, q: "" });
+
+            expect(url).toBe("/url?id=5");
+        });
+        
+        it("doesn't skips 0 query params", () => {
+            const url = buildUrl(["/url"], { id: 5, q: 0 });
+
+            expect(url).toBe("/url?id=5&q=0");
+        });
     });
 });
