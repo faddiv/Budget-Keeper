@@ -23,18 +23,6 @@ namespace ListHelpers {
         return items;
     }
 
-    export function clear(list: any[]) {
-        list.length = 0;
-    }
-
-    export function createRange(from: number, to: number) {
-        const list = [];
-        for (let index = from; index <= to; index++) {
-            list.push(index);
-        }
-        return list;
-    }
-
     export function selectMap<T, V>(list: T[] | undefined, where: (val: T) => boolean, select: (val: T) => V) {
         return list && list.filter(where).map(select)[0];
     }
