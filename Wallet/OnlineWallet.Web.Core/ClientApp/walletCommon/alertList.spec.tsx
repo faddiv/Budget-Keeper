@@ -6,6 +6,7 @@ import { AlertList } from "./alertList";
 import { AlertMessage } from "reducers/alerts/alertsModel";
 import { unwrap } from "helpers/testHelpers";
 import { AlertsActions } from "actions/alerts";
+import { createAlertsActionsMock } from "actions/alerts.mocks";
 
 describe("AlertList", () => {
     const AlertList2 = unwrap(AlertList);
@@ -14,11 +15,7 @@ describe("AlertList", () => {
 
     beforeEach(() => {
         defaultHistory = H.createMemoryHistory();
-        actions = {
-            dismissAlert: jasmine.createSpy("dismissAlert"),
-            dismissAllAlert: jasmine.createSpy("dismissAllAlert"),
-            showAlert: jasmine.createSpy("showAlert")
-        };
+        actions = createAlertsActionsMock();
     });
 
     afterEach(() => {

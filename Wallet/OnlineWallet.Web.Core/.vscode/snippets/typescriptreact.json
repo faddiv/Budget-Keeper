@@ -74,5 +74,41 @@
 			"\t</tbody>",
 			"</table>"
 		]
+	},
+	"it Test Karma": {
+		"prefix": "itt",
+		"body": [
+			"it(\"$1\", () => {",
+			"\t$0",
+			"});"
+		],
+		"description": "Karma Test"
+	},
+	"describe Test Karma": {
+		"prefix": "describe",
+		"body": [
+			"describe(\"$1\", () => {",
+			"\t$0",
+			"});"
+		],
+		"description": "Karma Test"
+	},
+	"beforeEach Test Karma": {
+		"prefix": "beforeEach",
+		"body": [
+			"beforeEach(() => {",
+			"\t$0",
+			"});"
+		],
+		"description": "Karma Test"
+	},
+	"beforeAll Test Karma": {
+		"prefix": "beforeAll",
+		"body": [
+			"beforeAll(() => {",
+			"\t$0",
+			"});"
+		],
+		"description": "Karma Test"
 	}
 }
