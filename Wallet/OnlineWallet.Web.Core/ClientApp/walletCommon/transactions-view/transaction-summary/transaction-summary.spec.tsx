@@ -7,6 +7,7 @@ import { unwrap } from "helpers/testHelpers";
 import { MoneyDirection } from "walletApi";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { TransactionViewModel } from "walletCommon";
+import { createTransactionSummaryActionsMocks } from "actions/transactionsSummary.mocks";
 
 describe("TransactionSummary", () => {
     const TransactionSummary2 = unwrap(TransactionSummary);
@@ -15,9 +16,7 @@ describe("TransactionSummary", () => {
 
     beforeEach(() => {
         defaultHistory = H.createMemoryHistory();
-        actions = {
-            transactionsSelected: jasmine.createSpy("transactionsSelected")
-        };
+        actions = createTransactionSummaryActionsMocks();
     });
 
     it("should sum incomes", () => {
@@ -36,7 +35,7 @@ describe("TransactionSummary", () => {
 
         expect(element).toBeDefined();
         expect(element.html()).toContain("Incomes: 150");
-        expect(element.html()).toMatchSnapshot("transaction-summary-income");
+        expect(element).toMatchSnapshot();
     });
 
     it("should sum expenses", () => {
@@ -55,7 +54,7 @@ describe("TransactionSummary", () => {
 
         expect(element).toBeDefined();
         expect(element.html()).toContain("Expenses: 150");
-        expect(element.html()).toMatchSnapshot("transaction-summary-expense");
+        expect(element).toMatchSnapshot();
     });
 
     it("should sum plans", () => {
@@ -74,7 +73,7 @@ describe("TransactionSummary", () => {
 
         expect(element).toBeDefined();
         expect(element.html()).toContain("Plans: 150");
-        expect(element.html()).toMatchSnapshot("transaction-summary-plan");
+        expect(element).toMatchSnapshot();
     });
 
     it("should call transactionsSelected with empty list when navigation occur", () => {

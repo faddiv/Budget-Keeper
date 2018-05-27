@@ -1,7 +1,112 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TransactionSummary should sum expenses: transaction-summary-expense 1`] = `"<div class=\\"transaction-summary card bg-light\\"><div class=\\"crad-body\\"><span>Expenses: 150</span> <span>Incomes: 0</span> <span>Plans: 50</span><button type=\\"button\\" class=\\"close\\" aria-label=\\"Close\\"><span aria-hidden=\\"true\\">×</span></button></div></div>"`;
+exports[`TransactionSummary should sum expenses 1`] = `
+<div
+  className="transaction-summary card bg-light"
+>
+  <div
+    className="crad-body"
+  >
+    <span>
+      Expenses: 
+      150
+    </span>
+     
+    <span>
+      Incomes: 
+      0
+    </span>
+     
+    <span>
+      Plans: 
+      50
+    </span>
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+  </div>
+</div>
+`;
 
-exports[`TransactionSummary should sum incomes: transaction-summary-income 1`] = `"<div class=\\"transaction-summary card bg-light\\"><div class=\\"crad-body\\"><span>Expenses: 50</span> <span>Incomes: 150</span> <span>Plans: 0</span><button type=\\"button\\" class=\\"close\\" aria-label=\\"Close\\"><span aria-hidden=\\"true\\">×</span></button></div></div>"`;
+exports[`TransactionSummary should sum incomes 1`] = `
+<div
+  className="transaction-summary card bg-light"
+>
+  <div
+    className="crad-body"
+  >
+    <span>
+      Expenses: 
+      50
+    </span>
+     
+    <span>
+      Incomes: 
+      150
+    </span>
+     
+    <span>
+      Plans: 
+      0
+    </span>
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+  </div>
+</div>
+`;
 
-exports[`TransactionSummary should sum plans: transaction-summary-plan 1`] = `"<div class=\\"transaction-summary card bg-light\\"><div class=\\"crad-body\\"><span>Expenses: 0</span> <span>Incomes: 50</span> <span>Plans: 150</span><button type=\\"button\\" class=\\"close\\" aria-label=\\"Close\\"><span aria-hidden=\\"true\\">×</span></button></div></div>"`;
+exports[`TransactionSummary should sum plans 1`] = `
+<div
+  className="transaction-summary card bg-light"
+>
+  <div
+    className="crad-body"
+  >
+    <span>
+      Expenses: 
+      0
+    </span>
+     
+    <span>
+      Incomes: 
+      50
+    </span>
+     
+    <span>
+      Plans: 
+      150
+    </span>
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+  </div>
+</div>
+`;

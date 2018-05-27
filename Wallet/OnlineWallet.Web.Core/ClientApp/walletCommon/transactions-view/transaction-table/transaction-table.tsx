@@ -18,8 +18,8 @@ enum SelectMode {
 }
 
 export interface TransactionTableProps {
-    actions?: typeof TransactionSummaryActions;
-    alerts?: typeof AlertsActions;
+    summaryActions?: typeof TransactionSummaryActions;
+    alertActions?: typeof AlertsActions;
     items: TransactionViewModel[];
     wallets: Wallet[];
     changedItems?: TransactionViewModel[];
@@ -65,7 +65,7 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
                 }
                 newSelection.push(newTransaction);
             }
-            this.props.actions.transactionsSelected(newSelection);
+            this.props.summaryActions.transactionsSelected(newSelection);
         }
     }
 
@@ -90,7 +90,7 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
             const selected = selectMode === SelectMode.select
                 ? [...props.transactionSummary, item]
                 : _.remove(props.transactionSummary, item);
-            props.actions.transactionsSelected(selected);
+            props.summaryActions.transactionsSelected(selected);
             return {
                 selectMode,
                 selected
@@ -112,7 +112,7 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
             }
         }
         if (selected) {
-            this.props.actions.transactionsSelected(selected);
+            this.props.summaryActions.transactionsSelected(selected);
         }
     }
 
@@ -125,7 +125,7 @@ export class TransactionTable extends React.Component<TransactionTableProps, Tra
 
     @bind
     errorHandler(e: Error) {
-        this.props.alerts.showAlert({ type: "danger", message: e.message });
+        this.props.alertActions.showAlert({ type: "danger", message: e.message });
     }
 
     render() {
@@ -174,7 +174,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions,
-        alerts: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
+        summaryActions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions,
+        alertActions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }

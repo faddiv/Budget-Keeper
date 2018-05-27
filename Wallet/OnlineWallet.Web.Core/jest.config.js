@@ -15,5 +15,8 @@ module.exports = {
     ],
     "globals": {
       "MODE": "development"
-    }
+    },
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   }

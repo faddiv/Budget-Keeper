@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionSummary should display transaction rows 1`] = `
+<table
+  class="table transactions"
+>
+  <thead>
+    <tr>
+      <th
+        class="created-at"
+      >
+        createdAt
+      </th>
+      <th
+        class="name"
+      >
+        name
+      </th>
+      <th
+        class="direction"
+      >
+        dir
+      </th>
+      <th
+        class="price"
+      >
+        price
+      </th>
+      <th
+        class="wallet-name"
+      >
+        walletName
+      </th>
+      <th
+        class="category"
+      >
+        category
+      </th>
+      <th>
+        comment
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="undefined"
+    >
+      <td>
+        2018-05-26
+      </td>
+      <td>
+        alfa
+      </td>
+      <td>
+        <span
+          class="fa fa-minus text-danger"
+        />
+      </td>
+      <td>
+        123
+      </td>
+      <td>
+        Cash
+      </td>
+      <td>
+        grocery
+      </td>
+      <td>
+        Hy
+      </td>
+    </tr>
+    <tr
+      class="table-success"
+    >
+      <td>
+        2018-05-27
+      </td>
+      <td>
+        beta
+      </td>
+      <td>
+        <span
+          class="fa fa-plus text-success"
+        />
+      </td>
+      <td>
+        3000
+      </td>
+      <td>
+        BankAccount
+      </td>
+      <td>
+        salary
+      </td>
+      <td>
+        Got it
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
