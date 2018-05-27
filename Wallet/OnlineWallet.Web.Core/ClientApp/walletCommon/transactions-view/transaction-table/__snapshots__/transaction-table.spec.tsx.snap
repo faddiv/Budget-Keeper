@@ -49,7 +49,7 @@ exports[`TransactionSummary should display transaction rows 1`] = `
         2018-05-26
       </td>
       <td>
-        alfa
+        apple
       </td>
       <td>
         <span
@@ -76,7 +76,7 @@ exports[`TransactionSummary should display transaction rows 1`] = `
         2018-05-27
       </td>
       <td>
-        beta
+        payment
       </td>
       <td>
         <span
@@ -84,16 +84,70 @@ exports[`TransactionSummary should display transaction rows 1`] = `
         />
       </td>
       <td>
-        3000
+        30000
       </td>
       <td>
         BankAccount
       </td>
       <td>
-        salary
+        incomes
       </td>
       <td>
         Got it
+      </td>
+    </tr>
+    <tr
+      class="undefined"
+    >
+      <td>
+        2018-05-27
+      </td>
+      <td>
+        detergent
+      </td>
+      <td>
+        <span
+          class="fa fa-minus text-danger"
+        />
+      </td>
+      <td>
+        100
+      </td>
+      <td>
+        Cash
+      </td>
+      <td>
+        cleaning
+      </td>
+      <td>
+        for cleaning
+      </td>
+    </tr>
+    <tr
+      class="table-warning"
+    >
+      <td>
+        2018-05-28
+      </td>
+      <td>
+        movie ticket
+      </td>
+      <td>
+        <span
+          class="fa fa-bookmark"
+        />
+      </td>
+      <td>
+        1000
+      </td>
+      <td>
+        BankAccount
+      </td>
+      <td>
+        fun
+      </td>
+      <td>
+        good movie
       </td>
     </tr>
   </tbody>
