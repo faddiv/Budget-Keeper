@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TransactionSummary should display transaction rows 1`] = `
+exports[`TransactionTable should display transaction rows 1`] = `
 <table
   class="table transactions"
 >
@@ -152,4 +152,332 @@ exports[`TransactionSummary should display transaction rows 1`] = `
     </tr>
   </tbody>
 </table>
+`;
+
+exports[`TransactionTable should switch edit mode with edit button 1`] = `
+<tbody>
+  <tr
+    class="undefined"
+  >
+    <td>
+      2018-05-26
+    </td>
+    <td>
+      apple
+    </td>
+    <td>
+      <span
+        class="fa fa-minus text-danger"
+      />
+    </td>
+    <td>
+      123
+    </td>
+    <td>
+      Cash
+    </td>
+    <td>
+      grocery
+    </td>
+    <td>
+      Hy
+    </td>
+    <td>
+      <div
+        class="cmd-btn-line"
+      >
+        <button
+          class="btn btn-primary btn-sm btn-edit"
+          type="button"
+        >
+          <span
+            class="fa fa-pencil"
+          />
+        </button>
+        <button
+          class="btn btn-danger btn-sm btn-delete"
+          type="button"
+        >
+          <span
+            class="fa fa-trash"
+          />
+        </button>
+      </div>
+    </td>
+  </tr>
+  <tr
+    class="table-success"
+  >
+    <td>
+      <input
+        class="form-control"
+        name="createdAt"
+        type="date"
+        value="2018-05-27"
+      />
+    </td>
+    <td>
+      <div
+        style="position: relative;"
+      >
+        <input
+          autocomplete="off"
+          class="form-control"
+          id="name"
+          name="name"
+          type="text"
+          value="payment"
+        />
+        <ul
+          class="dropdown-menu"
+          style="right: 0px;"
+        />
+      </div>
+    </td>
+    <td>
+      <span
+        class="fa fa-plus text-success"
+      />
+    </td>
+    <td>
+      <input
+        autocomplete="off"
+        class="form-control"
+        name="price"
+        type="number"
+        value="30000"
+      />
+    </td>
+    <td>
+      <select
+        class="form-control"
+        name="walletId"
+      >
+        <option
+          value="1"
+        >
+          Cash
+        </option>
+        <option
+          value="2"
+        >
+          BankAccount
+        </option>
+      </select>
+    </td>
+    <td>
+      <div
+        style="position: relative;"
+      >
+        <input
+          autocomplete="off"
+          class="form-control"
+          id="category"
+          name="category"
+          type="text"
+          value="incomes"
+        />
+        <ul
+          class="dropdown-menu"
+          style="right: 0px;"
+        />
+      </div>
+    </td>
+    <td>
+      <input
+        autocomplete="off"
+        class="form-control"
+        name="comment"
+        type="text"
+        value="Got it"
+      />
+    </td>
+    <td>
+      <div
+        class="cmd-btn-line"
+      >
+        <button
+          class="btn btn-success btn-sm btn-save"
+          type="button"
+        >
+          <span
+            class="fa fa-check"
+          />
+        </button>
+        <button
+          class="btn btn-danger btn-sm btn-cancel"
+          type="button"
+        >
+          <span
+            class="fa fa-ban"
+          />
+        </button>
+      </div>
+    </td>
+  </tr>
+</tbody>
+`;
+
+exports[`TransactionTable should switch into edit mode with edit button 1`] = `
+<tbody>
+  <tr
+    class="undefined"
+  >
+    <td>
+      2018-05-26
+    </td>
+    <td>
+      apple
+    </td>
+    <td>
+      <span
+        class="fa fa-minus text-danger"
+      />
+    </td>
+    <td>
+      123
+    </td>
+    <td>
+      Cash
+    </td>
+    <td>
+      grocery
+    </td>
+    <td>
+      Hy
+    </td>
+    <td>
+      <div
+        class="cmd-btn-line"
+      >
+        <button
+          class="btn btn-primary btn-sm btn-edit"
+          type="button"
+        >
+          <span
+            class="fa fa-pencil"
+          />
+        </button>
+        <button
+          class="btn btn-danger btn-sm btn-delete"
+          type="button"
+        >
+          <span
+            class="fa fa-trash"
+          />
+        </button>
+      </div>
+    </td>
+  </tr>
+  <tr
+    class="table-success"
+  >
+    <td>
+      <input
+        class="form-control"
+        name="createdAt"
+        type="date"
+        value="2018-05-27"
+      />
+    </td>
+    <td>
+      <div
+        style="position: relative;"
+      >
+        <input
+          autocomplete="off"
+          class="form-control"
+          id="name"
+          name="name"
+          type="text"
+          value="payment"
+        />
+        <ul
+          class="dropdown-menu"
+          style="right: 0px;"
+        />
+      </div>
+    </td>
+    <td>
+      <span
+        class="fa fa-plus text-success"
+      />
+    </td>
+    <td>
+      <input
+        autocomplete="off"
+        class="form-control"
+        name="price"
+        type="number"
+        value="30000"
+      />
+    </td>
+    <td>
+      <select
+        class="form-control"
+        name="walletId"
+      >
+        <option
+          value="1"
+        >
+          Cash
+        </option>
+        <option
+          value="2"
+        >
+          BankAccount
+        </option>
+      </select>
+    </td>
+    <td>
+      <div
+        style="position: relative;"
+      >
+        <input
+          autocomplete="off"
+          class="form-control"
+          id="category"
+          name="category"
+          type="text"
+          value="incomes"
+        />
+        <ul
+          class="dropdown-menu"
+          style="right: 0px;"
+        />
+      </div>
+    </td>
+    <td>
+      <input
+        autocomplete="off"
+        class="form-control"
+        name="comment"
+        type="text"
+        value="Got it"
+      />
+    </td>
+    <td>
+      <div
+        class="cmd-btn-line"
+      >
+        <button
+          class="btn btn-success btn-sm btn-save"
+          type="button"
+        >
+          <span
+            class="fa fa-check"
+          />
+        </button>
+        <button
+          class="btn btn-danger btn-sm btn-cancel"
+          type="button"
+        >
+          <span
+            class="fa fa-ban"
+          />
+        </button>
+      </div>
+    </td>
+  </tr>
+</tbody>
 `;

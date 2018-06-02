@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import "jest-enzyme";
 import { AlertList } from "./alertList";
 import { AlertMessage } from "reducers/alerts/alertsModel";
-import { unwrap } from "helpers/testHelpers";
+import { unwrap } from "react-ext/testHelpers";
 import { AlertsActions } from "actions/alerts";
 import { createAlertsActionsMock } from "actions/alerts.mocks";
 

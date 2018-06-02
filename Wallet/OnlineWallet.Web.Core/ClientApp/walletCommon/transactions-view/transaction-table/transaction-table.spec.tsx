@@ -3,7 +3,7 @@ import { render, mount, HTMLAttributes, ReactWrapper } from "enzyme";
 import "jest-enzyme";
 
 import { TransactionTable } from "./transaction-table";
-import { unwrap } from "react-ext/testHelpers";
+import { unwrap, createTransactions, simulateEvent, simulateInputChange } from "react-ext/testHelpers";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { AlertsActions } from "actions/alerts";
 import { createAlertsActionsMock } from "actions/alerts.mocks";
@@ -11,7 +11,7 @@ import { createTransactionSummaryActionsMocks } from "actions/transactionsSummar
 import { Wallet } from "walletApi";
 import { TransactionViewModel, getDirectionColoring } from "walletCommon";
 
-describe("TransactionSummary", () => {
+describe("TransactionTable", () => {
     const TransactionTable2 = unwrap(TransactionTable);
     let summaryActions: typeof TransactionSummaryActions;
     let alertActions: typeof AlertsActions;
@@ -85,25 +85,68 @@ describe("TransactionSummary", () => {
         simulateEvent(rows.at(3), "mouseenter");
         expect(summaryActions.transactionsSelected).not.toHaveBeenCalled();
     });
+
+    it("should switch edit mode with edit button", () => {
+        const items: TransactionViewModel[] = createTransactions(2);
+        const transactionSummary = [];
+
+        const element = mount(<TransactionTable2 alertActions={alertActions}
+            summaryActions={summaryActions} items={items} wallets={wallets}
+            transactionSummary={transactionSummary} rowColor={getDirectionColoring} update={() => { }} />);
+
+        const rows = element.find("tbody tr");
+        const editedRow = rows.at(1);
+        const editButton = editedRow.find(".btn-edit");
+        simulateEvent(editButton, "click");
+
+        const tbody = element.find("tbody");
+        expect(tbody.render()).toMatchSnapshot();
+    });
+
+    it("should switch into edit mode with edit button", () => {
+        const items: TransactionViewModel[] = createTransactions(2);
+
+        const element = mount(<TransactionTable2 alertActions={alertActions}
+            summaryActions={summaryActions} items={items} wallets={wallets}
+            transactionSummary={[]} rowColor={getDirectionColoring} update={() => { }} />);
+
+        clickButtonAtLine(element, 1, ".btn-edit");
+
+        const tbody = element.find("tbody");
+        expect(tbody.render()).toMatchSnapshot();
+    });
+
+    it("should call update when edit and save", () => {
+        const items: TransactionViewModel[] = createTransactions(2);
+        const updateSpy = jasmine.createSpy("updateSpy");
+
+        const element = mount(<TransactionTable2 alertActions={alertActions}
+            summaryActions={summaryActions} items={items} wallets={wallets}
+            transactionSummary={[]} rowColor={getDirectionColoring} update={updateSpy} changedItems={[]} />);
+
+        clickButtonAtLine(element, 1, ".btn-edit");
+
+        const priceInput = selectRow(element, 1).find('[name="price"]');
+        simulateInputChange(priceInput, "321");
+
+        clickButtonAtLine(element, 1, ".btn-save");
+
+        expect(updateSpy).toHaveBeenCalled();
+        const changes: TransactionViewModel[] = updateSpy.calls.mostRecent().args[1];
+        expect(changes).toBeDefined();
+        expect(changes).toHaveLength(1);
+        expect(changes[0].price).toBe("321");
+    });
 });
 
-function createTransactions(size: number = 4) {
-    return [
-        { key: 1, transactionId: 1, name: "apple", category: "grocery", comment: "Hy", createdAt: "2018-05-26", price: "123", direction: -1, walletId: 1 },
-        { key: 2, transactionId: 2, name: "payment", category: "incomes", comment: "Got it", createdAt: "2018-05-27", price: "30000", direction: 1, walletId: 2 },
-        { key: 3, transactionId: 3, name: "detergent", category: "cleaning", comment: "for cleaning", createdAt: "2018-05-27", price: "100", direction: -1, walletId: 1 },
-        { key: 4, transactionId: 4, name: "movie ticket", category: "fun", comment: "good movie", createdAt: "2018-05-28", price: "1000", direction: 0, walletId: 2 }
-    ].slice(0, size);
+function clickButtonAtLine(element: ReactWrapper<any, any>, at: number, btn: string) {
+    const editedRow = selectRow(element, at);
+    const editButton = editedRow.find(btn);
+    simulateEvent(editButton, "click");
 }
 
-function createMouseEvent(target: any) {
-    return {
-        isDefaultPrevented: () => false,
-        target,
-        currentTarget: target
-    };
-}
-
-function simulateEvent(target: ReactWrapper<HTMLAttributes, any>, event: string) {
-    target.simulate(event, createMouseEvent(target));
+function selectRow(element: ReactWrapper<any, any>, at: number): ReactWrapper<HTMLAttributes, any> {
+    const rows = element.find("tbody tr");
+    const editedRow = rows.at(at);
+    return editedRow;
 }

@@ -3,7 +3,7 @@ import * as H from "history";
 import { shallow } from "enzyme";
 
 import { TransactionSummary } from "./transaction-summary";
-import { unwrap } from "helpers/testHelpers";
+import { unwrap } from "react-ext/testHelpers";
 import { MoneyDirection } from "walletApi";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { TransactionViewModel } from "walletCommon";
