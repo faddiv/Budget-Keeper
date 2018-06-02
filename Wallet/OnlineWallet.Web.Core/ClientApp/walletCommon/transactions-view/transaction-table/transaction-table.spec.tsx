@@ -86,23 +86,6 @@ describe("TransactionTable", () => {
         expect(summaryActions.transactionsSelected).not.toHaveBeenCalled();
     });
 
-    it("should switch edit mode with edit button", () => {
-        const items: TransactionViewModel[] = createTransactions(2);
-        const transactionSummary = [];
-
-        const element = mount(<TransactionTable2 alertActions={alertActions}
-            summaryActions={summaryActions} items={items} wallets={wallets}
-            transactionSummary={transactionSummary} rowColor={getDirectionColoring} update={() => { }} />);
-
-        const rows = element.find("tbody tr");
-        const editedRow = rows.at(1);
-        const editButton = editedRow.find(".btn-edit");
-        simulateEvent(editButton, "click");
-
-        const tbody = element.find("tbody");
-        expect(tbody.render()).toMatchSnapshot();
-    });
-
     it("should switch into edit mode with edit button", () => {
         const items: TransactionViewModel[] = createTransactions(2);
 
