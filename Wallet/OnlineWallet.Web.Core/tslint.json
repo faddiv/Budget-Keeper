@@ -137,7 +137,8 @@
       "actions",
       "reducers",
       "constants",
-      "helpers"
+      "helpers",
+      "react-ext"
     ]
   }
 }

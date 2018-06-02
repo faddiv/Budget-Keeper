@@ -3,7 +3,7 @@ import { render, mount, HTMLAttributes, ReactWrapper } from "enzyme";
 import "jest-enzyme";
 
 import { TransactionTable } from "./transaction-table";
-import { unwrap } from "helpers/testHelpers";
+import { unwrap } from "react-ext/testHelpers";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { AlertsActions } from "actions/alerts";
 import { createAlertsActionsMock } from "actions/alerts.mocks";
