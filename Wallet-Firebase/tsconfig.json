@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "baseUrl": "MobileApp",
+    "outDir": "./wwwroot",
+    "sourceMap": true,
+    "importHelpers": true,
+    "target": "es5",
+    "jsx": "react",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "strictNullChecks": false,
+    "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "es6",
+      "es7",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "exclude": [
+      "bin",
+      "node_modules"
+  ]
+}
