@@ -1,14 +1,14 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var indexHtml = new HtmlWebpackPlugin({
-    template: "./ClientApp/index.html"
-});
 
 /**
  * This file contains the html related webpack config.
  */
-module.exports =
-    {
+module.exports = function (templatePath) {
+    var indexHtml = new HtmlWebpackPlugin({
+        template: templatePath
+    });
+    return {
         module: {
             rules: [
                 {
@@ -30,3 +30,4 @@ module.exports =
             indexHtml
         ]
     };
+}

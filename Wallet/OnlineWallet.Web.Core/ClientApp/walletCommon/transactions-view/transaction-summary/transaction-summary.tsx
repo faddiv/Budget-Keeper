@@ -1,5 +1,5 @@
 import * as React from "react";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, compose } from "redux";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router";
 import { bind } from "bind-decorator";
@@ -17,9 +17,7 @@ export interface TransactionSummaryProps extends Partial<RouteComponentProps<voi
 export interface TransactionSummaryState {
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-@withRouter
-export class TransactionSummary extends React.Component<TransactionSummaryProps, TransactionSummaryState> {
+export class TransactionSummary2 extends React.Component<TransactionSummaryProps, TransactionSummaryState> {
 
     private navListener: () => void;
 
@@ -93,3 +91,5 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions
     };
 }
+
+export const TransactionSummary = compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(TransactionSummary2);

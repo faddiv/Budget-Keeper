@@ -2,14 +2,12 @@ import * as React from "react";
 import * as H from "history";
 import { shallow } from "enzyme";
 import "jest-enzyme";
-import { AlertList } from "./alertList";
+import { AlertList2 } from "./alertList";
 import { AlertMessage } from "reducers/alerts/alertsModel";
-import { unwrap } from "react-ext/testHelpers";
 import { AlertsActions } from "actions/alerts";
 import { createAlertsActionsMock } from "actions/alerts.mocks";
 
 describe("AlertList", () => {
-    const AlertList2 = unwrap(AlertList);
     let defaultHistory: H.History;
     let actions: typeof AlertsActions;
 

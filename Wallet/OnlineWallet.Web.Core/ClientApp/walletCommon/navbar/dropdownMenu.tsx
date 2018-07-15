@@ -14,8 +14,7 @@ export interface DropdownMenuState {
     active: boolean;
 }
 
-@withRouter
-export class DropdownMenu extends React.Component<DropdownMenuProps, DropdownMenuState> {
+class DropdownMenu2 extends React.Component<DropdownMenuProps, DropdownMenuState> {
 
     constructor(props) {
         super(props);
@@ -89,3 +88,5 @@ export class DropdownMenu extends React.Component<DropdownMenuProps, DropdownMen
         );
     }
 }
+
+export const DropdownMenu = withRouter(DropdownMenu2);

@@ -24,8 +24,7 @@ export interface DetailsTableState {
     open: boolean;
 }
 
-@connect(undefined, mapDispatchToProps)
-export class DetailsTable extends React.Component<DetailsTableProps, DetailsTableState> {
+class DetailsTable2 extends React.Component<DetailsTableProps, DetailsTableState> {
     constructor(props: DetailsTableProps) {
         super(props);
         this.state = {
@@ -128,3 +127,5 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }
+
+export const DetailsTable = connect(undefined, mapDispatchToProps)(DetailsTable2);

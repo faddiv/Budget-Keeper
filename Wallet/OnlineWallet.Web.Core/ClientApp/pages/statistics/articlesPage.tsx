@@ -23,8 +23,7 @@ export interface ArticlesPageState {
     sync: boolean;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class ArticlesPage extends React.Component<ArticlesPageProps, ArticlesPageState> {
+class ArticlesPage2 extends React.Component<ArticlesPageProps, ArticlesPageState> {
 
     constructor(props) {
         super(props);
@@ -180,3 +179,5 @@ function mapStateToProps(state: RootState) {
         wallets: state.wallets
     };
 }
+
+export const ArticlesPage = connect(mapStateToProps, mapDispatchToProps)(ArticlesPage2);

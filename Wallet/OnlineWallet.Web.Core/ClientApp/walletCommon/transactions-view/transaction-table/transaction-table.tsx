@@ -33,8 +33,7 @@ export interface TransactionTableState {
     selectMode: SelectMode;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class TransactionTable extends React.Component<TransactionTableProps, TransactionTableState> {
+export class TransactionTable2 extends React.Component<TransactionTableProps, TransactionTableState> {
 
     constructor(props: TransactionTableProps) {
         super(props);
@@ -178,3 +177,5 @@ function mapDispatchToProps(dispatch) {
         alertActions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }
+
+export const TransactionTable = connect(mapStateToProps, mapDispatchToProps)(TransactionTable2);

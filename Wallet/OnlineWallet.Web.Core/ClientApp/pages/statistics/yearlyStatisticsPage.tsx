@@ -24,8 +24,7 @@ export interface YearlyStatisticsPageState {
     year: number;
 }
 
-@connect(null, mapDispatchToProps)
-export class YearlyStatisticsPage extends React.Component<YearlyStatisticsPageProps, YearlyStatisticsPageState> {
+class YearlyStatisticsPage2 extends React.Component<YearlyStatisticsPageProps, YearlyStatisticsPageState> {
     constructor(props) {
         super(props);
         const year = parseInt(this.props.match.params.year, 10) || new Date().getFullYear();
@@ -116,3 +115,5 @@ function defaultYearly(): YearlyStatistics {
         unused: 0
     };
 }
+
+export const YearlyStatisticsPage = connect(null, mapDispatchToProps)(YearlyStatisticsPage2);

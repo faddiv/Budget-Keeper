@@ -2,7 +2,7 @@
 	"React Component": {
 		"prefix": "react.component",
 		"body": [
-			"import * as React from 'react';",
+			"import * as React from \"react\";",
 			"",
 			"export interface ${1:${TM_FILENAME_BASE}}Props {",
 			"}",
@@ -26,7 +26,7 @@
 	"React Stateless Function": {
 		"prefix": "react.function",
 		"body": [
-			"import * as React from 'react';",
+			"import * as React from \"react\";",
 			"",
 			"interface  ${1:${TM_FILENAME_BASE}}Props { $2 }",
 			"",

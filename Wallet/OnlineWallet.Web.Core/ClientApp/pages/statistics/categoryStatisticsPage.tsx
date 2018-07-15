@@ -29,8 +29,7 @@ export interface CategoryStatisticsPageState {
     year: number;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class CategoryStatisticsPage extends React.Component<CategoryStatisticsPageProps, CategoryStatisticsPageState> {
+class CategoryStatisticsPage2 extends React.Component<CategoryStatisticsPageProps, CategoryStatisticsPageState> {
     constructor(props) {
         super(props);
         const year = parseInt(this.props.match.params.year, 10) || new Date().getFullYear();
@@ -137,3 +136,5 @@ function defaultData(): CategoryStatisticsSummary {
         monthly: []
     };
 }
+
+export const CategoryStatisticsPage = connect(mapStateToProps, mapDispatchToProps)(CategoryStatisticsPage2);

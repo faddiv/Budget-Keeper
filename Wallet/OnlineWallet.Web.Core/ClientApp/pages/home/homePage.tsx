@@ -20,8 +20,7 @@ export interface HomeState {
     items: TransactionViewModel[];
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class Home extends React.Component<HomeProps, HomeState> {
+class Home2 extends React.Component<HomeProps, HomeState> {
 
     /**
      *
@@ -135,3 +134,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 const leaveConfirmation = "There are added items. Are you sure leaving?";
+
+export const Home = connect(mapStateToProps, mapDispatchToProps)(Home2);

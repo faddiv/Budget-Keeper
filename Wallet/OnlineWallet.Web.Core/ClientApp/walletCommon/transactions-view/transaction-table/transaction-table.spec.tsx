@@ -2,8 +2,8 @@ import * as React from "react";
 import { render, mount, HTMLAttributes, ReactWrapper } from "enzyme";
 import "jest-enzyme";
 
-import { TransactionTable } from "./transaction-table";
-import { unwrap, createTransactions, simulateEvent, simulateInputChange } from "react-ext/testHelpers";
+import { TransactionTable2 } from "./transaction-table";
+import { createTransactions, simulateEvent, simulateInputChange } from "react-ext/testHelpers";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { AlertsActions } from "actions/alerts";
 import { createAlertsActionsMock } from "actions/alerts.mocks";
@@ -12,7 +12,6 @@ import { Wallet } from "walletApi";
 import { TransactionViewModel, getDirectionColoring } from "walletCommon";
 
 describe("TransactionTable", () => {
-    const TransactionTable2 = unwrap(TransactionTable);
     let summaryActions: typeof TransactionSummaryActions;
     let alertActions: typeof AlertsActions;
     const wallets: Wallet[] = [

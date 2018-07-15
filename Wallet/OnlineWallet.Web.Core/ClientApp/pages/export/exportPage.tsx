@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { bind } from "bind-decorator";
 
 import { renderRange, switchCase, updateState } from "react-ext";
-import { dateFormat } from "helpers";
+import { dateFormat, noop } from "helpers";
 import { Layout } from "layout";
 import { importExportService } from "walletApi";
 
@@ -140,5 +140,3 @@ export class ExportPage extends React.Component<ExportPageProps, ExportPageState
         );
     }
 }
-
-function noop() { }

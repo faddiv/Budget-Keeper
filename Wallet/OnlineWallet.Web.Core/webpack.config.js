@@ -1,19 +1,21 @@
 const path = require("path");
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const contentBase = "ClientApp";
+const outputPath = "wwwroot";
 
 var runMode = require("./build-config/run-mode");
 const scssConfig = require("./build-config/scss-config")(runMode.cssOutput);
-const htmlConfig = require("./build-config/html-config");
+const htmlConfig = require("./build-config/html-config")("./" + contentBase + "/index.html");
 const vendorConfig = require("./build-config/vendor-config");
 const variablesConfig = require("./build-config/variables-config")(runMode.mode);
 const typescriptConfig = require("./build-config/typescript-config");
-const outputPath = "wwwroot";
+
 module.exports = function () {
     return [merge(scssConfig, htmlConfig, vendorConfig, typescriptConfig, variablesConfig,
         {
             entry: {
-                "bundle": "./ClientApp/index.tsx"
+                "bundle": "./" + contentBase + "/index.tsx"
             },
             output: {
                 path: path.resolve(outputPath),
@@ -25,7 +27,7 @@ module.exports = function () {
             ],
             devtool: runMode.mode === "production" ? undefined : 'source-map',
             devServer: {
-                contentBase: "ClientApp",
+                contentBase: contentBase,
                 /**
                  * default false, if true .scss and .html changes trigger reload and also triggers FULL reload.
                  */

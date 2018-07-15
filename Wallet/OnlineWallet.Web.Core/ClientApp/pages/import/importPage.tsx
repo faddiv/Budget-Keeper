@@ -27,8 +27,7 @@ export interface ImportPageState {
     pageSize: number;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class ImportPage extends React.Component<ImportPageProps, ImportPageState> {
+class ImportPage2 extends React.Component<ImportPageProps, ImportPageState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -239,3 +238,5 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }
+
+export const ImportPage = connect(mapStateToProps, mapDispatchToProps)(ImportPage2);

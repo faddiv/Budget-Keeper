@@ -1,8 +1,9 @@
 import { ReactWrapper, HTMLAttributes } from "enzyme";
 import { TransactionViewModel } from "walletCommon";
+import { Component } from "react";
 
-export function unwrap<T>(component: T) {
-    return (component as any).WrappedComponent as T;
+export function unwrap<P, S, C extends Component<P, S>>(component: C): C {
+    return (component as any).WrappedComponent as C;
 }
 
 export function createTransactions(size: number = 4): TransactionViewModel[] {

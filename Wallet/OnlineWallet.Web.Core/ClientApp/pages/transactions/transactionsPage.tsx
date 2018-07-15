@@ -32,8 +32,7 @@ export interface TransactionsState {
     balance?: BalanceInfo;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class Transactions extends React.Component<TransactionsProps, TransactionsState> {
+class Transactions2 extends React.Component<TransactionsProps, TransactionsState> {
 
     constructor(props) {
         super(props);
@@ -162,3 +161,5 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }
+
+export const Transactions = connect(mapStateToProps, mapDispatchToProps)(Transactions2);

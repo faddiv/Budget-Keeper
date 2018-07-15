@@ -2,15 +2,13 @@ import * as React from "react";
 import * as H from "history";
 import { shallow } from "enzyme";
 
-import { TransactionSummary } from "./transaction-summary";
-import { unwrap } from "react-ext/testHelpers";
+import { TransactionSummary2 } from "./transaction-summary";
 import { MoneyDirection } from "walletApi";
 import { TransactionSummaryActions } from "actions/transactionsSummary";
 import { TransactionViewModel } from "walletCommon";
 import { createTransactionSummaryActionsMocks } from "actions/transactionsSummary.mocks";
 
 describe("TransactionSummary", () => {
-    const TransactionSummary2 = unwrap(TransactionSummary);
     let defaultHistory: H.History;
     let actions: typeof TransactionSummaryActions;
 

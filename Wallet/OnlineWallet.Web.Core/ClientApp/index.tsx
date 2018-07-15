@@ -14,7 +14,7 @@ const history = createBrowserHistory();
 const store = configureStore();
 
 // Preloading global data.
-store.dispatch(loadWallets());
+store.dispatch(loadWallets() as any); // TODO: remove when ts problem fixed.
 
 ReactDOM.render(
     <Provider store={store}>

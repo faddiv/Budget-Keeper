@@ -22,8 +22,7 @@ export interface WalletsState {
     validation: ValidationState;
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export class Wallets extends React.Component<WalletsProps, WalletsState> {
+class Wallets2 extends React.Component<WalletsProps, WalletsState> {
 
     constructor(props: WalletsProps) {
         super(props);
@@ -142,3 +141,5 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(WalletsActions as any, dispatch) as typeof WalletsActions
     };
 }
+
+export const Wallets = connect(mapStateToProps, mapDispatchToProps)(Wallets2);

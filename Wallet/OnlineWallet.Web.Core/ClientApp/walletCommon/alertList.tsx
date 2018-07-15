@@ -1,5 +1,5 @@
 import * as React from "react";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, compose } from "redux";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import { bind } from "bind-decorator";
@@ -16,9 +16,7 @@ export interface AlertListProps extends Partial<RouteComponentProps<void>> {
 export interface AlertListState {
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-@withRouter
-export class AlertList extends React.Component<AlertListProps, AlertListState> {
+export class AlertList2 extends React.Component<AlertListProps, AlertListState> {
 
     private navListener: () => void;
 
@@ -83,3 +81,5 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions
     };
 }
+
+export const AlertList = compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(AlertList2);
