@@ -1,7 +1,7 @@
 const path = require("path");
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const contentBase = "ClientApp";
+const contentBase = "MobileApp";
 const outputPath = "wwwroot";
 
 var runMode = require("./build-config/run-mode");
