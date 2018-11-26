@@ -10,6 +10,7 @@ import * as firebase from "firebase";
 
 import { configureStore } from "store";
 import { Home } from "pages";
+import { UserActions } from "actions/userActions";
 
 const config = {
     apiKey: "AIzaSyDdlgWpHPzu1-9O8KQSex9tut2CndYHnT4",
@@ -20,6 +21,11 @@ firebase.initializeApp(config);
 
 const history = createBrowserHistory();
 const store = configureStore();
+
+this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
+    console.log("signed in user:", user);
+    store.dispatch(UserActions.setUser(user));
+});
 
 ReactDOM.render(
     <Provider store={store}>
