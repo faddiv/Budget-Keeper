@@ -9,8 +9,9 @@ import { createBrowserHistory } from "history";
 import * as firebase from "firebase";
 
 import { configureStore } from "store";
-import { Home } from "pages";
+import { Home, Login } from "pages";
 import { UserActions } from "actions/userActions";
+import { AuthenticatedRoute } from "walletCommon";
 
 const config = {
     apiKey: "AIzaSyDdlgWpHPzu1-9O8KQSex9tut2CndYHnT4",
@@ -31,7 +32,8 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <Switch>
-                <Route path="/" exact component={Home} />
+                <AuthenticatedRoute path="/" exact component={Home} />
+                <Route path="/login" component={Login} />
             </Switch>
         </Router >
     </Provider>,

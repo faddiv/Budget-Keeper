@@ -6,15 +6,22 @@ import { bind } from "bind-decorator";
 import { MenuItem } from "./menuItem";
 // import { DropdownMenu } from "./dropdownMenu";
 import { Collapse } from "react-ext";
+import { UserModel } from "reducers/userReducers";
+import { connect } from "react-redux";
+import { RootState } from "reducers";
+import { UserActions } from "actions/userActions";
+import { bindActionCreators } from "redux";
 
 export interface NavbarProps {
+    userModel: UserModel;
+    actions?: typeof UserActions;
 }
 
 export interface NavbarState {
     open: boolean;
 }
 
-export class Navbar extends React.Component<NavbarProps, NavbarState> {
+class Navbar2 extends React.Component<NavbarProps, NavbarState> {
 
     constructor(props) {
         super(props);
@@ -34,6 +41,7 @@ export class Navbar extends React.Component<NavbarProps, NavbarState> {
 
     render() {
         const { open } = this.state;
+        const { userModel, actions } = this.props;
         const collapsed = !open;
         return (
             <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -46,8 +54,25 @@ export class Navbar extends React.Component<NavbarProps, NavbarState> {
                     <ul className="navbar-nav mr-auto">
                         <MenuItem to="/" exact>Home</MenuItem>
                     </ul>
+                    <ul className="navbar-nav">
+                        {userModel.singedIn ? <li className="nav-link"><a onClick={() => actions.signOut()}>Sign-out</a></li> : <MenuItem to="/login" exact>Login</MenuItem>}
+                    </ul>
                 </Collapse>
             </nav>
         );
     }
 }
+
+function mapStateToProps(state: RootState) {
+    return {
+        userModel: state.user
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(UserActions as any, dispatch) as typeof UserActions
+    };
+}
+
+export const Navbar = connect(mapStateToProps, mapDispatchToProps)(Navbar2);

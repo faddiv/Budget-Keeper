@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, Store, compose } from "redux";
 import { rootReducer, RootState } from "reducers";
+import * as firebase from "firebase";
 import thunk from "redux-thunk";
 
 export function configureStore(initialState?: RootState) {
@@ -17,3 +18,15 @@ export function configureStore(initialState?: RootState) {
 
     return store;
 }
+
+export const firebaseUiConfig: firebaseui.auth.Config = {
+    signInFlow: "popup",
+    signInSuccessUrl: "/",
+    signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+        // Avoid redirects after sign-in.
+        signInSuccessWithAuthResult: () => false
+    }
+};

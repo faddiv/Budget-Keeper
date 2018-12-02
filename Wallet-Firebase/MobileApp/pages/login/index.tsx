@@ -1,20 +1,24 @@
 import * as React from "react";
 import { Layout } from "layout";
+import * as firebase from "firebase";
+import { FirebaseAuth } from "react-firebaseui";
 import { UserModel } from "reducers/userReducers";
 import { RootState } from "reducers";
 import { UserActions } from "actions/userActions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { firebaseUiConfig } from "store";
+import { RouteComponentProps } from "react-router";
 
-export interface HomeProps {
+export interface LoginProps extends Partial<RouteComponentProps<any>> {
     userModel: UserModel;
     actions?: typeof UserActions;
 }
 
-export interface HomeState {
+export interface LoginState {
 }
 
-class Home2 extends React.Component<HomeProps, HomeState> {
+class Login2 extends React.Component<LoginProps, LoginState> {
     unregisterAuthObserver: () => void;
 
     constructor(props) {
@@ -24,6 +28,21 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     componentDidMount() {
+        this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
+            if (user && this.props.location.search) {
+                const search = new URLSearchParams(this.props.location.search);
+                const returnUrl = search.get("returnUrl");
+                if (returnUrl) {
+                    this.props.history.push(returnUrl);
+                }
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.unregisterAuthObserver) {
+            this.unregisterAuthObserver();
+        }
     }
 
     renderSignedInUser() {
@@ -47,9 +66,11 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         );
     }
     render() {
+        const { userModel } = this.props;
         return (
             <Layout>
-                <h1>Hello world!</h1>
+                <h1>Please login</h1>
+                {userModel.singedIn ? this.renderSignedInUser() : <FirebaseAuth uiConfig={firebaseUiConfig} firebaseAuth={firebase.auth()} />}
             </Layout>
         );
     }
@@ -67,4 +88,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export const Home = connect(mapStateToProps, mapDispatchToProps)(Home2);
+export const Login = connect(mapStateToProps, mapDispatchToProps)(Login2);
