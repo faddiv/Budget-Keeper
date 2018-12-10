@@ -38,10 +38,25 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
             };
         });
     }
-
+    renderSignedIn() {
+        const { userModel, actions } = this.props;
+        return (
+            <ul className="navbar-nav">
+                <li className="nav-link">{userModel.user.displayName}</li>
+                <li className="nav-link"><a onClick={() => actions.signOut()}>Sign-out</a></li>
+            </ul>
+        );
+    }
+    renderLogin() {
+        return (
+            <ul className="navbar-nav">
+                <MenuItem to="/login" exact>Login</MenuItem>
+            </ul>
+        );
+    }
     render() {
         const { open } = this.state;
-        const { userModel, actions } = this.props;
+        const { userModel } = this.props;
         const collapsed = !open;
         return (
             <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -55,7 +70,7 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
                         <MenuItem to="/" exact>Home</MenuItem>
                     </ul>
                     <ul className="navbar-nav">
-                        {userModel.singedIn ? <li className="nav-link"><a onClick={() => actions.signOut()}>Sign-out</a></li> : <MenuItem to="/login" exact>Login</MenuItem>}
+                        {userModel.singedIn ? this.renderSignedIn() : this.renderLogin()}
                     </ul>
                 </Collapse>
             </nav>
