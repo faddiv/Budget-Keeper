@@ -6,14 +6,14 @@ interface LayoutProps {
 
 const Layout: React.SFC<LayoutProps> = ({ ...rest }) => {
     return (
-        <div>
+        <>
             <Navbar />
             <AlertList />
             <main role="main" className="container">
                 {rest.children}
             </main>
             <TransactionSummary />
-        </div>
+        </>
     );
 };
 
