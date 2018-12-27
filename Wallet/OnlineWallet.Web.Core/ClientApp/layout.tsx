@@ -10,12 +10,12 @@ const Layout: React.SFC<LayoutProps> = ({ leaveConfirmation, ...rest }) => {
     return (
         <div>
             {leaveConfirmation && <Prompt when={leaveConfirmation.when} message={leaveConfirmation.message} />}
-            <AlertList />
             <Navbar />
-            <TransactionSummary />
+            <AlertList />
             <main role="main" className="container">
                 {rest.children}
             </main>
+            <TransactionSummary />
         </div>
     );
 };
