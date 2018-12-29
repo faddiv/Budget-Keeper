@@ -23,6 +23,10 @@ export class Navbar extends React.Component<NavbarProps, NavbarState> {
         };
     }
 
+    shouldComponentUpdate(_props: NavbarProps, state: NavbarState) {
+        return state.open !== this.state.open;
+    }
+
     @bind
     toggleNavbar() {
         this.setState((prevState) => {

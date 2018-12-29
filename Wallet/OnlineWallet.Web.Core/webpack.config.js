@@ -28,6 +28,7 @@ module.exports = function () {
             devtool: runMode.mode === "production" ? undefined : 'source-map',
             devServer: {
                 contentBase: contentBase,
+                openPage:"?react_perf",
                 /**
                  * default false, if true .scss and .html changes trigger reload and also triggers FULL reload.
                  */

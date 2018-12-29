@@ -12,7 +12,6 @@ const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month }) => {
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
     return (
-
         <div className="btn-group">
             <Link className="btn btn-light" to={`/transactions/${year - 1}/${12}`} >{year - 1}</Link>
             <button className="btn btn-primary" disabled>{year}</button>
@@ -24,22 +23,26 @@ const MonthSelector: React.SFC<MonthSelectorProps> = ({ year, month }) => {
     );
 };
 
+const pastMonthClass = "btn btn-light";
+const activeMonthClass = "btn btn-primary";
+const futureMonthClass = "btn btn-secondary";
+
 function getMonthColoring(year: number, month: number, currentYear: number, currentMonth: number, renderedMonth: number) {
     if (renderedMonth === month) {
-        return "btn btn-primary";
+        return activeMonthClass;
     }
 
     if (year > currentYear) {
-        return "btn btn-secondary";
+        return futureMonthClass;
     }
     if (year < currentYear) {
-        return "btn btn-light";
+        return pastMonthClass;
     }
 
     if (renderedMonth <= currentMonth) {
-        return "btn btn-light";
+        return pastMonthClass;
     } else {
-        return "btn btn-secondary";
+        return futureMonthClass;
     }
 
 }
