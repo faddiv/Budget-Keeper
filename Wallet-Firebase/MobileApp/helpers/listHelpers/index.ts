@@ -10,8 +10,8 @@ export default {
     contains,
     findLast,
     remove,
+    removeByIndex,
     replace,
     replaceByIndex,
-    selectMap,
-    removeByIndex
+    selectMap
 };
