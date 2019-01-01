@@ -6,4 +6,4 @@ export function createAlertsActionsMock(): typeof AlertsActions {
         dismissAllAlert: jasmine.createSpy("dismissAllAlert"),
         showAlert: jasmine.createSpy("showAlert")
     };
-};
+}
