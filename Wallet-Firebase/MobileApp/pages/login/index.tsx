@@ -58,7 +58,7 @@ class Login2 extends React.Component<LoginProps, LoginState> {
                 <p><span>metadata:</span><strong>{JSON.stringify(user.metadata)}</strong></p>
                 <p><span>phoneNumber:</span><strong>{user.phoneNumber}</strong></p>
                 <p><span>providerData:</span><strong>{JSON.stringify(user.providerData)}</strong></p>
-                <p><span>id:</span><span>{user.providerData[0].uid}</span></p>
+                <p><span>id:</span><span>{user.uid}</span></p>
                 <p><span>providerId:</span><strong>{user.providerId}</strong></p>
                 <p>Photo</p>
                 <p><img src={user.photoURL} /></p>
