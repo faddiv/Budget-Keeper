@@ -1,9 +1,8 @@
 import * as React from "react";
 import * as classNames from "classnames";
 import { Layout } from "layout";
-import { UserModel } from "reducers/userReducers";
-import { RootState } from "reducers";
-import { UserActions } from "actions/userActions";
+import { UserModel, UserServices } from "../../walletServices/userServices";
+import { RootState } from "walletServices";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import bind from "bind-decorator";
@@ -22,10 +21,6 @@ export const transactionRules: ValidationConfig<HomeState, any> = {
     },
     price: {
         validators: [
-            {
-                validator: validators.required,
-                message: "Price is reuired."
-            }
         ],
         valueGetter: state => state.price
     }
@@ -39,7 +34,7 @@ export interface IToDoElement {
 
 export interface HomeProps {
     userModel: UserModel;
-    actions?: typeof UserActions;
+    actions?: typeof UserServices;
 }
 
 export interface HomeState {
@@ -90,6 +85,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             items
         });
     }
+
     @bind
     deleteItem(evt: React.MouseEvent<HTMLElement>) {
         const index = parseInt(evt.currentTarget.parentElement.parentElement.parentElement.dataset.item, 10);
@@ -98,6 +94,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             items
         });
     }
+
     @bind
     validate() {
         const validationResult = validate(transactionRules, this.state.validation, this.state, this.props, this.state.showError);
@@ -154,6 +151,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                         <button type="submit" className="btn btn-primary">Add</button>
                     </div>
                 </form>
+                <br />
                 <ul className="list-group">
                     {items.map((item, index) => (
                         <li className={classNames("list-group-item", { "list-group-item-success": item.checked })} data-item={index} onClick={this.checkItem}>
@@ -178,7 +176,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserActions as any, dispatch) as typeof UserActions
+        actions: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
     };
 }
 

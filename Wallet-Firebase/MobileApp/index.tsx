@@ -10,7 +10,7 @@ import * as firebase from "firebase";
 
 import { configureStore } from "store";
 import { Home, Login } from "pages";
-import { UserActions } from "actions/userActions";
+import { UserServices } from "./walletServices/userServices";
 import { AuthenticatedRoute } from "walletCommon";
 
 const config = {
@@ -25,7 +25,7 @@ const store = configureStore();
 
 this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
     console.log("signed in user:", user);
-    store.dispatch(UserActions.setUser(user));
+    store.dispatch(UserServices.setUser(user));
 });
 
 ReactDOM.render(

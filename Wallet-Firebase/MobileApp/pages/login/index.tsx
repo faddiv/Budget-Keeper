@@ -2,9 +2,8 @@ import * as React from "react";
 import { Layout } from "layout";
 import * as firebase from "firebase";
 import { FirebaseAuth } from "react-firebaseui";
-import { UserModel } from "reducers/userReducers";
-import { RootState } from "reducers";
-import { UserActions } from "actions/userActions";
+import { UserModel, UserServices } from "../../walletServices/userServices";
+import { RootState } from "walletServices";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { firebaseUiConfig } from "store";
@@ -12,7 +11,7 @@ import { RouteComponentProps } from "react-router";
 
 export interface LoginProps extends Partial<RouteComponentProps<any>> {
     userModel: UserModel;
-    actions?: typeof UserActions;
+    actions?: typeof UserServices;
 }
 
 export interface LoginState {
@@ -84,7 +83,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserActions as any, dispatch) as typeof UserActions
+        actions: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
     };
 }
 

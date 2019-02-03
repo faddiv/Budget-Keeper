@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, Store, compose } from "redux";
-import { rootReducer, RootState } from "reducers";
+import { rootReducer, RootState } from "walletServices";
 import * as firebase from "firebase";
 import thunk from "redux-thunk";
 

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Route, Redirect, RouteProps } from "react-router";
-import { RootState } from "reducers";
+import { RootState } from "walletServices";
 import { connect } from "react-redux";
-import { UserModel } from "reducers/userReducers";
+import { UserModel } from "../walletServices/userServices";
 
 export interface AuthenticatedRoute2Props extends RouteProps {
     userModel?: UserModel;

@@ -6,15 +6,14 @@ import { bind } from "bind-decorator";
 import { MenuItem } from "./menuItem";
 // import { DropdownMenu } from "./dropdownMenu";
 import { Collapse } from "react-ext";
-import { UserModel } from "reducers/userReducers";
+import { UserModel, UserServices } from "../../walletServices/userServices";
 import { connect } from "react-redux";
-import { RootState } from "reducers";
-import { UserActions } from "actions/userActions";
+import { RootState } from "walletServices";
 import { bindActionCreators } from "redux";
 
 export interface NavbarProps {
     userModel: UserModel;
-    actions?: typeof UserActions;
+    actions?: typeof UserServices;
 }
 
 export interface NavbarState {
@@ -86,7 +85,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserActions as any, dispatch) as typeof UserActions
+        actions: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
     };
 }
 
