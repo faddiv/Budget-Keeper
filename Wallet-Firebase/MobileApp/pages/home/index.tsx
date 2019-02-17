@@ -7,7 +7,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import bind from "bind-decorator";
 import { updateState, isClickableClicked } from "react-ext";
-import { validate, ValidationState, ValidationConfig, validators, _ } from "helpers";
+import { validate, ValidationState, ValidationConfig, validators } from "helpers";
+// tslint:disable-next-line:no-submodule-imports
+import { ToDoServices, ToDoListModel } from "walletServices/toDoServices";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -34,7 +36,9 @@ export interface IToDoElement {
 
 export interface HomeProps {
     userModel: UserModel;
-    actions?: typeof UserServices;
+    userServices?: typeof UserServices;
+    toDoList?: ToDoListModel;
+    toDoServices?: typeof ToDoServices;
 }
 
 export interface HomeState {
@@ -43,7 +47,6 @@ export interface HomeState {
     result: string;
     validation: ValidationState;
     showError: boolean;
-    items: IToDoElement[];
 }
 
 class Home2 extends React.Component<HomeProps, HomeState> {
@@ -57,19 +60,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             price: "",
             result: "",
             showError: false,
-            validation: validate(transactionRules, {}, undefined, this.props).validationState,
-            items: [
-                {
-                    name: "Alma",
-                    price: 100,
-                    checked: false
-                },
-                {
-                    name: "Körte",
-                    price: 100,
-                    checked: true
-                }
-            ]
+            validation: validate(transactionRules, {}, undefined, this.props).validationState
         };
     }
 
@@ -78,21 +69,20 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         if (isClickableClicked(evt)) {
             return;
         }
-        const index = parseInt(evt.currentTarget.dataset.item, 10);
+        /*const index = parseInt(evt.currentTarget.dataset.item, 10);
         const items = [...this.state.items];
         items[index] = { ...this.state.items[index], checked: !this.state.items[index].checked };
         this.setState({
             items
-        });
+        });*/
     }
 
     @bind
     deleteItem(evt: React.MouseEvent<HTMLElement>) {
+        evt.preventDefault();
         const index = parseInt(evt.currentTarget.parentElement.parentElement.parentElement.dataset.item, 10);
-        const items = _.removeByIndex(this.state.items, index);
-        this.setState({
-            items
-        });
+        const item = this.props.toDoList.checklist[index];
+        this.props.toDoServices.Remove(item);
     }
 
     @bind
@@ -106,7 +96,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     @bind
-    submit(event: React.ChangeEvent<HTMLFormElement>) {
+    async submit(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
         const validationState = validate(transactionRules, this.state.validation, this.state, this.props, true);
         if (!validationState.isValid) {
@@ -114,9 +104,11 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             state.validation = validationState.validationState;
             this.setState(state);
         } else {
-            this.setState({
-                result: `${this.state.article} ${this.state.price}`
-            }, this.validate);
+            await this.props.toDoServices.Add({
+                name: this.state.article,
+                price: parseInt(this.state.price, 10),
+                ok: false
+            });
         }
     }
 
@@ -127,7 +119,8 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
-        const { validation, items } = this.state;
+        const { validation } = this.state;
+        const { toDoList } = this.props;
         return (
             <Layout>
                 <form onChange={this.handleInputChange} onSubmit={this.submit}>
@@ -153,11 +146,11 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                 </form>
                 <br />
                 <ul className="list-group">
-                    {items.map((item, index) => (
-                        <li className={classNames("list-group-item", { "list-group-item-success": item.checked })} data-item={index} onClick={this.checkItem}>
+                    {toDoList.checklist.map((item, index) => (
+                        <li key={item.id} className={classNames("list-group-item", { "list-group-item-success": item.ok })} data-item={index} onClick={this.checkItem}>
                             <div className="form-row">
-                                <div className="col-6"><span className="fa fa-check" style={{ visibility: item.checked ? "visible" : "hidden" }}></span>&nbsp;{item.name}</div>
-                                <div className="col-4"><input type="number" className="form-control form-control-xs" value={item.price} /></div>
+                                <div className="col-6"><span className="fa fa-check" style={{ visibility: item.ok ? "visible" : "hidden" }}></span>&nbsp;{item.name}</div>
+                                <div className="col-4"><input type="number" className="form-control form-control-xs" value={item.price} readOnly /></div>
                                 <div className="col-2"><button className="btn btn-link" onClick={this.deleteItem}><span className="fa fa-trash fa-sm" /></button></div>
                             </div>
                         </li>
@@ -170,13 +163,15 @@ class Home2 extends React.Component<HomeProps, HomeState> {
 
 function mapStateToProps(state: RootState) {
     return {
-        userModel: state.user
+        userModel: state.user,
+        toDoList: state.toDoList
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
+        userServices: bindActionCreators(UserServices as any, dispatch) as typeof UserServices,
+        toDoServices: bindActionCreators(ToDoServices as any, dispatch) as typeof ToDoServices
     };
 }
 

@@ -1,13 +1,13 @@
 import { combineReducers } from "redux";
 import { user, UserModel } from "./userServices";
-import { buyList, BuyListModel } from "./itemsServices";
+import { toDoList, ToDoListModel } from "./toDoServices";
 
 export interface RootState {
     user: UserModel;
-    buyList: BuyListModel;
+    toDoList: ToDoListModel;
 }
 
 export const rootReducer = combineReducers<RootState>({
     user,
-    buyList
+    toDoList
 });

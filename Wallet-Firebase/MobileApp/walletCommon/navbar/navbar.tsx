@@ -13,7 +13,7 @@ import { bindActionCreators } from "redux";
 
 export interface NavbarProps {
     userModel: UserModel;
-    actions?: typeof UserServices;
+    userServices?: typeof UserServices;
 }
 
 export interface NavbarState {
@@ -38,11 +38,11 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
         });
     }
     renderSignedIn() {
-        const { userModel, actions } = this.props;
+        const { userModel, userServices } = this.props;
         return (
             <ul className="navbar-nav">
                 <li className="nav-link">{userModel.user.displayName}</li>
-                <li className="nav-link"><a onClick={() => actions.signOut()}>Sign-out</a></li>
+                <li className="nav-link"><a onClick={() => userServices.signOut()}>Sign-out</a></li>
             </ul>
         );
     }
@@ -85,7 +85,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
+        userServices: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
     };
 }
 
