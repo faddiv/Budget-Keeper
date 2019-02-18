@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import { user, UserModel } from "./userServices";
-import { toDoList, ToDoListModel } from "./toDoServices";
+import { userReducers as user, UserModel } from "./userServices";
+import { toDoReducers as toDoList, ToDoListModel } from "./toDoServices";
 
 export interface RootState {
     user: UserModel;

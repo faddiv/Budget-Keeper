@@ -5,17 +5,22 @@ import { _ } from "helpers";
 
 let testCounter = 1;
 
+namespace ToDo {
+    export const Add = "ToDo.Add";
+    export const Remove = "ToDo.Remove";
+}
+
 export const initialState: ToDoListModel = {
     checklist: []
 };
 
-export interface ToDoAddResult extends Action<"ToDo.Add"> {
+export interface ToDoAddResult extends Action<typeof ToDo.Add> {
     success: boolean;
     errorMsg?: string;
     toDoItem?: ToDoModel;
 }
 
-interface ToDoRemoveResult extends Action<"ToDo.Remove"> {
+interface ToDoRemoveResult extends Action<typeof ToDo.Remove> {
     toDoItem?: ToDoModel;
 }
 
@@ -32,7 +37,7 @@ export namespace ToDoServices {
                 }, 1000);
             });
             const result: ToDoAddResult = {
-                type: "ToDo.Add",
+                type: ToDo.Add,
                 success: true,
                 toDoItem: newToDoResult
             };
@@ -42,7 +47,7 @@ export namespace ToDoServices {
 
     export const Remove: ActionCreator<ToDoRemoveResult> = (toDoItem: ToDoModel) => {
         return {
-            type: "ToDo.Remove",
+            type: ToDo.Remove,
             toDoItem
         };
     };
@@ -50,13 +55,13 @@ export namespace ToDoServices {
 
 type ToDoActions = ToDoAddResult | ToDoRemoveResult;
 
-export const toDoList: Reducer<ToDoListModel, ToDoActions> = (
+export const toDoReducers: Reducer<ToDoListModel, ToDoActions> = (
     state = initialState,
     action
 ) => {
     let newState: ToDoListModel;
     switch (action.type) {
-        case "ToDo.Add":
+        case ToDo.Add:
             {
                 if (action.success) {
                     newState = {
@@ -67,7 +72,7 @@ export const toDoList: Reducer<ToDoListModel, ToDoActions> = (
                 }
             }
             break;
-        case "ToDo.Remove":
+        case ToDo.Remove:
             {
                 newState = {
                     checklist: _.remove(state.checklist, action.toDoItem)
