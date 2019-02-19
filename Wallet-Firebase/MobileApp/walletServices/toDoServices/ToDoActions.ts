@@ -2,8 +2,10 @@ import { ToDoListModel } from "./ToDoListModel";
 import { ToDoModel } from "./ToDoModel";
 import { Action, Dispatch, Reducer, ActionCreator } from "redux";
 import { _ } from "helpers";
-
-let testCounter = 1;
+// tslint:disable:no-submodule-imports
+import * as firebase from "firebase/app";
+import "firebase/firestore";
+// tslint:enable:no-submodule-imports
 
 namespace ToDo {
     export const Add = "ToDo.Add";
@@ -27,19 +29,19 @@ interface ToDoRemoveResult extends Action<typeof ToDo.Remove> {
 export namespace ToDoServices {
     export const Add = (newToDo: ToDoModel) => {
         return async (dispatch: Dispatch<ToDoAddResult>) => {
-            const newToDoResult = await new Promise<ToDoModel>((resolve) => {
-                setTimeout(() => {
-                    const result2: ToDoModel = {
-                        ...newToDo,
-                        id: (++testCounter).toString()
-                    };
-                    resolve(result2);
-                }, 1000);
-            });
+            const db = firebase.firestore();
+            const userData = db.collection("ToDo");
+            const docRef = await userData.add(newToDo);
             const result: ToDoAddResult = {
                 type: ToDo.Add,
                 success: true,
-                toDoItem: newToDoResult
+                toDoItem: {
+                    id: docRef.id,
+                    userId: newToDo.userId,
+                    name: newToDo.name,
+                    price: newToDo.price,
+                    ok: newToDo.ok
+                }
             };
             return dispatch(result);
         };

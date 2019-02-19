@@ -1,5 +1,8 @@
 import { Action, Reducer, ActionCreator } from "redux";
-import * as firebase from "firebase";
+// tslint:disable:no-submodule-imports
+import * as firebase from "firebase/app";
+import "firebase/auth";
+// tslint:enable:no-submodule-imports
 import { UserModel } from "./UserModel";
 
 namespace User {

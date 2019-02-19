@@ -1,6 +1,7 @@
 export interface ToDoModel {
     id?: string;
-    ok?: boolean;
+    userId: string;
     name: string;
     price: number;
+    ok?: boolean;
 }

@@ -1,6 +1,9 @@
 import { createStore, applyMiddleware, Store, compose } from "redux";
 import { rootReducer, RootState } from "walletServices";
-import * as firebase from "firebase";
+// tslint:disable:no-submodule-imports
+import * as firebase from "firebase/app";
+import "firebase/auth";
+// tslint:enable:no-submodule-imports
 import thunk from "redux-thunk";
 
 export function configureStore(initialState?: RootState) {

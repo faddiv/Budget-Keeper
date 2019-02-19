@@ -1,12 +1,15 @@
 import "./scss/site.scss";
-// tslint:disable-next-line:no-submodule-imports
+// tslint:disable:no-submodule-imports
 import "moment/locale/hu";
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+// tslint:enable:no-submodule-imports
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
-import * as firebase from "firebase";
 
 import { configureStore } from "store";
 import { Home, Login } from "pages";
@@ -15,7 +18,8 @@ import { AuthenticatedRoute } from "walletCommon";
 
 const config = {
     apiKey: "AIzaSyDdlgWpHPzu1-9O8KQSex9tut2CndYHnT4",
-    authDomain: "budget-keeper-8f45b.firebaseapp.com"
+    authDomain: "budget-keeper-8f45b.firebaseapp.com",
+    projectId: "budget-keeper-8f45b"
 };
 
 firebase.initializeApp(config);

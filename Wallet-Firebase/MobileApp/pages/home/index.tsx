@@ -105,6 +105,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             this.setState(state);
         } else {
             await this.props.toDoServices.Add({
+                userId: this.props.userModel.user.uid,
                 name: this.state.article,
                 price: parseInt(this.state.price, 10),
                 ok: false

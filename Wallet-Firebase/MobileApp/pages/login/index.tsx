@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Layout } from "layout";
-import * as firebase from "firebase";
+// tslint:disable:no-submodule-imports
+import * as firebase from "firebase/app";
+import "firebase/auth";
+// tslint:enable:no-submodule-imports
 import { FirebaseAuth } from "react-firebaseui";
 import { UserModel, UserServices } from "../../walletServices/userServices";
 import { RootState } from "walletServices";
