@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as classNames from "classnames";
 import { Layout } from "layout";
-import { UserModel, UserServices } from "../../walletServices/userServices";
+import { UserServices } from "../../walletServices/userServices";
 import { RootState } from "walletServices";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import bind from "bind-decorator";
 import { updateState, isClickableClicked } from "react-ext";
-import { validate, ValidationState, ValidationConfig, validators } from "helpers";
+import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
 // tslint:disable-next-line:no-submodule-imports
-import { ToDoServices, ToDoListModel } from "walletServices/toDoServices";
+import { ToDoServices } from "walletServices/toDoServices";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -34,11 +34,7 @@ export interface IToDoElement {
     price: number;
 }
 
-export interface HomeProps {
-    userModel: UserModel;
-    userServices?: typeof UserServices;
-    toDoList?: ToDoListModel;
-    toDoServices?: typeof ToDoServices;
+export interface HomeProps extends ReturnType<typeof mapDispatchToProps>, ReturnType<typeof mapStateToProps> {
 }
 
 export interface HomeState {
@@ -64,17 +60,15 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         };
     }
 
+    componentDidMount() {
+        this.props.toDoServices.GetAll();
+    }
+
     @bind
     checkItem(evt: React.MouseEvent<HTMLElement>) {
         if (isClickableClicked(evt)) {
             return;
         }
-        /*const index = parseInt(evt.currentTarget.dataset.item, 10);
-        const items = [...this.state.items];
-        items[index] = { ...this.state.items[index], checked: !this.state.items[index].checked };
-        this.setState({
-            items
-        });*/
     }
 
     @bind
@@ -110,6 +104,10 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                 price: parseInt(this.state.price, 10),
                 ok: false
             });
+            this.setState({
+                article: "",
+                price: ""
+            });
         }
     }
 
@@ -120,7 +118,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
-        const { validation } = this.state;
+        const { validation, article, price } = this.state;
         const { toDoList } = this.props;
         return (
             <Layout>
@@ -128,14 +126,24 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                     <div className="form-row">
                         <div className="col form-group">
                             <label htmlFor="article">Article name</label>
-                            <input type="text" className={classNames("form-control", { "is-invalid": validation.article.showError })} id="article" name="article" placeholder="Article name" />
+                            <input type="text"
+                                className={classNames("form-control", { "is-invalid": validation.article.showError })}
+                                id="article" name="article"
+                                placeholder="Article name"
+                                value={article}
+                                onChange={noop} />
                             <div className="invalid-feedback">
                                 {validation.article.message}
                             </div>
                         </div>
                         <div className="col form-group">
                             <label htmlFor="price">Price</label>
-                            <input type="number" className={classNames("form-control", { "is-invalid": validation.price.showError })} id="price" name="price" placeholder="Price" />
+                            <input type="number"
+                                className={classNames("form-control", { "is-invalid": validation.price.showError })}
+                                id="price" name="price"
+                                placeholder="Price"
+                                value={price}
+                                onChange={noop} />
                             <div className="invalid-feedback">
                                 {validation.price.message}
                             </div>
@@ -171,8 +179,8 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        userServices: bindActionCreators(UserServices as any, dispatch) as typeof UserServices,
-        toDoServices: bindActionCreators(ToDoServices as any, dispatch) as typeof ToDoServices
+        userServices: bindActionCreators(UserServices, dispatch),
+        toDoServices: bindActionCreators(ToDoServices, dispatch)
     };
 }
 

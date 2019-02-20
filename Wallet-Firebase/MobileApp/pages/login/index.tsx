@@ -5,16 +5,14 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 // tslint:enable:no-submodule-imports
 import { FirebaseAuth } from "react-firebaseui";
-import { UserModel, UserServices } from "../../walletServices/userServices";
+import { UserServices } from "../../walletServices/userServices";
 import { RootState } from "walletServices";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { firebaseUiConfig } from "store";
 import { RouteComponentProps } from "react-router";
 
-export interface LoginProps extends Partial<RouteComponentProps<any>> {
-    userModel: UserModel;
-    actions?: typeof UserServices;
+export interface LoginProps extends Partial<RouteComponentProps<any>>, ReturnType<typeof mapDispatchToProps>, ReturnType<typeof mapStateToProps> {
 }
 
 export interface LoginState {
@@ -32,6 +30,10 @@ class Login2 extends React.Component<LoginProps, LoginState> {
     componentDidMount() {
         this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
             if (user && this.props.location.search) {
+                if (!this.props.userModel.user) {
+                    this.props.actions.setUser(this.props.userModel.user);
+                    return; // prevent infinitive redirect.
+                }
                 const search = new URLSearchParams(this.props.location.search);
                 const returnUrl = search.get("returnUrl");
                 if (returnUrl) {
@@ -86,7 +88,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
+        actions: bindActionCreators(UserServices, dispatch)
     };
 }
 
