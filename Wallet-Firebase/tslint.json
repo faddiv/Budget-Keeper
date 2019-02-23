@@ -134,11 +134,9 @@
     ],
     "no-submodule-imports": [
       true,
-      "actions",
-      "reducers",
-      "constants",
-      "helpers",
-      "react-ext"
+      "walletServices",
+      "firebase",
+      "moment"
     ]
   }
 }

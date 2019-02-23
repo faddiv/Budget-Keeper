@@ -60,10 +60,6 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         };
     }
 
-    componentDidMount() {
-        this.props.toDoServices.GetAll();
-    }
-
     @bind
     checkItem(evt: React.MouseEvent<HTMLElement>) {
         if (isClickableClicked(evt)) {
@@ -159,7 +155,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                         <li key={item.id} className={classNames("list-group-item", { "list-group-item-success": item.ok })} data-item={index} onClick={this.checkItem}>
                             <div className="form-row">
                                 <div className="col-6"><span className="fa fa-check" style={{ visibility: item.ok ? "visible" : "hidden" }}></span>&nbsp;{item.name}</div>
-                                <div className="col-4"><input type="number" className="form-control form-control-xs" value={item.price} readOnly /></div>
+                                <div className="col-4"><input type="number" className="form-control form-control-xs" value={item.price || ""} readOnly /></div>
                                 <div className="col-2"><button className="btn btn-link" onClick={this.deleteItem}><span className="fa fa-trash fa-sm" /></button></div>
                             </div>
                         </li>

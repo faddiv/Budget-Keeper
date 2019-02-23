@@ -1,10 +1,8 @@
 import "./scss/site.scss";
-// tslint:disable:no-submodule-imports
 import "moment/locale/hu";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-// tslint:enable:no-submodule-imports
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -15,6 +13,7 @@ import { configureStore } from "store";
 import { Home, Login } from "pages";
 import { UserServices } from "./walletServices/userServices";
 import { AuthenticatedRoute } from "walletCommon";
+import { initToDoListener } from "./walletServices/toDoServices";
 
 const config = {
     apiKey: "AIzaSyDdlgWpHPzu1-9O8KQSex9tut2CndYHnT4",
@@ -34,6 +33,8 @@ this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
     console.log("signed in user:", user);
     store.dispatch(UserServices.setUser(user));
 });
+
+initToDoListener(store.dispatch);
 
 ReactDOM.render(
     <Provider store={store}>
