@@ -30,6 +30,11 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
     }
 
     @bind
+    signOut() {
+        this.props.userServices.signOut();
+    }
+
+    @bind
     toggleNavbar() {
         this.setState((prevState) => {
             return {
@@ -37,12 +42,13 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
             };
         });
     }
+
     renderSignedIn() {
-        const { userModel, userServices } = this.props;
+        const { userModel } = this.props;
         return (
             <ul className="navbar-nav">
-                <li className="nav-link">{userModel.user.displayName}</li>
-                <li className="nav-link"><a onClick={() => userServices.signOut()}>Sign-out</a></li>
+                <li className="nav-link">{userModel.displayName}</li>
+                <li className="nav-link"><a onClick={this.signOut}>Sign-out</a></li>
             </ul>
         );
     }

@@ -1,9 +1,6 @@
 import { ToDoListModel } from "./ToDoListModel";
 import { ToDoModel } from "./ToDoModel";
 import { Reducer, Dispatch } from "redux";
-// tslint:disable:no-submodule-imports
-import "firebase/firestore";
-// tslint:enable:no-submodule-imports
 import { addInternal, removeInternal, initToDoInternal } from "./ToDoListener";
 import { ToDoListModification } from "./toDoInternalActions";
 import { ToDo } from "./actionNames";
@@ -23,15 +20,17 @@ export function initToDoListener(dispatch: Dispatch) {
 }
 
 export namespace ToDoServices {
-    export const Add = (newToDo: ToDoModel) => {
-        return async () => {
+    export function add(newToDo: ToDoModel) {
+        return () => {
             return addInternal(newToDo);
         };
-    };
+    }
 
-    export const Remove = (toDoItem: ToDoModel) => {
-        return removeInternal(toDoItem);
-    };
+    export function remove(toDoItem: ToDoModel) {
+        return () => {
+            return removeInternal(toDoItem);
+        };
+    }
 }
 
 type ToDoActions = ToDoListModification;
@@ -66,6 +65,8 @@ export const toDoReducers: Reducer<ToDoListModel, ToDoActions> = (
                 newState = { checklist };
             }
             break;
+        default:
+            return state;
     }
     return {
         ...state,

@@ -1,2 +1,2 @@
 export * from "./UserModel";
-export * from "./UserActions";
+export * from "./userActions";

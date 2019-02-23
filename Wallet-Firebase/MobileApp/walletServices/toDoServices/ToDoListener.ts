@@ -1,10 +1,9 @@
 import { bindActionCreators, Dispatch } from "redux";
-// tslint:disable:no-submodule-imports
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-// tslint:enable:no-submodule-imports
 import { ToDoModel } from "./ToDoModel";
 import { ToDoInternalServices } from "./toDoInternalActions";
+
 let db: firebase.firestore.Firestore;
 let toDoCollection: firebase.firestore.CollectionReference;
 let toDoListener: () => void;

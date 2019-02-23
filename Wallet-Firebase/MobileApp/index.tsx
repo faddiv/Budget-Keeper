@@ -11,7 +11,7 @@ import { createBrowserHistory } from "history";
 
 import { configureStore } from "store";
 import { Home, Login } from "pages";
-import { UserServices } from "./walletServices/userServices";
+import { initUserServices } from "./walletServices/userServices";
 import { AuthenticatedRoute } from "walletCommon";
 import { initToDoListener } from "./walletServices/toDoServices";
 
@@ -29,11 +29,7 @@ firebase.firestore().settings({
 const history = createBrowserHistory();
 const store = configureStore();
 
-this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
-    console.log("signed in user:", user);
-    store.dispatch(UserServices.setUser(user));
-});
-
+initUserServices(store.dispatch);
 initToDoListener(store.dispatch);
 
 ReactDOM.render(

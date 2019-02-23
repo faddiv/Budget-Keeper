@@ -72,7 +72,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         evt.preventDefault();
         const index = parseInt(evt.currentTarget.parentElement.parentElement.parentElement.dataset.item, 10);
         const item = this.props.toDoList.checklist[index];
-        this.props.toDoServices.Remove(item);
+        this.props.toDoServices.remove(item);
     }
 
     @bind
@@ -94,8 +94,8 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             state.validation = validationState.validationState;
             this.setState(state);
         } else {
-            await this.props.toDoServices.Add({
-                userId: this.props.userModel.user.uid,
+            await this.props.toDoServices.add({
+                userId: this.props.userModel.uid,
                 name: this.state.article,
                 price: parseInt(this.state.price, 10),
                 ok: false
