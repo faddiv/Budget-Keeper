@@ -1,8 +1,8 @@
 import { ToDoListModel } from "./ToDoListModel";
 import { ToDoModel } from "./ToDoModel";
 import { Reducer, Dispatch } from "redux";
-import { addInternal, removeInternal, initToDoInternal } from "./ToDoListener";
-import { ToDoListModification } from "./toDoInternalActions";
+import { addInternal, removeInternal, initToDoInternal, initToDoListener, destroyToDoListener } from "./ToDoListener";
+import { ToDoListModification, ClearListModification } from "./toDoInternalActions";
 import { ToDo } from "./actionNames";
 
 function toDoMapper(change: firebase.firestore.DocumentChange): ToDoModel {
@@ -15,8 +15,13 @@ export const initialState: ToDoListModel = {
     checklist: []
 };
 
-export function initToDoListener(dispatch: Dispatch) {
+export function initToDoServices(dispatch: Dispatch) {
     initToDoInternal(dispatch);
+}
+
+export function listenToDos() {
+    initToDoListener();
+    return destroyToDoListener;
 }
 
 export namespace ToDoServices {
@@ -33,7 +38,7 @@ export namespace ToDoServices {
     }
 }
 
-type ToDoActions = ToDoListModification;
+type ToDoActions = ToDoListModification | ClearListModification;
 
 export const toDoReducers: Reducer<ToDoListModel, ToDoActions> = (
     state = initialState,
@@ -63,6 +68,11 @@ export const toDoReducers: Reducer<ToDoListModel, ToDoActions> = (
                     }
                 });
                 newState = { checklist };
+            }
+            break;
+        case ToDo.ClearList:
+            {
+                newState = { checklist: [] };
             }
             break;
         default:

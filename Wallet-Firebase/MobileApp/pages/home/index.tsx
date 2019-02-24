@@ -9,7 +9,7 @@ import bind from "bind-decorator";
 import { updateState, isClickableClicked } from "react-ext";
 import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
 // tslint:disable-next-line:no-submodule-imports
-import { ToDoServices } from "walletServices/toDoServices";
+import { ToDoServices, listenToDos } from "walletServices/toDoServices";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -46,7 +46,7 @@ export interface HomeState {
 }
 
 class Home2 extends React.Component<HomeProps, HomeState> {
-    unregisterAuthObserver: () => void;
+    unregisterToDoListener: () => void;
 
     constructor(props) {
         super(props);
@@ -58,6 +58,14 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             showError: false,
             validation: validate(transactionRules, {}, undefined, this.props).validationState
         };
+    }
+
+    componentDidMount() {
+        this.unregisterToDoListener = listenToDos();
+    }
+
+    componentWillUnmount() {
+        this.unregisterToDoListener();
     }
 
     @bind

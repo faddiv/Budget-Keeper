@@ -13,7 +13,7 @@ import { configureStore } from "store";
 import { Home, Login } from "pages";
 import { initUserServices } from "./walletServices/userServices";
 import { AuthenticatedRoute } from "walletCommon";
-import { initToDoListener } from "./walletServices/toDoServices";
+import { initToDoServices } from "./walletServices/toDoServices";
 
 const config = {
     apiKey: "AIzaSyDdlgWpHPzu1-9O8KQSex9tut2CndYHnT4",
@@ -30,7 +30,7 @@ const history = createBrowserHistory();
 const store = configureStore();
 
 initUserServices(store.dispatch);
-initToDoListener(store.dispatch);
+initToDoServices(store.dispatch);
 
 ReactDOM.render(
     <Provider store={store}>

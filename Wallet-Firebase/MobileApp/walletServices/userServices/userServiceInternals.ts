@@ -13,30 +13,18 @@ export interface LoginAction extends Action<typeof User.setUser> {
 
 namespace UserInternalActions {
     export function setUser(user: firebase.UserInfo): LoginAction {
-        if (!user) {
-            return {
-                type: User.setUser,
-                user: {
-                    displayName: null,
-                    email: null,
-                    phoneNumber: null,
-                    photoURL: null,
-                    providerId: null,
-                    uid: null,
-                    singedIn: !!user
-                }
-            };
-        }
+        user = user || {} as any;
+        const {displayName, email, phoneNumber, photoURL, providerId, uid} = user;
         return {
             type: User.setUser,
             user: {
-                displayName: user.displayName,
-                email: user.email,
-                phoneNumber: user.phoneNumber,
-                photoURL: user.photoURL,
-                providerId: user.providerId,
-                uid: user.uid,
-                singedIn: !!user
+                displayName,
+                email,
+                phoneNumber,
+                photoURL,
+                providerId,
+                uid,
+                singedIn: !!uid
             }
         };
     }
