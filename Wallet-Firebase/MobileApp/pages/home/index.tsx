@@ -8,8 +8,7 @@ import { connect } from "react-redux";
 import bind from "bind-decorator";
 import { updateState, isClickableClicked } from "react-ext";
 import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
-// tslint:disable-next-line:no-submodule-imports
-import { ToDoServices, listenToDos } from "walletServices/toDoServices";
+import { ToDoActions, listenToDos } from "walletServices/toDoServices";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -184,7 +183,7 @@ function mapStateToProps(state: RootState) {
 function mapDispatchToProps(dispatch) {
     return {
         userServices: bindActionCreators(UserServices, dispatch),
-        toDoServices: bindActionCreators(ToDoServices, dispatch)
+        toDoServices: bindActionCreators(ToDoActions, dispatch)
     };
 }
 

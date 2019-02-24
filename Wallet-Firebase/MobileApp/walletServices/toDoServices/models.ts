@@ -5,3 +5,7 @@ export interface ToDoModel {
     price: number;
     ok?: boolean;
 }
+
+export interface ToDoListModel {
+    checklist: ToDoModel[];
+}

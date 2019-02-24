@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Dispatch, Action } from "redux";
 import { User } from "./actionNames";
-import { UserModel } from "./UserModel";
+import { UserModel } from "./models";
 
 let auth: firebase.auth.Auth;
 let unregisterAuthObserver: () => void;

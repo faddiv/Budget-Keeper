@@ -1,16 +1,16 @@
 import { bindActionCreators, Dispatch } from "redux";
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import { ToDoModel } from "./ToDoModel";
-import { ToDoInternalServices } from "./toDoInternalActions";
+import { ToDoModel } from "./models";
+import { ToDoInternalActions } from "./toDoInternalActions";
 
 let db: firebase.firestore.Firestore;
 let toDoListener: () => void;
-let toDoInternalActions: typeof ToDoInternalServices;
+let toDoInternalActions: typeof ToDoInternalActions;
 let toDoCollection: firebase.firestore.CollectionReference;
 
 export function initToDoInternal(dispatch: Dispatch) {
-    toDoInternalActions = bindActionCreators(ToDoInternalServices, dispatch);
+    toDoInternalActions = bindActionCreators(ToDoInternalActions, dispatch);
     db = firebase.firestore();
 }
 
@@ -54,4 +54,10 @@ export function updateInternal(toDo: ToDoModel) {
     ensureInitialized();
     const doc = toDoCollection.doc(toDo.id);
     return doc.update(toDo);
+}
+
+export function toDoMapper(change: firebase.firestore.DocumentChange): ToDoModel {
+    const model = change.doc.data() as ToDoModel;
+    model.id = change.doc.id;
+    return model;
 }

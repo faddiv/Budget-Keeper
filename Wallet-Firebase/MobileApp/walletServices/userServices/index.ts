@@ -1,2 +1,3 @@
-export * from "./UserModel";
+export * from "./models";
 export * from "./userActions";
+export * from "./userReducers";

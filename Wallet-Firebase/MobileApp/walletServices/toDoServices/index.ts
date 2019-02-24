@@ -1,3 +1,3 @@
-export * from "./ToDoModel";
-export * from "./ToDoListModel";
-export * from "./ToDoActions";
+export * from "./models";
+export * from "./toDoActions";
+export * from "./toDoReducers";
