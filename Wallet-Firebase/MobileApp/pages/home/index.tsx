@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import * as React from "react";
 import * as classNames from "classnames";
 import { Layout } from "layout";
@@ -8,7 +9,7 @@ import { connect } from "react-redux";
 import bind from "bind-decorator";
 import { updateState, isClickableClicked } from "react-ext";
 import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
-import { ToDoActions, listenToDos } from "walletServices/toDoServices";
+import { ToDoActions, listenToDos, ToDoModel } from "walletServices/toDoServices";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -59,6 +60,24 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         };
     }
 
+    private getItemByEvt<TElement extends HTMLElement>(evt: React.SyntheticEvent<TElement>) {
+        let target: HTMLElement = evt.currentTarget;
+        while (target && target.tagName !== "LI") {
+            target = target.parentElement;
+        }
+        const index = parseInt(target.dataset.item, 10);
+        const item = this.props.toDoList.checklist[index];
+        return item;
+    }
+
+    private get toDoServices() {
+        return this.props.toDoServices;
+    }
+
+    private parsePrice(priceStr: string) {
+        return priceStr ? parseInt(priceStr, 10) : null;
+    }
+
     componentDidMount() {
         this.unregisterToDoListener = listenToDos();
     }
@@ -72,14 +91,18 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         if (isClickableClicked(evt)) {
             return;
         }
+        evt.preventDefault();
+        const item = this.getItemByEvt(evt);
+        const ok = !item.ok;
+        const newItem: ToDoModel = { ...item, ok, checkedDate: ok ? new Date() : null };
+        this.toDoServices.update(newItem);
     }
 
     @bind
     deleteItem(evt: React.MouseEvent<HTMLElement>) {
         evt.preventDefault();
-        const index = parseInt(evt.currentTarget.parentElement.parentElement.parentElement.dataset.item, 10);
-        const item = this.props.toDoList.checklist[index];
-        this.props.toDoServices.remove(item);
+        const item = this.getItemByEvt(evt);
+        this.toDoServices.remove(item);
     }
 
     @bind
@@ -101,10 +124,10 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             state.validation = validationState.validationState;
             this.setState(state);
         } else {
-            await this.props.toDoServices.add({
+            await this.toDoServices.add({
                 userId: this.props.userModel.uid,
                 name: this.state.article,
-                price: parseInt(this.state.price, 10),
+                price: this.parsePrice(this.state.price),
                 ok: false
             });
             this.setState({
@@ -120,8 +143,18 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         this.setState(state, this.validate);
     }
 
+    @bind
+    handleInputChangeInTable(event: React.SyntheticEvent<HTMLInputElement>) {
+        const state = updateState(event);
+        const item = this.getItemByEvt(event);
+        state.price = this.parsePrice(state.price);
+        this.toDoServices.update({
+            ...item, ...state
+        });
+    }
+
     render() {
-        const { validation, article, price } = this.state;
+        const { validation, article, price: newPrice } = this.state;
         const { toDoList } = this.props;
         return (
             <Layout>
@@ -145,7 +178,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                                 className={classNames("form-control", { "is-invalid": validation.price.showError })}
                                 id="price" name="price"
                                 placeholder="Price"
-                                value={price}
+                                value={newPrice}
                                 onChange={noop} />
                             <div className="invalid-feedback">
                                 {validation.price.message}
@@ -158,11 +191,14 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                 </form>
                 <br />
                 <ul className="list-group">
-                    {toDoList.checklist.map((item, index) => (
-                        <li key={item.id} className={classNames("list-group-item", { "list-group-item-success": item.ok })} data-item={index} onClick={this.checkItem}>
+                    {toDoList.checklist.map(({ id, name, ok, price, checkedDate }, index) => (
+                        <li key={id} className={classNames("list-group-item", { "list-group-item-success": ok })} data-item={index} onClick={this.checkItem}>
                             <div className="form-row">
-                                <div className="col-6"><span className="fa fa-check" style={{ visibility: item.ok ? "visible" : "hidden" }}></span>&nbsp;{item.name}</div>
-                                <div className="col-4"><input type="number" className="form-control form-control-xs" value={item.price || ""} readOnly /></div>
+                                <div className="col-6"><span className="fa fa-check" style={{ visibility: ok ? "visible" : "hidden" }}></span>&nbsp;{name}</div>
+                                <div className="col-6"><input type="number" name="price" className="form-control form-control-xs" value={price || ""} onChange={this.handleInputChangeInTable} /></div>
+                            </div>
+                            <div className="form-row">
+                                <div className="col-10">{checkedDate && moment(checkedDate).format("L")}</div>
                                 <div className="col-2"><button className="btn btn-link" onClick={this.deleteItem}><span className="fa fa-trash fa-sm" /></button></div>
                             </div>
                         </li>

@@ -53,11 +53,21 @@ export function removeInternal(toDo: ToDoModel) {
 export function updateInternal(toDo: ToDoModel) {
     ensureInitialized();
     const doc = toDoCollection.doc(toDo.id);
-    return doc.update(toDo);
+    const model: ToDoModel = { ...toDo };
+    delete model.id;
+    return doc.update(model);
+}
+
+// Omit taken from https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+interface ToDoDbModel extends Omit<ToDoModel, "checkedDate"> {
+    checkedDate: firebase.firestore.Timestamp;
 }
 
 export function toDoMapper(change: firebase.firestore.DocumentChange): ToDoModel {
-    const model = change.doc.data() as ToDoModel;
-    model.id = change.doc.id;
-    return model;
+    const model = change.doc.data() as ToDoDbModel;
+    return { ...model,
+        id: change.doc.id,
+        checkedDate: (model.checkedDate && model.checkedDate.toDate()) || null };
 }

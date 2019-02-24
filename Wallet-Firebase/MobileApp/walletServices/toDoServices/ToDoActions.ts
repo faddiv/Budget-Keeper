@@ -1,6 +1,6 @@
 import { ToDoModel } from "./models";
 import { Dispatch } from "redux";
-import { addInternal, removeInternal, initToDoInternal, initToDoListener, destroyToDoListener } from "./toDoInternals";
+import { addInternal, removeInternal, updateInternal, initToDoInternal, initToDoListener, destroyToDoListener } from "./toDoInternals";
 
 export function initToDoServices(dispatch: Dispatch) {
     initToDoInternal(dispatch);
@@ -21,6 +21,12 @@ export namespace ToDoActions {
     export function remove(toDoItem: ToDoModel) {
         return () => {
             return removeInternal(toDoItem);
+        };
+    }
+
+    export function update(toDo: ToDoModel) {
+        return () => {
+            return updateInternal(toDo);
         };
     }
 }

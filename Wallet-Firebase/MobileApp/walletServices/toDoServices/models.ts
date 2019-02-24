@@ -4,6 +4,7 @@ export interface ToDoModel {
     name: string;
     price: number;
     ok?: boolean;
+    checkedDate?: Date;
 }
 
 export interface ToDoListModel {
