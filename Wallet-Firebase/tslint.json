@@ -3,7 +3,8 @@
     "tslint:latest",
     "tslint:recommended",
     "tslint-react",
-    "tslint-eslint-rules"
+    "tslint-eslint-rules",
+    "tslint-react-hooks"
   ],
   "rules": {
     "quotemark": [

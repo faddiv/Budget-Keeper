@@ -110,5 +110,19 @@
 			"});"
 		],
 		"description": "Karma Test"
+	},
+	"React eventhandler": {
+		"prefix": "react.eventhandler",
+		"body": [
+			"function ${1:Handler}(evt: React.SyntheticEvent<${2:HTMLElement}>) {",
+			"\tevt.preventDefault();$0",
+			"}"
+		]
+	},
+	"deconstruct": {
+		"prefix": "deconstruct",
+		"body": [
+			"const { $0 } = $1;"
+		]
 	}
 }

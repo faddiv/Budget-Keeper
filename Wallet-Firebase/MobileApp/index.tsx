@@ -22,9 +22,6 @@ const config = {
 };
 
 firebase.initializeApp(config);
-firebase.firestore().settings({
-    timestampsInSnapshots: true
-});
 
 const history = createBrowserHistory();
 const store = configureStore();

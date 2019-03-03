@@ -6,6 +6,7 @@ export * from "./tabpanel";
 export * from "./range";
 export * from "./switchCase";
 export * from "./collapse";
+export * from "./htmlElements";
 
 /**
  * Calls preventDefault on the event argument.

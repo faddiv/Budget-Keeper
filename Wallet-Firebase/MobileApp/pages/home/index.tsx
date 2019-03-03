@@ -1,4 +1,3 @@
-import * as moment from "moment";
 import * as React from "react";
 import * as classNames from "classnames";
 import { Layout } from "layout";
@@ -10,6 +9,7 @@ import bind from "bind-decorator";
 import { updateState, isClickableClicked } from "react-ext";
 import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
 import { ToDoActions, listenToDos, ToDoModel } from "walletServices/toDoServices";
+import { ViewRow, EditRow } from "./subComponents";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -43,6 +43,7 @@ export interface HomeState {
     result: string;
     validation: ValidationState;
     showError: boolean;
+    editIndex: number | null;
 }
 
 class Home2 extends React.Component<HomeProps, HomeState> {
@@ -56,7 +57,8 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             price: "",
             result: "",
             showError: false,
-            validation: validate(transactionRules, {}, undefined, this.props).validationState
+            validation: validate(transactionRules, {}, undefined, this.props).validationState,
+            editIndex: null
         };
     }
 
@@ -99,10 +101,24 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     @bind
-    deleteItem(evt: React.MouseEvent<HTMLElement>) {
-        evt.preventDefault();
-        const item = this.getItemByEvt(evt);
+    remove(item: ToDoModel) {
         this.toDoServices.remove(item);
+    }
+
+    @bind
+    edit(index: number) {
+        this.setState({ editIndex: index });
+    }
+
+    @bind
+    cancel() {
+        this.setState({ editIndex: null });
+    }
+
+    @bind
+    save(newItem: ToDoModel) {
+        this.toDoServices.update(newItem);
+        this.setState({ editIndex: null });
     }
 
     @bind
@@ -120,8 +136,10 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         event.preventDefault();
         const validationState = validate(transactionRules, this.state.validation, this.state, this.props, true);
         if (!validationState.isValid) {
-            const state: HomeState = { ...this.state, showError: true };
-            state.validation = validationState.validationState;
+            const state = {
+                showError: true,
+                validation: validationState.validationState
+            };
             this.setState(state);
         } else {
             await this.toDoServices.add({
@@ -141,16 +159,6 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
         const state = updateState(event);
         this.setState(state, this.validate);
-    }
-
-    @bind
-    handleInputChangeInTable(event: React.SyntheticEvent<HTMLInputElement>) {
-        const state = updateState(event);
-        const item = this.getItemByEvt(event);
-        state.price = this.parsePrice(state.price);
-        this.toDoServices.update({
-            ...item, ...state
-        });
     }
 
     render() {
@@ -191,21 +199,28 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                 </form>
                 <br />
                 <ul className="list-group">
-                    {toDoList.checklist.map(({ id, name, ok, price, checkedDate }, index) => (
-                        <li key={id} className={classNames("list-group-item", { "list-group-item-success": ok })} data-item={index} onClick={this.checkItem}>
-                            <div className="form-row">
-                                <div className="col-6"><span className="fa fa-check" style={{ visibility: ok ? "visible" : "hidden" }}></span>&nbsp;{name}</div>
-                                <div className="col-6"><input type="number" name="price" className="form-control form-control-xs" value={price || ""} onChange={this.handleInputChangeInTable} /></div>
-                            </div>
-                            <div className="form-row">
-                                <div className="col-10">{checkedDate && moment(checkedDate).format("L")}</div>
-                                <div className="col-2"><button className="btn btn-link" onClick={this.deleteItem}><span className="fa fa-trash fa-sm" /></button></div>
-                            </div>
-                        </li>
-                    ))}
+                    {toDoList.checklist.map(this.renderRow)}
                 </ul>
             </Layout>
         );
+    }
+
+    @bind
+    renderRow(item: ToDoModel, index: number) {
+        const { editIndex } = this.state;
+        if (editIndex === index) {
+            return (
+                <li key={item.id} className={classNames("list-group-item", { "list-group-item-success": item.ok })} data-item={index}>
+                    <EditRow item={item} index={index} save={this.save} cancel={this.cancel} />
+                </li>
+            );
+        } else {
+            return (
+                <li key={item.id} className={classNames("list-group-item", { "list-group-item-success": item.ok })} data-item={index} onClick={this.checkItem}>
+                    <ViewRow item={item} index={index} remove={this.remove} edit={this.edit} />
+                </li>
+            );
+        }
     }
 }
 

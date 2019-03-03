@@ -58,9 +58,6 @@ export function updateInternal(toDo: ToDoModel) {
     return doc.update(model);
 }
 
-// Omit taken from https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
 interface ToDoDbModel extends Omit<ToDoModel, "checkedDate"> {
     checkedDate: firebase.firestore.Timestamp;
 }
