@@ -11,6 +11,6 @@ export const TextInput: React.SFC<TextInputProps> = ({ value, onChange, classNam
         onChange(evt.currentTarget.value);
     }
     return (
-        <input type="text" value={value} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
+        <input type="text" value={value || ""} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
     );
 };

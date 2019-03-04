@@ -13,30 +13,26 @@ interface EditRowProps {
 
 export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
     const [price, setPrice] = React.useState(item.price);
-    const [name, setName] = React.useState(item.name || "");
+    const [name, setName] = React.useState(item.name);
     const [checkedDate, setCheckedDate] = React.useState(item.checkedDate);
     const [shouldCheck, setShouldCheck] = React.useState(item.price !== null);
-    function saveAndChecInternal(evt: React.MouseEvent) {
-        evt.preventDefault();
+    function saveToDo(ok: boolean) {
         save({
             id: item.id,
             checkedDate,
             name,
             price,
-            ok: true,
+            ok,
             userId: item.userId
         });
     }
+    function saveAndChecInternal(evt: React.MouseEvent) {
+        evt.preventDefault();
+        saveToDo(true);
+    }
     function saveInternal(evt: React.MouseEvent) {
         evt.preventDefault();
-        save({
-            id: item.id,
-            checkedDate,
-            name,
-            price,
-            ok: item.ok,
-            userId: item.userId
-        });
+        saveToDo(item.ok);
     }
     function onSetPrice(newPrice: number | null) {
         const newCheck = newPrice !== null;
@@ -74,8 +70,8 @@ export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
                     <DateInput value={checkedDate} onChange={setCheckedDate} />
                 </div>
                 <div className="col-5">
-                    <IconButton icon="check" size="lg" onClick={saveAndChecInternal} style={{ visibility: shouldCheck ? "visible" : "hidden" }} />
-                    <IconButton icon="save" size="lg" onClick={saveInternal} />
+                    <IconButton icon="check" size="lg" onClick={saveAndChecInternal} style={{ visibility: shouldCheck ? "visible" : "hidden" }} type="button" />
+                    <IconButton icon="save" size="lg" onClick={saveInternal} type="submit" />
                     <IconButton icon="times" size="lg" onClick={cancelInternal} />
                 </div>
             </div>
