@@ -16,6 +16,11 @@ export function formatInt(num: number) {
     return num.toLocaleString("hu");
 }
 
+export function today() {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
 /**
  * A function that does nothing... For a reason.
  */

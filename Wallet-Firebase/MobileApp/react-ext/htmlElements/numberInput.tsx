@@ -16,6 +16,6 @@ export const NumberInput: React.SFC<NumberInputProps> = ({ value, onChange, clas
         }
     }
     return (
-        <input type="number" value={value} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
+        <input type="number" value={value || ""} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
     );
 };

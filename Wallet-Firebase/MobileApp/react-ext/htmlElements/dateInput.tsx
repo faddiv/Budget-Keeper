@@ -18,6 +18,6 @@ export const DateInput: React.SFC<DateInputProps> = ({ value, onChange, classNam
         }
     }
     return (
-        <input type="date" value={dateValue} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
+        <input type="date" value={dateValue || ""} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
     );
 };
