@@ -20,6 +20,7 @@ export interface AutocompleteProps {
     className?: string;
     focusAction?: (focus: () => void) => void;
     onError: (error: Error) => void;
+    placeholder?: string;
 }
 
 export interface AutocompleteState {
@@ -249,12 +250,12 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
     }
 
     render() {
-        const { autoFocus, className, name, id } = this.props;
+        const { autoFocus, className, name, id, placeholder } = this.props;
         const { value, active, items } = this.state;
         return (
             <div style={{ position: "relative" }}>
                 <input ref={this.getInput} type="text" className={className}
-                    id={id || name} name={name} value={value} autoFocus={autoFocus} autoComplete="off"
+                    id={id || name} name={name} value={value} autoFocus={autoFocus} autoComplete="off" placeholder={placeholder}
                     onChange={this.onChange}
                     onBlur={this.onBlur}
                     onKeyDown={this.onKeyEvent} />

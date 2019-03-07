@@ -10,6 +10,7 @@ import { updateState, isClickableClicked } from "react-ext";
 import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
 import { ToDoActions, listenToDos, ToDoModel } from "walletServices/toDoServices";
 import { ViewRow, EditRow } from "./subComponents";
+import { NameInput } from "walletCommon";
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
@@ -170,15 +171,15 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                     <div className="form-row">
                         <div className="col form-group">
                             <label htmlFor="article">Article name</label>
-                            <input type="text"
-                                className={classNames("form-control", { "is-invalid": validation.article.showError })}
-                                id="article" name="article"
-                                placeholder="Article name"
+                            <NameInput
                                 value={article}
-                                onChange={noop} />
-                            <div className="invalid-feedback">
-                                {validation.article.message}
-                            </div>
+                                onChange={noop}
+                                className={classNames("form-control", { "is-invalid": validation.article.showError })}>
+                                <div className="invalid-feedback">
+                                    {validation.article.message}
+                                </div>
+                            </NameInput>
+
                         </div>
                         <div className="col form-group">
                             <label htmlFor="price">Price</label>
