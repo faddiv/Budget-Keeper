@@ -28,7 +28,7 @@
 		"body": [
 			"import * as React from \"react\";",
 			"",
-			"interface  ${1:${TM_FILENAME_BASE}}Props { $2 }",
+			"interface ${1:${TM_FILENAME_BASE}}Props { $2 }",
 			"",
 			"export const ${1}: React.SFC< ${1}Props> = ({ $2, ...rest }) => {",
 			"\treturn (",
@@ -37,6 +37,37 @@
 			"};",
 			"",
 			"${1}.defaultProps = { };"
+		]
+	},
+	"React Stateless Function with connect": {
+		"prefix": "react.function.redux",
+		"body": [
+			"import * as React from \"react\";",
+			"import { connect } from \"react-redux\";",
+			"import { Dispatch } from \"redux\";",
+			"",
+			"interface ${1:${TM_FILENAME_BASE}}Props extends ReturnType<typeof mapDispatchToProps>, ReturnType<typeof mapStateToProps> {",
+			"\t$2",
+			"}",
+			"",
+			"const ${1}Internal: React.SFC< ${1}Props> = ({ $2, ...rest }) => {",
+			"\treturn (",
+			"\t\t$0",
+			"\t);",
+			"};",
+			"",
+			"${1}Internal.defaultProps = { };",
+			"",
+			"function mapStateToProps(state: ${3:RootState}) {",
+    		"\treturn {};",
+			"}",
+			"",
+			"function mapDispatchToProps(dispatch: Dispatch) {",
+			"\treturn {};",
+			"}",
+			"",
+			"export const ${1} = connect(mapStateToProps, mapDispatchToProps)(${1}Internal);",
+			""
 		]
 	},
 	"React setState Async": {

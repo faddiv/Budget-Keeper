@@ -60,6 +60,7 @@ export class Navbar extends React.Component<NavbarProps, NavbarState> {
                             <NavLink to="/export" className="dropdown-item" activeClassName="active">Export</NavLink>
                         </DropdownMenu>
                         <MenuItem to="/wallets">Wallets</MenuItem>
+                        <MenuItem to="/mobil">Mobil</MenuItem>
                     </ul>
                 </Collapse>
             </nav>

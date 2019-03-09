@@ -23,7 +23,10 @@ module.exports = function () {
                 filename: runMode.jsOutput
             },
             plugins: [
-                new CleanWebpackPlugin([outputPath + "/*"])
+                new CleanWebpackPlugin({
+                    dry: true,
+                    cleanOnceBeforeBuildPatterns: [outputPath + "/*"]
+                })
             ],
             devtool: runMode.mode === "production" ? undefined : 'source-map',
             devServer: {

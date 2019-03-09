@@ -6,3 +6,4 @@ export * from "./export/exportPage";
 export * from "./statistics/yearlyStatisticsPage";
 export * from "./statistics/categoryStatisticsPage";
 export * from "./statistics/articlesPage";
+export * from "./mobil";

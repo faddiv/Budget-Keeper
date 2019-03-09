@@ -138,7 +138,9 @@
       "reducers",
       "constants",
       "helpers",
-      "react-ext"
+      "react-ext",
+      "firebase",
+      "moment"
     ]
   }
 }

@@ -23,6 +23,9 @@ launchSettings.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Firebase cache
+.firebase/
+
 #misc
 Wallet/swagger/walletApi/
 Wallet/swagger/swagger-codegen-cli-2.2.3.jar
