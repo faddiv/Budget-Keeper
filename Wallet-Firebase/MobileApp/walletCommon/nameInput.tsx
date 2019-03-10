@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Autocomplete, AutocompleteModel } from "react-ext";
+import { Autocomplete } from "react-ext";
+import { articleService } from "walletServices";
 
 interface NameInputProps {
     value: string;
@@ -19,10 +20,7 @@ export const NameInput: React.SFC<NameInputProps> = ({ value, onChange, ...rest 
 };
 
 function filter(value: string) {
-    return Promise.resolve<AutocompleteModel[]>([{
-        name: value + "asdf",
-        nameHighlighted: `<strong>${value}</strong>asdf`
-    }]);
+    return articleService.searchArticles(value);
 }
 
 function error(err: Error) {

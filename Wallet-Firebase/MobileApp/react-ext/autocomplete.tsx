@@ -113,6 +113,9 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
     async onChange(event: React.SyntheticEvent<HTMLInputElement>) {
         const value = getInputValue(event);
         this.setValue(value);
+        if (this.props.onChange) {
+            this.props.onChange(event);
+        }
         if (canOpen(value)) {
             try {
                 const items = await this.props.onFilter(value);
@@ -137,9 +140,6 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
             this.close({
                 items: []
             });
-        }
-        if (this.props.onChange) {
-            this.props.onChange(event);
         }
     }
 
