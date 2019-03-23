@@ -2,7 +2,7 @@ import * as React from "react";
 import * as classNames from "classnames";
 import { Layout } from "layout";
 import { UserServices } from "../../walletServices/userServices";
-import { RootState } from "walletServices";
+import { RootState, ArticleModel } from "walletServices";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import bind from "bind-decorator";
@@ -155,7 +155,15 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             });
         }
     }
-
+    @bind
+    onSelect(item: ArticleModel) {
+        if (item && item.lastPrice) {
+            this.setState({
+                price: item.lastPrice.toString(),
+                article: item.name
+            });
+        }
+    }
     @bind
     handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
         const state = updateState(event);
@@ -174,12 +182,12 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                             <NameInput
                                 value={article}
                                 onChange={noop}
+                                onSelect={this.onSelect}
                                 className={classNames("form-control", { "is-invalid": validation.article.showError })}>
                                 <div className="invalid-feedback">
                                     {validation.article.message}
                                 </div>
                             </NameInput>
-
                         </div>
                         <div className="col form-group">
                             <label htmlFor="price">Price</label>

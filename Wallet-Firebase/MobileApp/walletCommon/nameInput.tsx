@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Autocomplete } from "react-ext";
-import { articleService } from "walletServices";
+import { articleService, ArticleModel } from "walletServices";
 
 interface NameInputProps {
     value: string;
     onChange: (val: string) => void;
     className?: string;
+    onSelect?: (selected: ArticleModel) => void;
 }
 
 export const NameInput: React.SFC<NameInputProps> = ({ value, onChange, ...rest }) => {

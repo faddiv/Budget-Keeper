@@ -5,6 +5,7 @@ interface IconButtonProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     onClick: (evt: React.MouseEvent) => void;
     icon: string;
     size?: IconSize;
+    title?: string;
 }
 
 export const IconButton: React.SFC<IconButtonProps> = ({ onClick, icon, size, ...rest }) => {

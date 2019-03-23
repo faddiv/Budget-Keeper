@@ -124,5 +124,11 @@
 		"body": [
 			"const { $0 } = $1;"
 		]
+	},
+	"react useState": {
+		"prefix": "react.useState",
+		"body": [
+			"const [ ${1}, set${1/^(.)(.*)$/${1:/upcase}$2/}] = useState($2);$0"
+		]
 	}
 }

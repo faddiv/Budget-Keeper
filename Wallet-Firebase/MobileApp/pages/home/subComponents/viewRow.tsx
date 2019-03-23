@@ -29,8 +29,8 @@ export const ViewRow: React.SFC<ViewRowProps> = ({ item, remove, edit, index }) 
             <div className="form-row">
                 <div className="col-8">{checkedDate && moment(checkedDate).format("L")}</div>
                 <div className="col-4">
-                    <IconButton icon="edit" size="lg" onClick={editInternal} />
-                    <IconButton icon="trash" size="lg" onClick={removeInternal} />
+                    <IconButton icon="edit" size="lg" onClick={editInternal} title="Edit" />
+                    <IconButton icon="trash" size="lg" onClick={removeInternal} title="Delete" />
                 </div>
             </div>
         </>

@@ -19,6 +19,7 @@
     "strictNullChecks": false,
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "es6",
       "es7",

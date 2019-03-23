@@ -60,7 +60,7 @@ class ArticleService {
         return result;
     }
 
-    public async searchArticles(text: string, limit = 25) {
+    public async searchArticles(text: string, limit = 8) {
         const regex = new RegExp(`^.*?${text.split("").join(".*?")}.*?$`, "i");
         const articles: ArticleModel[] = [];
         for await (const article of this.getArticles()) {
