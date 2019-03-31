@@ -10,9 +10,10 @@ const htmlConfig = require("./build-config/html-config")("./" + contentBase + "/
 const vendorConfig = require("./build-config/vendor-config");
 const variablesConfig = require("./build-config/variables-config")(runMode.mode);
 const typescriptConfig = require("./build-config/typescript-config");
+const progressiveWebApp = require("./build-config/progressive-web-app");
 
 module.exports = function () {
-    return [merge(scssConfig, htmlConfig, vendorConfig, typescriptConfig, variablesConfig,
+    return [merge(scssConfig, htmlConfig, vendorConfig, typescriptConfig, variablesConfig, progressiveWebApp,
         {
             entry: {
                 "bundle": "./" + contentBase + "/index.tsx"

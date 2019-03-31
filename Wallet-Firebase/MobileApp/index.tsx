@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
 import "./firebaseInit";
+import "./serviceWorkerInstall";
 
 import { configureStore } from "store";
 import { Home, Login } from "pages";

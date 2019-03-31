@@ -133,7 +133,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     @bind
-    async submit(event: React.ChangeEvent<HTMLFormElement>) {
+    submit(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
         const validationState = validate(transactionRules, this.state.validation, this.state, this.props, true);
         if (!validationState.isValid) {
@@ -143,7 +143,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             };
             this.setState(state);
         } else {
-            await this.toDoServices.add({
+            this.toDoServices.add({
                 userId: this.props.userModel.uid,
                 name: this.state.article,
                 price: this.parsePrice(this.state.price),
