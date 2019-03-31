@@ -5,6 +5,7 @@ dist/
 obj/
 bin/
 coverage/
+wwwroot/
 
 # dependencies
 node_modules/
@@ -34,5 +35,3 @@ Wallet/swagger/swagger-codegen-cli-2.2.3.jar
 # System Files
 .DS_Store
 Thumbs.db
-
-/Wallet/OnlineWallet.Web.Core/wwwroot
