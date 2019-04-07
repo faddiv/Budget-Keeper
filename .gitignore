@@ -28,6 +28,7 @@ launchSettings.json
 .firebase/
 
 #misc
+Wallet-Firebase/MobileApp/icons/
 Wallet/swagger/walletApi/
 Wallet/swagger/swagger-codegen-cli-2.2.3.jar
 *.jar

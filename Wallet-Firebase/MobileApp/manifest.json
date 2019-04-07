@@ -1,0 +1,16 @@
+{
+    "name": "Budget keeper firebase",
+    "short_name": "Budget keeper",
+    "theme_color": "#41aff4",
+    "background_color": "#4bf442",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "change-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
