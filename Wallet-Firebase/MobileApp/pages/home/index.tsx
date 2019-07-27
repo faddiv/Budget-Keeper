@@ -10,22 +10,17 @@ import { updateState, isClickableClicked } from "react-ext";
 import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
 import { ToDoActions, listenToDos, ToDoModel } from "walletServices/toDoServices";
 import { ViewRow, EditRow } from "./subComponents";
-import { NameInput } from "walletCommon";
+import { DisplayProperty } from 'csstype';
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {
         validators: [
             {
                 validator: validators.required,
-                message: "Name is reuired."
+                message: "Name is required."
             }
         ],
         valueGetter: state => state.article
-    },
-    price: {
-        validators: [
-        ],
-        valueGetter: state => state.price
     }
 };
 
@@ -40,7 +35,6 @@ export interface HomeProps extends ReturnType<typeof mapDispatchToProps>, Return
 
 export interface HomeState {
     article: string;
-    price: string;
     result: string;
     validation: ValidationState;
     showError: boolean;
@@ -55,7 +49,6 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         console.log("Home created");
         this.state = {
             article: "",
-            price: "",
             result: "",
             showError: false,
             validation: validate(transactionRules, {}, undefined, this.props).validationState,
@@ -146,12 +139,11 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             this.toDoServices.add({
                 userId: this.props.userModel.uid,
                 name: this.state.article,
-                price: this.parsePrice(this.state.price),
+                price: this.parsePrice(""),
                 ok: false
             });
             this.setState({
-                article: "",
-                price: ""
+                article: ""
             });
         }
     }
@@ -159,7 +151,6 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     onSelect(item: ArticleModel) {
         if (item && item.lastPrice) {
             this.setState({
-                price: item.lastPrice.toString(),
                 article: item.name
             });
         }
@@ -171,39 +162,30 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
-        const { validation, article, price: newPrice } = this.state;
+        const { validation, article } = this.state;
         const { toDoList } = this.props;
+        const display: DisplayProperty = validation.article.showError ? "block" : "none";
         return (
             <Layout>
                 <form onChange={this.handleInputChange} onSubmit={this.submit}>
                     <div className="form-row">
                         <div className="col form-group">
                             <label htmlFor="article">Article name</label>
-                            <NameInput
-                                value={article}
-                                onChange={noop}
-                                onSelect={this.onSelect}
-                                className={classNames("form-control", { "is-invalid": validation.article.showError })}>
-                                <div className="invalid-feedback">
-                                    {validation.article.message}
+                            <div className={"input-group"}>
+                                <input
+                                    name="article"
+                                    value={article}
+                                    onChange={noop}
+                                    lang="hu"
+                                    className={classNames("form-control", { "is-invalid": validation.article.showError })} />
+                                <div className="input-group-append">
+                                    <button type="submit" className="btn btn-primary">Add</button>
                                 </div>
-                            </NameInput>
-                        </div>
-                        <div className="col form-group">
-                            <label htmlFor="price">Price</label>
-                            <input type="number"
-                                className={classNames("form-control", { "is-invalid": validation.price.showError })}
-                                id="price" name="price"
-                                placeholder="Price"
-                                value={newPrice}
-                                onChange={noop} />
-                            <div className="invalid-feedback">
-                                {validation.price.message}
+                            </div>
+                            <div className="invalid-feedback" style={{ display }}>
+                                {validation.article.message}
                             </div>
                         </div>
-                    </div>
-                    <div className="form-row">
-                        <button type="submit" className="btn btn-primary">Add</button>
                     </div>
                 </form>
                 <br />
