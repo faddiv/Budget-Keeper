@@ -9,7 +9,7 @@ import "./firebaseInit";
 import "./serviceWorkerInstall";
 
 import { configureStore } from "store";
-import { Home, Login } from "pages";
+import { Home, Login, SharePrices } from "pages";
 import { initUserServices } from "./walletServices/userServices";
 import { AuthenticatedRoute } from "walletCommon";
 import { initToDoServices } from "./walletServices/toDoServices";
@@ -25,6 +25,7 @@ ReactDOM.render(
         <Router history={history}>
             <Switch>
                 <AuthenticatedRoute path="/" exact component={Home} />
+                <AuthenticatedRoute path="/sharedPrices" exact component={SharePrices} />
                 <Route path="/login" component={Login} />
             </Switch>
         </Router >

@@ -4,3 +4,24 @@
 body {
     margin-top: 65px;
 }
+
+.list-group {
+    &.no-right-padding {
+        .list-group-item {
+            padding-right: 0;
+        }
+    }
+}
+input.borderless {
+    padding: 0;
+    margin: 0;
+    border: none;
+    text-align: right;
+    width: 4em;
+    :focus {
+        outline-offset: 0;
+    }
+}
+.sp-li-title {
+    padding-left: 0.5em;
+}

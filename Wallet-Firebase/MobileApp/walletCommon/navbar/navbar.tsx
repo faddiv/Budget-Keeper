@@ -73,6 +73,7 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
                 <Collapse open={open} className="navbar-collapse" id="walletNavbar">
                     <ul className="navbar-nav mr-auto">
                         <MenuItem to="/" exact>Home</MenuItem>
+                        <MenuItem to="/sharedPrices" exact>Share prices</MenuItem>
                     </ul>
                     <ul className="navbar-nav">
                         {userModel.singedIn ? this.renderSignedIn() : this.renderLogin()}
