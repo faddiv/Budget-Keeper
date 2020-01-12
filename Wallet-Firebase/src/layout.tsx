@@ -1,5 +1,6 @@
 import React from "react";
-import { Navbar } from "./walletCommon";
+import { WalletNavbar } from "./walletCommon";
+import { Container } from 'reactstrap';
 
 interface LayoutProps {
 }
@@ -7,10 +8,10 @@ interface LayoutProps {
 const Layout: React.SFC<LayoutProps> = ({ ...rest }) => {
     return (
         <>
-            <Navbar />
-            <main role="main" className="container">
+            <WalletNavbar />
+            <Container role="main">
                 {rest.children}
-            </main>
+            </Container>
         </>
     );
 };
