@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon, IconSize } from "./icon";
+import { Button } from 'reactstrap';
 
 interface IconButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "size"> {
     onClick: (evt: React.MouseEvent) => void;
@@ -10,8 +11,8 @@ interface IconButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElem
 
 export const IconButton: React.SFC<IconButtonProps> = ({ onClick, icon, size, ...rest }) => {
     return (
-        <button className="btn btn-link" onClick={onClick} {...rest}>
+        <Button color="link" onClick={onClick} {...rest}>
             <Icon name={icon} size={size} />
-        </button>
+        </Button>
     );
 };

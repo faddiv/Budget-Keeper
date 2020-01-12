@@ -12,22 +12,20 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
         <Layout>
             <h1>Cost per person</h1>
             <form onSubmit={noop}>
-                <div className="form-row">
-                    <div className="col form-group">
-                        <div className="input-group">
-                            <input
-                                name="article"
-                                lang="hu"
-                                className={classNames("form-control", { "is-invalid": false })}
-                                placeholder="Name"
-                            />
-                            <div className="input-group-append">
-                                <button type="submit" className="btn btn-primary">Add</button>
-                            </div>
+                <div className="form-group">
+                    <div className="input-group">
+                        <input
+                            name="article"
+                            lang="hu"
+                            className={classNames("form-control", { "is-invalid": false })}
+                            placeholder="Person"
+                        />
+                        <div className="input-group-append">
+                            <button type="submit" className="btn btn-primary">Add</button>
                         </div>
-                        <div className="invalid-feedback" style={{ display: "none" }}>
-                            {"Hiba"}
-                        </div>
+                    </div>
+                    <div className="invalid-feedback" style={{ display: "none" }}>
+                        {"Hiba"}
                     </div>
                 </div>
             </form>
@@ -53,7 +51,7 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
                             <div>Morbi leo risus</div><input className="borderless small" value="1000" />
                         </li>
                         <li className="list-group-item d-flex justify-content-between">
-                            <form onSubmit={noop}>
+                            <form onSubmit={noop} style={{ width: "100%" }}>
                                 <div className="form-row">
                                     <div className="col">
                                         <input className="form-control form-control-sm" placeholder="Item" />
@@ -98,7 +96,7 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
                             <div>Morbi leo risus</div><input className="borderless small" value="1000" />
                         </li>
                         <li className="list-group-item d-flex justify-content-between">
-                            <form onSubmit={noop}>
+                            <form onSubmit={noop} style={{ width: "100%" }}>
                                 <div className="form-row">
                                     <div className="col">
                                         <input className="form-control form-control-sm" placeholder="Item" />
@@ -143,7 +141,7 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
                             <div>Morbi leo risus</div><input className="borderless small" value="1000" />
                         </li>
                         <li className="list-group-item d-flex justify-content-between">
-                            <form onSubmit={noop}>
+                            <form onSubmit={noop} style={{ width: "100%" }}>
                                 <div className="form-row">
                                     <div className="col">
                                         <input className="form-control form-control-sm" placeholder="Item" />
@@ -170,22 +168,20 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
 
             <h1>Shared costs</h1>
             <form onSubmit={noop}>
-                <div className="form-row">
-                    <div className="col form-group">
-                        <div className="input-group">
-                            <input
-                                name="article"
-                                lang="hu"
-                                className={classNames("form-control", { "is-invalid": false })}
-                                placeholder="Name"
-                            />
-                            <div className="input-group-append">
-                                <button type="submit" className="btn btn-primary">Add</button>
-                            </div>
+                <div className="form-group">
+                    <div className="input-group">
+                        <input
+                            name="article"
+                            lang="hu"
+                            className={classNames("form-control", { "is-invalid": false })}
+                            placeholder="Shared item"
+                        />
+                        <div className="input-group-append">
+                            <button type="submit" className="btn btn-primary">Add</button>
                         </div>
-                        <div className="invalid-feedback" style={{ display: "none" }}>
-                            {"Hiba"}
-                        </div>
+                    </div>
+                    <div className="invalid-feedback" style={{ display: "none" }}>
+                        {"Hiba"}
                     </div>
                 </div>
             </form>
@@ -213,7 +209,7 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
                             <div>Joe</div><input className="borderless small" value="2:00" />
                         </li>
                         <li className="list-group-item d-flex justify-content-between">
-                            <form onSubmit={noop}>
+                            <form onSubmit={noop} style={{ width: "100%" }}>
                                 <div className="form-row">
                                     <div className="col">
                                         <input className="form-control form-control-sm" placeholder="Item" />
@@ -259,7 +255,7 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
                                 <div>Joe</div><input className="borderless small" value="2:00" />
                             </li>
                             <li className="list-group-item d-flex justify-content-between">
-                                <form onSubmit={noop}>
+                                <form onSubmit={noop} style={{ width: "100%" }}>
                                     <div className="form-row">
                                         <div className="col">
                                             <input className="form-control form-control-sm" placeholder="Item" />

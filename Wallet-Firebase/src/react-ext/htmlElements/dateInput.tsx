@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import moment from "moment";
+import { Input } from 'reactstrap';
 
 interface DateInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "type" | "value"> {
     value: Date | null;
@@ -18,6 +19,6 @@ export const DateInput: React.SFC<DateInputProps> = ({ value, onChange, classNam
         }
     }
     return (
-        <input type="date" value={dateValue || ""} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
+        <Input type="date" value={dateValue || ""} onChange={onChangeInternal} className={className} {...rest} />
     );
 };

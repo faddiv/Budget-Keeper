@@ -1,7 +1,8 @@
 import React from "react";
 import moment from "moment";
 import { ToDoModel } from "../../../walletServices/toDoServices";
-import { IconButton } from "../../../react-ext";
+import { IconButton, Icon } from "../../../react-ext";
+import { Row, Col } from 'reactstrap';
 
 interface ViewRowProps {
     item: ToDoModel;
@@ -22,17 +23,23 @@ export const ViewRow: React.SFC<ViewRowProps> = ({ item, remove, edit, index }) 
     }
     return (
         <>
-            <div className="form-row">
-                <div className="col-6"><span className="fa fa-check" style={{ visibility: ok ? "visible" : "hidden" }}></span>&nbsp;{name}</div>
-                <div className="col-6">{price || ""}</div>
-            </div>
-            <div className="form-row">
-                <div className="col-8">{checkedDate && moment(checkedDate).format("L")}</div>
-                <div className="col-4">
+            <Row>
+                <Col xs={6}>
+                    <Icon name="check" style={{ visibility: ok ? "visible" : "hidden" }}></Icon>&nbsp;{name}
+                </Col>
+                <Col xs={6}>
+                    {price || ""}
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={8}>
+                    {checkedDate && moment(checkedDate).format("L")}
+                </Col>
+                <Col xs={4}>
                     <IconButton icon="edit" size="lg" onClick={editInternal} title="Edit" />
                     <IconButton icon="trash" size="lg" onClick={removeInternal} title="Delete" />
-                </div>
-            </div>
+                </Col>
+            </Row>
         </>
     );
 };

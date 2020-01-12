@@ -1,5 +1,6 @@
 import React from "react";
 import classNames from "classnames";
+import { Input } from 'reactstrap';
 
 interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "type"> {
     value: string;
@@ -11,6 +12,6 @@ export const TextInput: React.SFC<TextInputProps> = ({ value, onChange, classNam
         onChange(evt.currentTarget.value);
     }
     return (
-        <input type="text" value={value || ""} onChange={onChangeInternal} className={classNames("form-control", className)} {...rest} />
+        <Input type="text" value={value || ""} onChange={onChangeInternal} className={className} {...rest} />
     );
 };
