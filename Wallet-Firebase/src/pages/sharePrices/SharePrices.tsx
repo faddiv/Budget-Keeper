@@ -15,11 +15,17 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
                 <div className="form-group">
                     <div className="input-group">
                         <input
-                            name="article"
+                            name="person"
                             lang="hu"
                             className={classNames("form-control", { "is-invalid": false })}
                             placeholder="Person"
+                            list="persons"
                         />
+                        <datalist id="persons">
+                            <option value="Viktor" />
+                            <option value="Bea" />
+                            <option value="Joe" />
+                        </datalist>
                         <div className="input-group-append">
                             <button type="submit" className="btn btn-primary">Add</button>
                         </div>
