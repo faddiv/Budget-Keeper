@@ -7,6 +7,7 @@ import { today } from "../../../helpers";
 import { NameInput } from "../../../walletCommon";
 import { ArticleModel } from "../../../walletServices";
 import { Form, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface EditRowProps {
     item: ToDoModel;
@@ -62,7 +63,7 @@ export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
                     <InputGroup>
                         {item.ok && (
                             <InputGroupAddon addonType="prepend">
-                                <InputGroupText><i className="fa fa-check"></i></InputGroupText>
+                                <InputGroupText><FontAwesomeIcon icon="check" /></InputGroupText>
                             </InputGroupAddon>)}
                         <TextInput value={name}
                             onChange={setName}>

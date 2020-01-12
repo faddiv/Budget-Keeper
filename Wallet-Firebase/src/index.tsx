@@ -7,6 +7,8 @@ import { Router, Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
 import "./firebaseInit";
 import * as serviceWorker from "./serviceWorker";
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faCheck, faTrash, faEdit, faSave, faTimes } from "@fortawesome/free-solid-svg-icons"
 
 import { configureStore } from "./store";
 import { Home, Login, SharePrices } from "./pages";
@@ -16,6 +18,8 @@ import { initToDoServices } from "./walletServices/toDoServices";
 
 const history = createBrowserHistory();
 const store = configureStore();
+
+library.add(faCheck, faTrash, faEdit, faSave, faTimes)
 
 initUserServices(store.dispatch);
 initToDoServices(store.dispatch);
