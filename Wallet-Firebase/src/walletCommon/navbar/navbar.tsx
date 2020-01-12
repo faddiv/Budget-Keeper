@@ -61,7 +61,7 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
             <Navbar color="dark" dark expand="md" fixed="top">
                 <NavbarBrand href="/">Wallet</NavbarBrand>
                 <NavbarToggler onClick={this.toggleNavbar} />
-                <Collapse open={open} navbar id="walletNavbar">
+                <Collapse isOpen={open} navbar id="walletNavbar">
                     <Nav className="mr-auto" navbar>
                         <MenuItem to="/" exact>Home</MenuItem>
                         <MenuItem to="/sharedPrices" exact>Share prices</MenuItem>

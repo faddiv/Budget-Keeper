@@ -33,10 +33,10 @@ export const ViewRow: React.SFC<ViewRowProps> = ({ item, remove, edit, index }) 
                 </Col>
             </Row>
             <Row>
-                <Col xs={8}>
+                <Col>
                     {checkedDate && moment(checkedDate).format("L")}
                 </Col>
-                <Col xs={4}>
+                <Col xs="auto">
                     <IconButton icon="edit" size="lg" onClick={editInternal} title="Edit" />
                     <IconButton icon="trash" size="lg" onClick={removeInternal} title="Delete" />
                 </Col>

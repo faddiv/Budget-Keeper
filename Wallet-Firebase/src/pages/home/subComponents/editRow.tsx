@@ -75,10 +75,10 @@ export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
                 </Col>
             </Row>
             <Row form>
-                <Col xs={7}>
+                <Col>
                     <DateInput value={checkedDate} onChange={setCheckedDate} />
                 </Col>
-                <Col xs={5}>
+                <Col xs="auto">
                     <IconButton icon="check" size="lg" onClick={saveAndChecInternal} style={{ visibility: shouldCheck ? "visible" : "hidden" }} type="button" title="Done and save" />
                     <IconButton icon="save" size="lg" onClick={saveInternal} type="submit" title="Save changes" />
                     <IconButton icon="times" size="lg" onClick={cancelInternal} title="Cancel changes" />
