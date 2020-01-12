@@ -1,15 +1,15 @@
-import * as React from "react";
-import { Layout } from "layout";
+import React from "react";
+import { Layout } from "../../layout";
 // tslint:disable:no-submodule-imports
 import * as firebase from "firebase/app";
 import "firebase/auth";
 // tslint:enable:no-submodule-imports
 import { FirebaseAuth } from "react-firebaseui";
 import { UserServices } from "../../walletServices/userServices";
-import { RootState } from "walletServices";
-import { bindActionCreators } from "redux";
+import { RootState } from "../../walletServices";
+import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
-import { firebaseUiConfig } from "store";
+import { firebaseUiConfig } from "../../store";
 import { RouteComponentProps } from "react-router";
 
 export interface LoginProps extends Partial<RouteComponentProps<any>>, ReturnType<typeof mapDispatchToProps>, ReturnType<typeof mapStateToProps> {
@@ -20,7 +20,7 @@ export interface LoginState {
 
 class Login2 extends React.Component<LoginProps, LoginState> {
 
-    constructor(props) {
+    constructor(props: LoginProps) {
         super(props);
         console.log("Home created");
         this.state = {};
@@ -28,10 +28,12 @@ class Login2 extends React.Component<LoginProps, LoginState> {
 
     componentDidUpdate(prevProps: LoginProps) {
         if (!prevProps.userModel.singedIn && this.props.userModel.singedIn) {
-            const search = new URLSearchParams(this.props.location.search);
-            const returnUrl = search.get("returnUrl");
-            if (returnUrl) {
-                this.props.history.push(returnUrl);
+            if (this.props.location && this.props.history) {
+                const search = new URLSearchParams(this.props.location.search);
+                const returnUrl = search.get("returnUrl");
+                if (returnUrl) {
+                    this.props.history.push(returnUrl);
+                }
             }
         }
     }
@@ -47,7 +49,7 @@ class Login2 extends React.Component<LoginProps, LoginState> {
                 <p><span>id:</span><span>{userModel.uid}</span></p>
                 <p><span>providerId:</span><strong>{userModel.providerId}</strong></p>
                 <p>Photo</p>
-                <p><img src={userModel.photoURL} /></p>
+                <p><img src={userModel.photoURL || undefined} /></p>
             </div>
         );
     }
@@ -68,7 +70,7 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
     return {
         actions: bindActionCreators(UserServices, dispatch)
     };

@@ -11,20 +11,20 @@ export function listenToDos() {
     return destroyToDoListener;
 }
 
-export namespace ToDoActions {
-    export function add(newToDo: ToDoModel) {
+export const ToDoActions = {
+    add(newToDo: ToDoModel) {
         return () => {
             return addInternal(newToDo);
         };
-    }
+    },
 
-    export function remove(toDoItem: ToDoModel) {
+    remove(toDoItem: ToDoModel) {
         return () => {
             return removeInternal(toDoItem);
         };
-    }
+    },
 
-    export function update(toDo: ToDoModel) {
+    update(toDo: ToDoModel) {
         return () => {
             return updateInternal(toDo);
         };

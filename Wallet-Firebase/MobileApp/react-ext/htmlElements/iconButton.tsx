@@ -1,7 +1,7 @@
-import * as React from "react";
+import React from "react";
 import { Icon, IconSize } from "./icon";
 
-interface IconButtonProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onClick" | "size"> {
+interface IconButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "size"> {
     onClick: (evt: React.MouseEvent) => void;
     icon: string;
     size?: IconSize;

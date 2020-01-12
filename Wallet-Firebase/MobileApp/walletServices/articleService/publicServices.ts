@@ -47,7 +47,7 @@ class ArticleService {
                 pi++;
             } else if (start) {
                 result += "</strong>";
-                start = null;
+                start = false;
             }
             result += ch;
         }
@@ -64,9 +64,9 @@ class ArticleService {
         const regex = new RegExp(`^.*?${text.split("").join(".*?")}.*?$`, "i");
         const articles: ArticleModel[] = [];
         for await (const article of this.getArticles()) {
-            const match = regex.exec(article.name);
+            const match = regex.exec(article.name || "");
             if (match !== null) {
-                article.nameHighlighted = this.createHighlight(article.name, text);
+                article.nameHighlighted = this.createHighlight(article.name || "", text);
                 articles.push(article);
                 if (articles.length >= limit) {
                     return articles;

@@ -1,7 +1,7 @@
 import { ToDoListModification, ClearListModification } from "./toDoInternalActions";
 import { Reducer } from "redux";
 import { ToDoListModel } from "./models";
-import { ToDo } from "./actionNames";
+import * as ToDo from "./actionNames";
 import { toDoMapper } from "./toDoInternals";
 
 export const initialState: ToDoListModel = {

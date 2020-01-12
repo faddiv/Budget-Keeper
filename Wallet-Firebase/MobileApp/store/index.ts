@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, Store, compose } from "redux";
-import { rootReducer, RootState } from "walletServices";
+import { rootReducer, RootState } from "../walletServices";
 // tslint:disable:no-submodule-imports
 import * as firebase from "firebase/app";
 import "firebase/auth";

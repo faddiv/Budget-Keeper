@@ -1,21 +1,21 @@
-import * as React from "react";
+import React from "react";
 import { Location as HLocation } from "history";
-import { Link, Route } from "react-router-dom";
-import * as classNames from "classnames";
+import { Link, Route, match } from "react-router-dom";
+import classNames from "classnames";
 
 interface MenuItemProps {
     to: string | any;
     activeClassName?: string;
     exact?: boolean;
     strict?: boolean;
-    getIsActive?: (match, location) => boolean;
+    getIsActive?: (match: match<any> | null, location: HLocation) => boolean;
     location?: HLocation;
     linkClassName?: string;
     linkStyles?: any;
     ariaCurrent?: boolean;
 }
 
-export const MenuItem: React.SFC<MenuItemProps> = ({ to, strict, activeClassName, ariaCurrent,
+export const MenuItem: React.SFC<MenuItemProps> = ({ to, strict, activeClassName = "is-active", ariaCurrent,
     exact, getIsActive, linkClassName, linkStyles, location, ...rest }) => {
     const path = typeof to === "object" ? to.pathname : to;
 

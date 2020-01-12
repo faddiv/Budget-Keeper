@@ -1,22 +1,29 @@
 import { ValidatorFunction } from "./interfaces";
+interface IValidator {
+    required: ValidatorFunction<string>
+    numberFormat: ValidatorFunction<string>
+    stringLength: (maxLength: number) => ValidatorFunction<string>
+    fieldEquals: ValidatorFunction<string>
+}
 
-export namespace validators {
-    export const required: ValidatorFunction<string> = (value: string) => {
+export const validators: IValidator = {
+    required(value: string) {
         return typeof value !== "undefined" && value !== null && value !== "";
-    };
+    },// as ValidatorFunction<string>
 
-    export const numberFormat: ValidatorFunction<string> = (value: any) => {
+    numberFormat(value: any) {
         return !value || !isNaN(value);
-    };
+    }, //ValidatorFunction<string> 
 
-    export function stringLength(maxLength: number): ValidatorFunction<string> {
+    stringLength(maxLength: number) {
         return (value: string) => {
             return !value || value.length <= maxLength;
         };
-    }
+    }, // ValidatorFunction<string>
 
-    export const fieldEquals: ValidatorFunction<string> = (value1: string, value2: string) => {
+    fieldEquals(value1: string, value2: string) {
         return value1 === value2;
-    };
-    fieldEquals.paramCount = 2;
-}
+    }// ValidatorFunction<string>
+    
+};
+validators.fieldEquals.paramCount = 2;

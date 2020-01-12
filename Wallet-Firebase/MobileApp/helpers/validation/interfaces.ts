@@ -26,7 +26,7 @@ export interface ValidationConfig<TState, TProps> {
 }
 
 export interface ValidationConfigElement<TState, TProps, TValue> {
-    shouldShowError?: GetShowErrorFunc<TState, TProps>;
+    shouldShowError?: GetShowErrorFunc<TState | null | undefined, TProps>;
     validators: Array<Validator<TState, TProps, TValue>>;
     valueGetter?(state: TState, props: TProps): TValue;
 }

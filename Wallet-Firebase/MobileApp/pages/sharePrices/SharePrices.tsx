@@ -1,7 +1,7 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import { Layout } from 'layout';
-import { noop } from 'helpers';
+import React from "react";
+import classNames from "classnames";
+import { Layout } from "../../layout";
+import { noop } from "../../helpers";
 
 interface SharePricesProps {
 

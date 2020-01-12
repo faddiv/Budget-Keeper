@@ -1,10 +1,10 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import * as moment from "moment";
+import React from "react";
+import classNames from "classnames";
+import moment from "moment";
 
 interface DateInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "type" | "value"> {
-    value: Date;
-    onChange: (val: Date) => void;
+    value: Date | null;
+    onChange: (val: Date | null) => void;
 }
 
 export const DateInput: React.SFC<DateInputProps> = ({ value, onChange, className, ...rest }) => {

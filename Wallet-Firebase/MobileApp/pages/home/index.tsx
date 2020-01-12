@@ -1,14 +1,13 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import { Layout } from "layout";
+import React from "react";
+import classNames from "classnames";
+import { Layout } from "../../layout";
 import { UserServices } from "../../walletServices/userServices";
-import { RootState, ArticleModel } from "walletServices";
-import { bindActionCreators } from "redux";
+import { RootState, ArticleModel } from "../../walletServices";
+import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
-import bind from "bind-decorator";
-import { updateState, isClickableClicked } from "react-ext";
-import { validate, ValidationState, ValidationConfig, validators, noop } from "helpers";
-import { ToDoActions, listenToDos, ToDoModel } from "walletServices/toDoServices";
+import { updateState, isClickableClicked } from "../../react-ext";
+import { validate, ValidationState, ValidationConfig, validators, noop } from "../../helpers";
+import { ToDoActions, listenToDos, ToDoModel } from "../../walletServices/toDoServices";
 import { ViewRow, EditRow } from "./subComponents";
 import { DisplayProperty } from 'csstype';
 
@@ -42,9 +41,9 @@ export interface HomeState {
 }
 
 class Home2 extends React.Component<HomeProps, HomeState> {
-    unregisterToDoListener: () => void;
+    unregisterToDoListener?: () => void | undefined;
 
-    constructor(props) {
+    constructor(props: HomeProps) {
         super(props);
         console.log("Home created");
         this.state = {
@@ -57,10 +56,11 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     private getItemByEvt<TElement extends HTMLElement>(evt: React.SyntheticEvent<TElement>) {
-        let target: HTMLElement = evt.currentTarget;
+        let target: HTMLElement | null = evt.currentTarget;
         while (target && target.tagName !== "LI") {
             target = target.parentElement;
         }
+        if(!target || !target.dataset.item) return undefined;
         const index = parseInt(target.dataset.item, 10);
         const item = this.props.toDoList.checklist[index];
         return item;
@@ -79,44 +79,39 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
 
     componentWillUnmount() {
-        this.unregisterToDoListener();
+        this.unregisterToDoListener && this.unregisterToDoListener();
     }
 
-    @bind
-    checkItem(evt: React.MouseEvent<HTMLElement>) {
+    checkItem = (evt: React.MouseEvent<HTMLElement>) => {
         if (isClickableClicked(evt)) {
             return;
         }
         evt.preventDefault();
         const item = this.getItemByEvt(evt);
+        if(!item) return;
         const ok = !item.ok;
         const newItem: ToDoModel = { ...item, ok, checkedDate: ok ? new Date() : null };
         this.toDoServices.update(newItem);
     }
 
-    @bind
-    remove(item: ToDoModel) {
+    remove = (item: ToDoModel) => {
         this.toDoServices.remove(item);
     }
 
-    @bind
-    edit(index: number) {
+    edit = (index: number) => {
         this.setState({ editIndex: index });
     }
 
-    @bind
-    cancel() {
+    cancel = () => {
         this.setState({ editIndex: null });
     }
 
-    @bind
-    save(newItem: ToDoModel) {
+    save = (newItem: ToDoModel) => {
         this.toDoServices.update(newItem);
         this.setState({ editIndex: null });
     }
 
-    @bind
-    validate() {
+    validate = () => {
         const validationResult = validate(transactionRules, this.state.validation, this.state, this.props, this.state.showError);
         if (validationResult.changed) {
             this.setState({
@@ -125,8 +120,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         }
     }
 
-    @bind
-    submit(event: React.ChangeEvent<HTMLFormElement>) {
+    submit = (event: React.ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
         const validationState = validate(transactionRules, this.state.validation, this.state, this.props, true);
         if (!validationState.isValid) {
@@ -140,6 +134,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
                 userId: this.props.userModel.uid,
                 name: this.state.article,
                 price: this.parsePrice(""),
+                checkedDate: null,
                 ok: false
             });
             this.setState({
@@ -147,16 +142,16 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             });
         }
     }
-    @bind
-    onSelect(item: ArticleModel) {
+    
+    onSelect = (item: ArticleModel)  => {
         if (item && item.lastPrice) {
             this.setState({
-                article: item.name
+                article: item.name || ""
             });
         }
     }
-    @bind
-    handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
+    
+    handleInputChange = (event: React.SyntheticEvent<HTMLFormElement>)  => {
         const state = updateState(event);
         this.setState(state, this.validate);
     }
@@ -196,8 +191,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         );
     }
 
-    @bind
-    renderRow(item: ToDoModel, index: number) {
+    renderRow = (item: ToDoModel, index: number) =>  {
         const { editIndex } = this.state;
         if (editIndex === index) {
             return (
@@ -222,7 +216,7 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
     return {
         userServices: bindActionCreators(UserServices, dispatch),
         toDoServices: bindActionCreators(ToDoActions, dispatch)

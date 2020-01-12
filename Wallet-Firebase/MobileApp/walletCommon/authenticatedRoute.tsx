@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import { Route, Redirect, RouteProps } from "react-router";
-import { RootState } from "walletServices";
+import { RootState } from "../walletServices";
 import { connect } from "react-redux";
 import { UserModel } from "../walletServices/userServices";
 
@@ -12,15 +12,19 @@ export interface AuthenticatedRoute2State {
 }
 
 class AuthenticatedRoute2 extends React.Component<AuthenticatedRoute2Props, AuthenticatedRoute2State> {
-    constructor(props) {
+    constructor(props: AuthenticatedRoute2Props) {
         super(props);
     }
     render() {
         const { userModel, component: Component, location, ...rest } = this.props;
-        const pathName = "/login?returnUrl=" + location.pathname;
+        const pathName = location
+            ? "/login?returnUrl=" + location.pathname
+            : "/login";
+        if (!Component)
+            throw "Component is undefined";
 
         return (
-            <Route render={props => (userModel.singedIn ? <Component {...props} /> : <Redirect to={pathName} />)} {...rest} />
+            <Route render={props => (userModel?.singedIn ? <Component {...props} /> : <Redirect to={pathName} />)} {...rest} />
         );
     }
 }
@@ -31,4 +35,4 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-export const AuthenticatedRoute = connect(mapStateToProps, undefined)(AuthenticatedRoute2) as typeof AuthenticatedRoute2;
+export const AuthenticatedRoute = connect(mapStateToProps, undefined)(AuthenticatedRoute2) as any as typeof AuthenticatedRoute2;

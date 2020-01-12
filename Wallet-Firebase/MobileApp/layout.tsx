@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Navbar } from "walletCommon";
+import React from "react";
+import { Navbar } from "./walletCommon";
 
 interface LayoutProps {
 }

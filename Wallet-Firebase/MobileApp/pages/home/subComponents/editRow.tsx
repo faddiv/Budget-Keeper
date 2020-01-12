@@ -1,11 +1,11 @@
-import * as React from "react";
-import * as moment from "moment";
-import * as classNames from "classnames";
-import { ToDoModel } from "walletServices/toDoServices";
-import { NumberInput, IconButton, DateInput } from "react-ext";
-import { today } from "helpers";
-import { NameInput } from "walletCommon";
-import { ArticleModel } from "walletServices";
+import React from "react";
+import moment from "moment";
+import classNames from "classnames";
+import { ToDoModel } from "../../../walletServices/toDoServices";
+import { NumberInput, IconButton, DateInput } from "../../../react-ext";
+import { today } from "../../../helpers";
+import { NameInput } from "../../../walletCommon";
+import { ArticleModel } from "../../../walletServices";
 
 interface EditRowProps {
     item: ToDoModel;
@@ -35,7 +35,7 @@ export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
     }
     function saveInternal(evt: React.MouseEvent) {
         evt.preventDefault();
-        saveToDo(item.ok);
+        saveToDo(!!item.ok);
     }
     function onSetPrice(newPrice: number | null) {
         const newCheck = newPrice !== null;
@@ -43,7 +43,7 @@ export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
         const now = today();
         if (newCheck && !checkedDate) {
             setCheckedDate(now);
-        } else if (!newCheck && !item.ok && moment(checkedDate).isSame(now)) {
+        } else if (!newCheck && !item.ok && (!checkedDate || moment(checkedDate).isSame(now))) {
             setCheckedDate(null);
         }
         setPrice(newPrice);
@@ -57,7 +57,7 @@ export const EditRow: React.SFC<EditRowProps> = ({ item, save, cancel }) => {
     function onSelect(item2: ArticleModel) {
         if (item2 && item2.lastPrice) {
             setPrice(item2.lastPrice);
-            setName(item2.name);
+            setName(item2.name || "");
         }
     }
 

@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { ToDo } from "./actionNames";
+import * as ToDo from "./actionNames";
 
 export interface ToDoListModification extends Action<typeof ToDo.Modifications> {
     changes: firebase.firestore.DocumentChange[];
@@ -8,14 +8,14 @@ export interface ToDoListModification extends Action<typeof ToDo.Modifications> 
 export interface ClearListModification extends Action<typeof ToDo.ClearList> {
 }
 
-export namespace ToDoInternalActions {
-    export function modifications(changes: firebase.firestore.DocumentChange[]): ToDoListModification {
+export const ToDoInternalActions = {
+    modifications(changes: firebase.firestore.DocumentChange[]): ToDoListModification {
         return {
             type: ToDo.Modifications,
             changes
         };
-    }
-    export function clearList(): ClearListModification {
+    },
+    clearList(): ClearListModification {
         return {
             type: ToDo.ClearList
         };

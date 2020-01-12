@@ -1,9 +1,9 @@
-import * as React from "react";
-import * as classNames from "classnames";
+import React from "react";
+import classNames from "classnames";
 
-interface NumberInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "type"> {
-    value: number;
-    onChange: (val: number) => void;
+interface NumberInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "type" | "value"> {
+    value: number | null;
+    onChange: (val: number | null) => void;
 }
 
 export const NumberInput: React.SFC<NumberInputProps> = ({ value, onChange, className, ...rest }) => {

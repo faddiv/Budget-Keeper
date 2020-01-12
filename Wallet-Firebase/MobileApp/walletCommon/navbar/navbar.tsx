@@ -1,15 +1,14 @@
-import * as React from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
-import * as classNames from "classnames";
-import { bind } from "bind-decorator";
+import classNames from "classnames";
 
 import { MenuItem } from "./menuItem";
 // import { DropdownMenu } from "./dropdownMenu";
-import { Collapse } from "react-ext";
+import { Collapse } from "../../react-ext";
 import { UserModel, UserServices } from "../../walletServices/userServices";
 import { connect } from "react-redux";
-import { RootState } from "walletServices";
-import { bindActionCreators } from "redux";
+import { RootState } from "../../walletServices";
+import { bindActionCreators, Dispatch } from "redux";
 
 export interface NavbarProps {
     userModel: UserModel;
@@ -22,20 +21,18 @@ export interface NavbarState {
 
 class Navbar2 extends React.Component<NavbarProps, NavbarState> {
 
-    constructor(props) {
+    constructor(props: NavbarProps) {
         super(props);
         this.state = {
             open: false
         };
     }
 
-    @bind
-    signOut() {
-        this.props.userServices.signOut();
+    signOut = () => {
+        this.props.userServices?.signOut();
     }
 
-    @bind
-    toggleNavbar() {
+    toggleNavbar = () => {
         this.setState((prevState) => {
             return {
                 open: !prevState.open
@@ -90,7 +87,7 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
     return {
         userServices: bindActionCreators(UserServices as any, dispatch) as typeof UserServices
     };

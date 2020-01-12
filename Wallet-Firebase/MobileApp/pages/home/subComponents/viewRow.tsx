@@ -1,7 +1,7 @@
-import * as React from "react";
-import * as moment from "moment";
-import { ToDoModel } from "walletServices/toDoServices";
-import { IconButton } from "react-ext";
+import React from "react";
+import moment from "moment";
+import { ToDoModel } from "../../../walletServices/toDoServices";
+import { IconButton } from "../../../react-ext";
 
 interface ViewRowProps {
     item: ToDoModel;

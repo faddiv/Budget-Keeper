@@ -1,13 +1,13 @@
 import { Action, Dispatch } from "redux";
-import { User } from "./actionNames";
+import * as User from "./actionNames";
 import { signOutInternal, initAuthInternal } from "./userInternals";
 
 export interface LogoutAction extends Action<typeof User.signOut> {
 }
 
-export namespace UserServices {
+export const UserServices = {
 
-    export function signOut() {
+    signOut() {
         return signOutInternal;
     }
 }

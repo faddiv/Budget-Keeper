@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Dispatch, Action } from "redux";
-import { User } from "./actionNames";
+import * as User from "./actionNames";
 import { UserModel } from "./models";
 
 let auth: firebase.auth.Auth;
@@ -11,10 +11,10 @@ export interface LoginAction extends Action<typeof User.setUser> {
     user: UserModel;
 }
 
-namespace UserInternalActions {
-    export function setUser(user: firebase.UserInfo): LoginAction {
-        user = user || {} as any;
-        const {displayName, email, phoneNumber, photoURL, providerId, uid} = user;
+const UserInternalActions = {
+    setUser(user: firebase.UserInfo | null): LoginAction {
+        user = user || { displayName: null, email: null, phoneNumber: null, photoURL: null, providerId: "firebase", uid: ""};
+        const { displayName, email, phoneNumber, photoURL, providerId, uid } = user;
         return {
             type: User.setUser,
             user: {

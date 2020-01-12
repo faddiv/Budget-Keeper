@@ -5,7 +5,7 @@ import { ToDoModel } from "./models";
 import { ToDoInternalActions } from "./toDoInternalActions";
 
 let db: firebase.firestore.Firestore;
-let toDoListener: () => void;
+let toDoListener: (() => void) | undefined;
 let toDoInternalActions: typeof ToDoInternalActions;
 let toDoCollection: firebase.firestore.CollectionReference;
 
@@ -34,7 +34,7 @@ export function destroyToDoListener() {
     if (toDoListener) {
         toDoListener();
         toDoListener = undefined;
-        toDoCollection = undefined;
+        //toDoCollection = undefined;
         toDoInternalActions.clearList();
     }
 }

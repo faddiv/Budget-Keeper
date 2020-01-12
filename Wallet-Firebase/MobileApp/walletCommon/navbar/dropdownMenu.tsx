@@ -1,6 +1,5 @@
-import * as React from "react";
-import { bind } from "bind-decorator";
-import * as classNames from "classnames";
+import React from "react";
+import classNames from "classnames";
 import { findDOMNode } from "react-dom";
 import { NavLink, withRouter, RouteComponentProps, NavLinkProps, matchPath } from "react-router-dom";
 
@@ -16,7 +15,7 @@ export interface DropdownMenuState {
 
 class DropdownMenu2 extends React.Component<DropdownMenuProps, DropdownMenuState> {
 
-    constructor(props) {
+    constructor(props: DropdownMenuProps) {
         super(props);
         this.state = {
             show: false,
@@ -33,7 +32,7 @@ class DropdownMenu2 extends React.Component<DropdownMenuProps, DropdownMenuState
             for (const element of children) {
                 const el = element as React.ReactElement<NavLinkProps>;
                 if (el.type as any === NavLink) {
-                    if (matchPath(props.location.pathname, {
+                    if (props.location && matchPath(props.location.pathname, {
                         path: el.props.to as string,
                         exact: el.props.exact,
                         strict: el.props.strict
@@ -54,17 +53,20 @@ class DropdownMenu2 extends React.Component<DropdownMenuProps, DropdownMenuState
         window.removeEventListener("click", this.globalClick, true);
     }
 
-    @bind
-    globalClick(event: MouseEvent) {
-        if (this.state.show && !findDOMNode(this).contains(event.target as HTMLElement)) {
+    
+    globalClick = (event: MouseEvent) => {
+        if (!this.state.show)
+        return;
+        const thisNode = findDOMNode(this);
+        if (thisNode && !thisNode.contains(event.target as HTMLElement)) {
             this.setState({
                 show: false
             });
         }
     }
 
-    @bind
-    openDropdown(event: React.MouseEvent<HTMLAnchorElement>) {
+    
+    openDropdown = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
         this.setState((prevState) => {
             return {
@@ -89,4 +91,4 @@ class DropdownMenu2 extends React.Component<DropdownMenuProps, DropdownMenuState
     }
 }
 
-export const DropdownMenu = withRouter(DropdownMenu2);
+export const DropdownMenu = withRouter(DropdownMenu2 as any) as any as typeof DropdownMenu2;

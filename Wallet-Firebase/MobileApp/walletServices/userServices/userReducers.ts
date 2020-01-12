@@ -2,7 +2,7 @@ import { LogoutAction } from "./userActions";
 import { LoginAction } from "./userInternals";
 import { Reducer } from "redux";
 import { UserModel } from "./models";
-import { User } from "./actionNames";
+import * as User from "./actionNames";
 
 const initialState: UserModel = {
     singedIn: false,

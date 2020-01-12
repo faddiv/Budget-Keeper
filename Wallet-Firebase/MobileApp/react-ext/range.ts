@@ -1,4 +1,4 @@
-export function renderRange(from, to, callback: (index) => JSX.Element): JSX.Element[] {
+export function renderRange(from: number, to: number, callback: (index: number) => JSX.Element): JSX.Element[] {
     const list = [];
     for (let i = from; i <= to; i++) {
         list.push(callback(i));

@@ -1,5 +1,5 @@
-import * as React from "react";
-import * as classNames from "classnames";
+import React from "react";
+import classNames from "classnames";
 
 interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "type"> {
     value: string;

@@ -1,4 +1,5 @@
-export function findLast<TElement>(list: TElement[], predicate: (value: TElement, index: number, list: TElement[]) => boolean, thisArg?: any): TElement {
+export function findLast<TElement>(list: TElement[], predicate: (value: TElement, index: number, list: TElement[]) => boolean, thisArg?: any)
+    : TElement | undefined {
     if (thisArg !== undefined) {
         predicate = predicate.bind(thisArg);
     }

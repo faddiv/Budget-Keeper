@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 export function updateState<T>(event: React.SyntheticEvent<T>): any {
     const target = event.target as HTMLInputElement;
@@ -21,7 +21,7 @@ export function updateState<T>(event: React.SyntheticEvent<T>): any {
 }
 
 export function isClickableClicked(event: React.MouseEvent<HTMLElement>): boolean {
-    let target: HTMLElement = event.target as HTMLElement;
+    let target: HTMLElement | null = event.target as HTMLElement;
     while (target && target !== event.currentTarget) {
         const targetTag = target.tagName;
         if (targetTag === "INPUT" || targetTag === "SELECT" || targetTag === "BUTTON") {

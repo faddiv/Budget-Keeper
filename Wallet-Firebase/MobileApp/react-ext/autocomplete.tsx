@@ -1,6 +1,5 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import { bind } from "bind-decorator";
+import React from "react";
+import classNames from "classnames";
 
 export interface AutocompleteModel {
     name?: string;
@@ -32,9 +31,9 @@ export interface AutocompleteState {
 }
 
 export class Autocomplete extends React.Component<AutocompleteProps, AutocompleteState> {
-    nameInput: HTMLInputElement;
+    nameInput?: HTMLInputElement = undefined;
 
-    constructor(props) {
+    constructor(props: AutocompleteProps) {
         super(props);
         this.state = {
             items: [],
@@ -60,15 +59,13 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         });
     }
 
-    @bind
-    globalClick() {
+    globalClick = () => {
         if (!this.state.focused) {
             this.close();
         }
     }
 
-    @bind
-    globalFocus() {
+    globalFocus = () => {
         if (!this.state.focused && this.state.open) {
             this.close();
         }
@@ -99,8 +96,7 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         this.nameInput && this.nameInput.focus();
     }
 
-    @bind
-    getInput(input: HTMLInputElement) {
+    getInput = (input: HTMLInputElement) => {
         const focusAction = this.props.focusAction;
         if (focusAction && input) {
             focusAction(() => {
@@ -109,8 +105,7 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         }
     }
 
-    @bind
-    async onChange(event: React.SyntheticEvent<HTMLInputElement>) {
+    onChange = async (event: React.SyntheticEvent<HTMLInputElement>) => {
         const value = getInputValue(event);
         this.setValue(value);
         if (this.props.onChange) {
@@ -153,15 +148,14 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         });
     }
 
-    setValue(value: string, state?: Partial<AutocompleteState>, callback?: () => void) {
+    setValue(value?: string, state?: Partial<AutocompleteState>, callback?: () => void) {
         this.setState({
             value,
             ...state as any
         }, callback);
     }
 
-    @bind
-    onBlur() {
+    onBlur = () => {
         this.setState({
             focused: false
         });
@@ -174,7 +168,7 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
 
     navigate(direction: number) {
         let ok = false;
-        if (this.state.open) {
+        if (this.state.open && this.state.active) {
             const index = this.state.items.indexOf(this.state.active) + direction;
             if (0 <= index && index < this.state.items.length) {
                 this.setState({
@@ -190,8 +184,8 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         }
         return ok;
     }
-    @bind
-    onKeyEvent(event: React.KeyboardEvent<HTMLInputElement>) {
+    
+    onKeyEvent = (event: React.KeyboardEvent<HTMLInputElement>) => {
         switch (event.key) {
             case "ArrowUp":
                 if (this.navigate(-1)) {
@@ -232,8 +226,7 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         });
     }
 
-    @bind
-    dropdownClass(): string {
+    dropdownClass = (): string => {
         const show = this.state.open;
         return classNames("dropdown-menu", { show });
     }
@@ -246,7 +239,7 @@ export class Autocomplete extends React.Component<AutocompleteProps, Autocomplet
         return <li key={this.getItemValue(item)}
             className={classNames("dropdown-item", { active })}
             onClick={event => this.onClick(event, item)}
-            dangerouslySetInnerHTML={{ __html: item.nameHighlighted }}></li>;
+            dangerouslySetInnerHTML={{ __html: item.nameHighlighted || "" }}></li>;
     }
 
     render() {

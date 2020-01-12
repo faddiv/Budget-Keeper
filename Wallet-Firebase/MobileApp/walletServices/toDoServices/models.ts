@@ -1,10 +1,10 @@
 export interface ToDoModel {
     id?: string;
-    userId: string;
+    userId: string | null;
     name: string;
-    price: number;
-    ok?: boolean;
-    checkedDate?: Date;
+    price: number | null;
+    ok: boolean | null;
+    checkedDate: Date | null;
 }
 
 export interface ToDoListModel {
