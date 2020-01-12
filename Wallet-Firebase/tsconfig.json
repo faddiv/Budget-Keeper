@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "MobileApp",
+    "baseUrl": "src",
     "outDir": "./wwwroot",
     "importHelpers": true,
     "target": "es5",
@@ -26,6 +26,6 @@
     "noEmit": true
   },
   "include": [
-    "MobileApp"
+    "src"
   ]
 }
