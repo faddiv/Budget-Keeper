@@ -41,9 +41,7 @@ export const toDoReducers: Reducer<ToDoListModel, ToDoActions> = (
             }
             break;
         case ToDo.ClearList:
-            {
-                newState = { checklist: [] };
-            }
+            newState = { checklist: [] };
             break;
         default:
             return state;

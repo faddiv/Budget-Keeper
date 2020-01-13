@@ -5,7 +5,7 @@ import { UserModel, UserServices } from "../../walletServices/userServices";
 import { connect } from "react-redux";
 import { RootState } from "../../walletServices";
 import { bindActionCreators, Dispatch } from "redux";
-import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav } from 'reactstrap';
+import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink, NavbarText } from 'reactstrap';
 
 export interface NavbarProps {
     userModel: UserModel;
@@ -40,10 +40,14 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
     renderSignedIn() {
         const { userModel } = this.props;
         return (
-            <ul className="navbar-nav">
-                <li className="nav-link">{userModel.displayName}</li>
-                <li className="nav-link"><a onClick={this.signOut}>Sign-out</a></li>
-            </ul>
+            <Nav navbar>
+                <NavItem>
+                    <NavbarText>{userModel.displayName}</NavbarText>
+                </NavItem>
+                <NavItem>
+                    <NavLink color="link" onClick={this.signOut}>Sign-out</NavLink>
+                </NavItem>
+            </Nav>
         );
     }
     renderLogin() {
@@ -56,7 +60,6 @@ class Navbar2 extends React.Component<NavbarProps, NavbarState> {
     render() {
         const { open } = this.state;
         const { userModel } = this.props;
-        const collapsed = !open;
         return (
             <Navbar color="dark" dark expand="md" fixed="top">
                 <NavbarBrand href="/">Wallet</NavbarBrand>

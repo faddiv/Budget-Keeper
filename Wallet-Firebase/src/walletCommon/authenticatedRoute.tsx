@@ -12,16 +12,14 @@ export interface AuthenticatedRoute2State {
 }
 
 class AuthenticatedRoute2 extends React.Component<AuthenticatedRoute2Props, AuthenticatedRoute2State> {
-    constructor(props: AuthenticatedRoute2Props) {
-        super(props);
-    }
+    
     render() {
         const { userModel, component: Component, location, ...rest } = this.props;
         const pathName = location
             ? "/login?returnUrl=" + location.pathname
             : "/login";
         if (!Component)
-            throw "Component is undefined";
+            throw new Error("Component is undefined");
 
         return (
             <Route render={props => (userModel?.singedIn ? <Component {...props} /> : <Redirect to={pathName} />)} {...rest} />

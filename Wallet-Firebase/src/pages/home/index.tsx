@@ -10,7 +10,7 @@ import { validate, ValidationState, ValidationConfig, validators, noop } from ".
 import { ToDoActions, listenToDos, ToDoModel } from "../../walletServices/toDoServices";
 import { ViewRow, EditRow } from "./subComponents";
 import { DisplayProperty } from 'csstype';
-import { Form, Row, FormGroup, Label, InputGroup, InputGroupAddon, Input, FormFeedback, ListGroup, ListGroupItem } from 'reactstrap';
+import { Form, FormGroup, Label, InputGroup, InputGroupAddon, Input, FormFeedback, ListGroup, ListGroupItem } from 'reactstrap';
 
 export const transactionRules: ValidationConfig<HomeState, any> = {
     article: {

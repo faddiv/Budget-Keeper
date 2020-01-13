@@ -1,11 +1,8 @@
 import React from "react";
 import moment from "moment";
-import classNames from "classnames";
 import { ToDoModel } from "../../../walletServices/toDoServices";
 import { NumberInput, IconButton, DateInput, TextInput } from "../../../react-ext";
 import { today } from "../../../helpers";
-import { NameInput } from "../../../walletCommon";
-import { ArticleModel } from "../../../walletServices";
 import { Form, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

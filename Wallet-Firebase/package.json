@@ -1,6 +1,6 @@
 {
   "name": "wallet-firebase",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "",
   "main": "MobileApp/index.tsx",
   "private": true,

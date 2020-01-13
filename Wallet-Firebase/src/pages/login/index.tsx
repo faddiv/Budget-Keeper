@@ -5,14 +5,12 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 // tslint:enable:no-submodule-imports
 import { FirebaseAuth } from "react-firebaseui";
-import { UserServices } from "../../walletServices/userServices";
 import { RootState } from "../../walletServices";
-import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { firebaseUiConfig } from "../../store";
 import { RouteComponentProps } from "react-router";
 
-export interface LoginProps extends Partial<RouteComponentProps<any>>, ReturnType<typeof mapDispatchToProps>, ReturnType<typeof mapStateToProps> {
+export interface LoginProps extends Partial<RouteComponentProps<any>>, ReturnType<typeof mapStateToProps> {
 }
 
 export interface LoginState {
@@ -39,17 +37,16 @@ class Login2 extends React.Component<LoginProps, LoginState> {
     }
 
     renderSignedInUser() {
-        const { userModel, actions } = this.props;
+        const { userModel } = this.props;
         return (
             <div>
-                <a onClick={() => actions.signOut()}>Sign-out</a>
                 <p><span>Display name:</span><strong>{userModel.displayName}</strong></p>
                 <p><span>Email:</span><strong>{userModel.email}</strong></p>
                 <p><span>phoneNumber:</span><strong>{userModel.phoneNumber}</strong></p>
                 <p><span>id:</span><span>{userModel.uid}</span></p>
                 <p><span>providerId:</span><strong>{userModel.providerId}</strong></p>
                 <p>Photo</p>
-                <p><img src={userModel.photoURL || undefined} /></p>
+                <p><img src={userModel.photoURL || undefined} alt={`${userModel.displayName}`} /></p>
             </div>
         );
     }
@@ -70,10 +67,4 @@ function mapStateToProps(state: RootState) {
     };
 }
 
-function mapDispatchToProps(dispatch: Dispatch) {
-    return {
-        actions: bindActionCreators(UserServices, dispatch)
-    };
-}
-
-export const Login = connect(mapStateToProps, mapDispatchToProps)(Login2);
+export const Login = connect(mapStateToProps)(Login2);
