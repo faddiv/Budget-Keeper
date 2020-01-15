@@ -2,11 +2,11 @@ import React from "react";
 import classNames from "classnames";
 import { noop } from "../../helpers";
 
-interface AddPersonComponentProps {
+interface AddPersonProps {
 
 }
 
-export const AddPersonComponent: React.FunctionComponent<AddPersonComponentProps> = () => {
+export const AddPerson: React.FunctionComponent<AddPersonProps> = () => {
     return (
         <form onSubmit={noop}>
             <div className="form-group">
