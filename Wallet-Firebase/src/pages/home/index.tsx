@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import { Layout } from "../../layout";
 import { UserServices } from "../../walletServices/userServices";
-import { RootState, ArticleModel } from "../../walletServices";
+import { RootState } from "../../walletServices";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { updateState, isClickableClicked } from "../../react-ext";
@@ -140,14 +140,6 @@ class Home2 extends React.Component<HomeProps, HomeState> {
             });
             this.setState({
                 article: ""
-            });
-        }
-    }
-
-    onSelect = (item: ArticleModel) => {
-        if (item && item.lastPrice) {
-            this.setState({
-                article: item.name || ""
             });
         }
     }
