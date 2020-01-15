@@ -1,11 +1,15 @@
 import React from "react";
+import { IDetailElement } from 'walletServices/priceShareServices';
+import { noop } from "helpers";
 
-interface SharedPriceDetailElementProps { }
+interface SharedPriceDetailElementProps {
+    model: IDetailElement;
+}
 
-export const SharedPriceDetailElement: React.FunctionComponent<SharedPriceDetailElementProps> = () => {
+export const SharedPriceDetailElement: React.FunctionComponent<SharedPriceDetailElementProps> = ({ model }) => {
     return (
         <li className="list-group-item d-flex justify-content-between">
-            <div>Viktor</div><input style={{minWidth: "60px"}} className="borderless small" type="time" />
+            <div>{model.name}</div><input className="borderless small" type="time" value={model.value} onChange={noop} />
         </li>
     );
 };

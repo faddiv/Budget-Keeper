@@ -1,18 +1,21 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IPersonCost } from 'walletServices/priceShareServices';
 
-interface PersonCostHeaderProps { }
+interface PersonCostHeaderProps {
+    model: IPersonCost;
+}
 
-export const PersonCostHeader: React.FunctionComponent<PersonCostHeaderProps> = () => {
+export const PersonCostHeader: React.FunctionComponent<PersonCostHeaderProps> = ({ model }) => {
     return (
         <div className="d-flex w-100 justify-content-between">
             <h5 className="mb-1">
                 <button className="btn btn-danger btn-sm">
                     <FontAwesomeIcon icon="trash" />
                 </button>
-                <span className="sp-li-title">Viktor</span>
+                <span className="sp-li-title">{model.personName}</span>
             </h5>
-            <small>10000 ft</small>
+            <small>{model.expense} ft</small>
         </div>
     );
 };

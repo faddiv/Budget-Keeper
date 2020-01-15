@@ -1,16 +1,17 @@
 import React from "react";
-import classNames from "classnames";
-import { noop } from "../../helpers";
 import { SharedPriceHeader } from './SharedPriceHeader';
 import { SharedPriceDetails } from './SharedPriceDetails';
+import { ISharedPrice } from 'walletServices/priceShareServices';
 
-interface SharedPriceListElementProps { }
+interface SharedPriceListElementProps {
+    model: ISharedPrice;
+}
 
-export const SharedPriceListElement: React.FunctionComponent<SharedPriceListElementProps> = () => {
+export const SharedPriceListElement: React.FunctionComponent<SharedPriceListElementProps> = ({ model }) => {
     return (
         <div className="list-group-item">
-            <SharedPriceHeader />
-            <SharedPriceDetails />
+            <SharedPriceHeader model={model} />
+            <SharedPriceDetails model={model.details} />
         </div>
     );
 };

@@ -1,20 +1,18 @@
 import React from "react";
 import { PersonCostListElement } from './PersonCostListElement';
+import { IPersonCost } from 'walletServices/priceShareServices';
 
 interface PersonCostListProps {
-
+    model: IPersonCost[]
 }
 
-export const PersonCostList: React.FunctionComponent<PersonCostListProps> = () => {
+export const PersonCostList: React.FunctionComponent<PersonCostListProps> = ({ model }) => {
     return (
 
         <div className="list-group">
-
-            <PersonCostListElement />
-
-            <PersonCostListElement />
-
-            <PersonCostListElement />
+            {
+                model.map(item => <PersonCostListElement key={item.id} model={item} />)
+            }
         </div>
     );
 };

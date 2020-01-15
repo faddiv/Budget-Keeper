@@ -16,7 +16,8 @@ input.borderless {
     margin: 0;
     border: none;
     text-align: right;
-    width: 4em;
+    width: 6em;
+    background-color: white;
     :focus {
         outline-offset: 0;
     }

@@ -1,17 +1,19 @@
 import React from "react";
 import classNames from "classnames";
+import { IDetailElement } from 'walletServices/priceShareServices';
+import { noop } from "helpers";
 
 interface PersonCostDetailElementProps {
-    editable: boolean;
+    model: IDetailElement;
 }
 
-export const PersonCostDetailElement: React.FunctionComponent<PersonCostDetailElementProps> = ({ editable }) => {
+export const PersonCostDetailElement: React.FunctionComponent<PersonCostDetailElementProps> = ({ model }) => {
     return (
-        <li className={classNames("list-group-item d-flex justify-content-between", { "list-group-item-light": !editable })}>
-            <div>Cras justo odio</div>
-            {editable
-                ? <input className="borderless small" value="1000" />
-                : <small>1000</small>}
+        <li className={classNames("list-group-item d-flex justify-content-between", { "list-group-item-light": !model.editable })}>
+            <div>{model.name}</div>
+            {model.editable
+                ? <input className="borderless small" type="number" value={model.value} onChange={noop} />
+                : <small>{model.value}</small>}
         </li>
     );
 };
