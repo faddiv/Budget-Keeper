@@ -25,3 +25,8 @@ export function today() {
  * A function that does nothing... For a reason.
  */
 export function noop() { }
+
+export function createRenderCounter() {
+    let renderCounter = 0;
+    return () => ++renderCounter;
+}
