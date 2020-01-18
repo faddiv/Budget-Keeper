@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { IDetailElement } from 'walletServices/priceShareServices';
+import { IDetailElement } from "./reducers";
 import { noop } from "helpers";
 
 interface PersonCostDetailElementProps {

@@ -1,7 +1,7 @@
 import React from "react";
 import { SharedPriceDetailElement } from './SharedPriceDetailElement';
 import { SharedPriceDetailAdd } from './SharedPriceDetailAdd';
-import { IDetailElement } from 'walletServices/priceShareServices';
+import { IDetailElement } from "./reducers";
 
 interface SharedPriceDetailsProps {
     model: IDetailElement[];

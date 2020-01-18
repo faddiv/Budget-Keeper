@@ -1,6 +1,6 @@
 import React from "react";
 import { PersonCostListElement } from './PersonCostListElement';
-import { IPersonCost } from 'walletServices/priceShareServices';
+import { IPersonCost } from "./reducers";
 
 interface PersonCostListProps {
     model: IPersonCost[]

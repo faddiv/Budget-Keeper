@@ -1,5 +1,5 @@
 import React from "react";
-import { IDetailElement } from 'walletServices/priceShareServices';
+import { IDetailElement } from "./reducers";
 import { noop } from "helpers";
 
 interface SharedPriceDetailElementProps {

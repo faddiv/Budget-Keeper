@@ -4,7 +4,7 @@ import { AddPerson } from './AddPerson';
 import { AddSharedCost } from './AddSharedCost';
 import { PersonCostList } from './PersonCostList';
 import { SharedPriceList } from './SharedPriceList';
-import { createInitialModel } from "../../walletServices/priceShareServices";
+import { createInitialModel } from "./reducers";
 
 interface SharePricesProps {
 

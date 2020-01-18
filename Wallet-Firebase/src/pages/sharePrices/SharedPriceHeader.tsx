@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ISharedPrice } from 'walletServices/priceShareServices';
+import { ISharedPrice } from "./reducers";
 import { noop } from "helpers";
 
 interface SharedPriceHeaderProps {

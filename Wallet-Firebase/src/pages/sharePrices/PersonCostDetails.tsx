@@ -1,7 +1,7 @@
 import React from "react";
 import { PersonCostDetailElement } from './PersonCostDetailElement';
 import { PersonCostDetailAdd } from './PersonCostDetailAdd';
-import { IDetailElement } from 'walletServices/priceShareServices';
+import { IDetailElement } from "./reducers";
 
 interface PersonCostDetailsProps {
     model: IDetailElement[];

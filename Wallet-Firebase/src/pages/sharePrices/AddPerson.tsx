@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { useSingleValueAdd } from './reducers/singleValueAdd';
+import { useSingleValueAdd } from "./reducers";
 
 interface AddPersonProps {
     onAddPerson(name: string): void;

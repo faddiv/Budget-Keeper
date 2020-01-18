@@ -1,7 +1,7 @@
 import React from "react";
 import { PersonCostHeader } from './PersonCostHeader';
 import { PersonCostDetails } from './PersonCostDetails';
-import { IPersonCost } from 'walletServices/priceShareServices';
+import { IPersonCost } from "./reducers";
 
 interface PersonCostListElementProps {
     model: IPersonCost

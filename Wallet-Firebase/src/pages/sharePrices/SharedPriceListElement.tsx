@@ -1,7 +1,7 @@
 import React from "react";
 import { SharedPriceHeader } from './SharedPriceHeader';
 import { SharedPriceDetails } from './SharedPriceDetails';
-import { ISharedPrice } from 'walletServices/priceShareServices';
+import { ISharedPrice } from "./reducers";
 
 interface SharedPriceListElementProps {
     model: ISharedPrice;

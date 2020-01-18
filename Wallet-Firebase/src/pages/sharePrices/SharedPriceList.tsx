@@ -1,6 +1,6 @@
 import React from "react";
 import { SharedPriceListElement } from './SharedPriceListElement';
-import { ISharedPrice } from 'walletServices/priceShareServices';
+import { ISharedPrice } from "./reducers";
 
 interface SharedPriceListProps {
     model: ISharedPrice[];

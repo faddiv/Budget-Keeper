@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IPersonCost } from 'walletServices/priceShareServices';
+import { IPersonCost } from "./reducers";
 
 interface PersonCostHeaderProps {
     model: IPersonCost;
