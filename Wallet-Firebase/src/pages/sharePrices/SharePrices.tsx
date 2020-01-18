@@ -11,20 +11,19 @@ interface SharePricesProps {
 }
 
 export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
-    const state = usePriceSharing();
-    var addPersonHandler = useCallback((name: string) => {
-        console.log(name);
-    }, []);
-    var addSharedItemHandler = useCallback((name: string) => {
-        console.log(name);
-    }, []);
+    const {
+        state,
+        addPersonHandler,
+        addSharedCostHandler
+    } = usePriceSharing();
+
     return (
         <Layout>
             <h1>Cost per person</h1>
             <AddPerson onAddPerson={addPersonHandler} />
             <PersonCostList model={state.costPerPersons} />
             <h1>Shared costs</h1>
-            <AddSharedCost onAddSharedCost={addSharedItemHandler} />
+            <AddSharedCost onAddSharedCost={addSharedCostHandler} />
             <SharedPriceList model={state.sharedPrices} />
         </Layout>
     );

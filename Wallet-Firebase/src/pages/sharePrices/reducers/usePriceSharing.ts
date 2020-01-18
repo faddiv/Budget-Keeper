@@ -1,13 +1,56 @@
 import { ISharePrice } from './models';
-import { useReducer } from 'react';
+import { useReducer, useCallback } from 'react';
 
 export function usePriceSharing() {
-    const [state, dispatch] = useReducer(reducer, 0, init);
-    return state;
+    const [state, dispatch] = useReducer(reducer, 1, init);
+
+    const addPersonHandler = useCallback((name: string) => {
+        dispatch({ type: "AddPerson", name });
+    }, []);
+
+    const addSharedCostHandler = useCallback((name: string) => {
+        dispatch({ type: "AddSharedCost", name });
+    }, []);
+    return { state, addPersonHandler, addSharedCostHandler };
 }
 
-function reducer(state: ISharePrice, action: any) {
-    return state;
+function reducer(state: ISharePrice, action: IActions) {
+    let newState = state;
+    switch (action.type) {
+        case "AddPerson":
+            newState = {
+                ...state,
+                id: state.id + 1,
+                costPerPersons: [
+                    ...state.costPerPersons,
+                    {
+                        personName: action.name,
+                        details: [],
+                        expense: 0,
+                        id: state.id
+                    }
+                ]
+            };
+            break;
+        case "AddSharedCost":
+            newState = {
+                ...state,
+                id: state.id + 1,
+                sharedPrices: [
+                    ...state.sharedPrices,
+                    {
+                        activityName: action.name,
+                        price: 0,
+                        details: [],
+                        id: state.id
+                    }
+                ]
+            };
+            break;
+        default:
+            break;
+    }
+    return newState;
 }
 
 function init(id: number): ISharePrice {
@@ -96,4 +139,16 @@ function init(id: number): ISharePrice {
             ]
         }]
     }
+}
+
+type IActions = IAddPerson | IAddSharedCost;
+
+interface IAddPerson {
+    type: "AddPerson",
+    name: string;
+}
+
+interface IAddSharedCost {
+    type: "AddSharedCost",
+    name: string;
 }
