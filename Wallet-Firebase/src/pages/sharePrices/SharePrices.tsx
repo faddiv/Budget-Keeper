@@ -12,16 +12,19 @@ interface SharePricesProps {
 
 export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
     const [state,] = useState(createInitialModel);
-    var onAddPerson = useCallback((name: string) => {
+    var addPersonHandler = useCallback((name: string) => {
+        console.log(name);
+    }, []);
+    var addSharedItemHandler = useCallback((name: string) => {
         console.log(name);
     }, []);
     return (
         <Layout>
             <h1>Cost per person</h1>
-            <AddPerson onAddPerson={onAddPerson} />
+            <AddPerson onAddPerson={addPersonHandler} />
             <PersonCostList model={state.costPerPersons} />
             <h1>Shared costs</h1>
-            <AddSharedCost />
+            <AddSharedCost onAddSharedCost={addSharedItemHandler} />
             <SharedPriceList model={state.sharedPrices} />
         </Layout>
     );
