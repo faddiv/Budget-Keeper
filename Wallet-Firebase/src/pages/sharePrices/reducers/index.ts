@@ -1,4 +1,4 @@
 export * from "./models";
-export * from "./priceSharingReducer";
-export * from "./singleValueAdd";
+export * from "./usePriceSharing";
+export * from "./useSingleValueAdd";
 
