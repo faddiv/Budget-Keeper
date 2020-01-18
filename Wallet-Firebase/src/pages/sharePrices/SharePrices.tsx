@@ -4,14 +4,14 @@ import { AddPerson } from './AddPerson';
 import { AddSharedCost } from './AddSharedCost';
 import { PersonCostList } from './PersonCostList';
 import { SharedPriceList } from './SharedPriceList';
-import { createInitialModel } from "./reducers";
+import { usePriceSharing } from "./reducers";
 
 interface SharePricesProps {
 
 }
 
 export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
-    const [state,] = useState(createInitialModel);
+    const state = usePriceSharing();
     var addPersonHandler = useCallback((name: string) => {
         console.log(name);
     }, []);
