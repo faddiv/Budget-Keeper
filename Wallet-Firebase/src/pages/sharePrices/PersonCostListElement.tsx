@@ -13,7 +13,7 @@ export const PersonCostListElement: React.FunctionComponent<PersonCostListElemen
 
     const onAddPersonCost = useCallback((name: string, price: number) => {
         dispatch.addPersonCost(model, name, price);
-    }, [model]);
+    }, [model, dispatch]);
 
     return (
         <div className="list-group-item">

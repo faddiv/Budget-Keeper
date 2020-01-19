@@ -5,7 +5,6 @@ import { AddSharedCost } from './AddSharedCost';
 import { PersonCostList } from './PersonCostList';
 import { SharedPriceList } from './SharedPriceList';
 import { usePriceSharing } from "./reducers";
-import { noop } from 'helpers';
 
 interface SharePricesProps {
 

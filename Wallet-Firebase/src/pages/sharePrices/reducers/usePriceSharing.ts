@@ -1,4 +1,4 @@
-import { ISharePrice, IPersonCost, IDetailElement, ISharedPrice } from './models';
+import { ISharePrice, IPersonCost } from './models';
 import { useReducer, useCallback } from 'react';
 import { _ } from "helpers";
 
