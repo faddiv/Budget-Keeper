@@ -1,5 +1,6 @@
 import { ISharePrice, IPersonCost, IDetailElement, ISharedPrice } from './models';
 import { useReducer, useCallback } from 'react';
+import { _ } from "helpers";
 
 export function usePriceSharing() {
     const [state, dispatch] = useReducer(reducer, 1, init);
@@ -62,6 +63,23 @@ function reducer(state: ISharePrice, action: IActions) {
                         id: state.id
                     }
                 ]
+            };
+            break;
+        case "AddPersonCost":
+
+            newState = {
+                ...state,
+                id: state.id + 1,
+                costPerPersons: _.replace(state.costPerPersons, {
+                    ...action.personCost,
+                    details: [...action.personCost.details, {
+                        id: state.id + 1,
+                        name: action.name,
+                        intValue: action.price,
+                        value: action.price.toString(),
+                        editable: true
+                    }]
+                }, action.personCost)
             };
             break;
         default:
