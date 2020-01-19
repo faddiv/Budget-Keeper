@@ -10,7 +10,11 @@ export const PersonCostDetailAdd: React.FunctionComponent<PersonCostDetailAddPro
             <form onSubmit={noop} style={{ width: "100%" }}>
                 <div className="form-row">
                     <div className="col">
-                        <input className="form-control form-control-sm" placeholder="Item" />
+                        <input className="form-control form-control-sm" placeholder="Item" list="itemOptions" />
+                        <datalist id="itemOptions">
+                            <option>Étel</option>
+                            <option>Ital</option>
+                        </datalist>
                     </div>
                     <div className="col">
                         <div className="input-group">

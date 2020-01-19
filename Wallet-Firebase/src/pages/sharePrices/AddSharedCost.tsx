@@ -1,5 +1,4 @@
 import React from "react";
-import { noop } from "../../helpers";
 import classNames from "classnames";
 import { useSingleValueAdd } from "./reducers";
 
