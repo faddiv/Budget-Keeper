@@ -1,14 +1,14 @@
 import React from "react";
 import classNames from "classnames";
-import { useSingleValueAdd } from "./reducers";
+import { useSingleValueAdd, IPriceSharingDispatcher } from "./reducers";
 
 interface AddSharedCostProps {
-    onAddSharedCost(name: string): void;
+    dispatch: IPriceSharingDispatcher;
 }
 
-export const AddSharedCost: React.FunctionComponent<AddSharedCostProps> = ({ onAddSharedCost }) => {
+export const AddSharedCost: React.FunctionComponent<AddSharedCostProps> = ({ dispatch }) => {
 
-    const { state, changeHandler, onSubmit } = useSingleValueAdd(onAddSharedCost);
+    const { state, changeHandler, submitHandler: onSubmit } = useSingleValueAdd(dispatch.addSharedCost);
     const { invalid, showError, value } = state;
 
     return (

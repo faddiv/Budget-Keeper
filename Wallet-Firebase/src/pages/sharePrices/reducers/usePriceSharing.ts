@@ -1,17 +1,34 @@
-import { ISharePrice } from './models';
+import { ISharePrice, IPersonCost, IDetailElement, ISharedPrice } from './models';
 import { useReducer, useCallback } from 'react';
 
 export function usePriceSharing() {
     const [state, dispatch] = useReducer(reducer, 1, init);
 
-    const addPersonHandler = useCallback((name: string) => {
+    const addPerson = useCallback((name: string) => {
         dispatch({ type: "AddPerson", name });
     }, []);
 
-    const addSharedCostHandler = useCallback((name: string) => {
+    const addSharedCost = useCallback((name: string) => {
         dispatch({ type: "AddSharedCost", name });
     }, []);
-    return { state, addPersonHandler, addSharedCostHandler };
+
+    const addPersonCost = useCallback((personCost: IPersonCost, name: string, price: number) => {
+        dispatch({ type: "AddPersonCost", personCost, name, price });
+    }, []);
+    return {
+        state,
+        dispatch: {
+            addPerson,
+            addSharedCost,
+            addPersonCost
+        } as IPriceSharingDispatcher
+    };
+}
+
+export interface IPriceSharingDispatcher {
+    addPerson(name: string): void;
+    addSharedCost(name: string): void;
+    addPersonCost(personCost: IPersonCost, name: string, price: number): void;
 }
 
 function reducer(state: ISharePrice, action: IActions) {
@@ -141,14 +158,21 @@ function init(id: number): ISharePrice {
     }
 }
 
-type IActions = IAddPerson | IAddSharedCost;
+type IActions = IAddPerson | IAddSharedCost | IAddPersonCost;
 
 interface IAddPerson {
-    type: "AddPerson",
+    type: "AddPerson";
     name: string;
 }
 
 interface IAddSharedCost {
-    type: "AddSharedCost",
+    type: "AddSharedCost";
     name: string;
+}
+
+interface IAddPersonCost {
+    type: "AddPersonCost";
+    personCost: IPersonCost;
+    name: string;
+    price: number;
 }

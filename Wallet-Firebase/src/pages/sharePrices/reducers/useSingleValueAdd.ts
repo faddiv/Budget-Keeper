@@ -8,12 +8,12 @@ export function useSingleValueAdd(onAddPerson: (name: string) => void) {
         dispatch({ type: "SetValue", value: newValue });
     }, []);
 
-    const onSubmit = useCallback((evt: React.FormEvent<HTMLFormElement>) => {
+    const submitHandler = useCallback((evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         dispatch({ type: "Submit", submitSuccess: onAddPerson });
     }, [onAddPerson]);
 
-    return { state, changeHandler, onSubmit };
+    return { state, changeHandler, submitHandler };
 }
 
 function reducer(state: IValueWithValidator, action: IActions) {

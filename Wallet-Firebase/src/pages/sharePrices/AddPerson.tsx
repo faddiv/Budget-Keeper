@@ -1,14 +1,14 @@
 import React from "react";
 import classNames from "classnames";
-import { useSingleValueAdd } from "./reducers";
+import { useSingleValueAdd, IPriceSharingDispatcher } from "./reducers";
 
 interface AddPersonProps {
-    onAddPerson(name: string): void;
+    dispatch: IPriceSharingDispatcher;
 }
 
-export const AddPerson: React.FunctionComponent<AddPersonProps> = ({ onAddPerson }) => {
+export const AddPerson: React.FunctionComponent<AddPersonProps> = ({ dispatch }) => {
 
-    const { state, changeHandler, onSubmit } = useSingleValueAdd(onAddPerson);
+    const { state, changeHandler, submitHandler: onSubmit } = useSingleValueAdd(dispatch.addPerson);
     const { invalid, showError, value } = state;
 
     return (
