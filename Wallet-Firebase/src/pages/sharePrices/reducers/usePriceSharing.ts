@@ -1,28 +1,45 @@
-import { ISharePrice, IPersonCost } from './models';
-import { useReducer, useCallback } from 'react';
+import { ISharePrice, IPersonCost, ISharedPrice } from './models';
+import { useReducer, useMemo } from 'react';
 import { _ } from "helpers";
 
 export function usePriceSharing() {
     const [state, dispatch] = useReducer(reducer, 1, init);
 
-    const addPerson = useCallback((name: string) => {
-        dispatch({ type: "AddPerson", name });
-    }, []);
-
-    const addSharedCost = useCallback((name: string) => {
-        dispatch({ type: "AddSharedCost", name });
-    }, []);
-
-    const addPersonCost = useCallback((personCost: IPersonCost, name: string, price: number) => {
-        dispatch({ type: "AddPersonCost", personCost, name, price });
-    }, []);
+    const packedDispatch = useMemo(() => {
+        return {
+            addPerson: (name: string) => {
+                dispatch({
+                    type: "AddPerson",
+                    name
+                });
+            },
+            addSharedCost: (name: string) => {
+                dispatch({
+                    type: "AddSharedCost",
+                    name
+                });
+            },
+            addPersonCost: (personCost: IPersonCost, name: string, price: number) => {
+                dispatch({
+                    type: "AddPersonCost",
+                    personCost,
+                    name,
+                    price
+                });
+            },
+            addPersonToSharedCost: (sharedPrice: ISharedPrice, name: string, price: number) => {
+                dispatch({
+                    type: "AddPersonToSharedCost",
+                    sharedPrice,
+                    name,
+                    price
+                });
+            }
+        } as IPriceSharingDispatcher
+    }, [])
     return {
         state,
-        dispatch: {
-            addPerson,
-            addSharedCost,
-            addPersonCost
-        } as IPriceSharingDispatcher
+        dispatch: packedDispatch
     };
 }
 
@@ -30,6 +47,7 @@ export interface IPriceSharingDispatcher {
     addPerson(name: string): void;
     addSharedCost(name: string): void;
     addPersonCost(personCost: IPersonCost, name: string, price: number): void;
+    addPersonToSharedCost(sharedPrice: ISharedPrice, name: string, price: number): void;
 }
 
 function reducer(state: ISharePrice, action: IActions) {
@@ -81,6 +99,25 @@ function reducer(state: ISharePrice, action: IActions) {
                     }]
                 }, action.personCost)
             };
+            break;
+        case "AddPersonToSharedCost":
+
+            newState = {
+                ...state,
+                id: state.id + 1,
+                sharedPrices: _.replace(state.sharedPrices, {
+                    ...action.sharedPrice,
+                    details: [
+                        ...action.sharedPrice.details, {
+                            id: state.id,
+                            editable: true,
+                            intValue: action.price,
+                            name: action.name,
+                            value: action.price.toString()
+                        }
+                    ]
+                }, action.sharedPrice)
+            }
             break;
         default:
             break;
@@ -176,7 +213,7 @@ function init(id: number): ISharePrice {
     }
 }
 
-type IActions = IAddPerson | IAddSharedCost | IAddPersonCost;
+type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IAddPersonToSharedCost;
 
 interface IAddPerson {
     type: "AddPerson";
@@ -191,6 +228,13 @@ interface IAddSharedCost {
 interface IAddPersonCost {
     type: "AddPersonCost";
     personCost: IPersonCost;
+    name: string;
+    price: number;
+}
+
+interface IAddPersonToSharedCost {
+    type: "AddPersonToSharedCost";
+    sharedPrice: ISharedPrice;
     name: string;
     price: number;
 }

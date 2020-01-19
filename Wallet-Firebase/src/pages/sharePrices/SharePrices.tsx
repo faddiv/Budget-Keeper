@@ -23,7 +23,7 @@ export const SharePrices: React.FunctionComponent<SharePricesProps> = () => {
             <PersonCostList model={state.costPerPersons} dispatch={dispatch} />
             <h1>Shared costs</h1>
             <AddSharedCost dispatch={dispatch} />
-            <SharedPriceList model={state.sharedPrices} />
+            <SharedPriceList model={state.sharedPrices} dispatch={dispatch} />
         </Layout>
     );
 };

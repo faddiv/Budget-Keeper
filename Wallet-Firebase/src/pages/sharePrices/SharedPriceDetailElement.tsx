@@ -9,7 +9,7 @@ interface SharedPriceDetailElementProps {
 export const SharedPriceDetailElement: React.FunctionComponent<SharedPriceDetailElementProps> = ({ model }) => {
     return (
         <li className="list-group-item d-flex justify-content-between">
-            <div>{model.name}</div><input className="borderless small" type="time" value={model.value} onChange={noop} />
+            <div>{model.name}</div><input className="borderless small" value={model.value} onChange={noop} />
         </li>
     );
 };
