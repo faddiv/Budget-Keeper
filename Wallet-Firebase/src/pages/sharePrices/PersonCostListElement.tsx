@@ -20,6 +20,9 @@ export const PersonCostListElement: React.FunctionComponent<PersonCostListElemen
             <PersonCostHeader model={model} />
             <ul className="list-group list-group-flush no-right-padding">
                 {
+                    model.sharedPrices.map(item => <PersonCostDetailElement key={item.id} model={item} />)
+                }
+                {
                     model.details.map(item => <PersonCostDetailElement key={item.id} model={item} />)
                 }
                 <PersonCostDetailAdd onAddPersonCost={onAddPersonCost} />

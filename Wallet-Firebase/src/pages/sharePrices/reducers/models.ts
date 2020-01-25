@@ -8,6 +8,7 @@ export interface IPersonCost {
     id: number;
     personName: string;
     expense: number;
+    sharedPrices: IDetailElement[];
     details: IDetailElement[];
 }
 

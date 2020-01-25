@@ -1,4 +1,4 @@
-import { ISharePrice, IPersonCost, ISharedPrice } from './models';
+import { ISharePrice, IPersonCost, ISharedPrice, IDetailElement } from './models';
 import { useReducer, useMemo } from 'react';
 import { _ } from "helpers";
 
@@ -54,19 +54,48 @@ function reducer(state: ISharePrice, action: IActions) {
     let newState = state;
     switch (action.type) {
         case "AddPerson":
+            let id = state.id;
+            const personCost: IPersonCost = {
+                personName: action.name,
+                details: [],
+                sharedPrices: state.sharedPrices.map<IDetailElement>(e => {
+                    return {
+                        id: e.id,
+                        editable: false,
+                        intValue: 0,
+                        name: e.activityName,
+                        value: ""
+                    };
+                }),
+                expense: 0,
+                id: id++
+            };
+            const sharedPrices: ISharedPrice[] = [];
+            for (const sharedPrice of state.sharedPrices) {
+                const intValue = _.max(sharedPrice.details, d => d.intValue) || 1;
+                sharedPrices.push({
+                    ...sharedPrice,
+                    details: [
+                        ...sharedPrice.details,
+                        {
+                            id: personCost.id,
+                            editable: true,
+                            intValue: intValue,
+                            value: toTime(intValue),
+                            name: personCost.personName
+                        }
+                    ]
+                });
+            }
             newState = {
-                ...state,
-                id: state.id + 1,
+                id: id,
                 costPerPersons: [
                     ...state.costPerPersons,
-                    {
-                        personName: action.name,
-                        details: [],
-                        expense: 0,
-                        id: state.id
-                    }
-                ]
+                    personCost
+                ],
+                sharedPrices: sharedPrices
             };
+            newState = recalculate(newState);
             break;
         case "AddSharedCost":
             newState = {
@@ -126,22 +155,24 @@ function reducer(state: ISharePrice, action: IActions) {
 }
 
 function init(id: number): ISharePrice {
-    return {
+    return recalculate({
         id: id,
         costPerPersons: [{
-            id: 3,
+            id: 1,
             personName: "Viktor",
             expense: 10000,
+            sharedPrices: [
+                {
+                    id: 3,
+                    name: "Billiárd",
+                    value: "",
+                    intValue: 0,
+                    editable: false
+                }
+            ],
             details: [
                 {
-                    id: 1,
-                    name: "Billiárd",
-                    value: "1000",
-                    intValue: 1000,
-                    editable: false
-                },
-                {
-                    id: 2,
+                    id: 4,
                     name: "Étel",
                     value: "1000",
                     intValue: 1000,
@@ -149,17 +180,19 @@ function init(id: number): ISharePrice {
                 }
             ]
         }, {
-            id: 4,
+            id: 2,
             personName: "Bea",
             expense: 10000,
-            details: [
+            sharedPrices: [
                 {
-                    id: 5,
+                    id: 1,
                     name: "Billiárd",
-                    value: "1000",
-                    intValue: 1000,
+                    value: "",
+                    intValue: 0,
                     editable: false
-                },
+                }
+            ],
+            details: [
                 {
                     id: 6,
                     name: "Étel",
@@ -170,19 +203,19 @@ function init(id: number): ISharePrice {
             ]
         }],
         sharedPrices: [{
-            id: 8,
+            id: 3,
             activityName: "Billiárd",
             price: 2000,
             details: [
                 {
-                    id: 9,
+                    id: 1,
                     editable: true,
                     name: "Viktor",
                     value: "01:30",
                     intValue: 90
                 },
                 {
-                    id: 10,
+                    id: 2,
                     editable: true,
                     name: "Bea",
                     value: "02:00",
@@ -190,19 +223,19 @@ function init(id: number): ISharePrice {
                 }
             ]
         }, {
-            id: 11,
+            id: 4,
             activityName: "Darts",
             price: 3000,
             details: [
                 {
-                    id: 12,
+                    id: 1,
                     editable: true,
                     name: "Viktor",
                     value: "01:30",
                     intValue: 90
                 },
                 {
-                    id: 13,
+                    id: 2,
                     editable: true,
                     name: "Bea",
                     value: "02:00",
@@ -210,7 +243,13 @@ function init(id: number): ISharePrice {
                 }
             ]
         }]
-    }
+    });
+}
+
+function toTime(totalMinutes: number) {
+    const hour = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 }
 
 type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IAddPersonToSharedCost;
@@ -237,4 +276,45 @@ interface IAddPersonToSharedCost {
     sharedPrice: ISharedPrice;
     name: string;
     price: number;
+}
+
+function recalculate(state: ISharePrice): ISharePrice {
+    const costPerPersons: IPersonCost[] = recalculateCostPerPersons(state);
+
+    return {
+        id: state.id,
+        costPerPersons: costPerPersons,
+        sharedPrices: state.sharedPrices
+    };
+}
+
+function recalculateCostPerPersons(state: ISharePrice) {
+    const costPerPersons: IPersonCost[] = [];
+    for (const personCost of state.costPerPersons) {
+        const sharedPrices: IDetailElement[] = [];
+        for (const sharedPrice of state.sharedPrices) {
+            const sumTime = _.sum(sharedPrice.details, d => d.intValue);
+            const personDetail = sharedPrice.details.find(e => e.id === personCost.id);
+            if(!personDetail)
+            throw new Error("Person detail not found");
+            const ownCost = Math.round(sharedPrice.price * personDetail.intValue / sumTime);
+            sharedPrices.push({
+                id: sharedPrice.id,
+                editable: false,
+                name: sharedPrice.activityName,
+                intValue: ownCost,
+                value: ownCost.toString()
+            });
+        }
+        const expense = _.sum(sharedPrices, e => e.intValue)
+            + _.sum(personCost.details, e => e.intValue);
+        costPerPersons.push({
+            id: personCost.id,
+            expense: expense,
+            personName: personCost.personName,
+            details: personCost.details,
+            sharedPrices: sharedPrices
+        });
+    }
+    return costPerPersons;
 }

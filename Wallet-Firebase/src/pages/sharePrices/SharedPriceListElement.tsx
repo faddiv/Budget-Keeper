@@ -12,7 +12,7 @@ interface SharedPriceListElementProps {
 export const SharedPriceListElement: React.FunctionComponent<SharedPriceListElementProps> = ({ model, dispatch }) => {
     const addPersonHandler = useCallback((name: string, price: number) => {
         dispatch.addPersonToSharedCost(model, name, price);
-    }, [model]);
+    }, [model, dispatch]);
 
     return (
         <div className="list-group-item">

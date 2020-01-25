@@ -5,6 +5,8 @@ import { replace } from "./replace";
 import { selectMap } from "./selectMap";
 import { replaceByIndex } from "./replaceByIndex";
 import { removeByIndex } from "./removeByIndex";
+import { max } from "./max";
+import { sum } from "./sum";
 
 export default {
     contains,
@@ -13,5 +15,7 @@ export default {
     removeByIndex,
     replace,
     replaceByIndex,
-    selectMap
+    selectMap,
+    max,
+    sum
 };
