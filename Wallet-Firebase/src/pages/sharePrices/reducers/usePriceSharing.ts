@@ -38,15 +38,26 @@ export function usePriceSharing() {
                     value
                 });
             },
-            modifyPersonShareById(id, value) {
+            modifyPersonShareById(sharedPriceId, detailId, value) {
                 const intValue = !value
                     ? 0
                     : fromTime(value);
                 dispatch({
                     type: "ModifyPersonShareById",
-                    id,
+                    sharedPriceId,
+                    detailId,
                     intValue,
                     value
+                });
+            },
+            modifySharePriceById(id, value) {
+                const price = !value
+                    ? 0
+                    : parseInt(value);
+                dispatch({
+                    type: "ModifySharePriceById",
+                    id,
+                    price
                 });
             }
         } as IPriceSharingDispatcher
@@ -62,7 +73,8 @@ export interface IPriceSharingDispatcher {
     addSharedCost(name: string): void;
     addPersonCost(personCost: IPersonCost, name: string, price: number): void;
     modifyPersonCostById(id: number, rawValue: string): void;
-    modifyPersonShareById(id: number, rawValue: string): void;
+    modifyPersonShareById(sharedPriceId: number, detailId: number, rawValue: string): void;
+    modifySharePriceById(id: number, rawValue: string): void;
 }
 
 function reducer(state: ISharePrice, action: IActions) {
@@ -180,9 +192,8 @@ function reducer(state: ISharePrice, action: IActions) {
             break;
         case "ModifyPersonShareById":
             {
-                const { personCost, sharedCost } = findShareWhitPersonByDetailId(state, action.id);
-                if (!personCost || !sharedCost)
-                    throw new Error("Shared element and cost was not found.");
+                const sharedCost = findSharedPriceById(state, action.sharedPriceId);
+                const personCost = findDetailById(sharedCost, action.detailId);
                 newState = {
                     ...state,
                     sharedPrices: _.replace(state.sharedPrices, {
@@ -193,6 +204,20 @@ function reducer(state: ISharePrice, action: IActions) {
                             intValue: action.intValue
                         }, personCost)
                     }, sharedCost)
+                };
+                newState = recalculate(newState);
+            }
+            break;
+        case "ModifySharePriceById":
+            {
+                const sharedCost = findSharedPriceById(state, action.id);
+                const sharedPrices = _.replace(state.sharedPrices, {
+                    ...sharedCost,
+                    price: action.price
+                }, sharedCost);
+                newState = {
+                    ...state,
+                    sharedPrices
                 };
                 newState = recalculate(newState);
             }
@@ -210,22 +235,7 @@ function init(id: number): ISharePrice {
             id: 1,
             personName: "Viktor",
             expense: 10000,
-            sharedPrices: [
-                {
-                    id: 3,
-                    name: "Billiárd",
-                    value: "",
-                    intValue: 0,
-                    editable: false
-                },
-                {
-                    id: 4,
-                    name: "Darts",
-                    value: "",
-                    intValue: 0,
-                    editable: false
-                }
-            ],
+            sharedPrices: [],
             details: [
                 {
                     id: 5,
@@ -239,22 +249,7 @@ function init(id: number): ISharePrice {
             id: 2,
             personName: "Bea",
             expense: 10000,
-            sharedPrices: [
-                {
-                    id: 3,
-                    name: "Billiárd",
-                    value: "",
-                    intValue: 0,
-                    editable: false
-                },
-                {
-                    id: 4,
-                    name: "Darts",
-                    value: "",
-                    intValue: 0,
-                    editable: false
-                }
-            ],
+            sharedPrices: [],
             details: [
                 {
                     id: 6,
@@ -324,7 +319,8 @@ function fromTime(time: string) {
     return hour * 60 + minute;
 }
 
-type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IModifyPersonCostById | IModifyPersonShareById;
+type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IModifyPersonCostById
+    | IModifyPersonShareById | IModifySharePriceById;
 
 interface IAddPerson {
     type: "AddPerson";
@@ -352,9 +348,16 @@ interface IModifyPersonCostById {
 
 interface IModifyPersonShareById {
     type: "ModifyPersonShareById";
-    id: number;
+    sharedPriceId: number;
+    detailId: number;
     intValue: number;
     value: string;
+}
+
+interface IModifySharePriceById {
+    type: "ModifySharePriceById";
+    id: number;
+    price: number;
 }
 
 function recalculate(state: ISharePrice): ISharePrice {
@@ -418,18 +421,20 @@ function findPersonWithCostByDetailId(state: ISharePrice, id: number) {
     return {}
 }
 
-function findShareWhitPersonByDetailId(state: ISharePrice, id: number) {
-    for (const sharedCost of state.sharedPrices) {
-        for (const personCost of sharedCost.details) {
-            if (personCost.id === id) {
-                return {
-                    sharedCost,
-                    personCost
-                };
-            }
-        }
-    }
-    return {}
+function findSharedPriceById(state: ISharePrice,
+    id: number) {
+    const result = state.sharedPrices.find(e => e.id === id);
+    if (!result)
+        throw new Error("SharedPrice not found");
+    return result;
+}
+
+function findDetailById(state: ISharedPrice,
+    id: number) {
+    const result = state.details.find(e => e.id === id);
+    if (!result)
+        throw new Error("Detail not found");
+    return result;
 }
 
 function recalculatePerson(person: IPersonCost, ownCost: IDetailElement, intValue: number, value: string): IPersonCost {

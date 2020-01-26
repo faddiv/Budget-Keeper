@@ -1,18 +1,18 @@
 import React, { useCallback } from "react";
-import { IDetailElement, IPriceSharingDispatcher } from "./reducers";
+import { IDetailElement } from "./reducers";
 
 interface SharedPriceDetailElementProps {
     model: IDetailElement;
-    dispatch: IPriceSharingDispatcher;
+    onShareChanged(detailId: number, rawValue: string) : void;
 }
 
-export const SharedPriceDetailElement: React.FunctionComponent<SharedPriceDetailElementProps> = ({ model, dispatch }) => {
+export const SharedPriceDetailElement: React.FunctionComponent<SharedPriceDetailElementProps> = ({ model, onShareChanged }) => {
 
     const id = model.id;
     const changeHandler = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
         const rawValue = evt.target.value;
-        dispatch.modifyPersonShareById(id, rawValue);
-    }, [id, dispatch]);
+        onShareChanged(id, rawValue);
+    }, [id, onShareChanged]);
     return (
         <li className="list-group-item d-flex justify-content-between">
             <div>{model.name}</div><input className="borderless small" type="time" value={model.value} onChange={changeHandler} />
