@@ -26,6 +26,17 @@ export function usePriceSharing() {
                     name,
                     price
                 });
+            },
+            modifyPersonCostById(id, value) {
+                const intValue = !value
+                    ? 0
+                    : parseInt(value);
+                dispatch({
+                    type: "ModifyPersonCostById",
+                    id,
+                    intValue,
+                    value
+                });
             }
         } as IPriceSharingDispatcher
     }, [])
@@ -39,7 +50,7 @@ export interface IPriceSharingDispatcher {
     addPerson(name: string): void;
     addSharedCost(name: string): void;
     addPersonCost(personCost: IPersonCost, name: string, price: number): void;
-    addPersonToSharedCost(sharedPrice: ISharedPrice, name: string, price: number): void;
+    modifyPersonCostById(id: number, rawValue: string): void;
 }
 
 function reducer(state: ISharePrice, action: IActions) {
@@ -127,23 +138,35 @@ function reducer(state: ISharePrice, action: IActions) {
             }
             break;
         case "AddPersonCost":
-
-            newState = {
-                ...state,
-                id: state.id + 1,
-                costPerPersons: _.replace(state.costPerPersons, {
-                    ...action.personCost,
-                    details: [...action.personCost.details, {
-                        id: state.id + 1,
-                        name: action.name,
-                        intValue: action.price,
-                        value: action.price.toString(),
-                        editable: true
-                    }]
-                }, action.personCost)
-            };
-            newState = recalculate(newState);
+            {
+                newState = {
+                    sharedPrices: state.sharedPrices,
+                    id: state.id + 1,
+                    costPerPersons: _.replace(state.costPerPersons, {
+                        ...action.personCost,
+                        details: [...action.personCost.details, {
+                            id: state.id + 1,
+                            name: action.name,
+                            intValue: action.price,
+                            value: action.price.toString(),
+                            editable: true
+                        }]
+                    }, action.personCost)
+                };
+                newState = recalculate(newState);
+            }
             break;
+        case "ModifyPersonCostById":
+            {
+                const { person, ownCost } = findPersonWithCostByDetailId(state, action.id);
+                if (!person || !ownCost)
+                    throw new Error("Person and cost was not found.");
+
+                newState = {
+                    ...state,
+                    costPerPersons: _.replace(state.costPerPersons, recalculatePerson(person, ownCost, action.intValue, action.value), person)
+                };
+            }
         default:
             break;
     }
@@ -262,7 +285,7 @@ function toTime(totalMinutes: number) {
     return `${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 }
 
-type IActions = IAddPerson | IAddSharedCost | IAddPersonCost;
+type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IModifyPersonCostById;
 
 interface IAddPerson {
     type: "AddPerson";
@@ -279,6 +302,13 @@ interface IAddPersonCost {
     personCost: IPersonCost;
     name: string;
     price: number;
+}
+
+interface IModifyPersonCostById {
+    type: "ModifyPersonCostById";
+    id: number;
+    intValue: number;
+    value: string;
 }
 
 function recalculate(state: ISharePrice): ISharePrice {
@@ -311,8 +341,7 @@ function recalculateCostPerPersons(state: ISharePrice) {
                 value: ownCost.toString()
             });
         }
-        const expense = _.sum(sharedPrices, e => e.intValue)
-            + _.sum(personCost.details, e => e.intValue);
+        const expense = personSumExpense(sharedPrices, personCost.details);
         costPerPersons.push({
             id: personCost.id,
             expense: expense,
@@ -322,4 +351,37 @@ function recalculateCostPerPersons(state: ISharePrice) {
         });
     }
     return costPerPersons;
+}
+
+function personSumExpense(sharedPrices: IDetailElement[], details: IDetailElement[]) {
+    return _.sum(sharedPrices, e => e.intValue)
+        + _.sum(details, e => e.intValue);
+}
+
+function findPersonWithCostByDetailId(state: ISharePrice, id: number) {
+    for (const person of state.costPerPersons) {
+        for (const ownCost of person.details) {
+            if (ownCost.id === id) {
+                return {
+                    person,
+                    ownCost
+                };
+            }
+        }
+    }
+    return {}
+}
+function recalculatePerson(person: IPersonCost, ownCost: IDetailElement, intValue: number, value: string): IPersonCost {
+    const newCost: IDetailElement = {
+        ...ownCost,
+        intValue,
+        value
+    }
+    const newDetails: IDetailElement[] = _.replace(person.details, newCost, ownCost);
+    const expense = personSumExpense(person.sharedPrices, newDetails);
+    return {
+        ...person,
+        details: newDetails,
+        expense
+    };
 }
