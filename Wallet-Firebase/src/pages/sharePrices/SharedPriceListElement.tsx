@@ -15,7 +15,7 @@ export const SharedPriceListElement: React.FunctionComponent<SharedPriceListElem
             <SharedPriceHeader model={model} />
             <ul className="list-group list-group-flush no-right-padding">
                 {
-                    model.details.map(item => <SharedPriceDetailElement key={item.id} model={item} />)
+                    model.details.map(item => <SharedPriceDetailElement key={item.id} model={item} dispatch={dispatch} />)
                 }
             </ul>
         </div>
