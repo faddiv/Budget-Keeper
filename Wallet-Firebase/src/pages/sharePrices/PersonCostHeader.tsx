@@ -15,7 +15,7 @@ export const PersonCostHeader: React.FunctionComponent<PersonCostHeaderProps> = 
                 </button>
                 <span className="sp-li-title">{model.personName}</span>
             </h5>
-            <small>{model.expense} ft</small>
+            <small><strong>{model.expense} ft</strong></small>
         </div>
     );
 };

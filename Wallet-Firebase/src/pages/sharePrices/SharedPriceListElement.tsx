@@ -21,7 +21,6 @@ export const SharedPriceListElement: React.FunctionComponent<SharedPriceListElem
                 {
                     model.details.map(item => <SharedPriceDetailElement key={item.id} model={item} />)
                 }
-                <SharedPriceDetailAdd onAddPersonToSharedPrice={addPersonHandler} />
             </ul>
         </div>
     );
