@@ -138,23 +138,21 @@ function reducer(state: ISharePrice, action: IActions) {
             }
             break;
         case "AddPersonCost":
-            {
-                newState = {
-                    sharedPrices: state.sharedPrices,
-                    id: state.id + 1,
-                    costPerPersons: _.replace(state.costPerPersons, {
-                        ...action.personCost,
-                        details: [...action.personCost.details, {
-                            id: state.id + 1,
-                            name: action.name,
-                            intValue: action.price,
-                            value: action.price.toString(),
-                            editable: true
-                        }]
-                    }, action.personCost)
-                };
-                newState = recalculate(newState);
-            }
+            newState = {
+                sharedPrices: state.sharedPrices,
+                id: state.id + 1,
+                costPerPersons: _.replace(state.costPerPersons, {
+                    ...action.personCost,
+                    details: [...action.personCost.details, {
+                        id: state.id + 1,
+                        name: action.name,
+                        intValue: action.price,
+                        value: action.price.toString(),
+                        editable: true
+                    }]
+                }, action.personCost)
+            };
+            newState = recalculate(newState);
             break;
         case "ModifyPersonCostById":
             {
@@ -167,6 +165,7 @@ function reducer(state: ISharePrice, action: IActions) {
                     costPerPersons: _.replace(state.costPerPersons, recalculatePerson(person, ownCost, action.intValue, action.value), person)
                 };
             }
+            break;
         default:
             break;
     }

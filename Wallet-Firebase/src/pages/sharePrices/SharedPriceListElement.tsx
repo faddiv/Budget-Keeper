@@ -1,7 +1,6 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { SharedPriceHeader } from './SharedPriceHeader';
 import { ISharedPrice, IPriceSharingDispatcher } from "./reducers";
-import { SharedPriceDetailAdd } from './SharedPriceDetailAdd';
 import { SharedPriceDetailElement } from './SharedPriceDetailElement';
 
 interface SharedPriceListElementProps {

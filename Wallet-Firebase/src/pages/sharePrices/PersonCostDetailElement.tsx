@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import classNames from "classnames";
 import { IDetailElement, IPriceSharingDispatcher } from "./reducers";
-import { noop } from "helpers";
 
 interface PersonCostDetailElementProps {
     model: IDetailElement;
