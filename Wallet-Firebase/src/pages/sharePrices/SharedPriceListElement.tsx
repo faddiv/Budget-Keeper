@@ -14,12 +14,16 @@ export const SharedPriceListElement: React.FunctionComponent<SharedPriceListElem
         dispatch.modifyPersonShareById(sharedPriceId, detailId, rawValue);
     }, [sharedPriceId, dispatch]);
 
+    const deleteSharedItemHandler = useCallback(() => {
+        dispatch.deleteSharedItemById(sharedPriceId);
+    }, [sharedPriceId, dispatch]);
+
     const priceChangedHandler = useCallback((rawValue: string) => {
         dispatch.modifySharePriceById(sharedPriceId, rawValue);
     }, [sharedPriceId, dispatch]);
     return (
         <div className="list-group-item">
-            <SharedPriceHeader model={model} onPriceChanged={priceChangedHandler} />
+            <SharedPriceHeader model={model} onPriceChanged={priceChangedHandler} onDelete={deleteSharedItemHandler} />
             <ul className="list-group list-group-flush no-right-padding">
                 {
                     model.details.map(item => <SharedPriceDetailElement key={item.id} model={item} onShareChanged={shareChangeHandler} />)

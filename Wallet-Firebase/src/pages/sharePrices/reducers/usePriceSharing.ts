@@ -3,7 +3,7 @@ import { useReducer, useMemo } from 'react';
 import { _ } from "helpers";
 
 export function usePriceSharing() {
-    const [state, dispatch] = useReducer(reducer, 1, init);
+    const [state, dispatch] = useReducer(reducer, 0, init);
 
     const packedDispatch = useMemo(() => {
         return {
@@ -59,6 +59,18 @@ export function usePriceSharing() {
                     id,
                     price
                 });
+            },
+            deletePersonById(id: number) {
+                dispatch({
+                    type: "DeletePersonById",
+                    id
+                });
+            },
+            deleteSharedItemById(id: number) {
+                dispatch({
+                    type: "DeleteSharedItemById",
+                    id
+                });
             }
         } as IPriceSharingDispatcher
     }, [])
@@ -75,6 +87,8 @@ export interface IPriceSharingDispatcher {
     modifyPersonCostById(id: number, rawValue: string): void;
     modifyPersonShareById(sharedPriceId: number, detailId: number, rawValue: string): void;
     modifySharePriceById(id: number, rawValue: string): void;
+    deletePersonById(id: number): void;
+    deleteSharedItemById(id: number): void;
 }
 
 function reducer(state: ISharePrice, action: IActions) {
@@ -222,6 +236,40 @@ function reducer(state: ISharePrice, action: IActions) {
                 newState = recalculate(newState);
             }
             break;
+        case "DeletePersonById":
+            {
+                const costPerPersons = state.costPerPersons.filter(p => p.id !== action.id);
+                const sharedPrices = state.sharedPrices.map<ISharedPrice>(sp => {
+                    return {
+                        ...sp,
+                        details: sp.details.filter(d => d.id !== action.id)
+                    }
+                });
+                newState = {
+                    id: state.id,
+                    costPerPersons,
+                    sharedPrices
+                };
+                newState = recalculate(newState);
+            }
+            break;
+        case "DeleteSharedItemById":
+            {
+                const sharedPrices = state.sharedPrices.filter(p => p.id !== action.id);
+                const costPerPersons = state.costPerPersons.map<IPersonCost>(sp => {
+                    return {
+                        ...sp,
+                        sharedPrices: sp.sharedPrices.filter(d => d.id !== action.id)
+                    }
+                });
+                newState = {
+                    id: state.id,
+                    costPerPersons,
+                    sharedPrices
+                };
+                newState = recalculate(newState);
+            }
+            break;
         default:
             break;
     }
@@ -230,77 +278,9 @@ function reducer(state: ISharePrice, action: IActions) {
 
 function init(id: number): ISharePrice {
     return recalculate({
-        id: 6,
-        costPerPersons: [{
-            id: 1,
-            personName: "Viktor",
-            expense: 10000,
-            sharedPrices: [],
-            details: [
-                {
-                    id: 5,
-                    name: "Étel",
-                    value: "1000",
-                    intValue: 1000,
-                    editable: true
-                }
-            ]
-        }, {
-            id: 2,
-            personName: "Bea",
-            expense: 10000,
-            sharedPrices: [],
-            details: [
-                {
-                    id: 6,
-                    name: "Étel",
-                    value: "1000",
-                    intValue: 1000,
-                    editable: true
-                }
-            ]
-        }],
-        sharedPrices: [{
-            id: 3,
-            activityName: "Billiárd",
-            price: 2000,
-            details: [
-                {
-                    id: 1,
-                    editable: true,
-                    name: "Viktor",
-                    value: "01:30",
-                    intValue: 90
-                },
-                {
-                    id: 2,
-                    editable: true,
-                    name: "Bea",
-                    value: "02:00",
-                    intValue: 120
-                }
-            ]
-        }, {
-            id: 4,
-            activityName: "Darts",
-            price: 3000,
-            details: [
-                {
-                    id: 1,
-                    editable: true,
-                    name: "Viktor",
-                    value: "01:30",
-                    intValue: 90
-                },
-                {
-                    id: 2,
-                    editable: true,
-                    name: "Bea",
-                    value: "02:00",
-                    intValue: 120
-                }
-            ]
-        }]
+        id: id,
+        costPerPersons: [],
+        sharedPrices: []
     });
 }
 
@@ -319,8 +299,8 @@ function fromTime(time: string) {
     return hour * 60 + minute;
 }
 
-type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IModifyPersonCostById
-    | IModifyPersonShareById | IModifySharePriceById;
+type IActions = IAddPerson | IAddSharedCost | IAddPersonCost | IModifyPersonCostById | IModifyPersonShareById
+    | IModifySharePriceById | IDeletePersonById | IDeleteSharedItemById;
 
 interface IAddPerson {
     type: "AddPerson";
@@ -358,6 +338,16 @@ interface IModifySharePriceById {
     type: "ModifySharePriceById";
     id: number;
     price: number;
+}
+
+interface IDeletePersonById {
+    type: "DeletePersonById";
+    id: number;
+}
+
+interface IDeleteSharedItemById {
+    type: "DeleteSharedItemById";
+    id: number;
 }
 
 function recalculate(state: ISharePrice): ISharePrice {
