@@ -1,0 +1,23 @@
+import { FunctionComponent } from "react";
+import { MoneyDirection } from "../walletApi";
+
+interface DirectionIconProps {
+    direction: MoneyDirection;
+}
+
+export const DirectionIcon: FunctionComponent<DirectionIconProps> = ({ direction }) => {
+    return (
+        <span className={directionCssClass(direction)}></span>
+    );
+};
+
+function directionCssClass(direction: MoneyDirection) {
+    switch (direction) {
+        case -1:
+            return "fa fa-minus text-danger";
+        case 1:
+            return "fa fa-plus text-success";
+        default:
+            return "fa fa-bookmark";
+    }
+}
