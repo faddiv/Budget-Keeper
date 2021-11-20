@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.TransactionModule.Models;
@@ -30,7 +31,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         public async Task<BalanceInfo> GetBalanceInfo(int year, int month, CancellationToken token)
         {
-            var stats = await _db.Transactions
+            var stats = (await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year && e.CreatedAt.Month == month)
                 .GroupBy(e => e.Direction)
                 .Select(e => new
@@ -38,8 +39,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     Direction = e.Key,
                     Value = e.Sum(r => r.Value)
                 })
-                .ToAsyncEnumerable()
-                .ToLookup(e => e.Direction, token);
+                .ToListAsync(token))
+                .ToLookup(e => e.Direction);
             var balanceInfo = new BalanceInfo
             {
                 Income = stats[MoneyDirection.Income].Sum(e => e.Value),
@@ -51,7 +52,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         public async Task<CategoryStatisticsSummary> GetCategoriesSummary(int year, CancellationToken token)
         {
-            var monthlyStats = await _db.Transactions
+            var monthlyStats = (await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year && e.Direction == MoneyDirection.Expense)
                 .GroupBy(e => new {e.CreatedAt.Month, Category = e.Category ?? string.Empty})
                 .Select(e => new
@@ -61,8 +62,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     Spent = e.Sum(t => t.Value),
                     Count = e.Count()
                 })
-                .ToAsyncEnumerable()
-                .ToLookup(e => e.Month, token);
+                .ToListAsync(token))
+                .ToLookup(e => e.Month);
             var monthly = new List<List<CategoryStatistics>>();
             for (int i = 0; i < 12; i++)
             {
@@ -111,7 +112,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
 
         public async Task<YearlyStatistics> GetYearlySummary(int year, CancellationToken token)
         {
-            var monthlyStats = await _db.Transactions
+            var monthlyStats = (await _db.Transactions
                 .Where(e => e.CreatedAt.Year == year)
                 .GroupBy(e => new {e.CreatedAt.Month, e.Direction})
                 .Select(e => new
@@ -120,8 +121,8 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Queries
                     e.Key.Direction,
                     Sum = e.Sum(t => t.Value)
                 })
-                .ToAsyncEnumerable()
-                .ToLookup(e => e.Month, token);
+                .ToListAsync(token))
+                .ToLookup(e => e.Month);
             var monthly = new List<BalanceInfo>();
             for (int i = 0; i < 12; i++)
             {

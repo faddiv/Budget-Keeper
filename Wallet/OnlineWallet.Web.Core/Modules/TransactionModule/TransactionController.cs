@@ -37,9 +37,9 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         #region  Public Methods
 
         [HttpPost("BatchSave")]
-        [SwaggerResponse((int) HttpStatusCode.Created, typeof(List<Transaction>))]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
-        [SwaggerResponse((int) HttpStatusCode.BadRequest, typeof(object))]
+        //[SwaggerResponse((int) HttpStatusCode.Created, typeof(List<Transaction>))]
+        //[SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
+        //[SwaggerResponse((int) HttpStatusCode.BadRequest, typeof(object))]
         public async Task<ActionResult> BatchSave(
             [FromBody, Required] TransactionOperationBatch model,
             CancellationToken token)
@@ -61,7 +61,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         }
 
         [HttpGet(nameof(FetchByArticle))]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
+        //[SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
         public Task<List<Transaction>> FetchByArticle(string article, int limit = 20, int skip = 0,
             CancellationToken token = default(CancellationToken))
         {
@@ -69,7 +69,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         }
         
         [HttpGet(nameof(FetchByDateRange))]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
+        //[SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Transaction>))]
         public Task<List<Transaction>> FetchByDateRange(DateTime start, DateTime end,
             CancellationToken token = default(CancellationToken))
         {
@@ -77,7 +77,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         }
 
         [HttpGet(nameof(FetchByCategory))]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
+        //[SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Transaction>))]
         public Task<List<Transaction>> FetchByCategory(string category, DateTime? start = null, DateTime? end = null,
             int? limit = null, int? skip = null, CancellationToken token = default(CancellationToken))
         {

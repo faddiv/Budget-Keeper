@@ -1,7 +1,6 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace OnlineWallet.Web.DataLayer
 {
@@ -9,7 +8,7 @@ namespace OnlineWallet.Web.DataLayer
     {
         #region Properties
 
-        [StringLength(200)] public string Category { get; set; }
+        [StringLength(200)] public string? Category { get; set; }
 
         [Required] public int LastPrice { get; set; }
 
@@ -17,11 +16,11 @@ namespace OnlineWallet.Web.DataLayer
 
         [JsonIgnore]
         [ForeignKey(nameof(LastWalletId))]
-        public Wallet LastWallet { get; set; }
+        public Wallet? LastWallet { get; set; }
 
         [Required] public int LastWalletId { get; set; }
 
-        [Key] [Required] [StringLength(200)] public string Name { get; set; }
+        [Key] [Required] [StringLength(200)] public string Name { get; set; } = "";
 
         [Required] public int Occurence { get; set; }
 

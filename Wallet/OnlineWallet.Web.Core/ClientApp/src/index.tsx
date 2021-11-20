@@ -28,7 +28,7 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path="/" component={Home} />
+        <Route path="/" exact={true} component={Home} />
         <Route path="/transactions/:year?/:month?" component={Transactions} />
         <Route
           path="/statistics/yearly/:year?"

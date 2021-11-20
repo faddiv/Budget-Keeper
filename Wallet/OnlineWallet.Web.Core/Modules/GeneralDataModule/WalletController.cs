@@ -34,8 +34,8 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         #region  Public Methods
 
         [HttpDelete("{id}")]
-        [SwaggerResponse((int) HttpStatusCode.OK)]
-        [SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
+        //[SwaggerResponse((int) HttpStatusCode.OK)]
+        //[SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
         public async Task<ActionResult> Delete(int id, CancellationToken token)
         {
             var result = await _walletCommands.DeleteWalletById(id, token);
@@ -55,15 +55,15 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         }
 
         [HttpGet]
-        [SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Wallet>))]
+        //[SwaggerResponse((int) HttpStatusCode.OK, typeof(List<Wallet>))]
         public virtual Task<List<Wallet>> GetAll(CancellationToken token = default(CancellationToken))
         {
             return _walletQueries.GetAll(token);
         }
 
         [HttpPost]
-        [SwaggerResponse((int) HttpStatusCode.Created)]
-        [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
+        //[SwaggerResponse((int) HttpStatusCode.Created)]
+        //[SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
         public async Task<ActionResult> Post([FromBody] Wallet value, CancellationToken token)
         {
             if (!ModelState.IsValid)
@@ -79,9 +79,9 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         }
 
         [HttpPut("{id}")]
-        [SwaggerResponse((int) HttpStatusCode.OK)]
-        [SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
-        [SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
+        //[SwaggerResponse((int) HttpStatusCode.OK)]
+        //[SwaggerResponse((int) HttpStatusCode.BadRequest, description: "There is a validation error")]
+        //[SwaggerResponse((int) HttpStatusCode.NotFound, description: "The object defined by id doesn't exists.")]
         public async Task<ActionResult> Put(int id, [FromBody] Wallet value, CancellationToken token)
         {
             if (!ModelState.IsValid)

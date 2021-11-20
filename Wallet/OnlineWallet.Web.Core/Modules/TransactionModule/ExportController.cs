@@ -1,11 +1,5 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OnlineWallet.Web.Common.Swagger;
 using OnlineWallet.Web.Modules.TransactionModule.Queries;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OnlineWallet.Web.Modules.TransactionModule
 {
@@ -30,8 +24,7 @@ namespace OnlineWallet.Web.Modules.TransactionModule
         #region  Public Methods
 
         [HttpGet]
-        [SwaggerOperationFilter(typeof(FileDownloadOperationFilter))]
-        public async Task<IActionResult> FromRange(DateTime from, DateTime to, string fileName,
+        public async Task<FileContentResult> FromRange(DateTime from, DateTime to, string fileName,
             CancellationToken token = default(CancellationToken))
         {
             from = from.Date;
