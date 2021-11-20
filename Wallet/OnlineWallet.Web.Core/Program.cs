@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineWallet.ExportImport;
+using OnlineWallet.Web.Core;
 using OnlineWallet.Web.DataLayer;
-using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
-using OnlineWallet.Web.Modules.GeneralDataModule.Queries;
-using OnlineWallet.Web.Modules.TransactionModule.Commands;
-using OnlineWallet.Web.Modules.TransactionModule.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 /*builder.Configuration.AddJsonFile("appsettings.json");
@@ -18,16 +15,7 @@ services.AddDbContext<IWalletDbContext, WalletDbContext>(options =>
 {
     options.UseSqlServer(Configuration.GetConnectionString("Wallet"));
 });
-services.AddScoped<ITransactionQueries, TransactionQueries>();
-services.AddScoped<IBatchSaveCommand, BatchSaveCommand>();
-services.AddScoped<IWalletQueries, WalletQueries>();
-services.AddScoped<IWalletCommands, WalletCommands>();
-services.AddScoped<IArticleQueries, ArticleQueries>();
-services.AddScoped<IStatisticsQueries, StatisticsQueries>();
-services.AddScoped<ICategoryQueries, CategoryQueries>();
-services.AddScoped<IImportExportQueries, ImportExportQueries>();
-services.AddScoped<IArticleCommands, ArticleCommands>();
-services.AddScoped<IBatchSaveEvent, ArticleUpdateOnBachSave>();
+services.AddWalletServices();
 services.AddSingleton<ICsvExportImport>(provider => new CsvExportImport());
 services.AddSwaggerGen();
 

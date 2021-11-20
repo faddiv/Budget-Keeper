@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using OnlineWallet.ExportImport;
+using OnlineWallet.Web.Core;
 using OnlineWallet.Web.DataLayer;
 using OnlineWallet.Web.Modules.TransactionModule;
 using OnlineWallet.Web.Modules.TransactionModule.Models;
@@ -42,7 +43,7 @@ namespace OnlineWallet.Web.TestHelpers
             _connection = new SqliteConnection("DataSource=:memory:");
 
             var services = new ServiceCollection();
-            Startup.AddWalletServices(services);
+            services.AddWalletServices();
             AddControllers(services);
 
             CreateDatabase(services);
@@ -142,7 +143,7 @@ namespace OnlineWallet.Web.TestHelpers
                 _services = _rootServices.CreateScope();
             }
 
-            return (T) _services.ServiceProvider.GetRequiredService(typeof(T));
+            return (T)_services.ServiceProvider.GetRequiredService(typeof(T));
         }
 
         public Task PrepareArticlesWith(Func<ArticleBuilder, ArticleBuilder> rules, int size = 100)
@@ -178,21 +179,15 @@ namespace OnlineWallet.Web.TestHelpers
             var optionsBuilder = new DbContextOptionsBuilder<WalletDbContext>();
             optionsBuilder.UseSqlite(_connection);
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseLoggerFactory(new LoggerFactory(new[]
-            {
-                new ConsoleLoggerProvider(new ConsoleLoggerSettings
-                {
-                    IncludeScopes = true
-                })
-            }));
+            optionsBuilder.LogTo(log => Console.WriteLine(log));
             services.AddScoped<IWalletDbContext>(provider =>
             {
                 _connection.Open();
                 var dbContext = new WalletDbContext(optionsBuilder.Options);
                 dbContext.Database.EnsureCreated();
 
-                _walletCash = new Wallet {Name = MoneySource.Cash.ToString()};
-                _walletBankAccount = new Wallet {Name = MoneySource.BankAccount.ToString()};
+                _walletCash = new Wallet { Name = MoneySource.Cash.ToString() };
+                _walletBankAccount = new Wallet { Name = MoneySource.BankAccount.ToString() };
                 dbContext.Wallets.AddRange(
                     _walletCash,
                     _walletBankAccount);

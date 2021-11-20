@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Collections;
@@ -7,11 +7,12 @@ using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.TestHelpers
 {
-    public class ArticleListAssertion : SelfReferencingCollectionAssertions<Article, ArticleListAssertion>
+    public class ArticleListAssertion<TCollection> : GenericCollectionAssertions<TCollection, Article, ArticleListAssertion<TCollection>>
+        where TCollection : IEnumerable<Article>
     {
         #region  Constructors
 
-        public ArticleListAssertion(IEnumerable<Article> article) : base(article)
+        public ArticleListAssertion(TCollection article) : base(article)
         {
         }
 
@@ -19,13 +20,13 @@ namespace OnlineWallet.Web.TestHelpers
 
         #region Properties
 
-        protected override string Context => "ArticleList";
+        protected override string Identifier => "ArticleList";
 
         #endregion
 
         #region  Public Methods
 
-        public AndConstraint<ArticleListAssertion> HaveDistinctArticleNamesOnlyFrom(
+        public AndConstraint<ArticleListAssertion<TCollection>> HaveDistinctArticleNamesOnlyFrom(
             IEnumerable<Transaction> transactions, string because = "", params object[] becauseParams)
         {
             var countArticleNames = transactions.Select(e => e.Name.ToLower()).Distinct().Count();
@@ -35,7 +36,7 @@ namespace OnlineWallet.Web.TestHelpers
                 .FailWith("Expected {context:ArticleList} to have {0} element{reason}, but found {1}.",
                     countArticleNames, Subject.Count());
 
-            return new AndConstraint<ArticleListAssertion>(this);
+            return new AndConstraint<ArticleListAssertion<TCollection>>(this);
         }
 
         #endregion
