@@ -1,3 +1,13 @@
+
+// Request a theme color level
+@function theme-color-level($color-name: "primary", $level: 0) {
+  $color: theme-color($color-name);
+  $color-base: if($level > 0, #000, #fff);
+  $level: abs($level);
+
+  @return mix($color-base, $color, $level * $theme-color-interval);
+}
+
 .transaction-summary {
     position: fixed;
     bottom: 5px;
@@ -11,8 +21,7 @@
         tr.selected {
             background-color: $table-hover-bg;
         }
-        @each $theme, $value in $theme-colors {
-            $color: theme-color-level($theme, -9);
+        @each $theme, $color in $theme-colors {
             $select-background: darken($color, 5%);
 
             tr.table-#{$theme}.selected {

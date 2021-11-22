@@ -1,4 +1,4 @@
-import "./scss/site.scss";
+import "./index.scss";
 // tslint:disable-next-line:no-submodule-imports
 import "moment/locale/hu";
 import * as ReactDOM from "react-dom";
