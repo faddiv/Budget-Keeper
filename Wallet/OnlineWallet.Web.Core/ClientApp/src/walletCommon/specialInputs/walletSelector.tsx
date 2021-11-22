@@ -1,25 +1,30 @@
-import * as React from "react";
-import { Wallet } from "../../walletApi";
+import { useEffect, useState } from "react";
+import { Form } from "react-bootstrap";
+import { PropsBase } from "../../react-ext";
+import { Wallet, walletService } from "../../walletApi";
 
-interface WalletSelectorProps {
-    walletId: number;
-    wallets: Wallet[];
-    className?: string;
-    name?: string;
-    onChange?: React.ChangeEventHandler<HTMLSelectElement>;
+interface WalletSelectorProps extends PropsBase {
+  walletId: number;
+  className?: string;
+  name?: string;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 }
 
-export const WalletSelector: React.SFC<WalletSelectorProps> = ({ walletId, wallets, className, name, onChange }) => {
-    return (
-        <select className={className} value={walletId} name={name} onChange={onChange}>
-            {wallets.map(wallet =>
-                <option key={wallet.moneyWalletId} value={wallet.moneyWalletId}>{wallet.name}</option>)}
-        </select>
-    );
-};
-
-WalletSelector.defaultProps = {
-    className: "form-control",
-    name: "walletId",
-    onChange: () => { }
-};
+export function WalletSelector({ walletId, className, name = "walletId", onChange = () => {} }: WalletSelectorProps) {
+  const [wallets, setWallets] = useState<Wallet[]>(walletService.cache || []);
+  useEffect(() => {
+    (async () => {
+      const result = await walletService.getAll();
+      setWallets(result);
+    })();
+  }, []);
+  return (
+    <Form.Select name={name} id={name} onChange={onChange} value={walletId} className={className}>
+      {wallets.map((wallet) => (
+        <option key={wallet.moneyWalletId} value={wallet.moneyWalletId}>
+          {wallet.name}
+        </option>
+      ))}
+    </Form.Select>
+  );
+}

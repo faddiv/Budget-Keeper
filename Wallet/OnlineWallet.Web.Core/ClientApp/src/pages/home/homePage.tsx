@@ -114,7 +114,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
         return (
             <Layout>
                 <Prompt when={this.needLeaveConfirmation()} message={leaveConfirmation} />
-                <AddItemForm addLine={this.addLine} saveAll={this.saveAll} wallets={wallets} items={items} onError={this.errorHandler} />
+                <AddItemForm addLine={this.addLine} saveAll={this.saveAll} items={items} onError={this.errorHandler} />
                 <TransactionTable
                     items={items} wallets={wallets}
                     deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />

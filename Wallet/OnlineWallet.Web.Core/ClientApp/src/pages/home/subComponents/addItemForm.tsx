@@ -4,14 +4,13 @@ import { bind } from "bind-decorator";
 import { updateState } from "../../../react-ext";
 import { validate, ValidationState, toDateString, _ } from "../../../helpers";
 import { FormGroup, transactionRules, TransactionViewModel, WalletSelector, NameInput, CategoryInput } from "../../../walletCommon";
-import { Wallet, ArticleModel, CategoryModel } from "../../../walletApi";
+import { ArticleModel, CategoryModel } from "../../../walletApi";
 import { DirectionCheck } from "./directionCheck";
 import { Component } from "react";
 
 export interface AddItemFormProps {
   addLine: (model: TransactionViewModel) => void;
   saveAll: () => Promise<SaveAllResult>;
-  wallets: Wallet[];
   items: TransactionViewModel[];
   onError: (error: Error) => void;
 }
@@ -137,12 +136,12 @@ export class AddItemForm extends Component<AddItemFormProps, AddItemFormState> {
   }
 
   render() {
-    const { wallets, onError } = this.props;
+    const { onError } = this.props;
     const { category, comment, createdAt, direction, name, price, walletId, validation } = this.state;
     return (
       <form onChange={this.handleInputChange} onSubmit={this.addLine}>
         <FormGroup name="walletId" label="Wallet">
-          <WalletSelector walletId={walletId || 0} wallets={wallets} />
+          <WalletSelector walletId={walletId || 0} />
         </FormGroup>
         <FormGroup name="name" label="Name">
           <NameInput

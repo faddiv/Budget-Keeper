@@ -156,7 +156,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRowProp
 
     renderEditRow() {
         const { item } = this.state;
-        const { wallets, rowColor, selected, onError } = this.props;
+        const { rowColor, selected, onError } = this.props;
         const actualRowColor = rowColor && rowColor(item);
         return (
             <tr className={classNames(actualRowColor, { selected })} onChange={this.handleInputChange}
@@ -174,7 +174,7 @@ export class TransactionTableRow extends React.Component<TransactionTableRowProp
                     <input type="number" className="form-control" value={item.price} name="price" autoComplete="off" onChange={noop} />
                 </td>
                 <td>
-                    <WalletSelector walletId={item.walletId || 0} wallets={wallets} className="form-control" />
+                    <WalletSelector walletId={item.walletId || 0} className="form-control" />
                 </td>
                 <td>
                     <CategoryInput value={item.category || ""} onSelect={this.categorySelected} className="form-control" onError={onError} />
