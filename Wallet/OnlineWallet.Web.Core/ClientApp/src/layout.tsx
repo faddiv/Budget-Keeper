@@ -1,4 +1,4 @@
-import { Navbar, AlertList, TransactionSummary } from "./walletCommon";
+import { MainMenu, AlertList, TransactionSummary } from "./walletCommon";
 
 interface LayoutProps {
 }
@@ -6,7 +6,7 @@ interface LayoutProps {
 const Layout: React.SFC<LayoutProps> = ({ ...rest }) => {
     return (
         <>
-            <Navbar />
+            <MainMenu />
             <AlertList />
             <main role="main" className="container">
                 {rest.children}

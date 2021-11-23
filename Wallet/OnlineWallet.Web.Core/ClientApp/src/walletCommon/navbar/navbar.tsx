@@ -1,69 +1,47 @@
-import { NavLink } from "react-router-dom";
-import classNames from "classnames";
-import { bind } from "bind-decorator";
+import { Link, NavLink } from "react-router-dom";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
-import { MenuItem } from "./menuItem";
-import { DropdownMenu } from "./dropdownMenu";
-import { Collapse } from "../../react-ext";
-import { Component } from "react";
-
-export interface NavbarProps {
-}
-
-export interface NavbarState {
-    open: boolean;
-}
-
-export class Navbar extends Component<NavbarProps, NavbarState> {
-
-    constructor(props: NavbarProps) {
-        super(props);
-        this.state = {
-            open: false
-        };
-    }
-
-    shouldComponentUpdate(_props: NavbarProps, state: NavbarState) {
-        return state.open !== this.state.open;
-    }
-
-    @bind
-    toggleNavbar() {
-        this.setState((prevState) => {
-            return {
-                open: !prevState.open
-            };
-        });
-    }
-
-    render() {
-        const { open } = this.state;
-        const collapsed = !open;
-        return (
-            <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-                <NavLink to="/" className="navbar-brand" exact>Wallet</NavLink>
-                <button className={classNames("navbar-toggler", { collapsed })} type="button"
-                    aria-controls="walletNavbar" aria-expanded={open} aria-label="Open main menu" onClick={this.toggleNavbar}>
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <Collapse open={open} className="navbar-collapse" id="walletNavbar">
-                    <ul className="navbar-nav mr-auto">
-                        <MenuItem to="/" exact>Home</MenuItem>
-                        <MenuItem to="/transactions">Transactions</MenuItem>
-                        <DropdownMenu name="Statistics">
-                            <NavLink to="/statistics/yearly" className="dropdown-item" activeClassName="active">Yearly statistics</NavLink>
-                            <NavLink to="/statistics/category" className="dropdown-item" activeClassName="active">Category statistics</NavLink>
-                            <NavLink to="/statistics/articles" className="dropdown-item" activeClassName="active">Articles</NavLink>
-                        </DropdownMenu>
-                        <DropdownMenu name="Export/Import">
-                            <NavLink to="/import" className="dropdown-item" activeClassName="active">Import</NavLink>
-                            <NavLink to="/export" className="dropdown-item" activeClassName="active">Export</NavLink>
-                        </DropdownMenu>
-                        <MenuItem to="/wallets">Wallets</MenuItem>
-                        <MenuItem to="/mobil">Mobil</MenuItem>
-                    </ul>
-                </Collapse>
-            </nav>
-        );
-    }
+export function MainMenu() {
+  return (
+    <Navbar expand="lg" bg="dark" variant="dark">
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+          Wallet
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="main-menu-nav" />
+        <Navbar.Collapse id="main-menu-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={NavLink} to="/" exact>
+              Home
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/transactions">
+              Transactions
+            </Nav.Link>
+            <NavDropdown title="Statistics" id="statistics-nav">
+              <NavDropdown.Item as={NavLink} to="/statistics/yearly" activeClassName="active">
+                Yearly statistics
+              </NavDropdown.Item>
+              <NavDropdown.Item as={NavLink} to="/statistics/category" activeClassName="active">
+                Category statistics
+              </NavDropdown.Item>
+              <NavDropdown.Item as={NavLink} to="/statistics/articles" activeClassName="active">
+                Articles
+              </NavDropdown.Item>
+            </NavDropdown>
+            <NavDropdown title="Export/Import" id="export-import-nav">
+              <NavDropdown.Item as={NavLink} to="/import" activeClassName="active">
+                Import
+              </NavDropdown.Item>
+              <NavDropdown.Item as={NavLink} to="/export" activeClassName="active">
+                Export
+              </NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link as={NavLink} to="/wallets">
+              Wallets
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
 }

@@ -11,12 +11,12 @@ import {
   Wallets,
   YearlyStatisticsPage,
 } from "./pages";
-import { Navbar } from "./walletCommon";
+import { MainMenu } from "./walletCommon";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <MainMenu />
       <Container className="main" as="main" role="main">
         <Switch>
           <Route path="/" component={Home} />
