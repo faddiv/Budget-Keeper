@@ -1,5 +1,5 @@
 export interface ArticleModel {
-    name?: string;
+    name: string;
 
     nameHighlighted?: string;
 

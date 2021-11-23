@@ -1,24 +1,54 @@
-import * as React from "react";
 import { CategoryModel, categoryService } from "../../walletApi";
-import { Autocomplete } from "../../react-ext";
+import AsyncCreatable from "react-select/async-creatable";
+import { PropsBase } from "../../react-ext";
+import { components, InputProps } from "react-select";
+import { useSelectExt } from "./useSelectExt";
 
-interface CategoryInputProps {
-    value: string;
-    onError: (error: Error) => void;
-    onChange?: (value: React.SyntheticEvent<HTMLInputElement>) => void;
-    autoFocus?: boolean;
-    onSelect?: (selected: CategoryModel) => void;
-    className?: string;
+interface SelectOption {
+  value: CategoryModel;
+  label: string;
 }
 
-export const CategoryInput: React.SFC<CategoryInputProps> = ({ value, onChange, autoFocus, onSelect, className, onError, ...rest }) => {
-    return (
-        <Autocomplete name="category" value={value} onFilter={filter} autoFocus={autoFocus} onChange={onChange} onSelect={onSelect} className={className} onError={onError}>
-            {rest.children}
-        </Autocomplete>
-    );
+interface CategoryInputProps extends PropsBase {
+  value: string;
+  onError: (error: Error) => void;
+  onSelect?: (selected: CategoryModel) => void;
+  className?: string;
+}
+const empty: CategoryModel = {
+  name: "",
+  nameHighlighted: "",
+  occurence: 0,
 };
 
-function filter(value: string) {
-    return categoryService.filterBy(value);
+export function CategoryInput({ value, onSelect, className, onError }: CategoryInputProps) {
+  const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, onSelect);
+
+  return (
+    <AsyncCreatable
+      ref={selectRef}
+      loadOptions={filter}
+      components={{ Input }}
+      formatCreateLabel={(text) => `${text} - Unknown`}
+      value={selected}
+      onChange={changeHandler}
+      onCreateOption={createHandler}
+    />
+  );
 }
+
+async function filter(value: string, callback: (options: SelectOption[]) => void) {
+  const result = await categoryService.filterBy(value);
+  const list = result.map<SelectOption>((value) => ({ value, label: value.name || "" }));
+  callback(list);
+}
+
+function Input(props: InputProps<SelectOption, false>) {
+  return <components.Input {...props} data-lpignore={true} />;
+}
+
+/*
+<Autocomplete name="category" value={value} onFilter={filter} autoFocus={autoFocus} onChange={onChange} onSelect={onSelect} className={className} onError={onError}>
+            {rest.children}
+        </Autocomplete>
+*/

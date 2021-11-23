@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { FunctionComponent } from "react";
 
 interface PagerProps {
     pageSize: number;
@@ -7,7 +8,7 @@ interface PagerProps {
     onPageSelected: (page: number) => void;
 }
 
-export const Pager: React.SFC<PagerProps> = ({ pageSize, page, countAll, onPageSelected }) => {
+export const Pager: FunctionComponent<PagerProps> = ({ pageSize, page, countAll, onPageSelected }) => {
     if (pageSize === 0 || !countAll) {
         return null;
     }
@@ -51,7 +52,7 @@ function item(page: number, text: string, callback: (number: number) => void, en
 
 function link(page: number, text: string, callback: (number: number) => void, enabled: boolean) {
     if (enabled) {
-        return <a className="page-link" onClick={evt => { evt.preventDefault(); callback(page); }}>{text}</a>;
+        return <button className="page-link" onClick={evt => { evt.preventDefault(); callback(page); }}>{text}</button>;
     } else {
         return <span className="page-link">{text}</span>;
     }

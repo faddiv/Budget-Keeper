@@ -1,5 +1,5 @@
 export interface CategoryModel {
-    name?: string;
+    name: string;
 
     nameHighlighted?: string;
 

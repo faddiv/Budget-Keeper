@@ -53,7 +53,7 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
         grouping[element.name || ""].occurence = occurence;
       } else {
         grouping[element.name || ""] = {
-          name: element.name,
+          name: element.name || "",
           category: element.category,
           occurence: 1,
         };
