@@ -2,11 +2,3 @@
 @import "transaction-summary";
 @import "transaction-table";
 @import "statistics";
-
-.cmd-btn-line {
-    display: flex;
-
-    >:nth-child(1n+2) {
-        margin-left: 6px;
-    }
-}

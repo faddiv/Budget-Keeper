@@ -46,9 +46,3 @@ async function filter(value: string, callback: (options: SelectOption[]) => void
 function Input(props: InputProps<SelectOption, false>) {
   return <components.Input {...props} data-lpignore={true} />;
 }
-
-/*
-<Autocomplete name="category" value={value} onFilter={filter} autoFocus={autoFocus} onChange={onChange} onSelect={onSelect} className={className} onError={onError}>
-            {rest.children}
-        </Autocomplete>
-*/
