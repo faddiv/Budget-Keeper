@@ -7,6 +7,7 @@ import { FormGroup, transactionRules, TransactionViewModel, WalletSelector, Name
 import { ArticleModel, CategoryModel } from "../../../walletApi";
 import { DirectionCheck } from "./directionCheck";
 import { Component } from "react";
+import { Form } from "react-bootstrap";
 
 export interface AddItemFormProps {
   addLine: (model: TransactionViewModel) => void;
@@ -139,7 +140,7 @@ export class AddItemForm extends Component<AddItemFormProps, AddItemFormState> {
     const { onError } = this.props;
     const { category, comment, createdAt, direction, name, price, walletId, validation } = this.state;
     return (
-      <form onChange={this.handleInputChange} onSubmit={this.addLine}>
+      <Form onChange={this.handleInputChange} onSubmit={this.addLine}>
         <FormGroup name="walletId" label="Wallet">
           <WalletSelector walletId={walletId || 0} />
         </FormGroup>
@@ -168,7 +169,7 @@ export class AddItemForm extends Component<AddItemFormProps, AddItemFormState> {
         <button type="button" className="btn btn-success" onClick={this.saveAll}>
           Save
         </button>
-      </form>
+      </Form>
     );
   }
 }
