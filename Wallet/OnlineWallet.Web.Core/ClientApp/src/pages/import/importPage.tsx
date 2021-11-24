@@ -4,13 +4,14 @@ import { bind } from "bind-decorator";
 
 import { AlertsActions } from "../../actions/alerts";
 import { Layout } from "../../layout";
-import { updateState, NavLink, TabPane } from "../../react-ext";
+import { updateState } from "../../react-ext";
 import { StockTable } from "./subComponents";
 import { _, toDateString, toErrorMessage } from "../../helpers";
 import { transactionService, importExportService, Wallet, ArticleModel, Transaction } from "../../walletApi";
 import { RootState } from "../../reducers";
 import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "../../walletCommon";
 import { Component } from "react";
+import { Tab, Tabs } from "react-bootstrap";
 
 export interface ImportPageProps {
   wallets: Wallet[];
@@ -212,16 +213,8 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
             <span>{0}</span>
           </div>
         </div>
-        <ul className="nav nav-tabs">
-          <NavLink name="full" activeKey={activeTab} onActivate={this.setActiveTab}>
-            Full list
-          </NavLink>
-          <NavLink name="groupStock" activeKey={activeTab} onActivate={this.setActiveTab}>
-            Group stock
-          </NavLink>
-        </ul>
-        <div className="tab-content">
-          <TabPane name="full" activeKey={activeTab}>
+        <Tabs id="import" activeKey={activeTab} onSelect={this.setActiveTab}>
+          <Tab eventKey="full" title="Full list">
             <TransactionTable
               items={transactions.slice(dataFrom(page, pageSize, countAll), dataTo(page, pageSize, countAll))}
               wallets={wallets}
@@ -230,12 +223,12 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
               rowColor={this.rowColoring}
             />
             <Pager page={page} pageSize={pageSize} countAll={countAll} onPageSelected={this.selectPage} />
-          </TabPane>
-          <TabPane name="groupStock" activeKey={activeTab}>
+          </Tab>
+          <Tab eventKey="groupStock" title="Group stock">
             <StockTable articles={stocks.slice(dataFrom(pageStocks, pageSize, countStocks), dataTo(pageStocks, pageSize, countStocks))} />
             <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage} />
-          </TabPane>
-        </div>
+          </Tab>
+        </Tabs>
       </Layout>
     );
   }
