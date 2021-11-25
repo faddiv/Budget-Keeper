@@ -4,6 +4,7 @@ import { ArticleModel, articleService } from "../../walletApi";
 import AsyncCreatable from "react-select/async-creatable";
 import { components, InputProps } from "react-select";
 import { useSelectExt } from "./useSelectExt";
+import { rsBsStyles } from "./reactSelectBootstrapStyles";
 
 interface SelectOption {
   value: ArticleModel;
@@ -11,6 +12,7 @@ interface SelectOption {
 }
 
 interface NameInputProps extends PropsBase {
+  name?: string;
   value: string;
   onError: (error: Error) => void;
   autoFocus?: boolean;
@@ -27,7 +29,7 @@ const empty: ArticleModel = {
   occurence: 0,
 };
 
-export const NameInput: FunctionComponent<NameInputProps> = ({ value, autoFocus, onSelect, className, focusAction, onError }) => {
+export function NameInput({ value, autoFocus, onSelect, className, focusAction, onError, name = "name" }: NameInputProps) {
   const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, onSelect);
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export const NameInput: FunctionComponent<NameInputProps> = ({ value, autoFocus,
 
   return (
     <AsyncCreatable
+      inputId={name}
       ref={selectRef}
       loadOptions={filter}
       components={{ Input }}
@@ -51,9 +54,10 @@ export const NameInput: FunctionComponent<NameInputProps> = ({ value, autoFocus,
       onChange={changeHandler}
       onCreateOption={createHandler}
       autoFocus={autoFocus}
+      styles={rsBsStyles}
     />
   );
-};
+}
 
 async function filter(value: string, callback: (options: SelectOption[]) => void) {
   const result = await articleService.filterBy(value, 6);

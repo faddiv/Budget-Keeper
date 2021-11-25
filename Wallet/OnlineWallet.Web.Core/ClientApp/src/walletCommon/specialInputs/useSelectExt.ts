@@ -9,12 +9,12 @@ export interface SelectOption<TModel extends { name: string }> {
 export function useSelectExt<TModel extends { name: string }>(value: string, empty: TModel, onSelect?: (selected: TModel) => void) {
   const selectRef = useRef<SelectInstance<SelectOption<TModel>>>(null);
   const [selected, setSelected] = useState<SelectOption<TModel> | null>(null);
-  
+
   const changeHandler = useCallback(
     (newValue: OnChangeValue<SelectOption<TModel>, false>) => {
       setSelected(newValue);
       if (!newValue) {
-        onSelect && onSelect(Object.assign({ name: "" }, empty));
+        onSelect && onSelect(Object.assign({}, empty, { name: "" }));
         return;
       }
       onSelect && onSelect(newValue.value);
@@ -24,7 +24,7 @@ export function useSelectExt<TModel extends { name: string }>(value: string, emp
 
   const createHandler = useCallback(
     (inputValue: string) => {
-      const newValue = Object.assign({ name: inputValue }, empty);
+      const newValue = Object.assign({}, empty, { name: inputValue });
       setSelected({
         value: newValue,
         label: inputValue,
@@ -41,7 +41,7 @@ export function useSelectExt<TModel extends { name: string }>(value: string, emp
     } else if (!selected || value !== selected.label) {
       selectRef.current.setValue(
         {
-          value: Object.assign({ name: value }, empty),
+          value: Object.assign({}, empty, { name: value }),
           label: value,
         },
         "select-option"
