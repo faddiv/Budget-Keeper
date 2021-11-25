@@ -1,4 +1,4 @@
-export * from "./alertList";
+export * from "./Alerts";
 export * from "./directionIcon";
 export * from "./editDelete";
 export * from "./formGroup";
