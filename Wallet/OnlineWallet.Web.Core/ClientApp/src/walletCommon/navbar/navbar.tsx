@@ -3,7 +3,7 @@ import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 export function MainMenu() {
   return (
-    <Navbar expand="lg" bg="dark" variant="dark">
+    <Navbar expand="lg" bg="dark" variant="dark" sticky="top" className="mb-3">
       <Container>
         <Navbar.Brand as={Link} to="/">
           Wallet
