@@ -1,10 +1,9 @@
-import * as React from "react";
-import moment from "moment";
-import { bind } from "bind-decorator";
-
-import { renderRange, switchCase, updateState } from "../../react-ext";
-import { dateFormat, noop } from "../../helpers";
+import { dateFormat, dateFormatNew } from "../../helpers";
 import { importExportService } from "../../walletApi";
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { FieldErrors, useForm, UseFormRegister } from "react-hook-form";
+import { useCallback, useMemo } from "react";
+import { startOfMonth, endOfMonth, format } from "date-fns";
 
 export interface ExportPageProps {}
 
@@ -16,142 +15,139 @@ export interface ExportPageState {
   year: string;
   month: string;
 }
+const rangeTypes = [
+  {
+    value: "1",
+    name: "Year/Month",
+  },
+  {
+    value: "2",
+    name: "From-To",
+  },
+];
 
-export class ExportPage extends React.Component<ExportPageProps, ExportPageState> {
-  rangeTypes = [
-    {
-      value: "1",
-      name: "Year/Month",
-    },
-    {
-      value: "2",
-      name: "From-To",
-    },
-  ];
-  constructor(props: ExportPageProps) {
-    super(props);
-    const now = moment();
-    this.state = {
-      rangeType: "1",
-      file: "Export",
-      month: (now.month() + 1).toString(),
-      year: now.year().toString(),
-      rangeFrom: now.startOf("month").format(dateFormat),
-      rangeTo: now.endOf("month").format(dateFormat),
+function getRangeSelection(state: ExportPageState) {
+  const { rangeFrom, rangeTo, rangeType, month, year } = state;
+  if (rangeType === "1") {
+    const from = new Date(parseInt(year, 10), parseInt(month, 10) - 1, 1);
+    return {
+      rangeFrom: format(from, dateFormat),
+      rangeTo: format(endOfMonth(from), dateFormat),
     };
   }
+  return { rangeFrom, rangeTo };
+}
 
-  @bind
-  export(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const { file } = this.state;
-    const { rangeFrom, rangeTo } = this.getRangeSelection();
+export function ExportPage() {
+  const now = useMemo(() => new Date(), []);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ExportPageState>({
+    shouldUnregister: true,
+    defaultValues: {
+      rangeType: "1",
+      file: "Export",
+      month: (now.getMonth() + 1).toString(),
+      year: now.getFullYear().toString(),
+      rangeFrom: format(startOfMonth(now), dateFormatNew),
+      rangeTo: format(endOfMonth(now), dateFormatNew),
+    },
+  });
+  const rangeType = watch("rangeType");
+
+  const onSubmit = useCallback((data: ExportPageState) => {
+    const { file } = data;
+    const { rangeFrom, rangeTo } = getRangeSelection(data);
     importExportService.exportRange(rangeFrom, rangeTo, file);
-  }
-
-  getRangeSelection() {
-    const { rangeFrom, rangeTo, rangeType, month, year } = this.state;
-    if (rangeType === "1") {
-      const from = moment([parseInt(year, 10), parseInt(month, 10) - 1, 1]);
-      return {
-        rangeFrom: from.format(dateFormat),
-        rangeTo: from.endOf("month").format(dateFormat),
-      };
-    }
-    return { rangeFrom, rangeTo };
-  }
-
-  @bind
-  handleInputChange(event: React.SyntheticEvent<HTMLFormElement>) {
-    const state = updateState(event);
-    this.setState(state);
-  }
-
-  @bind
-  renderYearMonthSelector() {
-    const { month, year } = this.state;
-    return (
-      <div className="card-body">
-        <div className="form-group row">
-          <label htmlFor="year" className="col-sm-2 col-form-label">
-            Year/Month
-          </label>
-          <div className="col-sm-5">
-            <input type="number" className="form-control" name="year" value={year} onChange={noop} />
-          </div>
-          <div className="col-sm-5">
-            <select className="form-control" name="month" value={month} onChange={noop}>
-              {renderRange(1, 12, (i) => (
-                <option key={i}>{i}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  @bind
-  renderRangeSelector() {
-    const { rangeFrom, rangeTo } = this.state;
-    return (
-      <div className="card-body">
-        <div className="form-group row">
-          <label htmlFor="rangeFrom" className="col-sm-2 col-form-label">
-            From
-          </label>
-          <div className="col-sm-4">
-            <input type="date" className="form-control" name="rangeFrom" value={rangeFrom} onChange={noop} />
-          </div>
-          <label htmlFor="rangeFrom" className="col-sm-2 col-form-label">
-            To
-          </label>
-          <div className="col-sm-4">
-            <input type="date" className="form-control" name="rangeTo" value={rangeTo} onChange={noop} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  render() {
-    const { rangeType, file } = this.state;
-    return (
-      <form onChange={this.handleInputChange} onSubmit={this.export}>
-        <div className="form-group row">
-          <label htmlFor="file" className="col-sm-2 col-form-label">
-            Export file
-          </label>
-          <div className="col-sm-10">
-            <input type="text" id="file" name="file" className="form-control" value={file} onChange={noop} />
-          </div>
-        </div>
-        <div className="form-group row">
-          <label htmlFor="rangeType" className="col-sm-2 col-form-label">
-            Range type
-          </label>
-          <div className="col-sm-10">
-            <select className="form-control" name="rangeType" value={rangeType} onChange={noop}>
-              {this.rangeTypes.map((v) => (
-                <option key={v.value} value={v.value}>
-                  {v.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="card">
-          {switchCase(rangeType, {
-            1: this.renderYearMonthSelector,
-            2: this.renderRangeSelector,
-          })}
-        </div>
-        <div className="form-group" style={{ marginTop: "0.5rem" }}>
-          <button type="submit" className="btn btn-primary">
+  }, []);
+  return (
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form.Group as={Row} className="mb-3" controlId="file">
+        <Form.Label column sm="2">
+          Export file
+        </Form.Label>
+        <Col>
+          <Form.Control {...register("file", { required: true })} isInvalid={!!errors.file} />
+          <Form.Control.Feedback type="invalid">Field required.</Form.Control.Feedback>
+        </Col>
+        <Col sm="auto">
+          <Button type="submit" variant="primary">
             Download
-          </button>
-        </div>
-      </form>
-    );
-  }
+          </Button>
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3" controlId="rangeType">
+        <Form.Label column sm="2">
+          Range type
+        </Form.Label>
+        <Col>
+          <Form.Select {...register("rangeType")}>
+            {rangeTypes.map((v) => (
+              <option key={v.value} value={v.value}>
+                {v.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+      </Form.Group>
+      <Card>
+        {rangeType === "1" && <YearMonthSelector register={register} errors={errors} />}
+        {rangeType === "2" && <RangeSelector register={register} errors={errors} />}
+      </Card>
+    </Form>
+  );
+}
+interface YearMonthSelectorProps {
+  register: UseFormRegister<ExportPageState>;
+  errors: FieldErrors<ExportPageState>;
+}
+function YearMonthSelector({ register, errors }: YearMonthSelectorProps) {
+  return (
+    <Card.Body>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm="2">
+          Year/Month
+        </Form.Label>
+        <Col>
+          <Form.Control type="number" {...register("year", { required: true })} isInvalid={!!errors.year} />
+          <Form.Control.Feedback type="invalid">Field required.</Form.Control.Feedback>
+        </Col>
+        <Col>
+          <Form.Control type="number" {...register("month", { required: true })} isInvalid={!!errors.month} />
+          <Form.Control.Feedback type="invalid">Field required.</Form.Control.Feedback>
+        </Col>
+      </Form.Group>
+    </Card.Body>
+  );
+}
+
+interface RangeProps {
+  register: UseFormRegister<ExportPageState>;
+  errors: FieldErrors<ExportPageState>;
+}
+
+function RangeSelector({ register, errors }: RangeProps) {
+  return (
+    <Card.Body>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm="1">
+          From
+        </Form.Label>
+        <Col>
+          <Form.Control type="date" {...register("rangeFrom", { required: true })} isInvalid={!!errors.rangeFrom} />
+          <Form.Control.Feedback type="invalid">Field required.</Form.Control.Feedback>
+        </Col>
+        <Form.Label column sm="1">
+          To
+        </Form.Label>
+        <Col>
+          <Form.Control type="date" {...register("rangeTo", { required: true })} isInvalid={!!errors.rangeTo} />
+          <Form.Control.Feedback type="invalid">Field required.</Form.Control.Feedback>
+        </Col>
+      </Form.Group>
+    </Card.Body>
+  );
 }

@@ -1,6 +1,7 @@
 import moment from "moment";
 
 export const dateFormat = "YYYY-MM-DD";
+export const dateFormatNew = "yyyy-MM-dd";
 export function toDateString(dateTime: Date | undefined) {
     return toServerDate(moment(dateTime));
 }
