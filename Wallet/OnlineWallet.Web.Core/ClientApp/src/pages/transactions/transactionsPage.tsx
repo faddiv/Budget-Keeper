@@ -8,7 +8,6 @@ import { bind } from "bind-decorator";
 import { AlertsActions } from "../../actions/alerts";
 import { transactionService, Wallet, BalanceInfo, statisticsService } from "../../walletApi";
 import { toErrorMessage, _ } from "../../helpers";
-import { Layout } from "../../layout";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "../../walletCommon";
 import { MonthSelector, Balance } from "./subComponents";
 import { RootState } from "../../reducers";
@@ -132,7 +131,7 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
     const { items, changedItems, balance, year, month } = this.state;
     const { wallets } = this.props;
     return (
-      <Layout>
+      <>
         <form>
           <div className="form-row">
             <div className="col">
@@ -154,7 +153,7 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
           deleted={this.deleteItem}
           update={this.update}
         />
-      </Layout>
+      </>
     );
   }
 }

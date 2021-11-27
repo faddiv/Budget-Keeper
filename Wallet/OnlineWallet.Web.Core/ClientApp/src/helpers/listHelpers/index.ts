@@ -6,12 +6,14 @@ import { selectMap } from "./selectMap";
 import { replaceByIndex } from "./replaceByIndex";
 import { removeByIndex } from "./removeByIndex";
 
-export default {
-    contains,
-    findLast,
-    remove,
-    removeByIndex,
-    replace,
-    replaceByIndex,
-    selectMap
+const _ = {
+  contains,
+  findLast,
+  remove,
+  removeByIndex,
+  replace,
+  replaceByIndex,
+  selectMap,
 };
+
+export default _;

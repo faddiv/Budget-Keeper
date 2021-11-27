@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
+import { useEffect } from "react";
 import { PropsBase } from "../../react-ext";
 import { ArticleModel, articleService } from "../../walletApi";
 import AsyncCreatable from "react-select/async-creatable";

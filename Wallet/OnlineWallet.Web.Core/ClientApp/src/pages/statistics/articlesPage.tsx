@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { bind } from "bind-decorator";
 
-import { Layout } from "../../layout";
 import { ArticleModel, articleService, Wallet, transactionService } from "../../walletApi";
 import { updateState, noAction } from "../../react-ext";
 import { getWalletNameById, TransactionViewModel, mapTransactionViewModel } from "../../walletCommon";
@@ -136,7 +135,7 @@ class ArticlesPage2 extends React.Component<ArticlesPageProps, ArticlesPageState
     render() {
         const { name, articles, sync } = this.state;
         return (
-            <Layout>
+            <>
                 <form onSubmit={noAction}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Article</label>
@@ -164,7 +163,7 @@ class ArticlesPage2 extends React.Component<ArticlesPageProps, ArticlesPageState
                         {articles.map(item => [this.renderTableRow(item), this.renderSubTable(item)])}
                     </tbody>
                 </table>
-            </Layout>
+            </>
         );
     }
 }

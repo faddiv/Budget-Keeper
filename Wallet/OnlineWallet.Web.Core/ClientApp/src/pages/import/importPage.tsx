@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bind } from "bind-decorator";
 
 import { AlertsActions } from "../../actions/alerts";
-import { Layout } from "../../layout";
 import { updateState } from "../../react-ext";
 import { StockTable } from "./subComponents";
 import { _, toDateString, toErrorMessage } from "../../helpers";
@@ -192,7 +191,7 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
     const countAll = transactions ? transactions.length : 0;
     const countStocks = stocks ? stocks.length : 0;
     return (
-      <Layout>
+      <>
         <div className="row">
           <form onChange={this.handleInputChange} onSubmit={this.upload}>
             <div className="form-group">
@@ -229,7 +228,7 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
             <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage} />
           </Tab>
         </Tabs>
-      </Layout>
+      </>
     );
   }
 }

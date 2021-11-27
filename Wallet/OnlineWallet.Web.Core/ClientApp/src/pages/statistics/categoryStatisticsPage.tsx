@@ -5,7 +5,6 @@ import { RouteComponentProps } from "react-router";
 import { bindActionCreators } from "redux";
 import { bind } from "bind-decorator";
 
-import { Layout } from "../../layout";
 import { AlertsActions } from "../../actions/alerts";
 import { CategoryStatisticsSummary, statisticsService, CategoryStatistics, Wallet } from "../../walletApi";
 import { CategoryTable } from "./subComponents/categoryTable";
@@ -85,7 +84,7 @@ class CategoryStatisticsPage2 extends React.Component<CategoryStatisticsPageProp
     const date = moment([year, 0, 1]);
     const endDate = moment(date).endOf("year");
     return (
-      <Layout>
+      <>
         <YearSelector year={year} link="/statistics/category" />
         <Tabs defaultActiveKey="yearly" id="statistics-tabs">
           <Tab key="yearly" eventKey="yearly" title="Full list">
@@ -93,7 +92,7 @@ class CategoryStatisticsPage2 extends React.Component<CategoryStatisticsPageProp
           </Tab>
           {monthly.map(this.renderMonthTable)}
         </Tabs>
-      </Layout>
+      </>
     );
   }
 }
