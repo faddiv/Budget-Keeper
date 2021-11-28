@@ -1,70 +1,14 @@
-import * as React from "react";
-import { bindActionCreators, compose } from "redux";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router";
-import { bind } from "bind-decorator";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
 import { RootState } from "../../../reducers";
 import { TransactionViewModel } from "../../models";
 import { TransactionSummaryActions, TransactionSummaryViewModel } from "../../../actions/transactionsSummary";
 import { MoneyDirection } from "../../../walletApi";
-
-export interface TransactionSummaryProps extends Partial<RouteComponentProps<void>> {
-  transactionSummary?: TransactionViewModel[];
-  actions?: typeof TransactionSummaryActions;
-}
-
-export interface TransactionSummaryState {}
-
-export class TransactionSummary2 extends React.Component<TransactionSummaryProps, TransactionSummaryState> {
-  private navListener: (() => void) | null = null;
-
-  @bind
-  private locationListener() {
-    const { actions, transactionSummary } = this.props;
-    if (actions && transactionSummary && transactionSummary.length > 0) {
-      actions.transactionsSelected([]);
-    }
-  }
-
-  componentDidMount() {
-    this.navListener = this.props.history?.listen(this.locationListener) || null;
-  }
-
-  componentWillUnmount() {
-    if (this.navListener) {
-      this.navListener();
-      this.navListener = null;
-    }
-  }
-
-  @bind
-  close() {
-    this.props.actions?.transactionsSelected([]);
-  }
-
-  render() {
-    const { transactionSummary } = this.props;
-    if (!transactionSummary || !transactionSummary.length) {
-      return null;
-    }
-    const expenses = sumPrice(transactionSummary, MoneyDirection.Expense);
-    const incomes = sumPrice(transactionSummary, MoneyDirection.Income);
-    const plans = sumPrice(transactionSummary, MoneyDirection.Plan);
-    return (
-      <div className="transaction-summary card bg-light">
-        <div className="crad-body">
-          <span>Expenses: {expenses}</span>&nbsp;
-          <span>Incomes: {incomes}</span>&nbsp;
-          <span>Plans: {plans}</span>
-          <button type="button" className="close" aria-label="Close" onClick={this.close}>
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-}
+import { Button } from "react-bootstrap";
+import { useCallback, useEffect } from "react";
+import styles from "./transaction-summary.module.scss";
+import cl from "classnames";
 
 function sumPrice(items: TransactionSummaryViewModel, dir: MoneyDirection): number {
   let sum: number = 0;
@@ -76,16 +20,36 @@ function sumPrice(items: TransactionSummaryViewModel, dir: MoneyDirection): numb
   return sum;
 }
 
-function mapStateToProps(state: RootState) {
-  return {
-    transactionSummary: state.transactionSummary,
-  };
-}
+export function TransactionSummary() {
+  const transactionSummary = useSelector<RootState, TransactionViewModel[]>((e) => e.transactionSummary, shallowEqual);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const closeHandler = useCallback(() => {
+    dispatch(TransactionSummaryActions.transactionsSelected([]));
+  }, [dispatch]);
+  useEffect(() => {
+    const destroy = history.listen(() => {
+      closeHandler();
+    });
+    return destroy;
+  }, [closeHandler, history]);
+  if (transactionSummary.length === 0) {
+    return null;
+  }
+  const expenses = sumPrice(transactionSummary, MoneyDirection.Expense);
+  const incomes = sumPrice(transactionSummary, MoneyDirection.Income);
+  const plans = sumPrice(transactionSummary, MoneyDirection.Plan);
 
-function mapDispatchToProps(dispatch: any) {
-  return {
-    actions: bindActionCreators(TransactionSummaryActions as any, dispatch) as typeof TransactionSummaryActions,
-  };
+  return (
+    <div className={cl(styles.summary, "bg-light")}>
+      <div>
+        <span>Expenses: {expenses}</span>&nbsp;
+        <span>Incomes: {incomes}</span>&nbsp;
+        <span>Plans: {plans}</span>
+      </div>
+      <Button variant="outline-secondary" className="pull-right" aria-label="Close" onClick={closeHandler}>
+        <span aria-hidden="true">&times;</span>
+      </Button>
+    </div>
+  );
 }
-
-export const TransactionSummary = compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(TransactionSummary2) as typeof TransactionSummary2;

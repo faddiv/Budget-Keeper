@@ -4,8 +4,14 @@ import { TransactionSummaryViewModel } from "../../actions/transactionsSummary";
 
 export type { TransactionSummaryViewModel };
 
-export default handleActions<TransactionSummaryViewModel, TransactionSummaryViewModel>({
+export default handleActions<TransactionSummaryViewModel, TransactionSummaryViewModel>(
+  {
     [Actions.transactionsSelected](_state, action) {
-        return action.payload;
-    }
-}, []);
+      if (_state.length === 0 && action.payload.length === 0) {
+        return _state;
+      }
+      return action.payload;
+    },
+  },
+  []
+);

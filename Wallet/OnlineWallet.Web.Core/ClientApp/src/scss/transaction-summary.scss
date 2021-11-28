@@ -8,14 +8,6 @@
   @return mix($color-base, $color, $level * $theme-color-interval);
 }
 
-.transaction-summary {
-    position: fixed;
-    bottom: 5px;
-    left: 5px;
-    right: 5px;
-    height: 32px;
-}
-
 .transactions {
     tbody {
         tr.selected {
