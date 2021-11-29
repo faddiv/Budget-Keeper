@@ -194,7 +194,6 @@ export interface TransactionTableProps2 {
   rowColor?: ITransactionTableExtFunction;
   update?(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
   deleted?(items: TransactionViewModel): void;
-  wallets: Wallet[]; // TODO remove
 }
 
 export function TransactionTable({ items, changedItems, deleted, rowColor, update }: TransactionTableProps2) {
@@ -242,7 +241,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
     getRowId: (original) => original.key?.toString() || "",
   });
   const getRowProps = useCallback(
-    (row: TransactionViewModel) => {
+    (row: TransactionViewModel, selectMode: SelectMode, transactionSummary: TransactionSummaryViewModel) => {
       const coloring = rowColor && rowColor(row);
       const selected = _.contains(transactionSummary, row);
       return {
@@ -285,7 +284,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
         },
       } as TableRowExt;
     },
-    [dispatch, rowColor, selectMode, transactionSummary]
+    [dispatch, rowColor]
   );
   return (
     <Table {...getTableProps()} className="transactions">
@@ -302,7 +301,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps(getRowProps(row.original))}>
+            <tr {...row.getRowProps(getRowProps(row.original, selectMode, transactionSummary))}>
               {row.cells.map((cell) => {
                 return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
               })}

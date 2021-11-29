@@ -107,13 +107,11 @@ class ArticlesPage2 extends React.Component<ArticlesPageProps, ArticlesPageState
 
     renderSubTable(item: ArticleModel) {
         const { openItem } = this.state;
-        const { wallets } = this.props;
         return (
             <DetailsTable key={item.name + "collapse"}
                 open={item === openItem}
                 colSpan={5}
                 parentRow={item}
-                wallets={wallets}
                 queryDetails={this.queryDetails}
                 toggleDetails={this.toggleDetails} />
         );

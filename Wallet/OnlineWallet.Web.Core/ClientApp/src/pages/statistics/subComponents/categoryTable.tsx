@@ -1,14 +1,13 @@
 import * as React from "react";
 import { bind } from "bind-decorator";
 
-import { CategoryStatistics, Wallet, transactionService } from "../../../walletApi";
+import { CategoryStatistics, transactionService } from "../../../walletApi";
 import { formatInt } from "../../../helpers";
 import { DetailsTable } from "./detailsTable";
 import { mapTransactionViewModel, TransactionViewModel } from "../../../walletCommon";
 
 export interface CategoryTableProps {
     categories: CategoryStatistics[];
-    wallets: Wallet[];
     startDate?: string;
     endDate?: string;
 }
@@ -55,7 +54,7 @@ export class CategoryTable extends React.Component<CategoryTableProps, CategoryT
     }
 
     render() {
-        const { categories, wallets } = this.props;
+        const { categories } = this.props;
         const { openItem } = this.state;
         return (
             <table className="table category-statistics">
@@ -76,7 +75,7 @@ export class CategoryTable extends React.Component<CategoryTableProps, CategoryT
                             <td>{item.spentPercent.toLocaleString("en", { style: "percent", maximumFractionDigits: 2 })}</td>
                         </tr>
                     ), (
-                        <DetailsTable key={item.name + " collapse"} colSpan={4} open={item === openItem} parentRow={item} wallets={wallets} queryDetails={this.queryDetails} toggleDetails={this.toggleDetails} />
+                        <DetailsTable key={item.name + " collapse"} colSpan={4} open={item === openItem} parentRow={item} queryDetails={this.queryDetails} toggleDetails={this.toggleDetails} />
                     )])}
                 </tbody>
             </table>

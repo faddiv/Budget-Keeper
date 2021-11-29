@@ -4,15 +4,13 @@ import { connect } from "react-redux";
 import { bind } from "bind-decorator";
 
 import { AlertsActions } from "../../actions/alerts";
-import { Wallet, transactionService } from "../../walletApi";
+import { transactionService } from "../../walletApi";
 import { AddItemForm, SaveAllResult } from "./subComponents";
-import { RootState } from "../../reducers";
 import { toErrorMessage, _ } from "../../helpers";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransaction } from "../../walletCommon";
 import { Prompt } from "react-router";
 
 export interface HomeProps {
-  wallets: Wallet[];
   actions?: typeof AlertsActions;
 }
 
@@ -107,22 +105,15 @@ class Home2 extends React.Component<HomeProps, HomeState> {
   }
 
   render() {
-    const { wallets } = this.props;
     const { items } = this.state;
     return (
       <>
         <Prompt when={this.needLeaveConfirmation()} message={leaveConfirmation} />
         <AddItemForm addLine={this.addLine} saveAll={this.saveAll} items={items} onError={this.errorHandler} />
-        <TransactionTable items={items} wallets={wallets} deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
+        <TransactionTable items={items} deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
       </>
     );
   }
-}
-
-function mapStateToProps(state: RootState) {
-  return {
-    wallets: state.wallets,
-  };
 }
 
 function mapDispatchToProps(dispatch: any) {
@@ -133,4 +124,4 @@ function mapDispatchToProps(dispatch: any) {
 
 const leaveConfirmation = "There are added items. Are you sure leaving?";
 
-export const Home = connect(mapStateToProps, mapDispatchToProps)(Home2);
+export const Home = connect(undefined, mapDispatchToProps)(Home2);

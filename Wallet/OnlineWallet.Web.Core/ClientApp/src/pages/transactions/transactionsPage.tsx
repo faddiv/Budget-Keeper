@@ -6,11 +6,10 @@ import { RouteComponentProps } from "react-router";
 import { bind } from "bind-decorator";
 
 import { AlertsActions } from "../../actions/alerts";
-import { transactionService, Wallet, BalanceInfo, statisticsService } from "../../walletApi";
+import { transactionService, BalanceInfo, statisticsService } from "../../walletApi";
 import { toErrorMessage, _ } from "../../helpers";
 import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "../../walletCommon";
 import { MonthSelector, Balance } from "./subComponents";
-import { RootState } from "../../reducers";
 
 export interface TransactionsParams {
   year?: string;
@@ -18,7 +17,6 @@ export interface TransactionsParams {
 }
 
 export interface TransactionsProps extends Partial<RouteComponentProps<TransactionsParams>> {
-  wallets: Wallet[];
   actions?: typeof AlertsActions;
 }
 
@@ -129,7 +127,6 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
 
   render() {
     const { items, changedItems, balance, year, month } = this.state;
-    const { wallets } = this.props;
     return (
       <>
         <form>
@@ -145,23 +142,10 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
           </div>
         </form>
         <Balance balance={balance} />
-        <TransactionTable
-          changedItems={changedItems}
-          wallets={wallets}
-          items={items}
-          rowColor={getDirectionColoring}
-          deleted={this.deleteItem}
-          update={this.update}
-        />
+        <TransactionTable changedItems={changedItems} items={items} rowColor={getDirectionColoring} deleted={this.deleteItem} update={this.update} />
       </>
     );
   }
-}
-
-function mapStateToProps(state: RootState) {
-  return {
-    wallets: state.wallets,
-  };
 }
 
 function mapDispatchToProps(dispatch: any) {
@@ -170,4 +154,4 @@ function mapDispatchToProps(dispatch: any) {
   };
 }
 
-export const Transactions = connect(mapStateToProps, mapDispatchToProps)(Transactions2);
+export const Transactions = connect(undefined, mapDispatchToProps)(Transactions2);

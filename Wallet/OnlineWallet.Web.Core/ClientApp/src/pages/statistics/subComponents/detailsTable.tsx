@@ -2,7 +2,6 @@ import { bind } from "bind-decorator";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { TransactionViewModel, TransactionTable, getDirectionColoring } from "../../../walletCommon";
-import { Wallet } from "../../../walletApi";
 import { Card, Collapse } from "react-bootstrap";
 import { AlertsActions } from "../../../actions/alerts";
 import { Component } from "react";
@@ -13,7 +12,6 @@ export interface DetailsTableProps {
   colSpan: number;
   queryDetails: (parentRow: any, take: number, skip: number) => Promise<TransactionViewModel[]>;
   toggleDetails: (parentRow: any, open: boolean) => void;
-  wallets: Wallet[];
   open: boolean;
   actions?: typeof AlertsActions;
 }
@@ -91,7 +89,7 @@ class DetailsTable2 extends Component<DetailsTableProps, DetailsTableState> {
   }
 
   render() {
-    const { wallets, colSpan } = this.props;
+    const { colSpan } = this.props;
     const { openedArticleTransactions, open } = this.state;
     return (
       <tr>
@@ -99,7 +97,7 @@ class DetailsTable2 extends Component<DetailsTableProps, DetailsTableState> {
           <Collapse in={open}>
             <Card>
               <Card.Body>
-                <TransactionTable wallets={wallets} items={openedArticleTransactions} rowColor={getDirectionColoring} />
+                <TransactionTable items={openedArticleTransactions} rowColor={getDirectionColoring} />
               </Card.Body>
               <Card.Footer>
                 <ul className="pagination justify-content-center">

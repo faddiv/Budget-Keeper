@@ -6,10 +6,9 @@ import { bindActionCreators } from "redux";
 import { bind } from "bind-decorator";
 
 import { AlertsActions } from "../../actions/alerts";
-import { CategoryStatisticsSummary, statisticsService, CategoryStatistics, Wallet } from "../../walletApi";
+import { CategoryStatisticsSummary, statisticsService, CategoryStatistics } from "../../walletApi";
 import { CategoryTable } from "./subComponents/categoryTable";
 import { YearSelector } from "./subComponents/yearSelector";
-import { RootState } from "../../reducers";
 import { toErrorMessage, toServerDate } from "../../helpers";
 import { Tab, Tabs } from "react-bootstrap";
 
@@ -18,7 +17,6 @@ export interface CategoryStatisticsPageParams {
 }
 
 export interface CategoryStatisticsPageProps extends Partial<RouteComponentProps<CategoryStatisticsPageParams>> {
-  wallets: Wallet[];
   actions: typeof AlertsActions;
 }
 
@@ -65,20 +63,18 @@ class CategoryStatisticsPage2 extends React.Component<CategoryStatisticsPageProp
   @bind
   renderMonthTable(monthData: CategoryStatistics[], monthIndex: number) {
     const { year } = this.state;
-    const { wallets } = this.props;
     const date = moment([year, monthIndex, 1]);
     const monthKey = date.format("MM");
     const endDate = moment(date).endOf("month");
     const monthName = date.format("MMM");
     return (
       <Tab key={monthKey} eventKey={monthKey} title={monthName}>
-        <CategoryTable categories={monthData} wallets={wallets} startDate={toServerDate(date)} endDate={toServerDate(endDate)} />
+        <CategoryTable categories={monthData} startDate={toServerDate(date)} endDate={toServerDate(endDate)} />
       </Tab>
     );
   }
 
   render() {
-    const { wallets } = this.props;
     const { stats, year } = this.state;
     const { yearly, monthly } = stats;
     const date = moment([year, 0, 1]);
@@ -88,7 +84,7 @@ class CategoryStatisticsPage2 extends React.Component<CategoryStatisticsPageProp
         <YearSelector year={year} link="/statistics/category" />
         <Tabs defaultActiveKey="yearly" id="statistics-tabs">
           <Tab key="yearly" eventKey="yearly" title="Full list">
-            <CategoryTable categories={yearly} wallets={wallets} startDate={toServerDate(date)} endDate={toServerDate(endDate)} />
+            <CategoryTable categories={yearly} startDate={toServerDate(date)} endDate={toServerDate(endDate)} />
           </Tab>
           {monthly.map(this.renderMonthTable)}
         </Tabs>
@@ -103,12 +99,6 @@ function mapDispatchToProps(dispatch: any) {
   };
 }
 
-function mapStateToProps(state: RootState) {
-  return {
-    wallets: state.wallets,
-  };
-}
-
 function defaultData(): CategoryStatisticsSummary {
   return {
     yearly: [],
@@ -116,4 +106,4 @@ function defaultData(): CategoryStatisticsSummary {
   };
 }
 
-export const CategoryStatisticsPage = connect(mapStateToProps, mapDispatchToProps)(CategoryStatisticsPage2);
+export const CategoryStatisticsPage = connect(undefined, mapDispatchToProps)(CategoryStatisticsPage2);

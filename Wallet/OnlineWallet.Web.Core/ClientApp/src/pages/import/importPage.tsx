@@ -6,14 +6,12 @@ import { AlertsActions } from "../../actions/alerts";
 import { updateState } from "../../react-ext";
 import { StockTable } from "./subComponents";
 import { _, toDateString, toErrorMessage } from "../../helpers";
-import { transactionService, importExportService, Wallet, ArticleModel, Transaction } from "../../walletApi";
-import { RootState } from "../../reducers";
+import { transactionService, importExportService, ArticleModel, Transaction } from "../../walletApi";
 import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "../../walletCommon";
 import { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 
 export interface ImportPageProps {
-  wallets: Wallet[];
   actions?: typeof AlertsActions;
 }
 
@@ -187,7 +185,6 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
 
   render() {
     const { activeTab, stocks, transactions, page, pageSize, pageStocks } = this.state;
-    const { wallets } = this.props;
     const countAll = transactions ? transactions.length : 0;
     const countStocks = stocks ? stocks.length : 0;
     return (
@@ -216,7 +213,6 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
           <Tab eventKey="full" title="Full list">
             <TransactionTable
               items={transactions.slice(dataFrom(page, pageSize, countAll), dataTo(page, pageSize, countAll))}
-              wallets={wallets}
               update={this.transactionUpdated}
               deleted={this.transactionDeleted}
               rowColor={this.rowColoring}
@@ -233,16 +229,10 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
   }
 }
 
-function mapStateToProps(state: RootState) {
-  return {
-    wallets: state.wallets,
-  };
-}
-
 function mapDispatchToProps(dispatch: any) {
   return {
     actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions,
   };
 }
 
-export const ImportPage = connect(mapStateToProps, mapDispatchToProps)(ImportPage2);
+export const ImportPage = connect(undefined, mapDispatchToProps)(ImportPage2);
