@@ -5,7 +5,7 @@ import { bind } from "bind-decorator";
 import { Wallet } from "../../../walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel, ITransactionTableExtFunction } from "../../../walletCommon";
-import { _ } from "../../../helpers";
+import { noop, _ } from "../../../helpers";
 import { TransactionSummaryActions, TransactionSummaryViewModel } from "../../../actions/transactionsSummary";
 import { RootState } from "../../../reducers";
 import { AlertsActions } from "../../../actions/alerts";
@@ -18,6 +18,7 @@ import { WalletsModel } from "../../../reducers/wallets/walletsReducers";
 import { DirectionIcon } from "../../directionIcon";
 import cl from "classnames";
 import { isClickableClicked } from "../../../react-ext";
+import { useCellEditor } from "./useCellEditor";
 
 type TableRowExt = Omit<DetailedHTMLProps<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>, "key">;
 enum SelectMode {
@@ -210,6 +211,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       {
         Header: "Name",
         accessor: "name",
+        Editor: (item) => <input value={item.row.original.name} onChange={noop} />
       },
       {
         Header: "Dir",
@@ -235,11 +237,14 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       },
     ];
   }, [wallets]);
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data: items,
-    getRowId: (original) => original.key?.toString() || "",
-  });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data: items,
+      getRowId: (original) => original.key?.toString() || "",
+    },
+    useCellEditor
+  );
   const getRowProps = useCallback(
     (row: TransactionViewModel, selectMode: SelectMode, transactionSummary: TransactionSummaryViewModel) => {
       const coloring = rowColor && rowColor(row);
