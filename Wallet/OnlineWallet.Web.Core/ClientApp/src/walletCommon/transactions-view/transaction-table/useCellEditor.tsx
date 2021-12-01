@@ -1,16 +1,20 @@
 import React, { useCallback } from "react";
 import { ActionType, Cell, Hooks, MetaBase, Row, TableCellProps, TableInstance, TableState } from "react-table";
+import { CellEditor } from "./CellEditor";
 
 const startEdit = "useCellEditor.startEdit";
 const endEdit = "useCellEditor.endEdit";
 
 function prepareRow<D extends object = {}>(row: Row<D>, meta: MetaBase<D>) {
   const editedCell = meta.instance.state.editedCell || { rowId: "", columnId: "" };
-  const rowEdited = (meta.instance.editEnabled || false) && editedCell.rowId !== row.id;
+  const rowEdited = (meta.instance.editEnabled || false) && editedCell.rowId === row.id;
   const columnId = editedCell.columnId;
   for (let index = 0; index < row.cells.length; index++) {
     const cell = row.cells[index];
     cell.isEdited = rowEdited && cell.column.id === columnId;
+    if (cell.isEdited && typeof cell.column.Editor === "undefined") {
+      cell.column.Editor = CellEditor;
+    }
   }
 }
 
@@ -26,8 +30,6 @@ function getCellProps<D extends object = {}>(props: Partial<TableCellProps>, met
       onDoubleClick: (event) => {
         event.preventDefault();
         meta.instance.dispatch({ type: startEdit, rowId, columnId });
-        console.log("Clicked:", meta.cell);
-        alert("Clicked");
       },
     } as React.HTMLAttributes<HTMLTableCellElement>,
   ];
@@ -35,10 +37,16 @@ function getCellProps<D extends object = {}>(props: Partial<TableCellProps>, met
 
 function reducer<D extends object = {}>(newState: TableState<D>, action: ActionType) {
   if (action.type === startEdit) {
-    newState.editedCell = { rowId: action.rowId, columnId: action.columnId };
+    return {
+      ...newState,
+      editedCell: { rowId: action.rowId, columnId: action.columnId },
+    };
   }
   if (action.type === endEdit) {
-    newState.editedCell = undefined;
+    return {
+      ...newState,
+      editedCell: undefined,
+    };
   }
   return newState;
 }

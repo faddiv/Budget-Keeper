@@ -210,13 +210,13 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       },
       {
         Header: "Name",
-        accessor: "name",
-        Editor: (item) => <input value={item.row.original.name} onChange={noop} />
+        accessor: "name"
       },
       {
         Header: "Dir",
         id: "direction",
-        accessor: (item) => <DirectionIcon direction={item.direction || 0} />,
+        accessor: "direction",
+        Cell: (cell) => <DirectionIcon direction={cell.value || 0} />,
       },
       {
         Header: "Price",
@@ -242,6 +242,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       columns,
       data: items,
       getRowId: (original) => original.key?.toString() || "",
+      editEnabled: true,
     },
     useCellEditor
   );
@@ -308,7 +309,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
           return (
             <tr {...row.getRowProps(getRowProps(row.original, selectMode, transactionSummary))}>
               {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                return <td {...cell.getCellProps()}>{cell.render(cell.isEdited ? "Editor" : "Cell")}</td>;
               })}
             </tr>
           );
