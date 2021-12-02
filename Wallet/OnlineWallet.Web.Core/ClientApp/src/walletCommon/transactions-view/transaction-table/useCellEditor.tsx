@@ -52,7 +52,16 @@ function reducer<D extends object = {}>(newState: TableState<D>, action: ActionT
 }
 
 function useInstance<D extends object = {}>(instance: TableInstance<D>) {
-  instance.endEdit = useCallback(() => instance.dispatch({ type: endEdit }), [instance]);
+  instance.submitCell = useCallback(
+    (cell: Cell<D>, newValue: any) => {
+      instance.submitCellHandler?.(cell.row.original, cell.column.id, newValue);
+      instance.dispatch({ type: endEdit });
+    },
+    [instance]
+  );
+  instance.cancelCell = useCallback(() => {
+    instance.dispatch({ type: endEdit });
+  }, [instance]);
 }
 
 export function useCellEditor<D extends object = {}>(hooks: Hooks<D>) {
@@ -63,11 +72,13 @@ export function useCellEditor<D extends object = {}>(hooks: Hooks<D>) {
 }
 
 declare module "react-table" {
-  export interface UseCellEditorOptions {
+  export interface UseCellEditorOptions<D extends object> {
     editEnabled?: boolean;
+    submitCellHandler?: (originalRow: D, cellId: IdType<D>, value: any) => void;
   }
-  export interface UseCellEditorInstanceProps extends UseCellEditorOptions {
-    endEdit(): void;
+  export interface UseCellEditorInstanceProps<D extends object> extends UseCellEditorOptions<D> {
+    submitCell(cell: Cell<D>, newValue: any): void;
+    cancelCell(): void;
   }
   export interface UseCellEditorState<D extends object> {
     editedCell: { rowId: string; columnId: IdType<D> } | undefined;
@@ -81,8 +92,8 @@ declare module "react-table" {
     isEdited: boolean;
   }
 
-  export interface TableOptions<D extends object> extends UseCellEditorOptions {}
-  export interface TableInstance<D extends object> extends UseCellEditorInstanceProps {}
+  export interface TableOptions<D extends object> extends UseCellEditorOptions<D> {}
+  export interface TableInstance<D extends object> extends UseCellEditorInstanceProps<D> {}
   export interface ColumnInterface<D extends object = {}, V = any> extends CellEditable<D, V> {}
   export interface TableState<D extends object = {}> extends UseCellEditorState<D> {}
   export interface Cell<D extends object = {}, V = any> extends UseCellEditorCellProps {}

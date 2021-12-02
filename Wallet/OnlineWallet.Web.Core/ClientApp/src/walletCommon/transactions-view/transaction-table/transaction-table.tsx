@@ -5,7 +5,7 @@ import { bind } from "bind-decorator";
 import { Wallet } from "../../../walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
 import { TransactionViewModel, ITransactionTableExtFunction } from "../../../walletCommon";
-import { noop, _ } from "../../../helpers";
+import { _ } from "../../../helpers";
 import { TransactionSummaryActions, TransactionSummaryViewModel } from "../../../actions/transactionsSummary";
 import { RootState } from "../../../reducers";
 import { AlertsActions } from "../../../actions/alerts";
@@ -15,10 +15,11 @@ import { Component, DetailedHTMLProps, HTMLAttributes, useCallback, useMemo, use
 import { WalletSelector } from "../../specialInputs";
 import { getWalletNameById } from "../../models";
 import { WalletsModel } from "../../../reducers/wallets/walletsReducers";
-import { DirectionIcon } from "../../directionIcon";
 import cl from "classnames";
 import { isClickableClicked } from "../../../react-ext";
 import { useCellEditor } from "./useCellEditor";
+import { ActionsCell } from "./ActionsCell";
+import { DirectionCell } from "./DirectionCell";
 
 type TableRowExt = Omit<DetailedHTMLProps<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>, "key">;
 enum SelectMode {
@@ -202,6 +203,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
   const transactionSummary = useSelector<RootState, TransactionSummaryViewModel>((e) => e.transactionSummary, shallowEqual);
   const dispatch = useDispatch();
   const [selectMode, setSelectMode] = useState(SelectMode.none);
+
   const columns = useMemo<Column<TransactionViewModel>[]>(() => {
     return [
       {
@@ -210,13 +212,12 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       },
       {
         Header: "Name",
-        accessor: "name"
+        accessor: "name",
       },
       {
         Header: "Dir",
-        id: "direction",
         accessor: "direction",
-        Cell: (cell) => <DirectionIcon direction={cell.value || 0} />,
+        Cell: DirectionCell,
       },
       {
         Header: "Price",
@@ -235,14 +236,30 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
         Header: "Comment",
         accessor: "comment",
       },
+      {
+        accessor: "key",
+        Header: "",
+        Cell: ActionsCell,
+      },
     ];
   }, [wallets]);
+  const submitCellHandler = useCallback(
+    (original: TransactionViewModel, columnId: string, newValue: any) => {
+      const newItem = { ...original, [columnId]: newValue };
+      const newItems = _.replace(items, newItem, original);
+      const changes = changedItems ? _.replace(changedItems, newItem, original, true) : undefined;
+      update?.(newItems, changes);
+    },
+    [changedItems, items, update]
+  );
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
       data: items,
       getRowId: (original) => original.key?.toString() || "",
       editEnabled: true,
+      submitCellHandler,
+      transactionDelete: deleted,
     },
     useCellEditor
   );
@@ -317,4 +334,12 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       </tbody>
     </Table>
   );
+}
+
+declare module "react-table" {
+  interface TransactionTableOptions {
+    transactionDelete?(items: TransactionViewModel): void;
+  }
+
+  export interface TableOptions<D extends object> extends TransactionTableOptions {}
 }
