@@ -1,5 +1,5 @@
 import { KeyboardEvent, useCallback } from "react";
-import { Col, Form, InputGroup, Row, Button } from "react-bootstrap";
+import { Form, InputGroup, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { CellProps } from "react-table";
 
@@ -23,16 +23,12 @@ export function createCellEditor<D extends object, V = any>(type: string) {
     );
     return (
       <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-        <Row className="align-items-center">
-          <Col>
-            <InputGroup>
-              <Form.Control type={type} {...register("value")} autoFocus onKeyDown={onKeyDown} data-lpignore="true" />
-              <Button variant="outline-success" type="submit">
-                <span className="fa fa-check"></span>
-              </Button>
-            </InputGroup>
-          </Col>
-        </Row>
+        <InputGroup>
+          <Form.Control type={type} {...register("value")} autoFocus onKeyDown={onKeyDown} data-lpignore="true" />
+          <Button variant="outline-success" type="submit">
+            <span className="fa fa-check"></span>
+          </Button>
+        </InputGroup>
       </Form>
     );
   };

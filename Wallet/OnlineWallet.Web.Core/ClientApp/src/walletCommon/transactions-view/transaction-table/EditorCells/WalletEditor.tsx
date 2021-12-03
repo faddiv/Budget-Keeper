@@ -18,7 +18,7 @@ export function WalletEditor<D extends object>({ value, submitCell, cancelCell, 
       if (evt.key === "Escape") {
         cancelCell();
       }
-      if(evt.key === "Enter") {
+      if (evt.key === "Enter") {
         evt.preventDefault();
         evt.currentTarget.form?.requestSubmit();
       }
@@ -27,16 +27,12 @@ export function WalletEditor<D extends object>({ value, submitCell, cancelCell, 
   );
   return (
     <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-      <Row className="align-items-center">
-        <Col>
-          <InputGroup>
-            <WalletSelector {...register("value", { valueAsNumber: true })} autoFocus onKeyDown={onKeyDown} data-lpignore="true" />
-            <Button variant="outline-success" type="submit">
-              <span className="fa fa-check"></span>
-            </Button>
-          </InputGroup>
-        </Col>
-      </Row>
+      <InputGroup>
+        <WalletSelector {...register("value", { valueAsNumber: true })} autoFocus onKeyDown={onKeyDown} data-lpignore="true" />
+        <Button variant="outline-success" type="submit">
+          <span className="fa fa-check"></span>
+        </Button>
+      </InputGroup>
     </Form>
   );
 }

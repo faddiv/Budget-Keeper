@@ -150,7 +150,7 @@ export class AddItemForm extends Component<AddItemFormProps, AddItemFormState> {
             value={name || ""}
             autoFocus={true}
             onSelect={this.nameSelected}
-            className={classNames("form-control", { "is-invalid": validation.name.showError })}
+            className={classNames({ "is-invalid": validation.name.showError })}
             onError={onError}
           >
             <div className="invalid-feedback">{validation.name.message}</div>
