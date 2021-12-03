@@ -12,14 +12,11 @@ import { AlertsActions } from "../../../actions/alerts";
 import { Table } from "react-bootstrap";
 import { Column, useTable } from "react-table";
 import { Component, DetailedHTMLProps, HTMLAttributes, useCallback, useMemo, useState } from "react";
-import { WalletSelector } from "../../specialInputs";
-import { getWalletNameById } from "../../models";
-import { WalletsModel } from "../../../reducers/wallets/walletsReducers";
 import cl from "classnames";
 import { isClickableClicked } from "../../../react-ext";
 import { useCellEditor } from "./useCellEditor";
-import { ActionsCell } from "./ActionsCell";
-import { DirectionCell } from "./DirectionCell";
+import { WalletCell, ActionsCell, DirectionCell } from "./ViewCells";
+import { createCellEditor, WalletEditor } from "./EditorCells";
 
 type TableRowExt = Omit<DetailedHTMLProps<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>, "key">;
 enum SelectMode {
@@ -190,6 +187,10 @@ function mapDispatchToProps(dispatch: any) {
 
 export const TransactionTable3 = connect(mapStateToProps, mapDispatchToProps)(TransactionTable2);
 
+const DateEditor = createCellEditor("date");
+const CommentEditor = createCellEditor("text");
+const NumberEditor = createCellEditor("number");
+
 export interface TransactionTableProps2 {
   items: TransactionViewModel[];
   changedItems?: TransactionViewModel[];
@@ -199,7 +200,6 @@ export interface TransactionTableProps2 {
 }
 
 export function TransactionTable({ items, changedItems, deleted, rowColor, update }: TransactionTableProps2) {
-  const wallets = useSelector<RootState, WalletsModel>((e) => e.wallets, shallowEqual);
   const transactionSummary = useSelector<RootState, TransactionSummaryViewModel>((e) => e.transactionSummary, shallowEqual);
   const dispatch = useDispatch();
   const [selectMode, setSelectMode] = useState(SelectMode.none);
@@ -209,6 +209,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       {
         Header: "Created at",
         accessor: "createdAt",
+        Editor: DateEditor,
       },
       {
         Header: "Name",
@@ -222,11 +223,13 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       {
         Header: "Price",
         accessor: "price",
+        Editor: NumberEditor,
       },
       {
         Header: "Wallet",
-        id: "walletId",
-        accessor: (item) => getWalletNameById(item.walletId, wallets),
+        accessor: "walletId",
+        Cell: WalletCell,
+        Editor: WalletEditor,
       },
       {
         Header: "Category",
@@ -235,6 +238,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       {
         Header: "Comment",
         accessor: "comment",
+        Editor: CommentEditor,
       },
       {
         accessor: "key",
@@ -242,7 +246,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
         Cell: ActionsCell,
       },
     ];
-  }, [wallets]);
+  }, []);
   const submitCellHandler = useCallback(
     (original: TransactionViewModel, columnId: string, newValue: any) => {
       const newItem = { ...original, [columnId]: newValue };
@@ -341,5 +345,6 @@ declare module "react-table" {
     transactionDelete?(items: TransactionViewModel): void;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface TableOptions<D extends object> extends TransactionTableOptions {}
 }

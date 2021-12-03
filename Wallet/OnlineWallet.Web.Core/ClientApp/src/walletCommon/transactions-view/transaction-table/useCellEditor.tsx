@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { ActionType, Cell, Hooks, MetaBase, Row, TableCellProps, TableInstance, TableState } from "react-table";
-import { CellEditor } from "./CellEditor";
 
 const startEdit = "useCellEditor.startEdit";
 const endEdit = "useCellEditor.endEdit";
@@ -12,24 +11,24 @@ function prepareRow<D extends object = {}>(row: Row<D>, meta: MetaBase<D>) {
   for (let index = 0; index < row.cells.length; index++) {
     const cell = row.cells[index];
     cell.isEdited = rowEdited && cell.column.id === columnId;
-    if (cell.isEdited && typeof cell.column.Editor === "undefined") {
-      cell.column.Editor = CellEditor;
-    }
   }
 }
 
-function getCellProps<D extends object = {}>(props: Partial<TableCellProps>, meta: MetaBase<D> & { cell: Cell<D> }) {
-  if (!meta.instance.editEnabled) {
+function getCellProps<D extends object = {}>(props: Partial<TableCellProps>, { cell, instance }: MetaBase<D> & { cell: Cell<D> }) {
+  if (!instance.editEnabled) {
     return props;
   }
-  const rowId = meta.cell.row.id;
-  const columnId = meta.cell.column.id;
+  if (!cell.column.Editor) {
+    return props;
+  }
+  const rowId = cell.row.id;
+  const columnId = cell.column.id;
   return [
     props,
     {
       onDoubleClick: (event) => {
         event.preventDefault();
-        meta.instance.dispatch({ type: startEdit, rowId, columnId });
+        instance.dispatch({ type: startEdit, rowId, columnId });
       },
     } as React.HTMLAttributes<HTMLTableCellElement>,
   ];
@@ -54,7 +53,9 @@ function reducer<D extends object = {}>(newState: TableState<D>, action: ActionT
 function useInstance<D extends object = {}>(instance: TableInstance<D>) {
   instance.submitCell = useCallback(
     (cell: Cell<D>, newValue: any) => {
-      instance.submitCellHandler?.(cell.row.original, cell.column.id, newValue);
+      if (instance.submitCellHandler) {
+        instance.submitCellHandler(cell.row.original, cell.column.id, newValue);
+      }
       instance.dispatch({ type: endEdit });
     },
     [instance]
@@ -96,5 +97,6 @@ declare module "react-table" {
   export interface TableInstance<D extends object> extends UseCellEditorInstanceProps<D> {}
   export interface ColumnInterface<D extends object = {}, V = any> extends CellEditable<D, V> {}
   export interface TableState<D extends object = {}> extends UseCellEditorState<D> {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface Cell<D extends object = {}, V = any> extends UseCellEditorCellProps {}
 }
