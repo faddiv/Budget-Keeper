@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Wallet } from "../../walletApi";
-import { EditDelete, SaveCancel } from "../../walletCommon";
-import { updateState } from "../../react-ext";
+import { Wallet } from "../../services/walletApi";
+import { EditDelete } from "../../components/MiniComponents/editDelete";
+import { SaveCancel } from "../../components/MiniComponents/saveCancel";
+import { updateState } from "../../services/helpers";
 
 export interface WalletsRowProps {
   wallet: Wallet;

@@ -3,13 +3,11 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { bind } from "bind-decorator";
 
-import { ArticleModel, articleService, Wallet, transactionService } from "../../walletApi";
-import { updateState, noAction } from "../../react-ext";
-import { getWalletNameById, TransactionViewModel, mapTransactionViewModel } from "../../walletCommon";
-import { RootState } from "../../reducers";
-import { AlertsActions } from "../../actions/alerts";
-import { DetailsTable } from "./subComponents/detailsTable";
-import { toErrorMessage } from "../../helpers";
+import { ArticleModel, articleService, Wallet, transactionService } from "../../services/walletApi";
+import { preventDefault, updateState, getWalletNameById, TransactionViewModel, mapTransactionViewModel, toErrorMessage } from "../../services/helpers";
+import { RootState } from "../../services/reducers";
+import { AlertsActions } from "../../services/actions/alerts";
+import { DetailsTable } from "./components/detailsTable";
 
 export interface ArticlesPageProps {
     wallets: Wallet[];
@@ -134,7 +132,7 @@ class ArticlesPage2 extends React.Component<ArticlesPageProps, ArticlesPageState
         const { name, articles, sync } = this.state;
         return (
             <>
-                <form onSubmit={noAction}>
+                <form onSubmit={preventDefault}>
                     <div className="form-group row">
                         <label htmlFor="name" className="col-sm-2 col-form-label">Article</label>
                         <div className="col-sm-8">

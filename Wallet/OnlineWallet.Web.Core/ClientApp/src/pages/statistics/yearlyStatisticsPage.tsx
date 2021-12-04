@@ -4,10 +4,10 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { bind } from "bind-decorator";
 
-import { YearlyStatistics, statisticsService } from "../../walletApi";
-import { formatInt, toErrorMessage } from "../../helpers";
-import { AlertsActions } from "../../actions/alerts";
-import { YearSelector } from "./subComponents/yearSelector";
+import { YearlyStatistics, statisticsService } from "../../services/walletApi";
+import { formatInt, toErrorMessage } from "../../services/helpers";
+import { AlertsActions } from "../../services/actions/alerts";
+import { YearSelector } from "./components/yearSelector";
 import { Component } from "react";
 
 export interface YearlyStatisticsPageParams {

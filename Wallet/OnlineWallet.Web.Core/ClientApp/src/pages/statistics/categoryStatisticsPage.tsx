@@ -5,11 +5,11 @@ import { RouteComponentProps } from "react-router";
 import { bindActionCreators } from "redux";
 import { bind } from "bind-decorator";
 
-import { AlertsActions } from "../../actions/alerts";
-import { CategoryStatisticsSummary, statisticsService, CategoryStatistics } from "../../walletApi";
-import { CategoryTable } from "./subComponents/categoryTable";
-import { YearSelector } from "./subComponents/yearSelector";
-import { toErrorMessage, toServerDate } from "../../helpers";
+import { AlertsActions } from "../../services/actions/alerts";
+import { CategoryStatisticsSummary, statisticsService, CategoryStatistics } from "../../services/walletApi";
+import { CategoryTable } from "./components/categoryTable";
+import { YearSelector } from "./components/yearSelector";
+import { toErrorMessage, toServerDate } from "../../services/helpers";
 import { Tab, Tabs } from "react-bootstrap";
 
 export interface CategoryStatisticsPageParams {

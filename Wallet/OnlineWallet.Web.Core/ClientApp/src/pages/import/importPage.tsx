@@ -2,12 +2,12 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { bind } from "bind-decorator";
 
-import { AlertsActions } from "../../actions/alerts";
-import { updateState } from "../../react-ext";
-import { StockTable } from "./subComponents";
-import { _, toDateString, toErrorMessage } from "../../helpers";
-import { transactionService, importExportService, ArticleModel, Transaction } from "../../walletApi";
-import { Pager, dataFrom, dataTo, TransactionViewModel, TransactionTable } from "../../walletCommon";
+import { AlertsActions } from "../../services/actions/alerts";
+import { StockTable } from "./components";
+import { _, toDateString, toErrorMessage, updateState, TransactionViewModel } from "../../services/helpers";
+import { transactionService, importExportService, ArticleModel, Transaction } from "../../services/walletApi";
+import { Pager, dataFrom, dataTo } from "../../components/MiniComponents/pager";
+import { TransactionTable } from "../../components/TransactionTable";
 import { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 

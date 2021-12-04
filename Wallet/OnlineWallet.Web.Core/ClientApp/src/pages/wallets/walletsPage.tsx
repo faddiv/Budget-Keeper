@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { bind } from "bind-decorator";
 
-import * as WalletsActions from "../../actions/wallets";
-import { Wallet } from "../../walletApi";
+import * as WalletsActions from "../../services/actions/wallets";
+import { Wallet } from "../../services/walletApi";
 import { WalletsRow } from "./walletsRow";
-import { validate, ValidationConfig, ValidationState, validators } from "../../helpers";
-import { RootState } from "../../reducers";
+import { validate, ValidationConfig, ValidationState, validators } from "../../services/helpers";
+import { RootState } from "../../services/reducers";
 
 export interface WalletsProps {
   wallets: Wallet[];

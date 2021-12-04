@@ -3,12 +3,13 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { bind } from "bind-decorator";
 
-import { AlertsActions } from "../../actions/alerts";
-import { transactionService } from "../../walletApi";
-import { AddItemForm, SaveAllResult } from "./subComponents";
-import { toErrorMessage, _ } from "../../helpers";
-import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransaction } from "../../walletCommon";
+import { AlertsActions } from "../../services/actions/alerts";
+import { transactionService } from "../../services/walletApi";
+import { AddItemForm, SaveAllResult } from "./components";
+import { toErrorMessage, _ } from "../../services/helpers";
+import { TransactionTable } from "../../components/TransactionTable";
 import { Prompt } from "react-router";
+import { getDirectionColoring, mapTransaction, TransactionViewModel } from "../../services/helpers";
 
 export interface HomeProps {
   actions?: typeof AlertsActions;

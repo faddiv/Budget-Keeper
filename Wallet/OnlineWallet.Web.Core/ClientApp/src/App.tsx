@@ -2,10 +2,11 @@ import { Container } from "react-bootstrap";
 import { BrowserRouter } from "react-router-dom";
 import { Route, Switch } from "react-router";
 import { ArticlesPage, CategoryStatisticsPage, Home, ExportPage, ImportPage, Transactions, Wallets, YearlyStatisticsPage } from "./pages";
-import { Alerts, MainMenu, TransactionSummary } from "./walletCommon";
-import { loadWallets } from "./actions/wallets";
-import { configureStore } from "./store";
+import { loadWallets } from "./services/actions/wallets";
+import { configureStore } from "./services/store";
 import { Provider } from "react-redux";
+import { MainMenu, Alerts } from "./components/Layout";
+import { TransactionSummary } from "./components/TransactionSummary";
 
 const store = configureStore();
 

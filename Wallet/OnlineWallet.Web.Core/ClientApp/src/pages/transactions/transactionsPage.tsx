@@ -5,11 +5,11 @@ import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { bind } from "bind-decorator";
 
-import { AlertsActions } from "../../actions/alerts";
-import { transactionService, BalanceInfo, statisticsService } from "../../walletApi";
-import { toErrorMessage, _ } from "../../helpers";
-import { TransactionTable, getDirectionColoring, TransactionViewModel, mapTransactionViewModel, mapTransaction } from "../../walletCommon";
-import { MonthSelector, Balance } from "./subComponents";
+import { AlertsActions } from "../../services/actions/alerts";
+import { transactionService, BalanceInfo, statisticsService } from "../../services/walletApi";
+import { toErrorMessage, _, getDirectionColoring, mapTransaction, mapTransactionViewModel, TransactionViewModel } from "../../services/helpers";
+import { TransactionTable } from "../../components/TransactionTable";
+import { MonthSelector, Balance } from "./components";
 
 export interface TransactionsParams {
   year?: string;
