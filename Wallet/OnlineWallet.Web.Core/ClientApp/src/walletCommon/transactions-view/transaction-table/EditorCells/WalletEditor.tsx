@@ -1,5 +1,5 @@
 import { KeyboardEvent, useCallback } from "react";
-import { Col, Form, InputGroup, Row, Button } from "react-bootstrap";
+import { Form, InputGroup, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { CellProps } from "react-table";
 import { WalletSelector } from "../../../../components/WalletSelector";

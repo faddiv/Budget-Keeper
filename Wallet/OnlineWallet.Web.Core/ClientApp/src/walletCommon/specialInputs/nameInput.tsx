@@ -14,7 +14,6 @@ interface SelectOption {
 interface NameInputProps extends PropsBase {
   name?: string;
   value: string;
-  onError?: (error: Error) => void;
   autoFocus?: boolean;
   onSelect?: (selected: ArticleModel) => void;
   className?: string;

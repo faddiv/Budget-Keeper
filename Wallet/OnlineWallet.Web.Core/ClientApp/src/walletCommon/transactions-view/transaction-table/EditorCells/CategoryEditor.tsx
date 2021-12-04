@@ -3,10 +3,10 @@ import { Form, InputGroup, Button } from "react-bootstrap";
 import { useController, useForm } from "react-hook-form";
 import { CellProps } from "react-table";
 import { ArticleModel } from "../../../../walletApi";
-import { NameInput } from "../../../specialInputs";
-import styles from "./NameEditor.module.scss";
+import { CategoryInput } from "../../../specialInputs";
+import styles from "./CategoryEditor.module.scss";
 
-export function NameEditor<D extends object>({ value, submitCell, cancelCell, cell }: CellProps<D, string>) {
+export function CategoryEditor<D extends object>({ value, submitCell, cancelCell, cell }: CellProps<D, string>) {
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       value: value,
@@ -37,7 +37,7 @@ export function NameEditor<D extends object>({ value, submitCell, cancelCell, ce
   return (
     <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
       <InputGroup>
-        <NameInput
+        <CategoryInput
           ref={ref}
           name={name}
           value={fieldValue}

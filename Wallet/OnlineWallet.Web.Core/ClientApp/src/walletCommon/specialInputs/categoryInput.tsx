@@ -4,6 +4,7 @@ import { PropsBase } from "../../react-ext";
 import { components, InputProps } from "react-select";
 import { useSelectExt } from "./useSelectExt";
 import { rsBsStyles } from "./reactSelectBootstrapStyles";
+import { FocusEventHandler, ForwardedRef, forwardRef, KeyboardEventHandler } from "react";
 
 interface SelectOption {
   value: CategoryModel;
@@ -13,9 +14,11 @@ interface SelectOption {
 interface CategoryInputProps extends PropsBase {
   name?: string;
   value: string;
-  onError: (error: Error) => void;
+  autoFocus?: boolean;
   onSelect?: (selected: CategoryModel) => void;
   className?: string;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }
 const empty: CategoryModel = {
   name: "",
@@ -23,8 +26,12 @@ const empty: CategoryModel = {
   occurence: 0,
 };
 
-export function CategoryInput({ value, onSelect, className, onError, name = "category" }: CategoryInputProps) {
+function CategoryInputInt({ value, onSelect, className, onBlur, name = "category", autoFocus }: CategoryInputProps, ref: ForwardedRef<any>) {
   const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, onSelect);
+
+  if (typeof ref === "function") {
+    ref(selectRef.current);
+  }
 
   return (
     <AsyncCreatable
@@ -37,6 +44,9 @@ export function CategoryInput({ value, onSelect, className, onError, name = "cat
       onChange={changeHandler}
       onCreateOption={createHandler}
       styles={rsBsStyles}
+      className={className}
+      classNamePrefix="ci"
+      autoFocus={autoFocus}
     />
   );
 }
@@ -50,3 +60,4 @@ async function filter(value: string, callback: (options: SelectOption[]) => void
 function Input(props: InputProps<SelectOption, false>) {
   return <components.Input {...props} data-lpignore={true} />;
 }
+export const CategoryInput = forwardRef(CategoryInputInt);

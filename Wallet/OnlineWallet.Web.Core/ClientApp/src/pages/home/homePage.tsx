@@ -95,11 +95,6 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     }
   }
 
-  @bind
-  errorHandler(e: Error) {
-    this.alertsService?.showAlert({ type: "danger", message: e.message });
-  }
-
   needLeaveConfirmation() {
     return this.state.items.length > 0;
   }
@@ -109,7 +104,7 @@ class Home2 extends React.Component<HomeProps, HomeState> {
     return (
       <>
         <Prompt when={this.needLeaveConfirmation()} message={leaveConfirmation} />
-        <AddItemForm addLine={this.addLine} saveAll={this.saveAll} items={items} onError={this.errorHandler} />
+        <AddItemForm addLine={this.addLine} saveAll={this.saveAll} items={items} />
         <TransactionTable items={items} deleted={this.deleteRow} update={this.updateRow} rowColor={getDirectionColoring} />
       </>
     );

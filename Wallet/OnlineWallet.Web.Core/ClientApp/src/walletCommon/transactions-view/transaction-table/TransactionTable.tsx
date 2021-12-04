@@ -4,7 +4,7 @@ import { bind } from "bind-decorator";
 
 import { Wallet } from "../../../walletApi";
 import { TransactionTableRow } from "./transaction-table-row";
-import { TransactionViewModel, ITransactionTableExtFunction } from "../../../walletCommon";
+import { TransactionViewModel, ITransactionTableExtFunction } from "../..";
 import { _ } from "../../../helpers";
 import { TransactionSummaryActions, TransactionSummaryViewModel } from "../../../actions/transactionsSummary";
 import { RootState } from "../../../reducers";
@@ -16,7 +16,7 @@ import cl from "classnames";
 import { isClickableClicked } from "../../../react-ext";
 import { useCellEditor } from "./useCellEditor";
 import { WalletCell, ActionsCell, DirectionCell } from "./ViewCells";
-import { createCellEditor, NameEditor, WalletEditor } from "./EditorCells";
+import { CategoryEditor, createCellEditor, NameEditor, WalletEditor } from "./EditorCells";
 
 type TableRowExt = Omit<DetailedHTMLProps<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>, "key">;
 enum SelectMode {
@@ -127,11 +127,6 @@ export class TransactionTable2 extends Component<TransactionTableProps, Transact
     });
   }
 
-  @bind
-  errorHandler(e: Error) {
-    this.props.alertActions?.showAlert({ type: "danger", message: e.message });
-  }
-
   render() {
     const { items, wallets, rowColor, transactionSummary, update } = this.props;
     const editable = !!update;
@@ -163,7 +158,6 @@ export class TransactionTable2 extends Component<TransactionTableProps, Transact
               rowMouseDown={this.startSelection}
               rowMouseEnter={this.selectingRow}
               rowMouseUp={this.endSelection}
-              onError={this.errorHandler}
             />
           ))}
         </tbody>
@@ -235,6 +229,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
       {
         Header: "Category",
         accessor: "category",
+        Editor: CategoryEditor,
       },
       {
         Header: "Comment",
@@ -326,7 +321,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
+        {rows.map((row) => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps(getRowProps(row.original, selectMode, transactionSummary))}>

@@ -13,7 +13,6 @@ export interface AddItemFormProps {
   addLine: (model: TransactionViewModel) => void;
   saveAll: () => Promise<SaveAllResult>;
   items: TransactionViewModel[];
-  onError: (error: Error) => void;
 }
 
 export interface AddItemFormState extends TransactionViewModel {
@@ -137,7 +136,6 @@ export class AddItemForm extends Component<AddItemFormProps, AddItemFormState> {
   }
 
   render() {
-    const { onError } = this.props;
     const { category, comment, createdAt, direction, name, price, walletId, validation } = this.state;
     return (
       <Form onChange={this.handleInputChange} onSubmit={this.addLine}>
@@ -151,14 +149,13 @@ export class AddItemForm extends Component<AddItemFormProps, AddItemFormState> {
             autoFocus={true}
             onSelect={this.nameSelected}
             className={classNames({ "is-invalid": validation.name.showError })}
-            onError={onError}
           >
             <div className="invalid-feedback">{validation.name.message}</div>
           </NameInput>
         </FormGroup>
         <FormGroup name="price" label="Price" type="number" value={price} validation={validation.price} />
         <FormGroup name="category" label="Category" value={category}>
-          <CategoryInput value={category || ""} className="form-control" onSelect={this.categorySelected} onError={onError} />
+          <CategoryInput value={category || ""} onSelect={this.categorySelected} />
         </FormGroup>
         <FormGroup name="createdAt" label="Date" type="date" value={createdAt} />
         <FormGroup name="comment" label="Comment" value={comment} />

@@ -1,2 +1,2 @@
-export * from "./transaction-table/transaction-table";
+export * from "./transaction-table/TransactionTable";
 export * from "./transaction-summary/transaction-summary";
