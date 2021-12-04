@@ -16,7 +16,7 @@ import cl from "classnames";
 import { isClickableClicked } from "../../../react-ext";
 import { useCellEditor } from "./useCellEditor";
 import { WalletCell, ActionsCell, DirectionCell } from "./ViewCells";
-import { CategoryEditor, createCellEditor, NameEditor, WalletEditor } from "./EditorCells";
+import { CategoryEditor, createCellEditor, DirectionEditor, NameEditor, WalletEditor } from "./EditorCells";
 
 type TableRowExt = Omit<DetailedHTMLProps<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>, "key">;
 enum SelectMode {
@@ -214,6 +214,7 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
         Header: "Dir",
         accessor: "direction",
         Cell: DirectionCell,
+        Editor: DirectionEditor,
       },
       {
         Header: "Price",

@@ -1,11 +1,11 @@
-import { forwardRef, useEffect, useState } from "react";
+import { ForwardedRef, forwardRef, useEffect, useState } from "react";
 import { Form, FormSelectProps } from "react-bootstrap";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { Wallet, walletService } from "../../walletApi";
 
 export interface WalletSelectorProps extends Omit<FormSelectProps, keyof UseFormRegisterReturn>, Omit<UseFormRegisterReturn, "ref"> {}
 
-export const WalletSelector = forwardRef<HTMLSelectElement, WalletSelectorProps>((props, ref) => {
+function WalletSelectorInt(props: WalletSelectorProps, ref: ForwardedRef<HTMLSelectElement>) {
   const [wallets, setWallets] = useState<Wallet[]>(walletService.cache || []);
   useEffect(() => {
     (async () => {
@@ -22,4 +22,6 @@ export const WalletSelector = forwardRef<HTMLSelectElement, WalletSelectorProps>
       ))}
     </Form.Select>
   );
-});
+}
+
+export const WalletSelector = forwardRef(WalletSelectorInt);

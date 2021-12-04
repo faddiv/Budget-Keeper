@@ -1,7 +1,7 @@
 import { CategoryModel, categoryService } from "../../walletApi";
 import AsyncCreatable from "react-select/async-creatable";
 import { PropsBase } from "../../react-ext";
-import { components, InputProps } from "react-select";
+import Input from "../../components/miniComponents/InputForSelect";
 import { useSelectExt } from "./useSelectExt";
 import { rsBsStyles } from "./reactSelectBootstrapStyles";
 import { FocusEventHandler, ForwardedRef, forwardRef, KeyboardEventHandler } from "react";
@@ -26,7 +26,7 @@ const empty: CategoryModel = {
   occurence: 0,
 };
 
-function CategoryInputInt({ value, onSelect, className, onBlur, name = "category", autoFocus }: CategoryInputProps, ref: ForwardedRef<any>) {
+function CategoryInputInt({ value, onSelect, className, onBlur, name = "category", autoFocus, onKeyDown }: CategoryInputProps, ref: ForwardedRef<any>) {
   const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, onSelect);
 
   if (typeof ref === "function") {
@@ -47,6 +47,8 @@ function CategoryInputInt({ value, onSelect, className, onBlur, name = "category
       className={className}
       classNamePrefix="ci"
       autoFocus={autoFocus}
+      onBlur={onBlur}
+      onKeyDown={onKeyDown}
     />
   );
 }
@@ -57,7 +59,4 @@ async function filter(value: string, callback: (options: SelectOption[]) => void
   callback(list);
 }
 
-function Input(props: InputProps<SelectOption, false>) {
-  return <components.Input {...props} data-lpignore={true} />;
-}
 export const CategoryInput = forwardRef(CategoryInputInt);

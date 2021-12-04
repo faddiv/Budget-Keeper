@@ -2,7 +2,7 @@ import { FocusEventHandler, ForwardedRef, forwardRef, KeyboardEventHandler, useE
 import { PropsBase } from "../../react-ext";
 import { ArticleModel, articleService } from "../../walletApi";
 import AsyncCreatable from "react-select/async-creatable";
-import { components, InputProps } from "react-select";
+import Input from "../../components/miniComponents/InputForSelect";
 import { useSelectExt } from "./useSelectExt";
 import { rsBsStyles } from "./reactSelectBootstrapStyles";
 
@@ -73,7 +73,4 @@ async function filter(value: string, callback: (options: SelectOption[]) => void
   callback(list);
 }
 
-function Input(props: InputProps<SelectOption, false>) {
-  return <components.Input {...props} data-lpignore={true} />;
-}
 export const NameInput = forwardRef(NameInputInt);
