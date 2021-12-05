@@ -10,4 +10,5 @@ export * from "./range";
 export * from "./reactHelpers";
 export * from "./TransactionViewModel";
 export * from "./switchCase";
+export * from "./forwardedRefHelpers";
 export { _ };

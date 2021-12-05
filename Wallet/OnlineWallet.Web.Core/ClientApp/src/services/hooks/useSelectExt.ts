@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ForwardedRef, useCallback, useImperativeHandle, useRef, useState } from "react";
+import { ChangeHandler } from "react-hook-form";
 import { OnChangeValue, SelectInstance } from "react-select";
 
 export interface SelectOption<TModel extends { name: string }> {
@@ -6,20 +7,43 @@ export interface SelectOption<TModel extends { name: string }> {
   label: string;
 }
 
-export function useSelectExt<TModel extends { name: string }>(value: string, empty: TModel, onSelect?: (selected: TModel) => void) {
-  const selectRef = useRef<SelectInstance<SelectOption<TModel>>>(null);
+export function useSelectExt<TModel extends { name: string }>(
+  value: string | undefined,
+  empty: TModel,
+  ref: ForwardedRef<any> = null,
+  onSelect?: (selected: TModel) => void,
+  onChange?: ChangeHandler,
+  name?: string
+) {
+  const selectRef = useRef<SelectInstance<SelectOption<TModel>> | null>(null);
   const [selected, setSelected] = useState<SelectOption<TModel> | null>(null);
 
+  const fireHandlers = useCallback(
+    (newValue: TModel) => {
+      if (onChange) {
+        const event = {
+          target: {
+            name,
+            value: newValue.name,
+          },
+          type: "change",
+        };
+        onChange(event);
+      }
+      onSelect && onSelect(newValue);
+    },
+    [name, onChange, onSelect]
+  );
   const changeHandler = useCallback(
     (newValue: OnChangeValue<SelectOption<TModel>, false>) => {
       setSelected(newValue);
       if (!newValue) {
-        onSelect && onSelect(Object.assign({}, empty, { name: "" }));
+        fireHandlers(Object.assign({}, empty, { name: "" }));
         return;
       }
-      onSelect && onSelect(newValue.value);
+      fireHandlers(newValue.value);
     },
-    [empty, onSelect]
+    [empty, fireHandlers]
   );
 
   const createHandler = useCallback(
@@ -29,25 +53,46 @@ export function useSelectExt<TModel extends { name: string }>(value: string, emp
         value: newValue,
         label: inputValue,
       });
-      onSelect && onSelect(newValue);
+      fireHandlers(newValue);
     },
-    [empty, onSelect]
+    [empty, fireHandlers]
   );
 
-  useEffect(() => {
-    if (!selectRef.current) return;
-    if (!value) {
-      selectRef.current.clearValue();
-    } else if (!selected || value !== selected.label) {
-      selectRef.current.setValue(
-        {
-          value: Object.assign({}, empty, { name: value }),
-          label: value,
-        },
-        "select-option"
-      );
-    }
-  }, [empty, selected, value]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus() {
+        if (selectRef.current) {
+          selectRef.current.focus();
+        }
+      },
+      get value() {
+        if (!selectRef.current) return "";
+        const selectedOption = selectRef.current.getValue()[0];
+        if (!selectedOption) return "";
+        return selectedOption.label;
+      },
+      set value(newValue: any) {
+        if (!selectRef.current) return;
+        const selectedOption = selectRef.current.getValue()[0];
+        const oldValue = selectedOption?.label || "";
+        if (newValue !== oldValue) {
+          if (newValue === "") {
+            selectRef.current.clearValue();
+          } else {
+            selectRef.current.setValue(
+              {
+                value: Object.assign({}, empty, { name: newValue }),
+                label: newValue,
+              },
+              "select-option"
+            );
+          }
+        }
+      },
+    }),
+    [empty]
+  );
 
-  return { changeHandler, createHandler, selectRef, selected };
+  return { changeHandler, createHandler, selectRef: selectRef, selected };
 }

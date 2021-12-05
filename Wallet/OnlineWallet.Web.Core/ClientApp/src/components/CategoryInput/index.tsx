@@ -5,6 +5,7 @@ import Input from "../MiniComponents/InputForSelect";
 import { useSelectExt } from "../../services/hooks";
 import { rsBsStyles } from "../MiniComponents/reactSelectBootstrapStyles";
 import { FocusEventHandler, ForwardedRef, forwardRef, KeyboardEventHandler } from "react";
+import { ChangeHandler } from "react-hook-form";
 
 interface SelectOption {
   value: CategoryModel;
@@ -13,12 +14,13 @@ interface SelectOption {
 
 interface CategoryInputProps extends PropsBase {
   name?: string;
-  value: string;
+  value?: string;
   autoFocus?: boolean;
   onSelect?: (selected: CategoryModel) => void;
   className?: string;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onChange?: ChangeHandler;
 }
 const empty: CategoryModel = {
   name: "",
@@ -26,12 +28,11 @@ const empty: CategoryModel = {
   occurence: 0,
 };
 
-function CategoryInputInt({ value, onSelect, className, onBlur, name = "category", autoFocus, onKeyDown }: CategoryInputProps, ref: ForwardedRef<any>) {
-  const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, onSelect);
-
-  if (typeof ref === "function") {
-    ref(selectRef.current);
-  }
+function CategoryInputInt(
+  { value, onSelect, className, onBlur, name = "category", autoFocus, onKeyDown, onChange }: CategoryInputProps,
+  ref: ForwardedRef<any>
+) {
+  const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, ref, onSelect, onChange, name);
 
   return (
     <AsyncCreatable

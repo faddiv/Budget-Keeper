@@ -1,10 +1,11 @@
-import { FocusEventHandler, ForwardedRef, forwardRef, KeyboardEventHandler, useEffect } from "react";
+import { FocusEventHandler, ForwardedRef, forwardRef, KeyboardEventHandler } from "react";
 import { PropsBase } from "../../services/helpers";
 import { ArticleModel, articleService } from "../../services/walletApi";
 import AsyncCreatable from "react-select/async-creatable";
 import Input from "../MiniComponents/InputForSelect";
 import { useSelectExt } from "../../services/hooks";
 import { rsBsStyles } from "../MiniComponents/reactSelectBootstrapStyles";
+import { ChangeHandler } from "react-hook-form";
 
 interface SelectOption {
   value: ArticleModel;
@@ -13,13 +14,13 @@ interface SelectOption {
 
 interface NameInputProps extends PropsBase {
   name?: string;
-  value: string;
+  value?: string | undefined;
   autoFocus?: boolean;
   onSelect?: (selected: ArticleModel) => void;
   className?: string;
-  focusAction?: (focus: () => void) => void;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onChange?: ChangeHandler;
 }
 const empty: ArticleModel = {
   name: "",
@@ -30,22 +31,8 @@ const empty: ArticleModel = {
   occurence: 0,
 };
 
-function NameInputInt({ value, autoFocus, onSelect, className, focusAction, name = "name", onBlur, onKeyDown }: NameInputProps, ref: ForwardedRef<any>) {
-  const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, onSelect);
-
-  if(typeof ref === "function") {
-    ref(selectRef.current);
-  }
-  useEffect(() => {
-    if (focusAction && selectRef.current) {
-      focusAction(() => {
-        if (selectRef.current) {
-          //selectRef.current.blurInput();
-          selectRef.current.focusInput();
-        }
-      });
-    }
-  }, [focusAction, selectRef]);
+function NameInputInt({ value, autoFocus, onSelect, className, name = "name", onBlur, onKeyDown, onChange }: NameInputProps, ref: ForwardedRef<any>) {
+  const { selectRef, selected, changeHandler, createHandler } = useSelectExt(value, empty, ref, onSelect, onChange, name);
 
   return (
     <AsyncCreatable

@@ -2,6 +2,7 @@ import { ValidationStateElement, noop } from "../../services/helpers";
 import classNames from "classnames";
 import { FunctionComponent } from "react";
 import { Col, Form, Row } from "react-bootstrap";
+import { FieldError } from "react-hook-form";
 
 type InputType =
   | "text"
@@ -32,16 +33,20 @@ interface FormGroupProps {
   onChange?: () => void;
   autoComplete?: boolean;
   validation?: ValidationStateElement;
+  error?: FieldError | undefined;
 }
 
-export const FormGroup: FunctionComponent<FormGroupProps> = ({ id, name, label, type, value, onChange, autoComplete, validation, ...rest }) => {
+export const FormGroup: FunctionComponent<FormGroupProps> = ({ id, name, label, type, value, onChange, autoComplete, validation, error, children }) => {
   id = id || name;
   return (
-    <Form.Group as={Row} controlId={id} className="mb-2">
+    <Form.Group as={Row} controlId={id} className="mb-2 align-items-baseline">
       <Form.Label column sm="2">
         {label}
       </Form.Label>
-      <Col>{rest.children ? rest.children : defaultInput(type || "", id, name, label, value, onChange, autoComplete || false, validation)}</Col>
+      <Col>
+        {children ? children : defaultInput(type || "", id, name, label, value, onChange, autoComplete || false, validation)}
+        {!!error && <Form.Control.Feedback type="invalid">{error.message || "Field is invalid"}</Form.Control.Feedback>}
+      </Col>
     </Form.Group>
   );
 };
