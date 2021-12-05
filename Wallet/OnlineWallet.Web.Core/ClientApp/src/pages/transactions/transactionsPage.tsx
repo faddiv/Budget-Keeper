@@ -100,7 +100,9 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
   }
 
   @bind
-  update(items: TransactionViewModel[], changedItems: TransactionViewModel[]): void {
+  update(newItem: TransactionViewModel, original: TransactionViewModel): void {
+    const items = _.replace(this.state.items, newItem, original);
+    const changedItems = _.replace(this.state.changedItems, newItem, original, true);
     this.setState({
       items,
       changedItems,
@@ -126,7 +128,7 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
   }
 
   render() {
-    const { items, changedItems, balance, year, month } = this.state;
+    const { items, balance, year, month } = this.state;
     return (
       <>
         <form>
@@ -142,7 +144,7 @@ class Transactions2 extends React.Component<TransactionsProps, TransactionsState
           </div>
         </form>
         <Balance balance={balance} />
-        <TransactionTable changedItems={changedItems} items={items} rowColor={getDirectionColoring} deleted={this.deleteItem} update={this.update} />
+        <TransactionTable items={items} rowColor={getDirectionColoring} deleted={this.deleteItem} update={this.update} />
       </>
     );
   }

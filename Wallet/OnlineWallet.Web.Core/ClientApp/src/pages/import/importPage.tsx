@@ -160,9 +160,10 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
   }
 
   @bind
-  transactionUpdated(items: TransactionViewModel[]): void {
+  transactionUpdated(newItem: TransactionViewModel, original: TransactionViewModel): void {
+    const transactions = _.replace(this.state.transactions, newItem, original);
     this.setState({
-      transactions: items,
+      transactions,
     });
   }
 

@@ -24,13 +24,12 @@ const NumberEditor = createCellEditor("number");
 
 export interface TransactionTableProps {
   items: TransactionViewModel[];
-  changedItems?: TransactionViewModel[];
   rowColor?: ITransactionTableExtFunction;
-  update?(items: TransactionViewModel[], changedItems?: TransactionViewModel[]): void;
+  update?(newItem: TransactionViewModel, oldItem: TransactionViewModel): void;
   deleted?(items: TransactionViewModel): void;
 }
 
-export function TransactionTable({ items, changedItems, deleted, rowColor, update }: TransactionTableProps) {
+export function TransactionTable({ items, deleted, rowColor, update }: TransactionTableProps) {
   const transactionSummary = useSelector<RootState, TransactionSummaryViewModel>((e) => e.transactionSummary, shallowEqual);
   const dispatch = useDispatch();
   const [selectMode, setSelectMode] = useState(SelectMode.none);
@@ -38,11 +37,9 @@ export function TransactionTable({ items, changedItems, deleted, rowColor, updat
   const submitCellHandler = useCallback(
     (original: TransactionViewModel, columnId: string, newValue: any) => {
       const newItem = { ...original, [columnId]: newValue };
-      const newItems = _.replace(items, newItem, original);
-      const changes = changedItems ? _.replace(changedItems, newItem, original, true) : undefined;
-      update?.(newItems, changes);
+      update?.(newItem, original);
     },
-    [changedItems, items, update]
+    [update]
   );
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {

@@ -60,7 +60,8 @@ class Home2 extends React.Component<HomeProps, HomeState> {
   }
 
   @bind
-  updateRow(items: TransactionViewModel[]) {
+  updateRow(newItem: TransactionViewModel, original: TransactionViewModel) {
+    const items = _.replace(this.state.items, newItem, original);
     this.setState({
       items,
     });
