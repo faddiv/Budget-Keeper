@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 import { BrowserRouter } from "react-router-dom";
 import { Route, Switch } from "react-router";
-import { ArticlesPage, CategoryStatisticsPage, Home, ExportPage, ImportPage, Transactions, Wallets, YearlyStatisticsPage } from "./pages";
+import { ArticlesPage, CategoryStatisticsPage, Home, ExportPage, ImportPage, Transactions, YearlyStatisticsPage, WalletPage } from "./pages";
 import { loadWallets } from "./services/actions/wallets";
 import { configureStore } from "./services/store";
 import { Provider } from "react-redux";
@@ -28,7 +28,7 @@ function App() {
             <Route path="/statistics/articles" component={ArticlesPage} />
             <Route path="/import" component={ImportPage} />
             <Route path="/export" component={ExportPage} />
-            <Route path="/wallets" component={Wallets} />
+            <Route path="/wallets" component={WalletPage} />
           </Switch>
         </Container>
         <TransactionSummary />
