@@ -11,7 +11,7 @@
  */
 
 export interface Wallet {
-    moneyWalletId?: number;
+    moneyWalletId: number;
 
     name?: string;
 

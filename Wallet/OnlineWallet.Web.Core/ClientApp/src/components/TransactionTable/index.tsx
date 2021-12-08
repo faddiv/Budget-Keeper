@@ -48,7 +48,7 @@ export function TransactionTable({ items, deleted, rowColor, update }: Transacti
       getRowId: (original) => original.key?.toString() || "",
       editEnabled: true,
       submitCellHandler,
-      transactionDelete: deleted,
+      deleteRow: deleted,
     },
     useCellEditor
   );
@@ -169,12 +169,3 @@ const columns: Column<TransactionViewModel>[] = [
     Cell: ActionsCell,
   },
 ];
-
-declare module "react-table" {
-  interface TransactionTableOptions {
-    transactionDelete?(items: TransactionViewModel): void;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  export interface TableOptions<D extends object> extends TransactionTableOptions {}
-}
