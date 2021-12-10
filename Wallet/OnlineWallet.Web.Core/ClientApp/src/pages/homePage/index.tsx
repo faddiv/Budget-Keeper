@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Stack } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { Prompt } from "react-router";
 import { TransactionTable } from "../../components/TransactionTable";
@@ -54,11 +55,11 @@ export function HomePage() {
   }, []);
 
   return (
-    <>
+    <Stack>
       <Prompt when={needConfirmation} message={leaveConfirmation} />
       <AddItemForm addLine={addLine} saveAll={saveAll} items={items} />
       <TransactionTable items={items} deleted={deleteRow} update={updateRow} rowColor={getDirectionColoring} />
-    </>
+    </Stack>
   );
 }
 
