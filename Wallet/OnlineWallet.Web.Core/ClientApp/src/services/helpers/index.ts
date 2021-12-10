@@ -10,6 +10,7 @@ export * from "./reactHelpers";
 export * from "./TransactionViewModel";
 export * from "./switchCase";
 export * from "./forwardedRefHelpers";
+export * from "./useBeforeUnload";
 export { _ };
 
 declare module "react-table" {
