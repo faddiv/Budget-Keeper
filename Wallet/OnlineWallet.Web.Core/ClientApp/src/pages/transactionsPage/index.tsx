@@ -1,159 +1,129 @@
-import * as React from "react";
-import moment from "moment";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { RouteComponentProps } from "react-router";
-import { bind } from "bind-decorator";
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
 
 import { AlertsActions } from "../../services/actions/alerts";
 import { transactionService, BalanceInfo, statisticsService } from "../../services/walletApi";
-import { toErrorMessage, _, getDirectionColoring, mapTransaction, mapTransactionViewModel, TransactionViewModel } from "../../services/helpers";
+import { toErrorMessage, _, getDirectionColoring, mapTransaction, mapTransactionViewModel, TransactionViewModel, dateFormatNew } from "../../services/helpers";
 import { TransactionTable } from "../../components/TransactionTable";
 import { MonthSelector, Balance } from "./components";
+import { endOfMonth, format } from "date-fns";
+import { Stack, Button, Col, Row } from "react-bootstrap";
 
 export interface TransactionsParams {
   year?: string;
   month?: string;
 }
 
-export interface TransactionsProps extends Partial<RouteComponentProps<TransactionsParams>> {
-  actions?: typeof AlertsActions;
-}
-
 export interface TransactionsState {
   changedItems: TransactionViewModel[];
   deletedItems: number[];
-  items: TransactionViewModel[];
-  month: number;
-  year: number;
-  balance?: BalanceInfo;
+  transactions: TransactionViewModel[];
+  balance: BalanceInfo | undefined;
 }
 
-class Transactions2 extends React.Component<TransactionsProps, TransactionsState> {
-  constructor(props: TransactionsProps) {
-    super(props);
-    const { year, month } = this.getYearMonth(props.match?.params);
-    this.state = {
-      changedItems: [],
-      deletedItems: [],
-      items: [],
-      year,
-      month,
-    };
-  }
+export function TransactionPage() {
+  const { year, month } = getYearMonth(useParams<TransactionsParams>());
+  const dispatch = useDispatch();
+  const [pageState, setPageState] = useState<TransactionsState>({
+    changedItems: [],
+    deletedItems: [],
+    transactions: [],
+    balance: undefined,
+  });
+  const { transactions, balance, changedItems, deletedItems } = pageState;
 
-  get alertsService() {
-    return this.props.actions;
-  }
-
-  componentDidMount() {
-    this.dateSelected();
-  }
-
-  componentWillReceiveProps(nextProps: TransactionsProps) {
-    const { year, month } = this.getYearMonth(nextProps.match?.params);
-    if (this.state.year !== year || this.state.month !== month) {
-      this.setState({ year, month }, this.dateSelected);
-    }
-  }
-
-  getYearMonth(params: TransactionsParams | undefined) {
-    const now = new Date();
-    const year = params?.year ? parseInt(params.year, 10) : now.getFullYear();
-    const month = params?.month ? parseInt(params.month, 10) : now.getMonth() + 1;
-    return { year, month };
-  }
-
-  @bind
-  async save() {
+  const loadData = useCallback(async () => {
     try {
-      this.alertsService?.dismissAllAlert();
-      if (this.state.changedItems.length === 0 && this.state.deletedItems.length === 0) {
-        this.alertsService?.showAlert({ type: "warning", message: "No data has changed." });
-        return;
-      }
-      const transactions = mapTransaction(this.state.changedItems);
-      await transactionService.batchUpdate(transactions, this.state.deletedItems);
-      this.setState({
+      const { transactions, balance } = await loadMonth(year, month);
+      setPageState({
+        transactions,
         changedItems: [],
         deletedItems: [],
+        balance,
       });
-      await this.dateSelected();
-      this.alertsService?.showAlert({ type: "success", message: "Changes saved successfully." });
     } catch (error) {
-      this.alertsService?.showAlert({ type: "danger", message: toErrorMessage(error) });
+      dispatch(AlertsActions.showAlert({ type: "danger", message: toErrorMessage(error) }));
     }
-  }
+  }, [dispatch, month, year]);
 
-  @bind
-  deleteItem(item: TransactionViewModel) {
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const update = useCallback((newItem: TransactionViewModel, original: TransactionViewModel) => {
+    setPageState((prev) => ({
+      ...prev,
+      transactions: _.replace(prev.transactions, newItem, original),
+      changedItems: _.replace(prev.changedItems, newItem, original, true),
+    }));
+  }, []);
+
+  const deleteItem = useCallback((item: TransactionViewModel) => {
     const deletedId = item.transactionId;
     if (deletedId) {
-      this.setState((prevState) => {
+      setPageState((prevState) => {
         return {
-          items: _.remove(prevState.items, item),
+          ...prevState,
+          items: _.remove(prevState.transactions, item),
           changedItems: _.remove(prevState.changedItems, item),
           deletedItems: [...prevState.deletedItems, deletedId],
         };
       });
     }
-  }
+  }, []);
 
-  @bind
-  update(newItem: TransactionViewModel, original: TransactionViewModel): void {
-    const items = _.replace(this.state.items, newItem, original);
-    const changedItems = _.replace(this.state.changedItems, newItem, original, true);
-    this.setState({
-      items,
-      changedItems,
-    });
-  }
-
-  @bind
-  async dateSelected() {
+  const save = useCallback(async () => {
     try {
-      const { year, month } = this.state;
-      const start = moment([year, month - 1, 1]);
-      const end = moment(start).endOf("month");
-      const fetchTransactions = transactionService.fetchDateRange(start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD"));
-      const fetchBalance = statisticsService.balanceInfo(start.year(), start.month() + 1);
-      const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
-      this.setState({
-        items: mapTransactionViewModel(transactions),
-        balance,
-      });
+      dispatch(AlertsActions.dismissAllAlert());
+      if (changedItems.length === 0 && deletedItems.length === 0) {
+        dispatch(AlertsActions.showAlert({ type: "warning", message: "No data has changed." }));
+        return;
+      }
+      const transactions = mapTransaction(changedItems);
+      await transactionService.batchUpdate(transactions, deletedItems);
+      setPageState((prev) => ({
+        ...prev,
+        changedItems: [],
+        deletedItems: [],
+      }));
+      await loadData();
+      dispatch(AlertsActions.showAlert({ type: "success", message: "Changes saved successfully." }));
     } catch (error) {
-      this.alertsService?.showAlert({ type: "danger", message: toErrorMessage(error) });
+      dispatch(AlertsActions.showAlert({ type: "danger", message: toErrorMessage(error) }));
     }
-  }
+  }, [changedItems, deletedItems, dispatch, loadData]);
 
-  render() {
-    const { items, balance, year, month } = this.state;
-    return (
-      <>
-        <form>
-          <div className="form-row">
-            <div className="col">
-              <button type="button" className="btn btn-success" onClick={this.save} name="saveBtn">
-                Save
-              </button>
-            </div>
-            <div className="col">
-              <MonthSelector year={year} month={month} />
-            </div>
-          </div>
-        </form>
-        <Balance balance={balance} />
-        <TransactionTable items={items} rowColor={getDirectionColoring} deleted={this.deleteItem} update={this.update} />
-      </>
-    );
-  }
+  return (
+    <Stack>
+      <Row>
+        <Col xs="auto">
+          <Button variant="success" onClick={save}>
+            Save
+          </Button>
+        </Col>
+        <Col>
+          <MonthSelector year={year} month={month} />
+        </Col>
+      </Row>
+      <Balance balance={balance} />
+      <TransactionTable items={transactions} rowColor={getDirectionColoring} deleted={deleteItem} update={update} />
+    </Stack>
+  );
 }
 
-function mapDispatchToProps(dispatch: any) {
-  return {
-    actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions,
-  };
+function getYearMonth(params: TransactionsParams) {
+  const now = new Date();
+  const year = params.year ? parseInt(params.year, 10) : now.getFullYear();
+  const month = params.month ? parseInt(params.month, 10) : now.getMonth() + 1;
+  return { year, month };
 }
 
-export const Transactions = connect(undefined, mapDispatchToProps)(Transactions2);
+async function loadMonth(year: number, month: number) {
+  const start = new Date(year, month - 1, 1);
+  const end = endOfMonth(start);
+  const fetchTransactions = transactionService.fetchDateRange(format(start, dateFormatNew), format(end, dateFormatNew));
+  const fetchBalance = statisticsService.balanceInfo(year, month);
+  const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
+  return { transactions: mapTransactionViewModel(transactions), balance };
+}
