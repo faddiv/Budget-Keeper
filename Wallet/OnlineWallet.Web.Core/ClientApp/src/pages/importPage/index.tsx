@@ -1,141 +1,80 @@
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { bind } from "bind-decorator";
-
 import { AlertsActions } from "../../services/actions/alerts";
 import { StockTable } from "./components";
-import { _, toDateString, toErrorMessage, updateState, TransactionViewModel } from "../../services/helpers";
+import { _, toDateString, toErrorMessage, TransactionViewModel } from "../../services/helpers";
 import { transactionService, importExportService, ArticleModel, Transaction } from "../../services/walletApi";
 import { Pager, dataFrom, dataTo } from "../../components/MiniComponents/pager";
 import { TransactionTable } from "../../components/TransactionTable";
-import { Component } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import { useCallback, useMemo, useState } from "react";
+import { Row, Stack, Tab, Tabs, Button, Form, Col } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { unstable_batchedUpdates } from "react-dom";
+import { TransactionSummaryActions } from "../../services/actions/transactionsSummary";
 
-export interface ImportPageProps {
-  actions?: typeof AlertsActions;
-}
+export function ImportPage() {
+  const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState<string | null>("full");
+  const [transactions, setTransactions] = useState<TransactionViewModel[]>([]);
+  const [stocks, setStocks] = useState<ArticleModel[]>([]);
+  const [pageTransactions, setPageTransactions] = useState(1);
+  const [pageStocks, setPageStocks] = useState(1);
+  const pageSize = 10;
+  const countTransactions = transactions ? transactions.length : 0;
+  const countStocks = stocks ? stocks.length : 0;
+  const transactionPage = useMemo(
+    () => transactions.slice(dataFrom(pageTransactions, pageSize, countTransactions), dataTo(pageTransactions, pageSize, countTransactions)),
+    [countTransactions, pageTransactions, transactions]
+  );
+  const stocksPage = useMemo(() => stocks.slice(dataFrom(pageStocks, pageSize, countStocks), dataTo(pageStocks, pageSize, countStocks)), [
+    countStocks,
+    pageStocks,
+    stocks,
+  ]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ImportPageForm>({});
 
-export interface ImportPageState {
-  activeTab: string;
-  transactions: TransactionViewModel[];
-  stocks: ArticleModel[];
-  file: FileList;
-  page: number;
-  pageStocks: number;
-  pageSize: number;
-}
-
-class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
-  constructor(props: ImportPageProps) {
-    super(props);
-    this.state = {
-      activeTab: "full",
-      stocks: [],
-      file: undefined as any,
-      transactions: [],
-      page: 1,
-      pageStocks: 1,
-      pageSize: 10,
-    };
-  }
-
-  createStockGroups(transactions: TransactionViewModel[]) {
-    const stocks = [];
-    const grouping: {
-      [name: string]: ArticleModel;
-    } = {};
-    for (const element of transactions) {
-      if (grouping[element.name || ""]) {
-        grouping[element.name || ""].category = grouping[element.name || ""].category || element.category;
-        const occurence = (grouping[element.name || ""].occurence || 0) + 1;
-        grouping[element.name || ""].occurence = occurence;
-      } else {
-        grouping[element.name || ""] = {
-          name: element.name || "",
-          category: element.category,
-          occurence: 1,
-        };
-      }
-    }
-    for (const key in grouping) {
-      if (grouping.hasOwnProperty(key)) {
-        stocks.push(grouping[key]);
-      }
-    }
-    stocks.sort((left, right) => (right.occurence || 0) - (left.occurence || 0));
-    this.setState({
-      stocks,
-    });
-  }
-
-  @bind
-  setActiveTab(newTab: any) {
-    this.setState({
-      activeTab: newTab,
-    });
-  }
-
-  @bind
-  selectPage(page: number) {
-    this.setState({
-      page,
-    });
-  }
-
-  @bind
-  selectStocksPage(pageStocks: number) {
-    this.setState({
-      pageStocks,
-    });
-  }
-
-  @bind
-  handleInputChange(event: React.ChangeEvent<HTMLFormElement>) {
-    const state = updateState(event);
-    this.setState(state);
-  }
-
-  @bind
-  async upload(event: React.FormEvent<HTMLFormElement>) {
+  const onSubmit = handleSubmit(async (model) => {
     try {
-      const { file } = this.state;
-      const { actions } = this.props;
-      event.preventDefault();
-      actions?.dismissAllAlert();
+      const { file } = model;
+      dispatch(AlertsActions.dismissAllAlert());
+      dispatch(TransactionSummaryActions.transactionsSelected([]));
+      setActiveTab("full");
       if (!file || !file.length) {
-        actions?.showAlert({ type: "danger", message: "Please select a file" });
+        dispatch(AlertsActions.showAlert({ type: "danger", message: "Please select a file" }));
         return;
       }
-      const transactions = await importExportService.uploadTransactions(file[0]);
-      this.setState({
-        transactions: transactions.map((tr, index) => {
-          return {
-            category: tr.category,
-            comment: tr.comment,
-            createdAt: toDateString(tr.created),
-            direction: tr.direction,
-            key: index,
-            name: tr.name,
-            price: tr.amount?.toString(10),
-            transactionId: tr.matchingId,
-            walletId: tr.source === "Cash" ? 1 : 2,
-          };
-        }),
-        page: 1,
-        pageStocks: 1,
+      const response = await importExportService.uploadTransactions(file[0]);
+      const transactions = response.map((tr, index) => {
+        return {
+          category: tr.category,
+          comment: tr.comment,
+          createdAt: toDateString(tr.created),
+          direction: tr.direction,
+          key: index,
+          name: tr.name,
+          price: tr.amount?.toString(10),
+          transactionId: tr.matchingId,
+          walletId: tr.source === "Cash" ? 1 : 2,
+        };
       });
-      this.createStockGroups(transactions);
+      const stocks = createStockGroups(transactions);
+      unstable_batchedUpdates(() => {
+        setTransactions(transactions);
+        setStocks(stocks);
+        setPageTransactions(1);
+        setPageStocks(1);
+      });
     } catch (error) {
-      this.props.actions?.showAlert({ type: "danger", message: toErrorMessage(error) });
+      dispatch(AlertsActions.showAlert({ type: "danger", message: toErrorMessage(error) }));
     }
-  }
+  });
 
-  @bind
-  async save() {
+  const save = useCallback(async () => {
     try {
-      const { transactions } = this.state;
-      const { actions } = this.props;
-      actions?.dismissAllAlert();
+      dispatch(AlertsActions.dismissAllAlert());
       const serverTransactions = transactions.map((tr) => {
         return {
           category: tr.category,
@@ -149,91 +88,100 @@ class ImportPage2 extends Component<ImportPageProps, ImportPageState> {
         } as Transaction;
       });
       await transactionService.batchUpdate(serverTransactions);
-      this.setState({
-        transactions: [],
-        stocks: [],
-        activeTab: "full",
+      unstable_batchedUpdates(() => {
+        setTransactions([]);
+        setStocks([]);
+        setActiveTab("full");
       });
     } catch (error) {
-      this.props.actions?.showAlert({ type: "danger", message: toErrorMessage(error) });
+      dispatch(AlertsActions.showAlert({ type: "danger", message: toErrorMessage(error) }));
     }
-  }
+  }, [dispatch, transactions]);
 
-  @bind
-  transactionUpdated(newItem: TransactionViewModel, original: TransactionViewModel): void {
-    const transactions = _.replace(this.state.transactions, newItem, original);
-    this.setState({
-      transactions,
-    });
-  }
+  const transactionUpdated = useCallback((newItem: TransactionViewModel, original: TransactionViewModel) => {
+    setTransactions((transactions) => _.replace(transactions, newItem, original));
+  }, []);
 
-  @bind
-  transactionDeleted(item: TransactionViewModel) {
-    this.setState((prevState) => {
-      return {
-        transactions: _.remove(prevState.transactions, item),
+  const transactionDeleted = useCallback((item: TransactionViewModel) => {
+    setTransactions((transactions) => _.remove(transactions, item));
+  }, []);
+
+  return (
+    <Stack>
+      <Row>
+        <Form onSubmit={onSubmit}>
+          <Form.Group controlId="file">
+            <Form.Label>File</Form.Label>
+            <label htmlFor="file">File</label>
+            <Form.Control type="file" {...register("file", { required: true })} isInvalid={!!errors.file} />
+            <Form.Control.Feedback type="invalid">File required</Form.Control.Feedback>
+          </Form.Group>
+          <Row>
+            <Col>
+              <Button variant="primary" type="submit">
+                Upload
+              </Button>
+              <Button variant="success" type="button" onClick={save}>
+                Save
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Row>
+      <div className="row">
+        <div className="col-sm">
+          <span>Number of imported row:</span>
+          <span>{countTransactions}</span>
+        </div>
+      </div>
+      <Tabs id="import" activeKey={activeTab || "full"} onSelect={setActiveTab}>
+        <Tab eventKey="full" title="Full list">
+          <TransactionTable items={transactionPage} update={transactionUpdated} deleted={transactionDeleted} rowColor={rowColoring} />
+          <Pager page={pageTransactions} pageSize={pageSize} countAll={countTransactions} onPageSelected={setPageTransactions} />
+        </Tab>
+        <Tab eventKey="groupStock" title="Group stock">
+          <StockTable articles={stocksPage} />
+          <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={setPageStocks} />
+        </Tab>
+      </Tabs>
+    </Stack>
+  );
+}
+
+interface ImportPageForm {
+  file: FileList;
+}
+
+function createStockGroups(transactions: TransactionViewModel[]) {
+  const stocks = [];
+  const grouping: {
+    [name: string]: ArticleModel;
+  } = {};
+  for (const element of transactions) {
+    if (grouping[element.name || ""]) {
+      grouping[element.name || ""].category = grouping[element.name || ""].category || element.category;
+      const occurence = (grouping[element.name || ""].occurence || 0) + 1;
+      grouping[element.name || ""].occurence = occurence;
+    } else {
+      grouping[element.name || ""] = {
+        name: element.name || "",
+        category: element.category,
+        occurence: 1,
       };
-    });
-  }
-
-  @bind
-  rowColoring(item: TransactionViewModel): string {
-    if (item.transactionId) {
-      return "table-info";
     }
-    return "";
   }
-
-  render() {
-    const { activeTab, stocks, transactions, page, pageSize, pageStocks } = this.state;
-    const countAll = transactions ? transactions.length : 0;
-    const countStocks = stocks ? stocks.length : 0;
-    return (
-      <>
-        <div className="row">
-          <form onChange={this.handleInputChange} onSubmit={this.upload}>
-            <div className="form-group">
-              <label htmlFor="file">File</label>
-              <input type="file" id="file" name="file" className="form-control" />
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Upload
-            </button>
-            <button type="button" className="btn btn-success" onClick={this.save}>
-              Save
-            </button>
-          </form>
-        </div>
-        <div className="row">
-          <div className="col-sm">
-            <span>Number of imported row:</span>
-            <span>{0}</span>
-          </div>
-        </div>
-        <Tabs id="import" activeKey={activeTab} onSelect={this.setActiveTab}>
-          <Tab eventKey="full" title="Full list">
-            <TransactionTable
-              items={transactions.slice(dataFrom(page, pageSize, countAll), dataTo(page, pageSize, countAll))}
-              update={this.transactionUpdated}
-              deleted={this.transactionDeleted}
-              rowColor={this.rowColoring}
-            />
-            <Pager page={page} pageSize={pageSize} countAll={countAll} onPageSelected={this.selectPage} />
-          </Tab>
-          <Tab eventKey="groupStock" title="Group stock">
-            <StockTable articles={stocks.slice(dataFrom(pageStocks, pageSize, countStocks), dataTo(pageStocks, pageSize, countStocks))} />
-            <Pager page={pageStocks} pageSize={pageSize} countAll={countStocks} onPageSelected={this.selectStocksPage} />
-          </Tab>
-        </Tabs>
-      </>
-    );
+  for (const key in grouping) {
+    if (grouping.hasOwnProperty(key)) {
+      stocks.push(grouping[key]);
+    }
   }
+  stocks.sort((left, right) => (right.occurence || 0) - (left.occurence || 0));
+  return stocks;
 }
 
-function mapDispatchToProps(dispatch: any) {
-  return {
-    actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions,
-  };
+function rowColoring(item: TransactionViewModel): string {
+  if (item.transactionId) {
+    return "table-info";
+  }
+  return "";
 }
-
-export const ImportPage = connect(undefined, mapDispatchToProps)(ImportPage2);
