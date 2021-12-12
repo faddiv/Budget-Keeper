@@ -7,7 +7,7 @@ import { WalletsModel } from "../../../services/reducers/wallets/walletsReducers
 import { Wallet } from "../../../services/walletApi";
 import { ActionsCell } from "./ActionsCell";
 import { deleteWallet, updateWallet } from "../../../services/actions/wallets";
-import { useCellEditor } from "../../../services/hooks";
+import { useCellEditor } from "../../../services/react-table-plugins";
 import { createCellEditor } from "../../../components/TransactionTable/EditorCells";
 
 export function WalletTable() {

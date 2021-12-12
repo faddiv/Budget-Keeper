@@ -34,6 +34,12 @@ class DetailsTable2 extends Component<DetailsTableProps, DetailsTableState> {
     };
   }
 
+  componentDidMount() {
+    if (this.props.open) {
+      this.setPage(1, this.props.parentRow);
+    }
+  }
+
   async componentWillReceiveProps?(nextProps: Readonly<DetailsTableProps>) {
     if (this.props.open !== nextProps.open) {
       if (nextProps.open) {
@@ -97,7 +103,7 @@ class DetailsTable2 extends Component<DetailsTableProps, DetailsTableState> {
           <Collapse in={open}>
             <Card>
               <Card.Body>
-                <TransactionTable items={openedArticleTransactions} rowColor={getDirectionColoring} />
+                <TransactionTable items={openedArticleTransactions} rowColor={getDirectionColoring} editEnabled={false} />
               </Card.Body>
               <Card.Footer>
                 <ul className="pagination justify-content-center">

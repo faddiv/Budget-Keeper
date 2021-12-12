@@ -1,83 +1,98 @@
-import * as React from "react";
-import { bind } from "bind-decorator";
-
 import { CategoryStatistics, transactionService } from "../../../services/walletApi";
 import { DetailsTable } from "./detailsTable";
-import { mapTransactionViewModel, TransactionViewModel, formatInt } from "../../../services/helpers";
+import { mapTransactionViewModel, TransactionViewModel, formatInt, noop } from "../../../services/helpers";
+import { Table } from "react-bootstrap";
+import { Column, useExpanded, useTable } from "react-table";
+import { Fragment, useCallback } from "react";
+import { useExpandedSingle } from "../../../services/react-table-plugins";
 
 export interface CategoryTableProps {
-    categories: CategoryStatistics[];
-    startDate?: string;
-    endDate?: string;
+  categories: CategoryStatistics[];
+  startDate?: string;
+  endDate?: string;
 }
 
-export interface CategoryTableState {
-    openItem: CategoryStatistics | null;
+export function CategoryTable({ categories, startDate, endDate }: CategoryTableProps) {
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, visibleColumns } = useTable<CategoryStatistics>(
+    {
+      columns,
+      data: categories,
+      getRowId,
+    },
+    useExpanded,
+    useExpandedSingle
+  );
+
+  const queryDetails = useCallback(
+    async (parentRow: CategoryStatistics, take: number, skip: number): Promise<TransactionViewModel[]> => {
+      const transactions = await transactionService
+        .fetchCategory(parentRow.name, {
+          limit: take,
+          skip,
+          start: startDate,
+          end: endDate,
+        })
+        .then(mapTransactionViewModel);
+      return transactions;
+    },
+    [endDate, startDate]
+  );
+
+  return (
+    <Table {...getTableProps()} className="transactions">
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row) => {
+          prepareRow(row);
+          const { key, ...rowProps } = row.getRowProps();
+          return (
+            <Fragment key={key}>
+              <tr {...rowProps} {...row.getToggleRowExpandedProps()}>
+                {row.cells.map((cell) => (
+                  <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                ))}
+              </tr>
+              {row.isExpanded && (
+                <DetailsTable colSpan={visibleColumns.length} open={row.isExpanded} parentRow={row.original} queryDetails={queryDetails} toggleDetails={noop} />
+              )}
+            </Fragment>
+          );
+        })}
+      </tbody>
+    </Table>
+  );
 }
 
-export class CategoryTable extends React.Component<CategoryTableProps, CategoryTableState> {
+const columns: Column<CategoryStatistics>[] = [
+  {
+    Header: "Name",
+    accessor: "name",
+  },
+  {
+    Header: "Count",
+    accessor: "count",
+    Cell: ({ value }) => formatInt(value),
+  },
+  {
+    Header: "Spent",
+    accessor: "spent",
+    Cell: ({ value }) => formatInt(value),
+  },
+  {
+    Header: "Spent percent",
+    accessor: "spentPercent",
+    Cell: ({ value }) => value.toLocaleString("en", { style: "percent", maximumFractionDigits: 2 }),
+  },
+];
 
-    constructor(props: CategoryTableProps) {
-        super(props);
-        this.state = {
-            openItem: null
-        };
-    }
-
-    @bind
-    async queryDetails(parentRow: CategoryStatistics, take: number, skip: number): Promise<TransactionViewModel[]> {
-        const { startDate, endDate } = this.props;
-        const transactions = await transactionService.fetchCategory(parentRow.name, {
-            limit: take,
-            skip,
-            start: startDate,
-            end: endDate
-        }).then(mapTransactionViewModel);
-        return transactions;
-    }
-
-    @bind
-    async toggleDetails(parentRow: CategoryStatistics, open: boolean) {
-        this.setState({
-            openItem: open ? parentRow : null
-        });
-    }
-
-    @bind
-    async openRow(item: CategoryStatistics) {
-        this.setState((prevState) => {
-            return {
-                openItem: prevState.openItem === item ? null : item
-            };
-        });
-    }
-
-    render() {
-        const { categories } = this.props;
-        const { openItem } = this.state;
-        return (
-            <table className="table category-statistics">
-                <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Count</td>
-                        <td>Spent</td>
-                        <td>Spent percent</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {categories.map(item => [(
-                        <tr key={item.name} onClick={() => this.openRow(item)}>
-                            <td>{item.name}</td>
-                            <td>{formatInt(item.count)}</td>
-                            <td>{formatInt(item.spent)}</td>
-                            <td>{item.spentPercent.toLocaleString("en", { style: "percent", maximumFractionDigits: 2 })}</td>
-                        </tr>
-                    ), (
-                        <DetailsTable key={item.name + " collapse"} colSpan={4} open={item === openItem} parentRow={item} queryDetails={this.queryDetails} toggleDetails={this.toggleDetails} />
-                    )])}
-                </tbody>
-            </table>
-        );
-    }
+function getRowId(original: CategoryStatistics) {
+  return original.name;
 }

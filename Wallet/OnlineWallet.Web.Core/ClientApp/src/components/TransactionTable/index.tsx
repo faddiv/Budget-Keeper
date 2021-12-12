@@ -6,7 +6,7 @@ import { Column, useTable } from "react-table";
 import { DetailedHTMLProps, HTMLAttributes, useCallback, useState } from "react";
 import cl from "classnames";
 import { isClickableClicked, _ } from "../../services/helpers";
-import { useCellEditor } from "../../services/hooks";
+import { useCellEditor } from "../../services/react-table-plugins";
 import { WalletCell, ActionsCell, DirectionCell } from "./ViewCells";
 import { CategoryEditor, createCellEditor, DirectionEditor, NameEditor, WalletEditor } from "./EditorCells";
 import { ITransactionTableExtFunction, TransactionViewModel } from "../../services/helpers";
@@ -27,9 +27,10 @@ export interface TransactionTableProps {
   rowColor?: ITransactionTableExtFunction;
   update?(newItem: TransactionViewModel, oldItem: TransactionViewModel): void;
   deleted?(items: TransactionViewModel): void;
+  editEnabled?: boolean;
 }
 
-export function TransactionTable({ items, deleted, rowColor, update }: TransactionTableProps) {
+export function TransactionTable({ items, deleted, rowColor, update, editEnabled = true }: TransactionTableProps) {
   const transactionSummary = useSelector<RootState, TransactionSummaryViewModel>((e) => e.transactionSummary, shallowEqual);
   const dispatch = useDispatch();
   const [selectMode, setSelectMode] = useState(SelectMode.none);
@@ -46,7 +47,7 @@ export function TransactionTable({ items, deleted, rowColor, update }: Transacti
       columns,
       data: items,
       getRowId: (original) => original.key?.toString() || "",
-      editEnabled: true,
+      editEnabled,
       submitCellHandler,
       deleteRow: deleted,
     },
