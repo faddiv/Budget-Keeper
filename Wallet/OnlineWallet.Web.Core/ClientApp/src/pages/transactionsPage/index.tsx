@@ -96,7 +96,7 @@ export function TransactionPage() {
 
   return (
     <Stack>
-      <Row>
+      <Row className="mb-3">
         <Col xs="auto">
           <Button variant="success" onClick={save}>
             Save
