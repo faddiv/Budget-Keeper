@@ -1,141 +1,84 @@
-import { bind } from "bind-decorator";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { TransactionTable } from "../../../components/TransactionTable";
-import { Card, Collapse } from "react-bootstrap";
+import { Card, Pagination } from "react-bootstrap";
 import { AlertsActions } from "../../../services/actions/alerts";
-import { Component } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getDirectionColoring, TransactionViewModel, toErrorMessage } from "../../../services/helpers";
+import { unstable_batchedUpdates } from "react-dom";
 
 export interface DetailsTableProps {
   parentRow: any;
   colSpan: number;
   queryDetails: (parentRow: any, take: number, skip: number) => Promise<TransactionViewModel[]>;
-  toggleDetails: (parentRow: any, open: boolean) => void;
-  open: boolean;
   actions?: typeof AlertsActions;
 }
 
-export interface DetailsTableState {
-  openedArticleTransactions: TransactionViewModel[];
-  page: number;
-  pageSize: number;
-  open: boolean;
-}
+const pageSize = 10;
 
-class DetailsTable2 extends Component<DetailsTableProps, DetailsTableState> {
-  constructor(props: DetailsTableProps) {
-    super(props);
-    this.state = {
-      openedArticleTransactions: [],
-      page: 1,
-      pageSize: 10,
-      open: props.open,
-    };
-  }
-
-  componentDidMount() {
-    if (this.props.open) {
-      this.setPage(1, this.props.parentRow);
-    }
-  }
-
-  async componentWillReceiveProps?(nextProps: Readonly<DetailsTableProps>) {
-    if (this.props.open !== nextProps.open) {
-      if (nextProps.open) {
-        this.setPage(1, nextProps.parentRow);
-      } else {
-        this.setState({
-          openedArticleTransactions: [],
-          page: 1,
-          open: false,
+export function DetailsTable({ parentRow, colSpan, queryDetails, actions }: DetailsTableProps) {
+  const dispatch = useDispatch();
+  const [openedArticleTransactions, setOpenedArticleTransactions] = useState<TransactionViewModel[]>([]);
+  const [page, setPage] = useState(1);
+  const loadPage = useCallback(
+    async (parentRow: any, page: number) => {
+      try {
+        const openedArticleTransactions = await queryDetails(parentRow, pageSize, (page - 1) * pageSize);
+        unstable_batchedUpdates(() => {
+          setOpenedArticleTransactions(openedArticleTransactions);
+          setPage(page);
         });
+      } catch (error) {
+        dispatch(
+          AlertsActions.showAlert({
+            type: "danger",
+            message: toErrorMessage(error),
+          })
+        );
       }
+    },
+    [dispatch, queryDetails]
+  );
+
+  useEffect(() => {
+    loadPage(parentRow, 1);
+  }, [loadPage, parentRow]);
+
+  const firstPage = useCallback(() => {
+    if (page > 1) {
+      loadPage(parentRow, 1);
     }
-  }
+  }, [loadPage, page, parentRow]);
 
-  @bind
-  toggleDetails() {
-    this.props.toggleDetails(this.props.parentRow, !this.props.open);
-  }
-
-  @bind
-  async firstPage() {
-    await this.setPage(1, this.props.parentRow);
-  }
-
-  @bind
-  async prevPage() {
-    if (this.state.page > 1) {
-      await this.setPage(this.state.page - 1, this.props.parentRow);
+  const prevPage = useCallback(() => {
+    if (page > 1) {
+      loadPage(parentRow, page - 1);
     }
-  }
+  }, [loadPage, page, parentRow]);
 
-  @bind
-  async nextPage() {
-    await this.setPage(this.state.page + 1, this.props.parentRow);
-  }
+  const nextPage = useCallback(() => {
+    loadPage(parentRow, page + 1);
+  }, [loadPage, page, parentRow]);
 
-  async setPage(page: number, parentRow: any) {
-    try {
-      const openedArticleTransactions = await this.props.queryDetails(parentRow, this.state.pageSize, (page - 1) * this.state.pageSize);
-      this.setState({
-        openedArticleTransactions,
-        page,
-        open: true,
-      });
-    } catch (error) {
-      this.props.actions?.showAlert({
-        type: "danger",
-        message: toErrorMessage(error),
-      });
-      this.props.toggleDetails(this.props.parentRow, false);
-      return Promise.resolve([]);
-    }
-  }
-
-  render() {
-    const { colSpan } = this.props;
-    const { openedArticleTransactions, open } = this.state;
-    return (
-      <tr>
-        <td colSpan={colSpan} style={{ padding: open ? undefined : "0" }}>
-          <Collapse in={open}>
-            <Card>
-              <Card.Body>
-                <TransactionTable items={openedArticleTransactions} rowColor={getDirectionColoring} editEnabled={false} />
-              </Card.Body>
-              <Card.Footer>
-                <ul className="pagination justify-content-center">
-                  <li className="page-item">
-                    <button className="page-link" type="button" onClick={this.firstPage}>
-                      First
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link" type="button" onClick={this.prevPage}>
-                      Previous
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link" type="button" onClick={this.nextPage}>
-                      Next
-                    </button>
-                  </li>
-                </ul>
-              </Card.Footer>
-            </Card>
-          </Collapse>
-        </td>
-      </tr>
-    );
-  }
+  return (
+    <tr>
+      <td colSpan={colSpan}>
+        <Card>
+          <Card.Body>
+            <TransactionTable items={openedArticleTransactions} rowColor={getDirectionColoring} editEnabled={false} />
+          </Card.Body>
+          <Card.Footer>
+            <Pagination className="justify-content-center">
+              <Pagination.Item onClick={firstPage} disabled={page === 1}>
+                First
+              </Pagination.Item>
+              <Pagination.Item onClick={prevPage} disabled={page === 1}>
+                Previous
+              </Pagination.Item>
+              <Pagination.Item onClick={nextPage}>Next</Pagination.Item>
+            </Pagination>
+          </Card.Footer>
+        </Card>
+      </td>
+    </tr>
+  );
 }
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions,
-  };
-}
-
-export const DetailsTable = connect(undefined, mapDispatchToProps)(DetailsTable2);

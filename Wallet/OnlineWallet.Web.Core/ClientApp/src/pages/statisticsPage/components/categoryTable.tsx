@@ -1,6 +1,6 @@
 import { CategoryStatistics, transactionService } from "../../../services/walletApi";
-import { DetailsTable } from "./detailsTable";
-import { mapTransactionViewModel, TransactionViewModel, formatInt, noop } from "../../../services/helpers";
+import { DetailsTable } from "./DetailsTable";
+import { mapTransactionViewModel, TransactionViewModel, formatInt } from "../../../services/helpers";
 import { Table } from "react-bootstrap";
 import { Column, useExpanded, useTable } from "react-table";
 import { Fragment, useCallback } from "react";
@@ -61,7 +61,7 @@ export function CategoryTable({ categories, startDate, endDate }: CategoryTableP
                 ))}
               </tr>
               {row.isExpanded && (
-                <DetailsTable colSpan={visibleColumns.length} open={row.isExpanded} parentRow={row.original} queryDetails={queryDetails} toggleDetails={noop} />
+                <DetailsTable colSpan={visibleColumns.length} parentRow={row.original} queryDetails={queryDetails} />
               )}
             </Fragment>
           );
