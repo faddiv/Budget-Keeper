@@ -1,10 +1,8 @@
 import { CategoryStatistics, transactionService } from "../../../services/walletApi";
-import { DetailsTable } from "./DetailsTable";
 import { mapTransactionViewModel, TransactionViewModel, formatInt } from "../../../services/helpers";
-import { Table } from "react-bootstrap";
-import { Column, useExpanded, useTable } from "react-table";
-import { Fragment, useCallback } from "react";
-import { useExpandedSingle } from "../../../services/react-table-plugins";
+import { Column } from "react-table";
+import { useCallback } from "react";
+import { TableWithDetails } from "./TableWithDetails";
 
 export interface CategoryTableProps {
   categories: CategoryStatistics[];
@@ -13,16 +11,6 @@ export interface CategoryTableProps {
 }
 
 export function CategoryTable({ categories, startDate, endDate }: CategoryTableProps) {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, visibleColumns } = useTable<CategoryStatistics>(
-    {
-      columns,
-      data: categories,
-      getRowId,
-    },
-    useExpanded,
-    useExpandedSingle
-  );
-
   const queryDetails = useCallback(
     async (parentRow: CategoryStatistics, take: number, skip: number): Promise<TransactionViewModel[]> => {
       const transactions = await transactionService
@@ -38,37 +26,7 @@ export function CategoryTable({ categories, startDate, endDate }: CategoryTableP
     [endDate, startDate]
   );
 
-  return (
-    <Table {...getTableProps()} className="transactions">
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          const { key, ...rowProps } = row.getRowProps();
-          return (
-            <Fragment key={key}>
-              <tr {...rowProps} {...row.getToggleRowExpandedProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                ))}
-              </tr>
-              {row.isExpanded && (
-                <DetailsTable colSpan={visibleColumns.length} parentRow={row.original} queryDetails={queryDetails} />
-              )}
-            </Fragment>
-          );
-        })}
-      </tbody>
-    </Table>
-  );
+  return <TableWithDetails columns={columns} data={categories} getRowId={getRowId} queryDetails={queryDetails} className="transactions" />;
 }
 
 const columns: Column<CategoryStatistics>[] = [

@@ -5,4 +5,4 @@ export * from "./importPage";
 export * from "./exportPage";
 export * from "./statisticsPage/yearlyStatisticsPage";
 export * from "./statisticsPage/categoryStatisticsPage";
-export * from "./statisticsPage/articlesPage";
+export * from "./statisticsPage/ArticlesPage";
