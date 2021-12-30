@@ -39,7 +39,7 @@ namespace OnlineWallet.Web.DataLayer
             foreach (var property in properties)
             {
                 if (property.Metadata.IsPrimaryKey() ||
-                    property.Metadata.IsShadowProperty)
+                    property.Metadata.IsShadowProperty())
                 {
                     continue;
                 }

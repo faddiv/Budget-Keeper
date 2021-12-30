@@ -1,5 +1,7 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using FluentAssertions;
 
 namespace OnlineWallet.Web.TestHelpers
 {
@@ -31,7 +33,12 @@ namespace OnlineWallet.Web.TestHelpers
         {
             return Regex.IsMatch(input, pattern, options);
         }
-        
+
+        public static void ShouldAllBeEquivalentTo<TElement, TCollection>(this TCollection collection, IEnumerable<TElement> elements, string because)
+            where TCollection : IEnumerable<TElement>
+        {
+            collection.Should().BeEquivalentTo(elements, because);
+        }
         #endregion
     }
 }

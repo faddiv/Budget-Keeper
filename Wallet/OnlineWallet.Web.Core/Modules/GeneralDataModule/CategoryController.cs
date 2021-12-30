@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.Web.Modules.GeneralDataModule.Models;
 using OnlineWallet.Web.Modules.GeneralDataModule.Queries;

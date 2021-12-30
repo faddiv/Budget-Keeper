@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using OnlineWallet.Web.DataLayer;
 
 namespace OnlineWallet.Web.TestHelpers
@@ -12,9 +12,10 @@ namespace OnlineWallet.Web.TestHelpers
             return new ArticleAssertion(article);
         }
 
-        public static ArticleListAssertion Should(this List<Article> article)
+        public static ArticleListAssertion<TCollection> Should<TCollection>(this TCollection article)
+            where TCollection : IEnumerable<Article>
         {
-            return new ArticleListAssertion(article);
+            return new ArticleListAssertion<TCollection>(article);
         }
 
         #endregion

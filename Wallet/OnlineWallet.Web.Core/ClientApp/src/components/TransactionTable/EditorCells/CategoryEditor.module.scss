@@ -1,0 +1,8 @@
+.editor {
+  min-width: 15rem;
+  flex: 1 1 auto;
+}
+:global(.input-group) .editor :global(.ci__control) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

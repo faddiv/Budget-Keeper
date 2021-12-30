@@ -12,6 +12,9 @@ build/
 node_modules/
 packages/
 
+# avoid dependabot nagging
+package-lock.json
+yarn.lock
 
 # IDE - Visual Studio
 .vs/

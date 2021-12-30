@@ -1,0 +1,7 @@
+.cmdBtnLine {
+  display: flex;
+
+  > :nth-child(1n + 2) {
+    margin-left: 6px;
+  }
+}

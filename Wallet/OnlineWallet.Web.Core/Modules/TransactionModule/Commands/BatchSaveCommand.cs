@@ -17,10 +17,10 @@ namespace OnlineWallet.Web.Modules.TransactionModule.Commands
 
         #region  Constructors
 
-        public BatchSaveCommand(IWalletDbContext db, IReadOnlyCollection<IBatchSaveEvent> events)
+        public BatchSaveCommand(IWalletDbContext db, IEnumerable<IBatchSaveEvent> events)
         {
             _db = db;
-            Events = events;
+            Events = events.ToList();
         }
 
         #endregion

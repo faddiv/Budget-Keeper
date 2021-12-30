@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 using OnlineWallet.Web.DataLayer;
@@ -9,16 +9,15 @@ namespace OnlineWallet.Web.TestHelpers
     {
         #region  Constructors
 
-        public ArticleAssertion(Article article)
+        public ArticleAssertion(Article article) : base(article)
         {
-            Subject = article;
         }
 
         #endregion
 
         #region Properties
 
-        protected override string Context => nameof(Article);
+        protected override string Identifier => nameof(Article);
 
         #endregion
 

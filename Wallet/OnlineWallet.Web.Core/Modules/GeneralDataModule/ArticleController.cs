@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OnlineWallet.Web.Modules.GeneralDataModule.Commands;
 using OnlineWallet.Web.Modules.GeneralDataModule.Models;
@@ -39,7 +36,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> SyncFromTransactions(List<string> articles = null,
+        public async Task<OkResult> SyncFromTransactions(List<string> articles = null,
             CancellationToken token = default(CancellationToken))
         {
             await _articleCommands.UpdateArticleStatuses(articles, token);

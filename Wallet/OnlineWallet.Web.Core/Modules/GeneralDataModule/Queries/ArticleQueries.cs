@@ -42,7 +42,7 @@ namespace OnlineWallet.Web.Modules.GeneralDataModule.Queries
         {
             if (string.IsNullOrEmpty(name))
                 return Task.FromResult<Article>(null);
-            return _db.Article.FindAsync(name);
+            return _db.Article.FindAsync(name).AsTask();
         }
 
         public Task<List<ArticleModel>> SearchByText(string search, int limit, CancellationToken token)
