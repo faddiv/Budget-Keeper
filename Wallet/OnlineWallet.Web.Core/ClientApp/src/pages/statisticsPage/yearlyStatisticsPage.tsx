@@ -1,120 +1,107 @@
-import moment from "moment";
-import { RouteComponentProps } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { bind } from "bind-decorator";
-
-import { YearlyStatistics, statisticsService } from "../../services/walletApi";
+import { useEffect, useState, useMemo } from "react";
+import { Stack, Table } from "react-bootstrap";
+import { useParams } from "react-router";
 import { formatInt, toErrorMessage } from "../../services/helpers";
-import { AlertsActions } from "../../services/actions/alerts";
+import { statisticsService, YearlyStatistics } from "../../services/walletApi";
 import { YearSelector } from "./components/yearSelector";
-import { Component } from "react";
+import { AlertsActions } from "../../services/actions/alerts";
+import { useDispatch } from "react-redux";
+import { format } from "date-fns";
+import { useTable, Column } from "react-table";
+import { BalanceInfo } from "../../services/walletApi";
 
 export interface YearlyStatisticsPageParams {
   year?: string;
 }
 
-export interface YearlyStatisticsPageProps extends Partial<RouteComponentProps<YearlyStatisticsPageParams>> {
-  actions: typeof AlertsActions;
-}
-
-export interface YearlyStatisticsPageState {
-  yearly: YearlyStatistics;
-  year: number;
-}
-
-class YearlyStatisticsPage2 extends Component<YearlyStatisticsPageProps, YearlyStatisticsPageState> {
-  constructor(props: YearlyStatisticsPageProps) {
-    super(props);
-    const year = parseInt(this.props.match?.params.year || "0", 10) || new Date().getFullYear();
-    this.state = {
-      year,
-      yearly: defaultYearly(),
-    };
-  }
-
-  @bind
-  async componentDidMount() {
-    try {
-      const yearly = await statisticsService.yearly(this.state.year);
-      this.setState({
-        yearly,
-      });
-    } catch (error) {
-      this.setState({
-        yearly: defaultYearly(),
-      });
-      this.props.actions.showAlert({ type: "danger", message: toErrorMessage(error) });
-    }
-  }
-
-  componentWillReceiveProps(nextProps: YearlyStatisticsPageProps) {
-    const year = parseInt(nextProps.match?.params.year || "0", 10) || new Date().getFullYear();
-    this.setState(
+export function YearlyStatisticsPage() {
+  const { year } = useParams<YearlyStatisticsPageParams>();
+  const year2 = parseInt(year || "0", 10) || new Date().getFullYear();
+  const [summary, setSummary] = useState<YearlyStatistics>(empty);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    (async () => {
+      try {
+        const yearly = await statisticsService.yearly(year2);
+        setSummary(yearly);
+      } catch (error) {
+        setSummary(empty);
+        dispatch(AlertsActions.showAlert({ type: "danger", message: toErrorMessage(error) }));
+      }
+    })();
+  }, [dispatch, year2]);
+  const { monthly } = summary;
+  const columns: Column<BalanceInfo>[] = useMemo(() => {
+    return [
       {
-        year,
+        Header: "Month",
+        accessor: (item, index) => format(new Date(year2, index, 1), "MMM"),
       },
-      this.componentDidMount
-    );
-  }
+      {
+        Header: "Income",
+        accessor: (item) => formatInt(item.income),
+      },
+      {
+        Header: "Spent",
+        accessor: (item) => formatInt(item.spent),
+      },
+      {
+        Header: "Savings",
+        accessor: (item) => formatInt(item.toSaving),
+      },
+      {
+        Header: "Unused",
+        accessor: (item) => formatInt(item.unused),
+      },
+    ];
+  }, [year2]);
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    data: monthly,
+    columns,
+  });
 
-  render() {
-    const { yearly, year } = this.state;
-    const monthly = yearly.monthly || [];
-    return (
-      <>
-        <YearSelector year={year} link="/statistics/yearly" />
-        <table className="table table-condensed yearly-statistics">
-          <thead>
-            <tr>
-              <th scope="col">Month</th>
-              <th scope="col">Income</th>
-              <th scope="col">Spent</th>
-              <th scope="col">Savings</th>
-              <th scope="col">Unused</th>
+  return (
+    <Stack>
+      <YearSelector year={year2} link="/statistics/yearly" />
+      <Table {...getTableProps()} className="yearly-statistics">
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+              ))}
             </tr>
-          </thead>
-          <tbody>
-            {monthly.map((item, index) => (
-              <tr key={index}>
-                <th scope="row">{moment(index + 1, "MM").format("MMM")}</th>
-                <td>{formatInt(item.income)}</td>
-                <td>{formatInt(item.spent)}</td>
-                <td>{formatInt(item.toSaving)}</td>
-                <td>{formatInt(item.unused)}</td>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => (
+                  <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                ))}
               </tr>
-            ))}
-            {yearly && (
-              <tr className="table-info">
-                <th scope="row">Summary</th>
-                <td>{formatInt(yearly.income)}</td>
-                <td>{formatInt(yearly.spent)}</td>
-                <td>{formatInt(yearly.toSaving)}</td>
-                <td>{formatInt(yearly.unused)}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </>
-    );
-  }
+            );
+          })}
+          <tr className="table-info">
+            <th scope="row">Summary</th>
+            <td>{formatInt(summary.income)}</td>
+            <td>{formatInt(summary.spent)}</td>
+            <td>{formatInt(summary.toSaving)}</td>
+            <td>{formatInt(summary.unused)}</td>
+          </tr>
+        </tbody>
+      </Table>
+    </Stack>
+  );
 }
 
-function mapDispatchToProps(dispatch: any) {
-  return {
-    actions: bindActionCreators(AlertsActions as any, dispatch) as typeof AlertsActions,
-  };
-}
-
-function defaultYearly(): YearlyStatistics {
-  return {
-    income: 0,
-    monthly: [],
-    planned: 0,
-    spent: 0,
-    toSaving: 0,
-    unused: 0,
-  };
-}
-
-export const YearlyStatisticsPage = connect(null, mapDispatchToProps)(YearlyStatisticsPage2);
+const empty: YearlyStatistics = {
+  income: 0,
+  monthly: [],
+  planned: 0,
+  spent: 0,
+  toSaving: 0,
+  unused: 0,
+};
