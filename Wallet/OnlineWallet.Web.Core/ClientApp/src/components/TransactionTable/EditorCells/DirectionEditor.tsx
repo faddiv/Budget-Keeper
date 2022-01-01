@@ -29,7 +29,7 @@ export function DirectionEditor<D extends object>({ value, submitCell, cancelCel
     },
   });
   const onSubmit = (data: FormData) => {
-    submitCell(cell, data.value);
+    submitCell(cell, data.value || 0);
   };
   const onKeyDown = useCallback(
     (evt: KeyboardEvent<HTMLDivElement>) => {

@@ -1,5 +1,5 @@
-import { endOfMonth, format } from "date-fns";
-import { dateFormatNew } from "../../../services/helpers";
+import { endOfMonth } from "date-fns";
+import { toDateString } from "../../../services/helpers";
 
 export interface ExportPageState {
   rangeType: string;
@@ -26,8 +26,8 @@ export function getRangeSelection(state: ExportPageState) {
   if (rangeType === "1") {
     const from = new Date(parseInt(year, 10), parseInt(month, 10) - 1, 1);
     return {
-      rangeFrom: format(from, dateFormatNew),
-      rangeTo: format(endOfMonth(from), dateFormatNew),
+      rangeFrom: toDateString(from),
+      rangeTo: toDateString(endOfMonth(from)),
     };
   }
   return { rangeFrom, rangeTo };

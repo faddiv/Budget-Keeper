@@ -15,7 +15,7 @@ import { MoneyDirection } from "./MoneyDirection";
 export interface Transaction {
     comment?: string;
 
-    createdAt: Date;
+    createdAt: string;
 
     direction: MoneyDirection;
 

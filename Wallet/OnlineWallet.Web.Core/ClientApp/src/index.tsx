@@ -1,5 +1,4 @@
 import "./index.scss";
-import "moment/locale/hu";
 import { render } from "react-dom";
 import { configureStore } from "./services/store";
 import { BrowserRouter } from "react-router-dom";

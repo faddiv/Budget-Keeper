@@ -1,9 +1,9 @@
-import { dateFormatNew } from "../../services/helpers";
+import { toDateString } from "../../services/helpers";
 import { importExportService } from "../../services/walletApi";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useCallback, useMemo } from "react";
-import { startOfMonth, endOfMonth, format } from "date-fns";
+import { startOfMonth, endOfMonth } from "date-fns";
 import { RangeSelector } from "./components/RangeSelector";
 import { YearMonthSelector } from "./components/YearMonthSelector";
 import { ExportPageState, getRangeSelection, rangeTypes } from "./services";
@@ -24,8 +24,8 @@ export function ExportPage() {
       file: "Export",
       month: (now.getMonth() + 1).toString(),
       year: now.getFullYear().toString(),
-      rangeFrom: format(startOfMonth(now), dateFormatNew),
-      rangeTo: format(endOfMonth(now), dateFormatNew),
+      rangeFrom: toDateString(startOfMonth(now)),
+      rangeTo: toDateString(endOfMonth(now)),
     },
   });
   const rangeType = watch("rangeType");

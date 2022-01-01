@@ -79,7 +79,7 @@ export function ImportPage() {
         return {
           category: tr.category,
           comment: tr.comment,
-          createdAt: tr.createdAt ? new Date(tr.createdAt) : null,
+          createdAt: tr.createdAt || "",
           direction: tr.direction,
           name: tr.name,
           transactionId: tr.transactionId,

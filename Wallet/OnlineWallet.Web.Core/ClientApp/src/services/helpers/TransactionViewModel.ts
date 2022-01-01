@@ -1,4 +1,4 @@
-import { toDateString, toUTCDate } from "./DateTimeFunctions";
+import { toDateString } from "./DateTimeFunctions";
 import { MoneyDirection, Wallet, Transaction } from "../walletApi";
 import _ from "./listHelpers";
 import { validators, ValidationConfig } from "./validation";
@@ -61,8 +61,8 @@ export function mapTransaction(transactions: TransactionViewModel[]): Transactio
         return {
             category: transaction.category,
             comment: transaction.comment,
-            createdAt: toUTCDate(transaction.createdAt),
-            direction: parseInt(transaction.direction as any, 10),
+            createdAt: transaction.createdAt || "",
+            direction: transaction.direction,
             name: transaction.name,
             value: transaction.price ? parseInt(transaction.price, 10) : 0,
             transactionId: transaction.transactionId,

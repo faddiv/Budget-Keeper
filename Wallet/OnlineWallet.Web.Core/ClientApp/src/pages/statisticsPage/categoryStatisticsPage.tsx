@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Tab, Tabs, Stack } from "react-bootstrap";
 import { useParams } from "react-router";
-import { toErrorMessage } from "../../services/helpers";
+import { toDateString, toErrorMessage, toMonthName, toMonthNumber } from "../../services/helpers";
 import { CategoryStatistics, CategoryStatisticsSummary, statisticsService } from "../../services/walletApi";
 import { CategoryTable } from "./components/categoryTable";
 import { YearSelector } from "./components/yearSelector";
 import { AlertsActions } from "../../services/actions/alerts";
 import { useDispatch } from "react-redux";
-import { endOfMonth, endOfYear, format } from "date-fns";
+import { endOfMonth, endOfYear } from "date-fns";
 
 export interface CategoryStatisticsPageParams {
   year?: string;
@@ -38,16 +38,16 @@ export function CategoryStatisticsPage() {
       <YearSelector year={year2} link="/statistics/category" />
       <Tabs defaultActiveKey="yearly" id="statistics-tabs">
         <Tab key="yearly" eventKey="yearly" title="Full list">
-          <CategoryTable categories={yearly} startDate={format(yearStart, "yyyy-MM-dd")} endDate={format(yearEnd, "yyyy-MM-dd")} />
+          <CategoryTable categories={yearly} startDate={toDateString(yearStart)} endDate={toDateString(yearEnd)} />
         </Tab>
         {monthly.map((monthData: CategoryStatistics[], monthIndex: number) => {
           const monthStart = new Date(year2, monthIndex, 1);
-          const monthKey = format(monthStart, "MM");
+          const monthKey = toMonthNumber(monthStart);
           const monthEnd = endOfMonth(monthStart);
-          const monthName = format(monthStart, "MMM");
+          const monthName = toMonthName(monthStart);
           return (
             <Tab key={monthKey} eventKey={monthKey} title={monthName}>
-              <CategoryTable categories={monthData} startDate={format(monthStart, "yyyy-MM-dd")} endDate={format(monthEnd, "yyyy-MM-dd")} />
+              <CategoryTable categories={monthData} startDate={toDateString(monthStart)} endDate={toDateString(monthEnd)} />
             </Tab>
           );
         })}

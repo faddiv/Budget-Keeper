@@ -1,18 +1,41 @@
-import moment from "moment";
+import { format, parse } from "date-fns";
 
-export const dateFormat = "YYYY-MM-DD";
-export const dateFormatNew = "yyyy-MM-dd";
-export function toDateString(dateTime: Date | undefined) {
-    return toServerDate(moment(dateTime));
-}
+const dateFormat = "yyyy-MM-dd";
 
-export function toServerDate(dateTime: moment.Moment) {
-    return dateTime.format(dateFormat);
+export function toDateString(dateTime: Date | string | undefined) {
+    if(!dateTime) {
+      return ""
+    } else if(typeof dateTime === "string") {
+      const tIndex = dateTime.indexOf("T");
+      if(tIndex === -1){
+        return dateTime;
+      }else {
+        return dateTime.slice(0, tIndex);
+      }
+    } else {
+      return dateTime ? format(dateTime, dateFormat) : "";
+    }
 }
 
 export function toUTCDate(value: any): Date | undefined {
     if (value) {
-        const date = moment(value);
-        return new Date(Date.UTC(date.year(), date.month(), date.date()));
+      if(value instanceof Date) {
+        return value;
+      }
+      if(typeof value === "string"){
+        return parse(value, dateFormat, new Date());
+      }
+      if(typeof value === "number") {
+        return new Date(value);
+      }
+      console.error("Unknown data type. Can't parse to date.", value);
     }
+}
+
+export function toMonthNumber(value: Date) {
+  return format(value, "MM");
+}
+
+export function toMonthName(value: Date) {
+  return format(value, "MMM");
 }

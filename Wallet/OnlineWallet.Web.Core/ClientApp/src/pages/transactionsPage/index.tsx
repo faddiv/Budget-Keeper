@@ -3,10 +3,10 @@ import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { AlertsActions } from "../../services/actions/alerts";
 import { transactionService, BalanceInfo, statisticsService } from "../../services/walletApi";
-import { toErrorMessage, _, getDirectionColoring, mapTransaction, mapTransactionViewModel, TransactionViewModel, dateFormatNew } from "../../services/helpers";
+import { toErrorMessage, _, getDirectionColoring, mapTransaction, mapTransactionViewModel, TransactionViewModel, toDateString } from "../../services/helpers";
 import { TransactionTable } from "../../components/TransactionTable";
 import { MonthSelector, Balance } from "./components";
-import { endOfMonth, format } from "date-fns";
+import { endOfMonth } from "date-fns";
 import { Stack, Button, Col, Row } from "react-bootstrap";
 
 export interface TransactionsParams {
@@ -121,7 +121,7 @@ function getYearMonth(params: TransactionsParams) {
 async function loadMonth(year: number, month: number) {
   const start = new Date(year, month - 1, 1);
   const end = endOfMonth(start);
-  const fetchTransactions = transactionService.fetchDateRange(format(start, dateFormatNew), format(end, dateFormatNew));
+  const fetchTransactions = transactionService.fetchDateRange(toDateString(start), toDateString(end));
   const fetchBalance = statisticsService.balanceInfo(year, month);
   const [transactions, balance] = await Promise.all([fetchTransactions, fetchBalance]);
   return { transactions: mapTransactionViewModel(transactions), balance };
